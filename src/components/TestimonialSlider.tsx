@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import TestimonialCard from "./TestimonialCard";
 
 interface Testimonial {
   quote: string;
@@ -115,27 +116,8 @@ export default function TestimonialSlider() {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 }
               }}
-              className="bg-card rounded-3xl shadow-xl p-8 md:p-12 lg:p-16 relative"
             >
-              <Quote className="w-12 h-12 md:w-16 md:h-16 text-primary/20 mb-6" />
-              
-              <blockquote className="text-lg md:text-xl lg:text-2xl text-foreground leading-relaxed mb-8 font-light italic">
-                "{testimonials[current].quote}"
-              </blockquote>
-              
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <div className="font-semibold text-xl text-foreground">
-                    {testimonials[current].author}
-                  </div>
-                  <div className="text-muted-foreground">
-                    {testimonials[current].role}
-                  </div>
-                  <div className="text-sm text-muted-foreground/80">
-                    {testimonials[current].industry}
-                  </div>
-                </div>
-              </div>
+              <TestimonialCard testimonial={testimonials[current]} index={0} />
             </motion.div>
           </AnimatePresence>
 
