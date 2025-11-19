@@ -1,19 +1,19 @@
 import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import PhilosophySection from "@/components/PhilosophySection";
-import ServicesSection from "@/components/ServicesSection";
-import ClientsSection from "@/components/ClientsSection";
+import Hero from "@/components/Hero";
+import Philosophy from "@/components/Philosophy";
+import Services from "@/components/Services";
+import ClientLogos from "@/components/ClientLogos";
+import TestimonialSlider from "@/components/TestimonialSlider";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
-      <main className="pt-16">
-        <HeroSection />
-        <PhilosophySection />
-        <ServicesSection />
-        <ClientsSection />
-      </main>
+      <Hero />
+      <Philosophy />
+      <Services />
+      <ClientLogos />
+      <TestimonialSlider />
     </div>
   );
 };
