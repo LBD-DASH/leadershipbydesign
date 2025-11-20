@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle, Mail, Phone, MapPin, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -26,10 +27,21 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.full_name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.role,
+          serviceInterest: formData.service_interest,
+          message: formData.message,
+        }
+      });
+
+      if (error) throw error;
+
       setSubmitted(true);
-      setIsSubmitting(false);
       setFormData({
         full_name: "",
         email: "",
@@ -42,7 +54,16 @@ export default function Contact() {
         title: "Request Sent",
         description: "We'll be in touch within 24 hours.",
       });
-    }, 1000);
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send your message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
