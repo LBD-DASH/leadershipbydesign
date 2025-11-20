@@ -40,7 +40,7 @@ const programmes = [
     description: "Tailored coaching engagements for leaders seeking to enhance their effectiveness and navigate complex challenges.",
     duration: "3-6 months",
     format: "One-on-one Sessions",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
     icon: MessageSquare
   }
 ];
