@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle, Mail, Phone, MapPin, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -50,7 +51,9 @@ export default function Contact() {
 
   if (submitted) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4 sm:px-6">
+      <div className="min-h-screen">
+        <Header />
+        <div className="min-h-[80vh] flex items-center justify-center px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -73,14 +76,16 @@ export default function Contact() {
             Submit Another Request
           </Button>
         </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
+      <Header />
       {/* Hero Section */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
+      <section className="pt-24 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
         <div className="max-w-6xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
