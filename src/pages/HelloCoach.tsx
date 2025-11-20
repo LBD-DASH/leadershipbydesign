@@ -2,6 +2,8 @@ import Header from "@/components/Header";
 import { motion } from "framer-motion";
 import { Users, Shield, Clock, CheckCircle, Sparkles, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import hellocoachLogo from "@/assets/hellocoach-logo.png";
+import hellocoachMockup from "@/assets/hellocoach-app-mockup.webp";
 
 const features = [
   {
@@ -76,7 +78,7 @@ export default function HelloCoach() {
           >
             <div className="w-32 h-32 mx-auto bg-black rounded-2xl flex items-center justify-center shadow-xl">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6914661fa894ae1081602d0f/5df0b32d8_Hellocoachlogo33.png"
+                src={hellocoachLogo}
                 alt="HelloCoach"
                 className="w-24 h-24 object-contain"
               />
@@ -249,6 +251,35 @@ export default function HelloCoach() {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Mobile App Showcase Section */}
+      <section className="py-20 px-6 lg:px-8 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#3A7CA5] mb-4 inline-block relative">
+              Coaching in Your Pocket
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3A7CA5]" />
+            </h2>
+            <p className="text-lg text-muted-foreground mt-6 max-w-3xl mx-auto">
+              Experience seamless coaching sessions through our intuitive mobile app. Book sessions, connect with coaches, and track your progress—all at your fingertips.
+            </p>
+          </div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-center"
+          >
+            <img 
+              src={hellocoachMockup}
+              alt="HelloCoach Mobile App"
+              className="w-full max-w-5xl rounded-xl shadow-2xl"
+            />
           </motion.div>
         </div>
       </section>
