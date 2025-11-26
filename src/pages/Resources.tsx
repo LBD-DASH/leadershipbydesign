@@ -3,6 +3,9 @@ import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Video, Download, ExternalLink } from "lucide-react";
+import partnerLogo1 from "@/assets/partner-logo-1.png";
+import valuesLogo from "@/assets/values-logo.png";
+import shiftLogo from "@/assets/shift-logo.jpg";
 
 export default function Resources() {
   const resourceCategories = [
@@ -108,6 +111,89 @@ export default function Resources() {
                   </div>
                 </div>
               ))}
+            </section>
+
+            {/* Featured Partner Resources */}
+            <section className="mt-20">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold mb-4 text-foreground">
+                  Featured Partner Resources
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Explore these carefully selected partner organizations and tools that complement our leadership development approach.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <a 
+                  href="#" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
+                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                        <img 
+                          src={partnerLogo1} 
+                          alt="Partner Resource" 
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 text-primary font-medium">
+                        Learn More
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
+
+                <a 
+                  href="#" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
+                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                        <img 
+                          src={valuesLogo} 
+                          alt="Values Identity Engineering" 
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 text-primary font-medium">
+                        Learn More
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
+
+                <a 
+                  href="#" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
+                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                        <img 
+                          src={shiftLogo} 
+                          alt="SHIFT" 
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 text-primary font-medium">
+                        Learn More
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
+              </div>
             </section>
 
             {/* Newsletter CTA */}
