@@ -90,22 +90,26 @@ export default function Resources() {
               
               <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 <a 
-                  href="#" 
+                  href="https://sixhumanneeds.lovable.app" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="group"
                 >
                   <Card className="hover:shadow-xl transition-all duration-300 h-full">
-                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
-                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[320px]">
+                      <div className="w-full h-40 flex items-center justify-center mb-6">
                         <img 
                           src={partnerLogo1} 
-                          alt="Partner Resource" 
+                          alt="6 Human Needs" 
                           className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
                         />
                       </div>
+                      <h3 className="text-xl font-semibold mb-2 text-foreground">6 Human Needs</h3>
+                      <p className="text-sm text-muted-foreground text-center mb-4">
+                        Collaborative tools and resources for community building
+                      </p>
                       <div className="flex items-center gap-2 text-primary font-medium">
-                        Learn More
+                        Visit Platform
                         <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </CardContent>
