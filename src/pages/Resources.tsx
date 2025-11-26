@@ -143,28 +143,26 @@ export default function Resources() {
                   </Card>
                 </a>
 
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="group"
-                >
+                <div className="group">
                   <Card className="hover:shadow-xl transition-all duration-300 h-full">
-                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
-                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[320px]">
+                      <div className="w-full h-40 flex items-center justify-center mb-6">
                         <img 
                           src={shiftLogo} 
-                          alt="SHIFT" 
+                          alt="Shift Daily Companion" 
                           className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
                         />
                       </div>
-                      <div className="flex items-center gap-2 text-primary font-medium">
-                        Learn More
-                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      <h3 className="text-xl font-semibold mb-2 text-foreground">Shift Daily Companion</h3>
+                      <p className="text-sm text-muted-foreground text-center mb-4">
+                        Your daily companion for mindset shifts and personal transformation
+                      </p>
+                      <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                        Coming Soon
                       </div>
                     </CardContent>
                   </Card>
-                </a>
+                </div>
               </div>
             </section>
 
