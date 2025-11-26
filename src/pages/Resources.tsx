@@ -117,22 +117,26 @@ export default function Resources() {
                 </a>
 
                 <a 
-                  href="#" 
+                  href="https://valuesblueprint.online" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="group"
                 >
                   <Card className="hover:shadow-xl transition-all duration-300 h-full">
-                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[280px]">
-                      <div className="w-full h-48 flex items-center justify-center mb-4">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[320px]">
+                      <div className="w-full h-40 flex items-center justify-center mb-6">
                         <img 
                           src={valuesLogo} 
                           alt="Values Identity Engineering" 
                           className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
                         />
                       </div>
+                      <h3 className="text-xl font-semibold mb-2 text-foreground">Values</h3>
+                      <p className="text-sm text-muted-foreground text-center mb-4">
+                        Identity Engineering - Building strong organizational values and culture
+                      </p>
                       <div className="flex items-center gap-2 text-primary font-medium">
-                        Learn More
+                        Visit Platform
                         <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </CardContent>
