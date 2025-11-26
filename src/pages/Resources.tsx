@@ -77,44 +77,8 @@ export default function Resources() {
               </p>
             </section>
 
-            {/* Resource Categories */}
-            <section className="space-y-12">
-              {resourceCategories.map((category, idx) => (
-                <div key={idx} className="space-y-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <category.icon className="w-8 h-8 text-primary" />
-                    <div>
-                      <h2 className="text-2xl font-semibold text-foreground">{category.title}</h2>
-                      <p className="text-muted-foreground">{category.description}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {category.items.map((item, itemIdx) => (
-                      <Card key={itemIdx} className="hover:shadow-lg transition-shadow">
-                        <CardHeader>
-                          <CardTitle className="text-lg">{item.title}</CardTitle>
-                          <CardDescription className="flex items-center gap-2">
-                            <span className="text-primary font-medium">{item.type}</span>
-                            <span>•</span>
-                            <span>{item.duration}</span>
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <Button variant="outline" className="w-full group">
-                            {category.icon === Download ? "Download" : "View"}
-                            <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </section>
-
             {/* Featured Partner Resources */}
-            <section className="mt-20">
+            <section className="mb-20">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold mb-4 text-foreground">
                   Featured Partner Resources
@@ -194,6 +158,42 @@ export default function Resources() {
                   </Card>
                 </a>
               </div>
+            </section>
+
+            {/* Resource Categories */}
+            <section className="space-y-12">
+              {resourceCategories.map((category, idx) => (
+                <div key={idx} className="space-y-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <category.icon className="w-8 h-8 text-primary" />
+                    <div>
+                      <h2 className="text-2xl font-semibold text-foreground">{category.title}</h2>
+                      <p className="text-muted-foreground">{category.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {category.items.map((item, itemIdx) => (
+                      <Card key={itemIdx} className="hover:shadow-lg transition-shadow">
+                        <CardHeader>
+                          <CardTitle className="text-lg">{item.title}</CardTitle>
+                          <CardDescription className="flex items-center gap-2">
+                            <span className="text-primary font-medium">{item.type}</span>
+                            <span>•</span>
+                            <span>{item.duration}</span>
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button variant="outline" className="w-full group">
+                            {category.icon === Download ? "Download" : "View"}
+                            <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </section>
 
             {/* Newsletter CTA */}
