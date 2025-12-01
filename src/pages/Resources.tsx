@@ -6,6 +6,7 @@ import { BookOpen, FileText, Video, Download, ExternalLink } from "lucide-react"
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
 import shiftLogo from "@/assets/shift-logo.jpg";
+import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
 
 export default function Resources() {
   const resourceCategories = [
@@ -88,7 +89,7 @@ export default function Resources() {
                 </p>
               </div>
               
-              <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
                 <a 
                   href="https://sixhumanneeds.lovable.app" 
                   target="_blank" 
@@ -163,6 +164,33 @@ export default function Resources() {
                     </CardContent>
                   </Card>
                 </div>
+
+                <a 
+                  href="https://findmypurpose.me" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                    <CardContent className="p-8 flex flex-col items-center justify-center min-h-[320px]">
+                      <div className="w-full h-40 flex items-center justify-center mb-6">
+                        <img 
+                          src={purposeBlueprintLogo} 
+                          alt="Purpose Blueprint" 
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2 text-foreground">Purpose Blueprint</h3>
+                      <p className="text-sm text-muted-foreground text-center mb-4">
+                        Discover and design your life's purpose with clarity and intention
+                      </p>
+                      <div className="flex items-center gap-2 text-primary font-medium">
+                        Visit Platform
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
               </div>
             </section>
 
