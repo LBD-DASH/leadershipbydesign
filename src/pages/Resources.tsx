@@ -58,18 +58,32 @@ export default function Resources() {
     },
   ];
 
-  const resourceCategories = [
-    {
-      title: "Video Content",
-      description: "Watch insights and lessons from leadership experts",
-      icon: Video,
-      items: [
-        { title: "Introduction to Conscious Leadership", type: "Video", duration: "15 min" },
-        { title: "Navigating Change Successfully", type: "Video", duration: "20 min" },
-        { title: "Building Trust in Teams", type: "Video", duration: "12 min" },
-      ]
+  const videoContent = [
+    { 
+      title: "Introduction to Conscious Leadership", 
+      type: "Video", 
+      duration: "15 min",
+      image: "https://img.youtube.com/vi/1PHFe9xCH4U/maxresdefault.jpg",
+      description: "Discover the principles of conscious leadership and how to lead with greater awareness.",
+      link: "https://www.youtube.com/watch?v=1PHFe9xCH4U"
+    },
+    { 
+      title: "Navigating Change Successfully", 
+      type: "Video", 
+      duration: "20 min",
+      image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=350&fit=crop",
+      description: "Learn strategies for leading teams through organizational change and uncertainty."
+    },
+    { 
+      title: "Building Trust in Teams", 
+      type: "Video", 
+      duration: "12 min",
+      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=350&fit=crop",
+      description: "Essential techniques for building and maintaining trust within your team."
     },
   ];
+
+  const resourceCategories = [];
 
   const caseStudies = [
     { 
@@ -327,6 +341,63 @@ export default function Resources() {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+            </section>
+
+            {/* Video Content with Images */}
+            <section className="space-y-6 mb-16">
+              <div className="flex items-center gap-3 mb-4">
+                <Video className="w-8 h-8 text-primary" />
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground">Video Content</h2>
+                  <p className="text-muted-foreground">Watch insights and lessons from leadership experts</p>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {videoContent.map((video, idx) => {
+                  const CardWrapper = video.link ? 'a' : 'div';
+                  const cardProps = video.link ? { href: video.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                  
+                  return (
+                    <CardWrapper key={idx} {...cardProps}>
+                      <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                        <div className="relative h-48 overflow-hidden">
+                          <img 
+                            src={video.image} 
+                            alt={video.title}
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                              {video.type}
+                            </span>
+                          </div>
+                          {video.link && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                              <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-primary border-b-8 border-b-transparent ml-1" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">{video.title}</CardTitle>
+                          <CardDescription>{video.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{video.duration}</span>
+                            <Button variant="ghost" size="sm" className="group/btn">
+                              {video.link ? "Watch Now" : "Coming Soon"}
+                              <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </section>
 
