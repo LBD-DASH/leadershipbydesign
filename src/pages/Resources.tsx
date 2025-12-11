@@ -11,24 +11,25 @@ import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
 export default function Resources() {
   const leadershipArticles = [
     { 
-      title: "The Future of Leadership in 2025", 
+      title: "Year-End Leadership Reflection", 
       type: "Article", 
       duration: "8 min read",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=300&fit=crop",
-      description: "Discover emerging trends shaping how leaders will inspire and guide teams in the years ahead."
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=top",
+      description: "Reflect on your leadership journey and set intentions for the year ahead.",
+      link: "https://valuesblueprint.online/resources"
     },
     { 
       title: "Building High-Performance Teams", 
       type: "Article", 
       duration: "6 min read",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop",
+      image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop&crop=faces",
       description: "Learn proven strategies for creating cohesive, motivated teams that consistently deliver results."
     },
     { 
       title: "Emotional Intelligence in Leadership", 
       type: "Article", 
       duration: "10 min read",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop",
+      image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop&crop=faces",
       description: "Master the art of understanding and managing emotions to become a more effective leader."
     },
   ];
@@ -219,35 +220,42 @@ export default function Resources() {
               </div>
               
               <div className="grid md:grid-cols-3 gap-6">
-                {leadershipArticles.map((article, idx) => (
-                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer">
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={article.image} 
-                        alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
-                          {article.type}
-                        </span>
-                      </div>
-                    </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">{article.title}</CardTitle>
-                      <CardDescription>{article.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">{article.duration}</span>
-                        <Button variant="ghost" size="sm" className="group/btn">
-                          Read More
-                          <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {leadershipArticles.map((article, idx) => {
+                  const CardWrapper = article.link ? 'a' : 'div';
+                  const cardProps = article.link ? { href: article.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                  
+                  return (
+                    <CardWrapper key={idx} {...cardProps}>
+                      <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                        <div className="relative h-48 overflow-hidden">
+                          <img 
+                            src={article.image} 
+                            alt={article.title}
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                              {article.type}
+                            </span>
+                          </div>
+                        </div>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">{article.title}</CardTitle>
+                          <CardDescription>{article.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{article.duration}</span>
+                            <Button variant="ghost" size="sm" className="group/btn">
+                              Read More
+                              <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </section>
 
