@@ -34,17 +34,31 @@ export default function Resources() {
     },
   ];
 
-  const resourceCategories = [
-    {
-      title: "Downloadable Guides",
-      description: "Practical tools and frameworks you can use immediately",
-      icon: Download,
-      items: [
-        { title: "Leadership Assessment Toolkit", type: "PDF", duration: "12 pages" },
-        { title: "Team Development Framework", type: "PDF", duration: "8 pages" },
-        { title: "Communication Strategy Template", type: "PDF", duration: "5 pages" },
-      ]
+  const downloadableGuides = [
+    { 
+      title: "Leadership Assessment Toolkit", 
+      type: "PDF", 
+      duration: "12 pages",
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=350&fit=crop",
+      description: "Comprehensive self-assessment tools to evaluate and enhance your leadership capabilities."
     },
+    { 
+      title: "Team Development Framework", 
+      type: "PDF", 
+      duration: "8 pages",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=350&fit=crop",
+      description: "A structured approach to building and nurturing high-performing teams."
+    },
+    { 
+      title: "Communication Strategy Template", 
+      type: "PDF", 
+      duration: "5 pages",
+      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=350&fit=crop",
+      description: "Ready-to-use templates for crafting clear and impactful communication plans."
+    },
+  ];
+
+  const resourceCategories = [
     {
       title: "Video Content",
       description: "Watch insights and lessons from leadership experts",
@@ -256,6 +270,49 @@ export default function Resources() {
                     </CardWrapper>
                   );
                 })}
+              </div>
+            </section>
+
+            {/* Downloadable Guides with Images */}
+            <section className="space-y-6 mb-16">
+              <div className="flex items-center gap-3 mb-4">
+                <Download className="w-8 h-8 text-primary" />
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground">Downloadable Guides</h2>
+                  <p className="text-muted-foreground">Practical tools and frameworks you can use immediately</p>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {downloadableGuides.map((guide, idx) => (
+                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={guide.image} 
+                        alt={guide.title}
+                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                          {guide.type}
+                        </span>
+                      </div>
+                    </div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg group-hover:text-primary transition-colors">{guide.title}</CardTitle>
+                      <CardDescription>{guide.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{guide.duration}</span>
+                        <Button variant="ghost" size="sm" className="group/btn">
+                          Download
+                          <Download className="w-4 h-4 ml-1 group-hover/btn:translate-y-0.5 transition-transform" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </section>
 
