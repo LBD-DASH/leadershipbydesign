@@ -352,7 +352,17 @@ export default function Resources() {
                 <Video className="w-8 h-8 text-primary" />
                 <div>
                   <h2 className="text-2xl font-semibold text-foreground">Video Content</h2>
-                  <p className="text-muted-foreground">Watch insights and lessons from leadership experts</p>
+                  <p className="text-muted-foreground">
+                    Watch insights and lessons from leadership experts{" "}
+                    <a 
+                      href="https://www.youtube.com/@TheLunchtimeSeries" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      (more on our podcast)
+                    </a>
+                  </p>
                 </div>
               </div>
               
