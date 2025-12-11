@@ -374,11 +374,11 @@ export default function Resources() {
                   return (
                     <CardWrapper key={idx} {...cardProps}>
                       <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
-                        <div className="relative h-48 overflow-hidden">
+                        <div className="relative aspect-video overflow-hidden">
                           <img 
                             src={video.image} 
                             alt={video.title}
-                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute top-3 left-3">
                             <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
