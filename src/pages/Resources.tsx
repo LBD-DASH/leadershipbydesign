@@ -89,11 +89,12 @@ export default function Resources() {
 
   const caseStudies = [
     { 
-      title: "Tech Startup Scales Culture", 
+      title: "How to Preserve Company Culture When Scaling Fast", 
       type: "Case Study", 
       duration: "15 min read",
       image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=350&fit=crop",
-      description: "How a fast-growing tech company maintained its culture while scaling from 50 to 500 employees."
+      description: "How a fast-growing tech company maintained its culture while scaling from 50 to 500 employees.",
+      link: "https://www.in8create.com/blog/how-to-preserve-company-culture-when-scaling-fast"
     },
     { 
       title: "Manufacturing Firm Transformation", 
@@ -460,35 +461,42 @@ export default function Resources() {
               </div>
               
               <div className="grid md:grid-cols-3 gap-6">
-                {caseStudies.map((study, idx) => (
-                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={study.image} 
-                        alt={study.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
-                          {study.type}
-                        </span>
-                      </div>
-                    </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">{study.title}</CardTitle>
-                      <CardDescription>{study.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">{study.duration}</span>
-                        <Button variant="ghost" size="sm" className="group/btn">
-                          Read Case Study
-                          <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {caseStudies.map((study, idx) => {
+                  const CardWrapper = study.link ? 'a' : 'div';
+                  const cardProps = study.link ? { href: study.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                  
+                  return (
+                    <CardWrapper key={idx} {...cardProps}>
+                      <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                        <div className="relative h-48 overflow-hidden">
+                          <img 
+                            src={study.image} 
+                            alt={study.title}
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                              {study.type}
+                            </span>
+                          </div>
+                        </div>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">{study.title}</CardTitle>
+                          <CardDescription>{study.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{study.duration}</span>
+                            <Button variant="ghost" size="sm" className="group/btn">
+                              Read Case Study
+                              <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </section>
 
