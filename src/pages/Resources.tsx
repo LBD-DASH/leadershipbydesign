@@ -69,16 +69,30 @@ export default function Resources() {
         { title: "Building Trust in Teams", type: "Video", duration: "12 min" },
       ]
     },
-    {
-      title: "Case Studies",
-      description: "Real-world examples of leadership transformation",
-      icon: FileText,
-      items: [
-        { title: "Tech Startup Scales Culture", type: "Case Study", duration: "15 min read" },
-        { title: "Manufacturing Firm Transformation", type: "Case Study", duration: "12 min read" },
-        { title: "Non-Profit Leadership Renewal", type: "Case Study", duration: "10 min read" },
-      ]
-    }
+  ];
+
+  const caseStudies = [
+    { 
+      title: "Tech Startup Scales Culture", 
+      type: "Case Study", 
+      duration: "15 min read",
+      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=350&fit=crop",
+      description: "How a fast-growing tech company maintained its culture while scaling from 50 to 500 employees."
+    },
+    { 
+      title: "Manufacturing Firm Transformation", 
+      type: "Case Study", 
+      duration: "12 min read",
+      image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&h=350&fit=crop",
+      description: "A traditional manufacturing company's journey to modern leadership practices and improved engagement."
+    },
+    { 
+      title: "Non-Profit Leadership Renewal", 
+      type: "Case Study", 
+      duration: "10 min read",
+      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&h=350&fit=crop",
+      description: "How a non-profit organization revitalized its leadership team and increased community impact."
+    },
   ];
 
   return (
@@ -350,6 +364,49 @@ export default function Resources() {
                   </div>
                 </div>
               ))}
+            </section>
+
+            {/* Case Studies with Images */}
+            <section className="space-y-6 mb-16">
+              <div className="flex items-center gap-3 mb-4">
+                <FileText className="w-8 h-8 text-primary" />
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground">Case Studies</h2>
+                  <p className="text-muted-foreground">Real-world examples of leadership transformation</p>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {caseStudies.map((study, idx) => (
+                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={study.image} 
+                        alt={study.title}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                          {study.type}
+                        </span>
+                      </div>
+                    </div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg group-hover:text-primary transition-colors">{study.title}</CardTitle>
+                      <CardDescription>{study.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{study.duration}</span>
+                        <Button variant="ghost" size="sm" className="group/btn">
+                          Read Case Study
+                          <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </section>
 
             {/* Newsletter CTA */}
