@@ -14,7 +14,7 @@ export default function Resources() {
       title: "Year-End Leadership Reflection", 
       type: "Article", 
       duration: "8 min read",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=350&fit=crop",
+      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=450&fit=crop&crop=faces",
       description: "Reflect on your leadership journey and set intentions for the year ahead.",
       link: "https://valuesblueprint.online/resources"
     },
