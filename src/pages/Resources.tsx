@@ -386,9 +386,9 @@ export default function Resources() {
                             </span>
                           </div>
                           {video.link && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                              <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-primary border-b-8 border-b-transparent ml-1" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-16 h-12 rounded-xl bg-[#FF0000] flex items-center justify-center group-hover:bg-[#CC0000] group-hover:scale-110 transition-all shadow-lg">
+                                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-white border-b-[10px] border-b-transparent ml-1" />
                               </div>
                             </div>
                           )}
