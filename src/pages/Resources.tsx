@@ -79,8 +79,9 @@ export default function Resources() {
       title: "Building Trust in Teams", 
       type: "Video", 
       duration: "12 min",
-      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=350&fit=crop",
-      description: "Essential techniques for building and maintaining trust within your team."
+      image: "https://img.youtube.com/vi/S7AkI6HHPMA/maxresdefault.jpg",
+      description: "Essential techniques for building and maintaining trust within your team.",
+      link: "https://www.youtube.com/watch?v=S7AkI6HHPMA"
     },
   ];
 
