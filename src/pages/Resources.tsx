@@ -71,8 +71,9 @@ export default function Resources() {
       title: "Navigating Change Successfully", 
       type: "Video", 
       duration: "20 min",
-      image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=350&fit=crop",
-      description: "Learn strategies for leading teams through organizational change and uncertainty."
+      image: "https://img.youtube.com/vi/pUmTQ-86-YI/maxresdefault.jpg",
+      description: "Learn strategies for leading teams through organizational change and uncertainty.",
+      link: "https://www.youtube.com/watch?v=pUmTQ-86-YI"
     },
     { 
       title: "Building Trust in Teams", 
