@@ -97,11 +97,12 @@ export default function Resources() {
       link: "https://www.in8create.com/blog/how-to-preserve-company-culture-when-scaling-fast"
     },
     { 
-      title: "Manufacturing Firm Transformation", 
+      title: "The Secret to Building a High-Performing Team", 
       type: "Case Study", 
       duration: "12 min read",
       image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&h=350&fit=crop",
-      description: "A traditional manufacturing company's journey to modern leadership practices and improved engagement."
+      description: "A traditional manufacturing company's journey to modern leadership practices and improved engagement.",
+      link: "https://hbr.org/2025/09/the-secret-to-building-a-high-performing-team"
     },
     { 
       title: "Non-Profit Leadership Renewal", 
