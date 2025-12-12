@@ -105,12 +105,11 @@ export default function Resources() {
       link: "https://hbr.org/2025/09/the-secret-to-building-a-high-performing-team"
     },
     { 
-      title: "Above Trust by Leading Org", 
+      title: "Non-Profit Leadership Renewal", 
       type: "Case Study", 
       duration: "10 min read",
       image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&h=350&fit=crop",
-      description: "Explore our suite of leadership tools: 6 Human Needs for community building, Values for identity engineering, Purpose Blueprint for life design, and SHIFT for daily transformation.",
-      isAppsShowcase: true
+      description: "How a non-profit organization revitalized its leadership team and increased community impact."
     },
   ];
 
