@@ -146,7 +146,7 @@ export default function HelloCoach() {
       <section className="py-20 px-6 lg:px-8 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#3A7CA5] mb-4 inline-block relative">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#3A7CA5] mb-4 pb-3 inline-block relative">
               Why Choose HelloCoach?
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#3A7CA5]" />
             </h2>
