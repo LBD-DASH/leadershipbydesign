@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Lightbulb, Target, Users, MessageSquare } from "lucide-react";
 
@@ -88,8 +89,15 @@ export default function ProgrammeDetail() {
   const Icon = programme.icon;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <>
+      <SEO
+        title={programme.title}
+        description={programme.description}
+        canonicalUrl={`/programmes/${id}`}
+        keywords={`${programme.title.toLowerCase()}, leadership programme, ${programme.format.toLowerCase()}, leadership development`}
+      />
+      <div className="min-h-screen bg-background">
+        <Header />
       
       <main className="pt-24 pb-16 px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -181,5 +189,6 @@ export default function ProgrammeDetail() {
         </div>
       </main>
     </div>
+    </>
   );
 }

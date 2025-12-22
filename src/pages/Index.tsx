@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Philosophy from "@/components/Philosophy";
@@ -8,15 +9,23 @@ import TestimonialSlider from "@/components/TestimonialSlider";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <Hero />
-      <Philosophy />
-      <Services />
-      <PartnerApps />
-      <ClientLogos />
-      <TestimonialSlider />
-    </div>
+    <>
+      <SEO
+        title="Leadership by Design"
+        description="Transform your leadership with expert executive coaching, team workshops, and bespoke leadership development programmes. Kevin Britz helps leaders achieve measurable results in South Africa."
+        canonicalUrl="/"
+        keywords="leadership development, executive coaching, team workshops, leadership training, South Africa, Kevin Britz"
+      />
+      <div className="min-h-screen">
+        <Header />
+        <Hero />
+        <Philosophy />
+        <Services />
+        <PartnerApps />
+        <ClientLogos />
+        <TestimonialSlider />
+      </div>
+    </>
   );
 };
 

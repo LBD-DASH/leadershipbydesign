@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Target, Lightbulb, Award, Heart } from "lucide-react";
 import TestimonialCard from "@/components/TestimonialCard";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 
 const values = [
   {
@@ -69,7 +70,14 @@ const partners = [
 
 export default function About() {
   return (
-    <div className="min-h-screen">
+    <>
+      <SEO
+        title="About Us"
+        description="Learn about Leadership by Design's philosophy, values, and approach to transforming leaders. We design people solutions through leadership design, training design, and coaching design."
+        canonicalUrl="/about"
+        keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching approach, leadership values"
+      />
+      <div className="min-h-screen">
       <Header />
       {/* Hero Section */}
       <section className="pt-24 pb-24 px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
@@ -296,5 +304,6 @@ export default function About() {
         </div>
       </section>
     </div>
+    </>
   );
 }

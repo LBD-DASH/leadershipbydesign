@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle, Mail, Phone, MapPin, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Contact() {
@@ -72,8 +73,15 @@ export default function Contact() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen">
-        <Header />
+      <>
+        <SEO
+          title="Contact Us"
+          description="Schedule a leadership consultation with Kevin Britz. Get in touch to discuss executive coaching, team workshops, and bespoke leadership development programmes."
+          canonicalUrl="/contact"
+          keywords="contact leadership by design, schedule consultation, executive coaching inquiry, Kevin Britz contact"
+        />
+        <div className="min-h-screen">
+          <Header />
         <div className="min-h-[80vh] flex items-center justify-center px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -99,11 +107,19 @@ export default function Contact() {
         </motion.div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <>
+      <SEO
+        title="Contact Us"
+        description="Schedule a leadership consultation with Kevin Britz. Get in touch to discuss executive coaching, team workshops, and bespoke leadership development programmes."
+        canonicalUrl="/contact"
+        keywords="contact leadership by design, schedule consultation, executive coaching inquiry, Kevin Britz contact"
+      />
+      <div className="min-h-screen">
       <Header />
       {/* Hero Section */}
       <section className="pt-24 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
@@ -332,5 +348,6 @@ export default function Contact() {
         </div>
       </section>
     </div>
+    </>
   );
 }

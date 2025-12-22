@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import { Lightbulb, Target, Users, MessageSquare } from "lucide-react";
 
@@ -47,8 +48,15 @@ const programmes = [
 
 export default function Programmes() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <>
+      <SEO
+        title="Programmes & Workshops"
+        description="Explore leadership development programmes including executive coaching, team effectiveness workshops, strategic leadership development, and bespoke programme design."
+        canonicalUrl="/programmes"
+        keywords="leadership programmes, executive coaching, team workshops, leadership development, strategic planning workshops"
+      />
+      <div className="min-h-screen bg-background">
+        <Header />
       
       <main className="pt-24 pb-16 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -130,5 +138,6 @@ export default function Programmes() {
         </div>
       </main>
     </div>
+    </>
   );
 }
