@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Users, Shield, Clock, CheckCircle, Sparkles, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,8 +64,15 @@ const steps = [
 
 export default function HelloCoach() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <>
+      <SEO
+        title="HelloCoach Ambassador"
+        description="Access professional coaching through HelloCoach with Kevin Britz as your ambassador. Book 40-minute confidential coaching sessions for personal and professional growth."
+        canonicalUrl="/hellocoach"
+        keywords="HelloCoach, professional coaching, personal development, career coaching, Kevin Britz ambassador"
+      />
+      <div className="min-h-screen bg-background">
+        <Header />
       
       {/* Hero Section with Ambassador Card */}
       <section className="pt-24 pb-16 px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
@@ -305,5 +313,6 @@ export default function HelloCoach() {
         </div>
       </section>
     </div>
+    </>
   );
 }

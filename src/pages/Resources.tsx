@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -115,13 +115,12 @@ export default function Resources() {
 
   return (
     <>
-      <Helmet>
-        <title>Resources - Leadership by Design | Articles, Guides & Tools</title>
-        <meta 
-          name="description" 
-          content="Access leadership development resources including articles, downloadable guides, videos, and case studies. Free tools and frameworks for emerging and executive leaders." 
-        />
-      </Helmet>
+      <SEO
+        title="Resources"
+        description="Access leadership development resources including articles, downloadable guides, videos, and case studies. Free tools and frameworks for emerging and executive leaders."
+        canonicalUrl="/resources"
+        keywords="leadership resources, leadership articles, leadership guides, leadership videos, case studies, free leadership tools"
+      />
 
       <div className="min-h-screen bg-background">
         <Header />
