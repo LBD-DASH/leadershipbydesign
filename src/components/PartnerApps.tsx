@@ -10,7 +10,7 @@ const partnerApps = [
     name: "6 Human Needs",
     logo: partnerLogo1,
     description: "Collaborative tools and resources for community building",
-    link: "https://sixhumanneeds.lovable.app",
+    link: "https://6humanneeds.online/",
     comingSoon: false
   },
   {
