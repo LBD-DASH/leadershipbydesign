@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/NavLink";
+import ldbLogo from "@/assets/ldb-logo.png";
 
 const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <NavLink to="/" className="text-xl font-semibold text-primary">
-          Leadership by Design
+        <NavLink to="/" className="flex items-center gap-2">
+          <img src={ldbLogo} alt="Leadership by Design" className="h-10 w-auto" />
         </NavLink>
         
         <div className="hidden md:flex items-center gap-8">
