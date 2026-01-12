@@ -127,9 +127,18 @@ const BlogPost = () => {
             {/* Content */}
             <div className="max-w-3xl mx-auto">
               <div 
-                className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary"
+                className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-p:mb-6 prose-p:leading-relaxed prose-strong:text-foreground prose-a:text-primary prose-em:text-foreground/90"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
+              <style>{`
+                .prose p:empty {
+                  display: block;
+                  min-height: 1.5rem;
+                }
+                .prose p {
+                  margin-bottom: 1.5rem;
+                }
+              `}</style>
             </div>
 
             {/* Author Bio */}
