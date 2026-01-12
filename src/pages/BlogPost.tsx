@@ -1,0 +1,136 @@
+import { useParams, Link } from "react-router-dom";
+import { Calendar, User, ArrowLeft, Share2 } from "lucide-react";
+import SEO from "@/components/SEO";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { blogPosts } from "@/data/blogPosts";
+import ReactMarkdown from "react-markdown";
+
+const BlogPost = () => {
+  const { id } = useParams<{ id: string }>();
+  const post = blogPosts.find((p) => p.id === id);
+
+  if (!post) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Post not found</h1>
+            <Link to="/blog" className="text-primary hover:underline">
+              ← Back to Blog
+            </Link>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
+
+  return (
+    <>
+      <SEO
+        title={`${post.title} | Leadership by Design`}
+        description={post.excerpt}
+        canonicalUrl={`/blog/${post.id}`}
+        keywords={post.tags.join(", ")}
+        author={post.author}
+      />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+
+        <article className="pt-32 pb-16 flex-1">
+          <div className="container mx-auto px-6">
+            {/* Back Link */}
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Blog
+            </Link>
+
+            {/* Header */}
+            <header className="max-w-3xl mx-auto mb-12">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {post.tags.map((tag) => (
+                  <Badge key={tag} variant="secondary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
+                {post.title}
+              </h1>
+
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">{post.author}</p>
+                    <p className="text-sm line-clamp-1">{post.authorRole}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>{post.date}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleShare}
+                  className="sm:ml-auto"
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
+              </div>
+            </header>
+
+            {/* Content */}
+            <div className="max-w-3xl mx-auto">
+              <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary">
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              </div>
+            </div>
+
+            {/* Author Bio */}
+            <div className="max-w-3xl mx-auto mt-16 pt-8 border-t">
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-foreground">
+                    {post.author}
+                  </h3>
+                  <p className="text-muted-foreground mt-1">{post.authorRole}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <Footer />
+      </div>
+    </>
+  );
+};
+
+export default BlogPost;

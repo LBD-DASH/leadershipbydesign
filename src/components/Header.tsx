@@ -46,6 +46,13 @@ const Header = () => {
             Resources
           </NavLink>
           <NavLink 
+            to="/blog" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground"
+          >
+            Blog
+          </NavLink>
+          <NavLink 
             to="/contact" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             activeClassName="text-foreground"
