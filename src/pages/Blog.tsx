@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, User, ArrowRight, Settings } from "lucide-react";
 import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 
 const Blog = () => {
@@ -28,9 +29,15 @@ const Blog = () => {
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Leadership Insights
               </h1>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-xl text-muted-foreground mb-6">
                 Thoughts, frameworks, and stories from over a decade of working with leaders and organisations.
               </p>
+              <Link to="/blog-admin">
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Manage Posts
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
