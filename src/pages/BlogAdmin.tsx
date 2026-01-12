@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const BlogAdmin = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -375,16 +376,13 @@ const BlogAdmin = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="content">Content * (Markdown supported)</Label>
-                    <Textarea
-                      id="content"
-                      name="content"
-                      value={formData.content || ""}
-                      onChange={handleChange}
-                      placeholder="Full blog post content..."
-                      rows={20}
-                      className="font-mono text-sm whitespace-pre-wrap"
-                      style={{ whiteSpace: 'pre-wrap' }}
+                    <Label htmlFor="content">Content *</Label>
+                    <RichTextEditor
+                      content={formData.content || ""}
+                      onChange={(content) =>
+                        setFormData((prev) => ({ ...prev, content }))
+                      }
+                      placeholder="Start writing your blog post..."
                     />
                   </div>
                 </CardContent>
