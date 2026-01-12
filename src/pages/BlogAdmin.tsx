@@ -383,7 +383,8 @@ const BlogAdmin = () => {
                       onChange={handleChange}
                       placeholder="Full blog post content..."
                       rows={20}
-                      className="font-mono text-sm"
+                      className="font-mono text-sm whitespace-pre-wrap"
+                      style={{ whiteSpace: 'pre-wrap' }}
                     />
                   </div>
                 </CardContent>
