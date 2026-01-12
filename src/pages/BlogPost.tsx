@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useBlogPost } from "@/hooks/useBlogPosts";
-import ReactMarkdown from "react-markdown";
 
 const BlogPost = () => {
   const { id } = useParams<{ id: string }>();
@@ -127,9 +126,10 @@ const BlogPost = () => {
 
             {/* Content */}
             <div className="max-w-3xl mx-auto">
-              <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-p:whitespace-pre-line">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
-              </div>
+              <div 
+                className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             </div>
 
             {/* Author Bio */}
