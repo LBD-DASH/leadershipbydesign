@@ -5,14 +5,25 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { blogPosts } from "@/data/blogPosts";
+import { useBlogPost } from "@/hooks/useBlogPosts";
 import ReactMarkdown from "react-markdown";
 
 const BlogPost = () => {
   const { id } = useParams<{ id: string }>();
-  const post = blogPosts.find((p) => p.id === id);
+  const { data: post, isLoading, error } = useBlogPost(id);
 
-  if (!post) {
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        </div>
+      </>
+    );
+  }
+
+  if (error || !post) {
     return (
       <>
         <Header />
@@ -45,8 +56,8 @@ const BlogPost = () => {
       <SEO
         title={`${post.title} | Leadership by Design`}
         description={post.excerpt}
-        canonicalUrl={`/blog/${post.id}`}
-        keywords={post.tags.join(", ")}
+        canonicalUrl={`/blog/${post.slug}`}
+        keywords={post.tags?.join(", ")}
         author={post.author}
       />
       <div className="min-h-screen flex flex-col">
@@ -63,10 +74,21 @@ const BlogPost = () => {
               Back to Blog
             </Link>
 
+            {/* Featured Image */}
+            {post.featured_image && (
+              <div className="max-w-4xl mx-auto mb-8">
+                <img
+                  src={post.featured_image}
+                  alt={post.title}
+                  className="w-full aspect-video object-cover rounded-xl shadow-lg"
+                />
+              </div>
+            )}
+
             {/* Header */}
             <header className="max-w-3xl mx-auto mb-12">
               <div className="flex flex-wrap gap-2 mb-4">
-                {post.tags.map((tag) => (
+                {post.tags?.map((tag) => (
                   <Badge key={tag} variant="secondary">
                     {tag}
                   </Badge>
@@ -84,7 +106,7 @@ const BlogPost = () => {
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{post.author}</p>
-                    <p className="text-sm line-clamp-1">{post.authorRole}</p>
+                    <p className="text-sm line-clamp-1">{post.author_role}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -120,7 +142,7 @@ const BlogPost = () => {
                   <h3 className="font-semibold text-lg text-foreground">
                     {post.author}
                   </h3>
-                  <p className="text-muted-foreground mt-1">{post.authorRole}</p>
+                  <p className="text-muted-foreground mt-1">{post.author_role}</p>
                 </div>
               </div>
             </div>
