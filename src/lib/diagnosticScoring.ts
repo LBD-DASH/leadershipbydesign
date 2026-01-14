@@ -52,7 +52,7 @@ export function getRecommendation(scores: DiagnosticScores): DiagnosticResult {
 export const workshopDetails = {
   clarity: {
     title: 'The Alignment Reset Workshop',
-    duration: '90 minutes',
+    duration: 'Morning workshop',
     summary: 'For teams working hard but not in the same direction. Addresses conflicting priorities, unclear success metrics, and reactive ways of working.',
     indicators: [
       'Conflicting priorities',
@@ -68,7 +68,7 @@ export const workshopDetails = {
   },
   motivation: {
     title: 'The Motivation & Energy Reset Workshop',
-    duration: '90 minutes',
+    duration: 'Morning workshop',
     summary: 'For teams that understand the work but lack energy and emotional commitment. Addresses fatigue, compliance without commitment, and unmet human needs.',
     indicators: [
       'Emotional fatigue',
@@ -84,7 +84,7 @@ export const workshopDetails = {
   },
   leadership: {
     title: 'The Leadership & Accountability Reset Workshop',
-    duration: '90 minutes',
+    duration: 'Morning workshop',
     summary: 'For capable teams where ownership is inconsistent. Addresses delayed decisions, avoided conversations, and dependency on authority.',
     indicators: [
       'Delayed decisions',
