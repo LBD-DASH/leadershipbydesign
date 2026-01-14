@@ -7,6 +7,9 @@ import Index from "./pages/Index";
 import TeamDiagnostic from "./pages/TeamDiagnostic";
 import Programmes from "./pages/Programmes";
 import ProgrammeDetail from "./pages/ProgrammeDetail";
+import AlignmentWorkshop from "./pages/workshops/AlignmentWorkshop";
+import MotivationWorkshop from "./pages/workshops/MotivationWorkshop";
+import LeadershipWorkshop from "./pages/workshops/LeadershipWorkshop";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import HelloCoach from "./pages/HelloCoach";
@@ -32,6 +35,9 @@ const App = () => (
           <Route path="/team-diagnostic" element={<TeamDiagnostic />} />
           <Route path="/programmes" element={<Programmes />} />
           <Route path="/programmes/:id" element={<ProgrammeDetail />} />
+          <Route path="/workshops/alignment" element={<AlignmentWorkshop />} />
+          <Route path="/workshops/motivation" element={<MotivationWorkshop />} />
+          <Route path="/workshops/leadership" element={<LeadershipWorkshop />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/hellocoach" element={<HelloCoach />} />
