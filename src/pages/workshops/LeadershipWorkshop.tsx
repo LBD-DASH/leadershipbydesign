@@ -30,10 +30,10 @@ export default function LeadershipWorkshop() {
               <div className="p-4 rounded-2xl bg-primary/10">
                 <Shield className="w-8 h-8 text-primary" />
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Clock className="w-5 h-5" />
-                <span>90 minutes</span>
-              </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="w-5 h-5" />
+              <span>Morning workshop</span>
+            </div>
             </div>
             
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
