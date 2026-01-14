@@ -18,12 +18,16 @@ export default function TeamDiagnostic() {
   const handleSubmit = async (answers: Record<number, number>) => {
     setIsSubmitting(true);
 
-    try {
-      const scores = calculateScores(answers);
-      const diagnosticResult = getRecommendation(scores);
+    const scores = calculateScores(answers);
+    const diagnosticResult = getRecommendation(scores);
 
-      // Save to database
-      const { data, error } = await supabase
+    // Show results immediately - don't block on database
+    setResult(diagnosticResult);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Save to database in background (non-blocking)
+    try {
+      const { data } = await supabase
         .from('diagnostic_submissions')
         .insert({
           answers,
@@ -36,16 +40,12 @@ export default function TeamDiagnostic() {
         .select('id')
         .single();
 
-      if (error) throw error;
-
-      setSubmissionId(data.id);
-      setResult(diagnosticResult);
-      
-      // Scroll to top to see results
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (data) {
+        setSubmissionId(data.id);
+      }
     } catch (error) {
-      console.error('Error submitting diagnostic:', error);
-      toast.error("Something went wrong. Please try again.");
+      // Silent fail - results are already shown
+      console.error('Error saving diagnostic:', error);
     } finally {
       setIsSubmitting(false);
     }
