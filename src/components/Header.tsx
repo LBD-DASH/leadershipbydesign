@@ -18,6 +18,13 @@ const Header = () => {
             Home
           </NavLink>
           <NavLink 
+            to="/team-diagnostic" 
+            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+            activeClassName="text-primary"
+          >
+            Team Diagnostic
+          </NavLink>
+          <NavLink 
             to="/programmes" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             activeClassName="text-foreground"
