@@ -7,6 +7,56 @@ import SEO from "@/components/SEO";
 import heroImage from "@/assets/workshop-motivation-hero.jpg";
 
 export default function MotivationWorkshop() {
+  const outcomes = [
+    {
+      title: "Re-engagement",
+      description: "Reconnect your team to the purpose behind the work and why it matters."
+    },
+    {
+      title: "Meaning & Recognition",
+      description: "Create systems for acknowledging contributions and celebrating progress."
+    },
+    {
+      title: "Sustainable Energy",
+      description: "Build practices that maintain momentum without burning people out."
+    },
+    {
+      title: "Emotional Investment",
+      description: "Shift from compliance to genuine commitment and discretionary effort."
+    },
+    {
+      title: "Team Connection",
+      description: "Strengthen the human bonds that make teams resilient under pressure."
+    },
+    {
+      title: "Morale Resilience",
+      description: "Build a foundation that isn't easily shaken by setbacks or pressure."
+    }
+  ];
+
+  const steps = [
+    {
+      step: "01",
+      title: "Energy Audit",
+      description: "We identify what's draining your team's energy and what (if anything) is currently energising them."
+    },
+    {
+      step: "02",
+      title: "Purpose Reconnection",
+      description: "We reconnect individuals and the team to the meaningful impact of their work."
+    },
+    {
+      step: "03",
+      title: "Recognition Design",
+      description: "We create practical, sustainable ways to acknowledge contributions that actually land."
+    },
+    {
+      step: "04",
+      title: "Sustainability Plan",
+      description: "We establish practices that protect energy over time, not just boost it temporarily."
+    }
+  ];
+
   return (
     <>
       <SEO
@@ -16,111 +66,125 @@ export default function MotivationWorkshop() {
       />
       <Header />
       <main className="min-h-screen bg-background">
-        {/* Hero Section with Image */}
-        <section className="relative">
-          {/* Hero Image */}
-          <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
-            <img 
-              src={heroImage} 
-              alt="Energized team motivation workshop"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background" />
-          </div>
-          
-          {/* Hero Content */}
-          <div className="container mx-auto px-4 sm:px-6 -mt-20 relative z-10">
-            <div className="bg-background rounded-2xl p-6 sm:p-10 shadow-lg border border-border">
-              <Link 
-                to="/team-diagnostic" 
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Diagnostic
-              </Link>
-              
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-primary/10">
-                  <Zap className="w-8 h-8 text-primary" />
+        {/* Hero Section */}
+        <section className="relative bg-muted/30">
+          <div className="container mx-auto px-4 sm:px-6 py-8">
+            <Link 
+              to="/team-diagnostic" 
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Diagnostic
+            </Link>
+            
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Content */}
+              <div className="order-2 lg:order-1">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <Zap className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4" />
+                    <span>Morning workshop</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="w-5 h-5" />
-                  <span>Morning workshop</span>
+                
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
+                  The Motivation & Energy Reset Workshop
+                </h1>
+                
+                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                  For teams that understand the work but lack energy and emotional commitment. This workshop 
+                  addresses fatigue, compliance without commitment, and unmet human needs.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button size="lg" asChild>
+                    <Link to="/contact">
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Book a Consultation
+                    </Link>
+                  </Button>
                 </div>
               </div>
               
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-                The Motivation & Energy Reset Workshop
-              </h1>
-              
-              <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                For teams that understand the work but lack energy and emotional commitment. This workshop 
-                addresses fatigue, compliance without commitment, and unmet human needs.
-              </p>
+              {/* Image */}
+              <div className="order-1 lg:order-2">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src={heroImage} 
+                    alt="Energized team motivation workshop"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* The Problem Section */}
+        {/* The Problem + Who It's For */}
         <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
-                The Problem This Workshop Solves
-              </h2>
-              <div className="prose prose-lg text-muted-foreground space-y-4">
-                <p>
-                  People do what's required, but rarely more. Energy in the team feels flat or forced. 
-                  Good work goes unnoticed. There's a pervasive sense of "why bother" when extra effort 
-                  is required.
-                </p>
-                <p>
-                  This isn't about lazy people or poor performers. It's about disconnection—from meaning, 
-                  from recognition, from the reasons why the work matters. And that can be fixed.
-                </p>
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
+                  The Problem This Solves
+                </h2>
+                <div className="space-y-4 text-muted-foreground">
+                  <p>
+                    People do what's required, but rarely more. Energy in the team feels flat or forced. 
+                    Good work goes unnoticed. There's a pervasive sense of "why bother" when extra effort 
+                    is required.
+                  </p>
+                  <p>
+                    This isn't about lazy people or poor performers. It's about disconnection—from meaning, 
+                    from recognition, from the reasons why the work matters. And that can be fixed.
+                  </p>
+                </div>
+              </div>
+              
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
+                  Who This Is For
+                </h2>
+                <div className="flex items-start gap-4">
+                  <div className="p-2 rounded-lg bg-primary/10 mt-1">
+                    <Users className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-muted-foreground">
+                    Teams where people know what to do but lack the emotional energy or commitment to do 
+                    it well. Ideal for groups experiencing fatigue, low morale, or a sense that effort 
+                    goes unrecognised.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* What You'll Achieve Section */}
+        {/* What You'll Achieve */}
         <section className="py-16 sm:py-20 bg-muted/30">
           <div className="container mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-10">
-              What You'll Achieve
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Re-engagement",
-                  description: "Reconnect your team to the purpose behind the work and why it matters."
-                },
-                {
-                  title: "Meaning & Recognition",
-                  description: "Create systems for acknowledging contributions and celebrating progress."
-                },
-                {
-                  title: "Sustainable Energy",
-                  description: "Build practices that maintain momentum without burning people out."
-                },
-                {
-                  title: "Emotional Investment",
-                  description: "Shift from compliance to genuine commitment and discretionary effort."
-                },
-                {
-                  title: "Team Connection",
-                  description: "Strengthen the human bonds that make teams resilient under pressure."
-                },
-                {
-                  title: "Morale Resilience",
-                  description: "Build a foundation that isn't easily shaken by setbacks or pressure."
-                }
-              ].map((outcome, index) => (
-                <div key={index} className="bg-background rounded-xl p-6 border border-border">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+                What You'll Achieve
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Reignite your team's energy and create sustainable practices for long-term motivation.
+              </p>
+            </div>
+            
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {outcomes.map((outcome, index) => (
+                <div 
+                  key={index} 
+                  className="bg-background rounded-xl p-6 border border-border hover:border-primary/30 transition-colors"
+                >
                   <div className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground mb-2">{outcome.title}</h3>
+                      <h3 className="font-semibold text-foreground mb-1">{outcome.title}</h3>
                       <p className="text-sm text-muted-foreground">{outcome.description}</p>
                     </div>
                   </div>
@@ -130,88 +194,48 @@ export default function MotivationWorkshop() {
           </div>
         </section>
 
-        {/* How It Works Section */}
+        {/* How It Works + Includes */}
         <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-10">
-              How It Works
-            </h2>
-            <div className="max-w-3xl space-y-8">
-              {[
-                {
-                  step: "01",
-                  title: "Energy Audit",
-                  description: "We identify what's draining your team's energy and what (if anything) is currently energising them."
-                },
-                {
-                  step: "02",
-                  title: "Purpose Reconnection",
-                  description: "We reconnect individuals and the team to the meaningful impact of their work."
-                },
-                {
-                  step: "03",
-                  title: "Recognition Design",
-                  description: "We create practical, sustainable ways to acknowledge contributions that actually land."
-                },
-                {
-                  step: "04",
-                  title: "Sustainability Plan",
-                  description: "We establish practices that protect energy over time, not just boost it temporarily."
-                }
-              ].map((step, index) => (
-                <div key={index} className="flex gap-6">
-                  <div className="text-4xl font-bold text-primary/20">{step.step}</div>
-                  <div>
-                    <h3 className="font-semibold text-lg text-foreground mb-2">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.description}</p>
-                  </div>
+            <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
+              {/* How It Works */}
+              <div className="lg:col-span-3">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">
+                  How It Works
+                </h2>
+                <div className="space-y-6">
+                  {steps.map((step, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary">{step.step}</span>
+                      </div>
+                      <div className="pt-2">
+                        <h3 className="font-semibold text-foreground mb-1">{step.title}</h3>
+                        <p className="text-sm text-muted-foreground">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Who It's For Section */}
-        <section className="py-16 sm:py-20 bg-muted/30">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
-                Who This Workshop Is For
-              </h2>
-              <div className="flex items-start gap-4 mb-6">
-                <Users className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
-                <p className="text-lg text-muted-foreground">
-                  Teams where people know what to do but lack the emotional energy or commitment to do 
-                  it well. Ideal for groups experiencing fatigue, low morale, or a sense that effort 
-                  goes unrecognised.
-                </p>
               </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Includes Section */}
-        <section className="py-16 sm:py-20">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
-                What's Included
-              </h2>
-              <div className="bg-primary/5 rounded-2xl p-8 border border-primary/20">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <CheckCircle className="w-6 h-6 text-primary" />
+              {/* What's Included */}
+              <div className="lg:col-span-2">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">
+                  What's Included
+                </h2>
+                <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-primary/20">
+                      <CheckCircle className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">6 Human Needs Assessment</h3>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">6 Human Needs Assessment</h3>
-                    <p className="text-muted-foreground">
-                      Every participant completes our 6 Human Needs Assessment before the workshop. 
-                      Based on proven psychological research, this reveals which of the six core human 
-                      needs—Certainty, Variety, Significance, Connection, Growth, and Contribution—are 
-                      being met or unmet for each team member. This insight drives targeted interventions 
-                      that actually move the needle on engagement.
-                    </p>
-                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Every participant completes our 6 Human Needs Assessment before the workshop. 
+                    Based on proven psychological research, this reveals which of the six core human 
+                    needs—Certainty, Variety, Significance, Connection, Growth, and Contribution—are 
+                    being met or unmet for each team member.
+                  </p>
                 </div>
               </div>
             </div>
@@ -219,7 +243,7 @@ export default function MotivationWorkshop() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 sm:py-24">
+        <section className="py-16 sm:py-20 bg-primary/5">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
