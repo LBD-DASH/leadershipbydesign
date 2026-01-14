@@ -64,6 +64,9 @@ export const workshopDetails = {
       'Decision clarity',
       'Aligned expectations'
     ],
+    includes: [
+      'Values Assessment'
+    ],
     resultSummary: 'Your team is working hard, but not in the same direction. Confusion and misalignment are draining energy and slowing execution.'
   },
   motivation: {
@@ -80,6 +83,9 @@ export const workshopDetails = {
       'Meaning and recognition',
       'Sustainable energy'
     ],
+    includes: [
+      '6 Human Needs Assessment'
+    ],
     resultSummary: 'Your team understands the work - but energy, engagement, and emotional commitment are low.'
   },
   leadership: {
@@ -95,6 +101,9 @@ export const workshopDetails = {
       'Clear ownership',
       'Faster decisions',
       'Stronger leadership behaviour'
+    ],
+    includes: [
+      'Leadership Index'
     ],
     resultSummary: 'Your team is capable, but ownership and accountability are inconsistent. Avoidance is slowing performance.'
   }

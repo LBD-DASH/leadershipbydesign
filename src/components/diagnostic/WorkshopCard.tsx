@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, CheckCircle, ArrowRight } from "lucide-react";
+import { Clock, CheckCircle, ArrowRight, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import alignmentImage from "@/assets/workshop-alignment.jpg";
@@ -14,6 +14,7 @@ interface WorkshopCardProps {
   duration: string;
   summary: string;
   delivers: string[];
+  includes?: string[];
   isRecommended: boolean;
   onFindOutMore: (workshopKey: 'clarity' | 'motivation' | 'leadership') => void;
 }
@@ -36,6 +37,7 @@ export default function WorkshopCard({
   duration,
   summary,
   delivers,
+  includes,
   isRecommended,
   onFindOutMore
 }: WorkshopCardProps) {
@@ -88,7 +90,7 @@ export default function WorkshopCard({
           {summary}
         </p>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-3">
             This workshop delivers:
           </p>
@@ -104,6 +106,28 @@ export default function WorkshopCard({
             ))}
           </ul>
         </div>
+
+        {includes && includes.length > 0 && (
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-3">
+              Includes:
+            </p>
+            <ul className="space-y-2">
+              {includes.map((item, index) => (
+                <li key={index} className="flex items-center gap-2 text-sm">
+                  <FileText className={cn(
+                    "w-4 h-4 flex-shrink-0",
+                    isRecommended ? "text-primary" : "text-muted-foreground"
+                  )} />
+                  <span className={cn(
+                    "font-medium",
+                    isRecommended ? "text-primary" : "text-foreground"
+                  )}>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-auto">
           <Button

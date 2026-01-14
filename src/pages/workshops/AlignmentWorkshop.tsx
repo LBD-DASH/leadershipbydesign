@@ -176,6 +176,33 @@ export default function AlignmentWorkshop() {
           </div>
         </section>
 
+        {/* Includes Section */}
+        <section className="py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-4xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
+                What's Included
+              </h2>
+              <div className="bg-primary/5 rounded-2xl p-8 border border-primary/20">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <CheckCircle className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">Values Assessment</h3>
+                    <p className="text-muted-foreground">
+                      Every participant completes our proprietary Values Assessment before the workshop. 
+                      This reveals individual and collective values, helping the team understand what 
+                      drives decision-making and where values may be creating invisible friction. 
+                      The assessment forms the foundation for meaningful alignment conversations.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="py-16 sm:py-24">
           <div className="container mx-auto px-4 sm:px-6">
