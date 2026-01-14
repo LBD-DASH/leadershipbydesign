@@ -28,8 +28,8 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight tracking-tight px-2"
         >
-          Transforming Leaders,<br />
-          <span className="text-white/90">Driving Results</span>
+          Your Team Doesn't Need More Training.<br />
+          <span className="text-white/90">It Needs the Right Intervention.</span>
         </motion.h1>
         
         <motion.p
@@ -38,8 +38,8 @@ export default function Hero() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-base sm:text-lg md:text-xl text-white/95 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
         >
-          We believe that exceptional leadership is not innate—it is designed. Our bespoke strategies 
-          empower leaders to navigate complexity and inspire lasting change.
+          Answer 15 questions and get a clear recommendation in under 5 minutes. 
+          Discover whether your team needs alignment, energy, or accountability.
         </motion.p>
         
         <motion.div
@@ -48,12 +48,12 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 0.8 }}
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4"
         >
-          <Link to={createPageUrl("Contact")} className="w-full sm:w-auto">
+          <Link to="/team-diagnostic" className="w-full sm:w-auto">
             <Button 
               size="lg" 
               className="w-full sm:w-auto bg-white text-primary hover:bg-gray-50 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
-              Schedule Consultation
+              Run the Free Team Diagnostic
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>

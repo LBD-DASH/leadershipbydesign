@@ -62,6 +62,51 @@ export type Database = {
         }
         Relationships: []
       }
+      diagnostic_submissions: {
+        Row: {
+          answers: Json
+          clarity_score: number
+          company: string | null
+          contacted_expert: boolean | null
+          created_at: string
+          email: string | null
+          id: string
+          leadership_score: number
+          motivation_score: number
+          name: string | null
+          primary_recommendation: string
+          secondary_recommendation: string | null
+        }
+        Insert: {
+          answers: Json
+          clarity_score: number
+          company?: string | null
+          contacted_expert?: boolean | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          leadership_score: number
+          motivation_score: number
+          name?: string | null
+          primary_recommendation: string
+          secondary_recommendation?: string | null
+        }
+        Update: {
+          answers?: Json
+          clarity_score?: number
+          company?: string | null
+          contacted_expert?: boolean | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          leadership_score?: number
+          motivation_score?: number
+          name?: string | null
+          primary_recommendation?: string
+          secondary_recommendation?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

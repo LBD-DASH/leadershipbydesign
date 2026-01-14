@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
-import { Lightbulb, Target, Users, MessageSquare } from "lucide-react";
+import { Lightbulb, Target, Users, MessageSquare, ClipboardCheck, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const programmes = [
   {
@@ -72,6 +73,23 @@ export default function Programmes() {
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Explore our comprehensive programmes designed to develop leaders at every level—from emerging managers to seasoned executives.
             </p>
+          </div>
+
+          {/* Diagnostic CTA Section */}
+          <div className="bg-primary/5 rounded-2xl p-8 sm:p-10 text-center border border-primary/20 mb-12">
+            <ClipboardCheck className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-foreground mb-3">
+              Not Sure What Your Team Needs?
+            </h3>
+            <p className="text-muted-foreground max-w-xl mx-auto mb-6">
+              Take our free 5-minute diagnostic to discover the single intervention that will make the biggest difference for your team.
+            </p>
+            <Link to="/team-diagnostic">
+              <Button size="lg" className="px-8 py-6 text-lg font-semibold rounded-full group">
+                Take the Team Diagnostic
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
 
           {/* Programme Grid */}
