@@ -20,6 +20,7 @@ import BlogAdminList from "./pages/BlogAdminList";
 import BlogAdmin from "./pages/BlogAdmin";
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/team-diagnostic" element={<TeamDiagnostic />} />
