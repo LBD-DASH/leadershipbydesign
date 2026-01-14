@@ -105,6 +105,7 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
               duration={workshopDetails[key].duration}
               summary={workshopDetails[key].summary}
               delivers={workshopDetails[key].delivers}
+              includes={workshopDetails[key].includes}
               isRecommended={key === primaryRecommendation}
               onFindOutMore={handleFindOutMore}
             />
