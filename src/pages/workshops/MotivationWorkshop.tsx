@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
-import { Zap, Clock, Users, CheckCircle, ArrowLeft, Calendar } from "lucide-react";
+import { Zap, Clock, Users, CheckCircle, ArrowLeft, Calendar, Target, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import heroImage from "@/assets/workshop-motivation-hero.jpg";
+import alignmentImage from "@/assets/workshop-alignment.jpg";
+import leadershipImage from "@/assets/workshop-leadership.jpg";
 
 export default function MotivationWorkshop() {
   const outcomes = [
@@ -238,6 +240,76 @@ export default function MotivationWorkshop() {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Other Workshops */}
+        <section className="py-16 sm:py-20 border-t border-border">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
+                Explore Other Workshops
+              </h2>
+              <p className="text-muted-foreground">
+                Discover more ways to transform your team's performance.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <Link 
+                to="/workshops/alignment" 
+                className="group relative rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all"
+              >
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img 
+                    src={alignmentImage} 
+                    alt="Alignment Reset Workshop"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Target className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="text-xs text-muted-foreground">Morning workshop</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    The Alignment Reset
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    For teams working hard but not in the same direction.
+                  </p>
+                </div>
+              </Link>
+              
+              <Link 
+                to="/workshops/leadership" 
+                className="group relative rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-all"
+              >
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img 
+                    src={leadershipImage} 
+                    alt="Leadership & Accountability Reset Workshop"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Shield className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="text-xs text-muted-foreground">Morning workshop</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    Leadership & Accountability Reset
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    For capable teams where ownership is inconsistent and decisions get stuck.
+                  </p>
+                </div>
+              </Link>
             </div>
           </div>
         </section>
