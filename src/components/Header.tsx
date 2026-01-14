@@ -1,7 +1,24 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import ldbLogo from "@/assets/ldb-logo.png";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const isServicesActive = ["/team-diagnostic", "/programmes", "/hellocoach", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership"].some(
+    path => location.pathname.startsWith(path)
+  );
+
+  const isResourcesActive = ["/resources", "/blog"].some(
+    path => location.pathname.startsWith(path)
+  );
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -9,7 +26,8 @@ const Header = () => {
           <img src={ldbLogo} alt="Leadership by Design" className="h-10 w-auto" />
         </NavLink>
         
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-6">
           <NavLink 
             to="/" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -17,20 +35,85 @@ const Header = () => {
           >
             Home
           </NavLink>
-          <NavLink 
-            to="/team-diagnostic" 
-            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-            activeClassName="text-primary"
+
+          {/* Services Dropdown */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
           >
-            Team Diagnostic
-          </NavLink>
-          <NavLink 
-            to="/programmes" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
+            <button 
+              className={cn(
+                "flex items-center gap-1 text-sm font-medium transition-colors",
+                isServicesActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Services
+              <ChevronDown className={cn("w-4 h-4 transition-transform", servicesOpen && "rotate-180")} />
+            </button>
+            
+            {servicesOpen && (
+              <div className="absolute top-full left-0 pt-2">
+                <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[200px]">
+                  <Link 
+                    to="/team-diagnostic" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Team Diagnostic
+                  </Link>
+                  <Link 
+                    to="/programmes" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Programmes
+                  </Link>
+                  <Link 
+                    to="/hellocoach" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    HelloCoach
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Resources Dropdown */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setResourcesOpen(true)}
+            onMouseLeave={() => setResourcesOpen(false)}
           >
-            Programmes
-          </NavLink>
+            <button 
+              className={cn(
+                "flex items-center gap-1 text-sm font-medium transition-colors",
+                isResourcesActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Resources
+              <ChevronDown className={cn("w-4 h-4 transition-transform", resourcesOpen && "rotate-180")} />
+            </button>
+            
+            {resourcesOpen && (
+              <div className="absolute top-full left-0 pt-2">
+                <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[160px]">
+                  <Link 
+                    to="/resources" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Free Resources
+                  </Link>
+                  <Link 
+                    to="/blog" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Blog
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
           <NavLink 
             to="/about" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -38,27 +121,7 @@ const Header = () => {
           >
             About
           </NavLink>
-          <NavLink 
-            to="/hellocoach" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
-          >
-            HelloCoach
-          </NavLink>
-          <NavLink 
-            to="/resources" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
-          >
-            Resources
-          </NavLink>
-          <NavLink 
-            to="/blog" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
-          >
-            Blog
-          </NavLink>
+
           <NavLink 
             to="/contact" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -67,7 +130,89 @@ const Header = () => {
             Contact
           </NavLink>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden p-2"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </nav>
+
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-background border-t border-border">
+          <div className="container mx-auto px-6 py-4 space-y-4">
+            <Link 
+              to="/" 
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Services</p>
+              <Link 
+                to="/team-diagnostic" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Team Diagnostic
+              </Link>
+              <Link 
+                to="/programmes" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Programmes
+              </Link>
+              <Link 
+                to="/hellocoach" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                HelloCoach
+              </Link>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resources</p>
+              <Link 
+                to="/resources" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Free Resources
+              </Link>
+              <Link 
+                to="/blog" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+            </div>
+
+            <Link 
+              to="/about" 
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+
+            <Link 
+              to="/contact" 
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
