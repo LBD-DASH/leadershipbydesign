@@ -4,46 +4,60 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import heroImage from "@/assets/workshop-alignment-hero.jpg";
 
 export default function AlignmentWorkshop() {
   return (
     <>
       <SEO
         title="The Alignment Reset Workshop | Leadership by Design"
-        description="A 90-minute workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working."
+        description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working."
         canonicalUrl="https://leadershipbydesign.lovable.app/workshops/alignment"
       />
       <Header />
       <main className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="py-16 sm:py-24 bg-gradient-to-b from-primary/5 to-background">
-          <div className="container mx-auto px-4 sm:px-6">
-            <Link 
-              to="/team-diagnostic" 
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Diagnostic
-            </Link>
-            
-            <div className="flex items-center gap-4 mb-6">
-              <div className="p-4 rounded-2xl bg-primary/10">
-                <Target className="w-8 h-8 text-primary" />
+        {/* Hero Section with Image */}
+        <section className="relative">
+          {/* Hero Image */}
+          <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden">
+            <img 
+              src={heroImage} 
+              alt="Team alignment workshop session"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background" />
+          </div>
+          
+          {/* Hero Content */}
+          <div className="container mx-auto px-4 sm:px-6 -mt-20 relative z-10">
+            <div className="bg-background rounded-2xl p-6 sm:p-10 shadow-lg border border-border">
+              <Link 
+                to="/team-diagnostic" 
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Diagnostic
+              </Link>
+              
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 rounded-2xl bg-primary/10">
+                  <Target className="w-8 h-8 text-primary" />
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Clock className="w-5 h-5" />
+                  <span>Morning workshop</span>
+                </div>
               </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="w-5 h-5" />
-              <span>Morning workshop</span>
+              
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+                The Alignment Reset Workshop
+              </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
+                For teams working hard but not in the same direction. This workshop addresses conflicting 
+                priorities, unclear success metrics, and reactive ways of working.
+              </p>
             </div>
-            </div>
-            
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              The Alignment Reset Workshop
-            </h1>
-            
-            <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
-              For teams working hard but not in the same direction. This workshop addresses conflicting 
-              priorities, unclear success metrics, and reactive ways of working.
-            </p>
           </div>
         </section>
 
