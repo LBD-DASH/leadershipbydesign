@@ -28,43 +28,23 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight tracking-tight px-2"
         >
-          Your Team Doesn't Need More Training.<br />
-          <span className="text-white/90">It Needs the Right Intervention.</span>
+          Transforming Leaders<br />
+          <span className="text-white/90">Driving Results</span>
         </motion.h1>
-        
-        <motion.p
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-base sm:text-lg md:text-xl text-white/95 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed font-light px-4"
-        >
-          Answer 15 questions and get a clear recommendation in under 5 minutes. 
-          Discover whether your team needs alignment, energy, or accountability.
-        </motion.p>
         
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4"
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="flex justify-center items-center px-4"
         >
           <Link to="/team-diagnostic" className="w-full sm:w-auto">
             <Button 
               size="lg" 
-              className="w-full sm:w-auto bg-white text-primary hover:bg-gray-50 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
+              className="w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
-              Run the Free Team Diagnostic
+              Free Team Diagnostics
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-          
-          <Link to={createPageUrl("Programmes")} className="w-full sm:w-auto">
-            <Button 
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto bg-transparent text-white border-2 border-white hover:bg-white hover:text-primary px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full transition-all duration-300"
-            >
-              Explore Programmes
             </Button>
           </Link>
         </motion.div>
