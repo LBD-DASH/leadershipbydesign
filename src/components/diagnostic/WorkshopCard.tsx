@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Target, Zap, Users, Clock, CheckCircle, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface WorkshopCardProps {
   workshopKey: 'clarity' | 'motivation' | 'leadership';
@@ -19,6 +20,12 @@ const icons = {
   leadership: Users
 };
 
+const workshopRoutes = {
+  clarity: '/workshops/alignment',
+  motivation: '/workshops/motivation',
+  leadership: '/workshops/leadership'
+};
+
 export default function WorkshopCard({
   workshopKey,
   title,
@@ -28,7 +35,12 @@ export default function WorkshopCard({
   isRecommended,
   onFindOutMore
 }: WorkshopCardProps) {
+  const navigate = useNavigate();
   const Icon = icons[workshopKey];
+
+  const handleFindOutMore = () => {
+    navigate(workshopRoutes[workshopKey]);
+  };
 
   return (
     <div
@@ -94,7 +106,7 @@ export default function WorkshopCard({
         <Button
           variant={isRecommended ? "default" : "outline"}
           className="w-full group"
-          onClick={() => onFindOutMore(workshopKey)}
+          onClick={handleFindOutMore}
         >
           Find out more
           <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
