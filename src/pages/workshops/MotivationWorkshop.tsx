@@ -62,8 +62,8 @@ export default function MotivationWorkshop() {
   return (
     <>
       <SEO
-        title="The Motivation & Energy Reset Workshop | Leadership by Design"
-        description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Address fatigue, compliance without commitment, and unmet human needs."
+        title="SHIFT Team Energy Workshop | Leadership by Design"
+        description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Address fatigue, compliance without commitment, and unmet human needs using the SHIFT Methodology™."
         canonicalUrl="https://leadershipbydesign.lovable.app/workshops/motivation"
       />
       <Header />
@@ -93,7 +93,7 @@ export default function MotivationWorkshop() {
                 </div>
                 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-                  The Motivation & Energy Reset Workshop
+                  SHIFT Team Energy Workshop
                 </h1>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
@@ -225,19 +225,37 @@ export default function MotivationWorkshop() {
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">
                   What's Included
                 </h2>
-                <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-primary/20">
-                      <CheckCircle className="w-5 h-5 text-primary" />
+                <div className="space-y-4">
+                  {/* SHIFT Methodology */}
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl p-6 border border-primary/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-primary/30">
+                        <Zap className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">SHIFT Methodology™</h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground">6 Human Needs Assessment</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Our proprietary SHIFT Methodology™ is the foundation of every workshop. This proven 
+                      framework creates lasting transformation by addressing root causes, not just symptoms. 
+                      It's what makes our workshops deliver sustainable change, not temporary fixes.
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Every participant completes our 6 Human Needs Assessment before the workshop. 
-                    Based on proven psychological research, this reveals which of the six core human 
-                    needs—Certainty, Variety, Significance, Connection, Growth, and Contribution—are 
-                    being met or unmet for each team member.
-                  </p>
+                  
+                  {/* 6 Human Needs Assessment */}
+                  <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-primary/20">
+                        <CheckCircle className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">6 Human Needs Assessment</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Every participant completes our 6 Human Needs Assessment before the workshop. 
+                      Based on proven psychological research, this reveals which of the six core human 
+                      needs—Certainty, Variety, Significance, Connection, Growth, and Contribution—are 
+                      being met or unmet for each team member.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -322,7 +340,7 @@ export default function MotivationWorkshop() {
                 Ready to Reignite Your Team's Energy?
               </h2>
               <p className="text-muted-foreground mb-8">
-                Book a call to discuss how the Motivation & Energy Reset Workshop can help your team 
+                Book a call to discuss how the SHIFT Team Energy Workshop can help your team 
                 rediscover their drive.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
