@@ -11,7 +11,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isServicesActive = ["/team-diagnostic", "/programmes", "/hellocoach", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership"].some(
+  const isServicesActive = ["/team-diagnostic", "/programmes", "/hellocoach", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -66,6 +66,12 @@ const Header = () => {
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     Programmes
+                  </Link>
+                  <Link 
+                    to="/shift-methodology" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    SHIFT Methodology™
                   </Link>
                   <Link 
                     to="/hellocoach" 
@@ -167,6 +173,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Programmes
+              </Link>
+              <Link 
+                to="/shift-methodology" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                SHIFT Methodology™
               </Link>
               <Link 
                 to="/hellocoach" 
