@@ -62,8 +62,8 @@ export default function AlignmentWorkshop() {
   return (
     <>
       <SEO
-        title="The Alignment Reset Workshop | Leadership by Design"
-        description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working."
+        title="SHIFT Team Alignment Workshop | Leadership by Design"
+        description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working using the SHIFT Methodology™."
         canonicalUrl="https://leadershipbydesign.lovable.app/workshops/alignment"
       />
       <Header />
@@ -93,7 +93,7 @@ export default function AlignmentWorkshop() {
                 </div>
                 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-                  The Alignment Reset Workshop
+                  SHIFT Team Alignment Workshop
                 </h1>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
@@ -225,18 +225,36 @@ export default function AlignmentWorkshop() {
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-8">
                   What's Included
                 </h2>
-                <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-primary/20">
-                      <CheckCircle className="w-5 h-5 text-primary" />
+                <div className="space-y-4">
+                  {/* SHIFT Methodology */}
+                  <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl p-6 border border-primary/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-primary/30">
+                        <Target className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">SHIFT Methodology™</h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground">Values Assessment</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Our proprietary SHIFT Methodology™ is the foundation of every workshop. This proven 
+                      framework creates lasting transformation by addressing root causes, not just symptoms. 
+                      It's what makes our workshops deliver sustainable change, not temporary fixes.
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Every participant completes our proprietary Values Assessment before the workshop. 
-                    This reveals individual and collective values, helping the team understand what 
-                    drives decision-making and where values may be creating invisible friction.
-                  </p>
+                  
+                  {/* Values Assessment */}
+                  <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-primary/20">
+                        <CheckCircle className="w-5 h-5 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">Values Assessment</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Every participant completes our proprietary Values Assessment before the workshop. 
+                      This reveals individual and collective values, helping the team understand what 
+                      drives decision-making and where values may be creating invisible friction.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -321,7 +339,7 @@ export default function AlignmentWorkshop() {
                 Ready to Align Your Team?
               </h2>
               <p className="text-muted-foreground mb-8">
-                Book a call to discuss how the Alignment Reset Workshop can help your team move in the same direction.
+                Book a call to discuss how the SHIFT Team Alignment Workshop can help your team move in the same direction.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
