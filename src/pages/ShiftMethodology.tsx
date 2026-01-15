@@ -8,6 +8,11 @@ import shiftLogo from "@/assets/shift-logo.jpg";
 import heroTeamImage from "@/assets/shift-hero-team.jpg";
 import methodologyPlanningImage from "@/assets/shift-methodology-planning.jpg";
 import teamOwnershipImage from "@/assets/shift-team-ownership.jpg";
+import skillSelfManagement from "@/assets/shift-skill-self-management.jpg";
+import skillHumanIntelligence from "@/assets/shift-skill-human-intelligence.jpg";
+import skillInnovation from "@/assets/shift-skill-innovation.jpg";
+import skillFocus from "@/assets/shift-skill-focus.jpg";
+import skillThinking from "@/assets/shift-skill-thinking.jpg";
 
 export default function ShiftMethodology() {
   const shiftSkills = [
@@ -15,31 +20,36 @@ export default function ShiftMethodology() {
       letter: "S",
       title: "Self-Management",
       description: "The ability to regulate emotions, behaviour, and energy. Taking responsibility for how you show up—regardless of circumstances.",
-      icon: Cog
+      icon: Cog,
+      image: skillSelfManagement
     },
     {
       letter: "H",
       title: "Human Intelligence",
       description: "The ability to read, connect with, and influence others. Understanding needs, values, and what drives behaviour—in yourself and others.",
-      icon: Users
+      icon: Users,
+      image: skillHumanIntelligence
     },
     {
       letter: "I",
       title: "Innovation",
       description: "The ability to think beyond the obvious. Taking initiative, questioning assumptions, and finding better ways forward.",
-      icon: Lightbulb
+      icon: Lightbulb,
+      image: skillInnovation
     },
     {
       letter: "F",
       title: "Focus",
       description: "The ability to prioritise what matters. Cutting through noise, aligning effort to outcomes, and staying on track under pressure.",
-      icon: Focus
+      icon: Focus,
+      image: skillFocus
     },
     {
       letter: "T",
       title: "Thinking",
       description: "The ability to make clear, independent decisions. Understanding context, weighing options, and taking ownership of conclusions.",
-      icon: Brain
+      icon: Brain,
+      image: skillThinking
     }
   ];
 
@@ -259,10 +269,17 @@ export default function ShiftMethodology() {
                   className="bg-background rounded-2xl p-6 border border-border hover:border-primary/30 transition-colors"
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl font-bold text-primary-foreground">
-                        {skill.letter}
-                      </span>
+                    <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
+                      <img 
+                        src={skill.image} 
+                        alt={skill.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/70 to-primary/50 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-primary-foreground">
+                          {skill.letter}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex-grow">
                       <h3 className="text-xl font-bold text-foreground">
