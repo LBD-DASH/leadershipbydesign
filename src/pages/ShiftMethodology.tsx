@@ -5,6 +5,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import shiftLogo from "@/assets/shift-logo.jpg";
+import heroTeamImage from "@/assets/shift-hero-team.jpg";
+import methodologyPlanningImage from "@/assets/shift-methodology-planning.jpg";
+import teamOwnershipImage from "@/assets/shift-team-ownership.jpg";
 
 export default function ShiftMethodology() {
   const shiftSkills = [
@@ -101,8 +104,18 @@ export default function ShiftMethodology() {
       <Header />
       <main className="min-h-screen bg-background pt-20">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-primary/5 via-background to-primary/10 py-16 sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="relative">
+          {/* Hero Image Background */}
+          <div className="absolute inset-0 h-[500px] sm:h-[600px]">
+            <img 
+              src={heroTeamImage} 
+              alt="Leadership team collaboration"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+          </div>
+          
+          <div className="relative container mx-auto px-4 sm:px-6 py-16 sm:py-24">
             <Link 
               to="/programmes" 
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
@@ -111,49 +124,36 @@ export default function ShiftMethodology() {
               Back to Programmes
             </Link>
             
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-                  <span>A Human Performance System</span>
-                </div>
-                
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-                  The SHIFT<br />
-                  <span className="text-primary">Methodology™</span>
-                </h1>
-                
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6">
-                  SHIFT is a skill-based methodology—not a personality model, motivation framework, or leadership style.
-                </p>
-                
-                <p className="text-base text-muted-foreground leading-relaxed mb-8">
-                  It defines the <strong className="text-foreground">five core human capabilities</strong> required to perform, lead, and adapt in the modern workplace—especially in an AI-accelerated world.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" asChild>
-                    <Link to="/team-diagnostic">
-                      Take the Team Diagnostic
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="lg" asChild>
-                    <Link to="/contact">
-                      Book a Consultation
-                    </Link>
-                  </Button>
-                </div>
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
+                <span>A Human Performance System</span>
               </div>
               
-              <div className="flex justify-center lg:justify-end">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl blur-3xl" />
-                  <img 
-                    src={shiftLogo} 
-                    alt="SHIFT Methodology"
-                    className="relative w-64 h-64 sm:w-80 sm:h-80 object-contain rounded-2xl"
-                  />
-                </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+                The SHIFT<br />
+                <span className="text-primary">Methodology™</span>
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6">
+                SHIFT is a skill-based methodology—not a personality model, motivation framework, or leadership style.
+              </p>
+              
+              <p className="text-base text-muted-foreground leading-relaxed mb-8">
+                It defines the <strong className="text-foreground">five core human capabilities</strong> required to perform, lead, and adapt in the modern workplace—especially in an AI-accelerated world.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" asChild>
+                  <Link to="/team-diagnostic">
+                    Take the Team Diagnostic
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild className="bg-background/80 backdrop-blur-sm">
+                  <Link to="/contact">
+                    Book a Consultation
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -173,34 +173,49 @@ export default function ShiftMethodology() {
         {/* What SHIFT Is */}
         <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
+            <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+              {/* Image */}
+              <div className="order-2 lg:order-1">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src={methodologyPlanningImage} 
+                    alt="Strategic planning and methodology"
+                    className="w-full h-80 lg:h-96 object-cover"
+                  />
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="order-1 lg:order-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
                   What the SHIFT Methodology™ Is
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                   The SHIFT Methodology™ is a human performance system that develops the five critical skills that determine:
                 </p>
+                
+                <div className="space-y-3 mb-8">
+                  {[
+                    "How people show up",
+                    "How they work with others",
+                    "How they make decisions",
+                    "How they respond under pressure",
+                    "How much responsibility they take"
+                  ].map((item, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl border border-border"
+                    >
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-foreground font-medium">{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-                {[
-                  "How people show up",
-                  "How they work with others",
-                  "How they make decisions",
-                  "How they respond under pressure",
-                  "How much responsibility they take"
-                ].map((item, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl border border-border"
-                  >
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-foreground font-medium">{item}</span>
-                  </div>
-                ))}
-              </div>
-              
+            </div>
+            
+            {/* SHIFT Focus Statement */}
+            <div className="max-w-4xl mx-auto mt-16">
               <div className="bg-gradient-to-br from-muted/50 to-muted/30 rounded-2xl p-8 border border-border">
                 <p className="text-center text-muted-foreground mb-6">
                   SHIFT works <strong className="text-foreground">below behaviour</strong> (habits) and <strong className="text-foreground">above personality</strong> (labels).
@@ -368,55 +383,79 @@ export default function ShiftMethodology() {
         {/* Value to Diagnostic */}
         <section className="py-16 sm:py-20 bg-muted/30">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
+            <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+              {/* Content */}
+              <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
                   How SHIFT Adds Value to the Team Diagnostic
                 </h2>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-muted-foreground mb-8">
                   The Team Diagnostic identifies which SHIFT skills need strengthening in your team.
                 </p>
-              </div>
-              
-              <div className="grid sm:grid-cols-3 gap-6">
-                <div className="bg-background rounded-2xl p-6 border border-border text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
-                    <Target className="w-6 h-6 text-primary" />
+                
+                <div className="space-y-4">
+                  <div className="bg-background rounded-2xl p-5 border border-border">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Target className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground mb-1">Alignment Issues?</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Indicates need to develop <strong className="text-foreground">Thinking</strong>, <strong className="text-foreground">Focus</strong>, and <strong className="text-foreground">Human Intelligence</strong> skills.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">Alignment Issues?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Indicates need to develop <strong className="text-foreground">Thinking</strong>, <strong className="text-foreground">Focus</strong>, and <strong className="text-foreground">Human Intelligence</strong> skills.
-                  </p>
+                  
+                  <div className="bg-background rounded-2xl p-5 border border-border">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Zap className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground mb-1">Energy Issues?</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Human Intelligence</strong>, and <strong className="text-foreground">Focus</strong> skills.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background rounded-2xl p-5 border border-border">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Shield className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground mb-1">Ownership Issues?</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Thinking</strong>, and <strong className="text-foreground">Innovation</strong> skills.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="bg-background rounded-2xl p-6 border border-border text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
-                    <Zap className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">Energy Issues?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Human Intelligence</strong>, and <strong className="text-foreground">Focus</strong> skills.
-                  </p>
-                </div>
-                
-                <div className="bg-background rounded-2xl p-6 border border-border text-center">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
-                    <Shield className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">Ownership Issues?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Thinking</strong>, and <strong className="text-foreground">Innovation</strong> skills.
-                  </p>
+                <div className="mt-8">
+                  <Button size="lg" asChild>
+                    <Link to="/team-diagnostic">
+                      Take the Free Team Diagnostic
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </Button>
                 </div>
               </div>
               
-              <div className="text-center mt-10">
-                <Button size="lg" asChild>
-                  <Link to="/team-diagnostic">
-                    Take the Free Team Diagnostic
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </Button>
+              {/* Image */}
+              <div className="hidden lg:block">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src={teamOwnershipImage} 
+                    alt="Professional leadership team"
+                    className="w-full h-[500px] object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
