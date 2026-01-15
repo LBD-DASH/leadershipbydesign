@@ -51,7 +51,7 @@ export function getRecommendation(scores: DiagnosticScores): DiagnosticResult {
 
 export const workshopDetails = {
   clarity: {
-    title: 'The Alignment Reset Workshop',
+    title: 'SHIFT Team Alignment',
     duration: 'Morning workshop',
     summary: 'For teams working hard but not in the same direction. Addresses conflicting priorities, unclear success metrics, and reactive ways of working.',
     indicators: [
@@ -70,7 +70,7 @@ export const workshopDetails = {
     resultSummary: 'Your team is working hard, but not in the same direction. Confusion and misalignment are draining energy and slowing execution.'
   },
   motivation: {
-    title: 'The Motivation & Energy Reset Workshop',
+    title: 'SHIFT Team Energy',
     duration: 'Morning workshop',
     summary: 'For teams that understand the work but lack energy and emotional commitment. Addresses fatigue, compliance without commitment, and unmet human needs.',
     indicators: [
@@ -89,7 +89,7 @@ export const workshopDetails = {
     resultSummary: 'Your team understands the work - but energy, engagement, and emotional commitment are low.'
   },
   leadership: {
-    title: 'The Leadership & Accountability Reset Workshop',
+    title: 'SHIFT Team Ownership',
     duration: 'Morning workshop',
     summary: 'For capable teams where ownership is inconsistent. Addresses delayed decisions, avoided conversations, and dependency on authority.',
     indicators: [
