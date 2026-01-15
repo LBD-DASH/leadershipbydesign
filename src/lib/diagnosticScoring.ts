@@ -65,7 +65,8 @@ export const workshopDetails = {
       'Aligned expectations'
     ],
     includes: [
-      'Values Assessment'
+      'Values Assessment',
+      'SHIFT Methodology™'
     ],
     resultSummary: 'Your team is working hard, but not in the same direction. Confusion and misalignment are draining energy and slowing execution.'
   },
@@ -84,7 +85,8 @@ export const workshopDetails = {
       'Sustainable energy'
     ],
     includes: [
-      '6 Human Needs Assessment'
+      '6 Human Needs Assessment',
+      'SHIFT Methodology™'
     ],
     resultSummary: 'Your team understands the work - but energy, engagement, and emotional commitment are low.'
   },
@@ -103,7 +105,8 @@ export const workshopDetails = {
       'Stronger leadership behaviour'
     ],
     includes: [
-      'Leadership Index'
+      'Leadership Index',
+      'SHIFT Methodology™'
     ],
     resultSummary: 'Your team is capable, but ownership and accountability are inconsistent. Avoidance is slowing performance.'
   }
