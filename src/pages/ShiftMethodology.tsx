@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Target, Zap, Shield, CheckCircle, Lightbulb, Users, TrendingUp, ArrowLeft } from "lucide-react";
+import { ArrowRight, Target, Zap, Shield, CheckCircle, Brain, Users, Lightbulb, Focus, Cog, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,54 +7,36 @@ import SEO from "@/components/SEO";
 import shiftLogo from "@/assets/shift-logo.jpg";
 
 export default function ShiftMethodology() {
-  const shiftSteps = [
+  const shiftSkills = [
     {
       letter: "S",
-      title: "See",
-      description: "Surface the current reality. We help teams see clearly what's actually happening—not what they assume or hope is true.",
-      detail: "Through diagnostic tools and facilitated conversations, we uncover the hidden patterns, unspoken tensions, and systemic issues that are holding your team back."
+      title: "Self-Management",
+      description: "The ability to regulate emotions, behaviour, and energy. Taking responsibility for how you show up—regardless of circumstances.",
+      icon: Cog
     },
     {
       letter: "H",
-      title: "Hear",
-      description: "Listen to what's not being said. The most important information is often in the silences and the avoided topics.",
-      detail: "We create safe spaces for honest dialogue, helping teams surface the conversations they've been avoiding and the concerns that haven't been voiced."
+      title: "Human Intelligence",
+      description: "The ability to read, connect with, and influence others. Understanding needs, values, and what drives behaviour—in yourself and others.",
+      icon: Users
     },
     {
       letter: "I",
-      title: "Identify",
-      description: "Pinpoint the root causes. Symptoms are easy to see; causes require deeper investigation.",
-      detail: "We move beyond surface-level problems to identify the underlying beliefs, structures, and behaviours that are creating the issues your team faces."
+      title: "Innovation",
+      description: "The ability to think beyond the obvious. Taking initiative, questioning assumptions, and finding better ways forward.",
+      icon: Lightbulb
     },
     {
       letter: "F",
-      title: "Frame",
-      description: "Reframe the challenge. How you see the problem determines what solutions become possible.",
-      detail: "We help teams shift their perspective from blame and limitation to ownership and possibility, opening up new paths forward."
+      title: "Focus",
+      description: "The ability to prioritise what matters. Cutting through noise, aligning effort to outcomes, and staying on track under pressure.",
+      icon: Focus
     },
     {
       letter: "T",
-      title: "Transform",
-      description: "Take action that sticks. Real change requires new behaviours, not just new intentions.",
-      detail: "We establish concrete commitments, accountability structures, and follow-through mechanisms that turn insights into lasting transformation."
-    }
-  ];
-
-  const differentiators = [
-    {
-      icon: Lightbulb,
-      title: "Root Cause Focus",
-      description: "We address underlying issues, not just symptoms. This creates lasting change rather than temporary relief."
-    },
-    {
-      icon: Users,
-      title: "Team-Centred",
-      description: "Solutions emerge from within the team, not from external prescription. This builds ownership and commitment."
-    },
-    {
-      icon: TrendingUp,
-      title: "Sustainable Results",
-      description: "Our approach creates new capabilities, not just quick fixes. Teams continue to improve long after the workshop ends."
+      title: "Thinking",
+      description: "The ability to make clear, independent decisions. Understanding context, weighing options, and taking ownership of conclusions.",
+      icon: Brain
     }
   ];
 
@@ -62,31 +44,58 @@ export default function ShiftMethodology() {
     {
       key: "alignment",
       title: "SHIFT Team Alignment",
-      description: "For teams working hard but not in the same direction.",
+      primaryOutcome: "Clarity, cohesion, and direction",
+      skillsActivated: [
+        { skill: "Thinking", detail: "shared understanding, decision clarity" },
+        { skill: "Focus", detail: "priorities, alignment to outcomes" },
+        { skill: "Human Intelligence", detail: "values, trust, psychological safety" }
+      ],
+      tools: ["Values Assessment", "Alignment diagnostics"],
+      result: "People stop working hard in different directions.",
       icon: Target,
       link: "/workshops/alignment"
     },
     {
       key: "energy",
       title: "SHIFT Team Energy",
-      description: "For teams that understand the work but lack energy and commitment.",
+      primaryOutcome: "Sustainable motivation and emotional regulation",
+      skillsActivated: [
+        { skill: "Self-Management", detail: "emotional awareness & regulation" },
+        { skill: "Human Intelligence", detail: "needs-awareness (self & others)" },
+        { skill: "Focus", detail: "reducing reactive behaviour" }
+      ],
+      tools: ["6 Human Needs Assessment"],
+      result: "Energy moves from reactive and draining → intentional and constructive.",
       icon: Zap,
       link: "/workshops/motivation"
     },
     {
       key: "ownership",
       title: "SHIFT Team Ownership",
-      description: "For capable teams where ownership is inconsistent.",
+      primaryOutcome: "Accountability and leadership at every level",
+      skillsActivated: [
+        { skill: "Self-Management", detail: "responsibility for behaviour and outcomes" },
+        { skill: "Thinking", detail: "independent decision-making" },
+        { skill: "Innovation", detail: "initiative instead of permission-seeking" }
+      ],
+      tools: ["Leadership Index"],
+      result: "Leaders stop carrying people. People start carrying outcomes.",
       icon: Shield,
       link: "/workshops/leadership"
     }
+  ];
+
+  const whatShiftIs = [
+    { label: "Capability", contrast: "not character" },
+    { label: "Skill", contrast: "not motivation" },
+    { label: "Responsibility", contrast: "not compliance" }
   ];
 
   return (
     <>
       <SEO
         title="SHIFT Methodology™ | Leadership by Design"
-        description="Discover the SHIFT Methodology™—our proprietary framework for creating lasting team transformation. See, Hear, Identify, Frame, Transform."
+        description="The SHIFT Methodology™ develops the five human skills required for performance: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
         canonicalUrl="https://leadershipbydesign.lovable.app/shift-methodology"
       />
       <Header />
@@ -105,7 +114,7 @@ export default function ShiftMethodology() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-                  <span>Our Proprietary Framework</span>
+                  <span>A Human Performance System</span>
                 </div>
                 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
@@ -113,9 +122,12 @@ export default function ShiftMethodology() {
                   <span className="text-primary">Methodology™</span>
                 </h1>
                 
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8">
-                  A proven framework for creating lasting team transformation. Not a quick fix—a 
-                  fundamental shift in how your team operates, communicates, and delivers.
+                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6">
+                  SHIFT is a skill-based methodology—not a personality model, motivation framework, or leadership style.
+                </p>
+                
+                <p className="text-base text-muted-foreground leading-relaxed mb-8">
+                  It defines the <strong className="text-foreground">five core human capabilities</strong> required to perform, lead, and adapt in the modern workplace—especially in an AI-accelerated world.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -147,177 +159,264 @@ export default function ShiftMethodology() {
           </div>
         </section>
 
-        {/* The Problem Section */}
-        <section className="py-16 sm:py-20 border-b border-border">
+        {/* One-Sentence Truth */}
+        <section className="py-12 sm:py-16 bg-primary/5 border-y border-primary/20">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-6">
-                Why Most Team Interventions Fail
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                Traditional team-building events create a temporary boost, then reality returns. 
-                One-size-fits-all training programs address symptoms, not causes. Generic frameworks 
-                get applied without understanding the unique dynamics at play.
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">The SHIFT Methodology™ is different.</strong> It's designed to 
-                create permanent change by addressing what's actually happening in your team—not what 
-                we assume is happening.
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-xl sm:text-2xl lg:text-3xl font-medium text-foreground leading-relaxed">
+                "The SHIFT Methodology™ develops the <span className="text-primary">five human skills</span> required for performance, and applies them through three focused interventions: <span className="text-primary">Alignment</span>, <span className="text-primary">Energy</span>, and <span className="text-primary">Ownership</span>."
               </p>
             </div>
           </div>
         </section>
 
-        {/* SHIFT Steps */}
-        <section className="py-16 sm:py-24">
+        {/* What SHIFT Is */}
+        <section className="py-16 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+                  What the SHIFT Methodology™ Is
+                </h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  The SHIFT Methodology™ is a human performance system that develops the five critical skills that determine:
+                </p>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+                {[
+                  "How people show up",
+                  "How they work with others",
+                  "How they make decisions",
+                  "How they respond under pressure",
+                  "How much responsibility they take"
+                ].map((item, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl border border-border"
+                  >
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                    <span className="text-foreground font-medium">{item}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="bg-gradient-to-br from-muted/50 to-muted/30 rounded-2xl p-8 border border-border">
+                <p className="text-center text-muted-foreground mb-6">
+                  SHIFT works <strong className="text-foreground">below behaviour</strong> (habits) and <strong className="text-foreground">above personality</strong> (labels).
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {whatShiftIs.map((item, index) => (
+                    <div 
+                      key={index}
+                      className="bg-background rounded-xl px-6 py-4 border border-primary/20"
+                    >
+                      <span className="text-lg font-semibold text-primary">{item.label}</span>
+                      <span className="text-muted-foreground">, {item.contrast}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-center mt-8 text-lg font-medium text-foreground">
+                  SHIFT answers one core question:<br />
+                  <span className="text-primary">"Which human skills must strengthen for results to improve?"</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* The Five SHIFT Skills */}
+        <section className="py-16 sm:py-24 bg-muted/30">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-                The Five Stages of SHIFT
+                The Five SHIFT™ Skills
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Each stage builds on the previous, creating a comprehensive transformation process.
+                The core human capabilities required for performance, leadership, and adaptation.
               </p>
             </div>
             
-            <div className="space-y-8 max-w-4xl mx-auto">
-              {shiftSteps.map((step, index) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {shiftSkills.map((skill) => (
                 <div 
-                  key={step.letter}
-                  className="relative flex gap-6 sm:gap-8 p-6 sm:p-8 bg-gradient-to-r from-muted/50 to-transparent rounded-2xl border border-border hover:border-primary/30 transition-colors"
+                  key={skill.letter}
+                  className="bg-background rounded-2xl p-6 border border-border hover:border-primary/30 transition-colors"
                 >
-                  {/* Letter */}
-                  <div className="flex-shrink-0">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-                      <span className="text-3xl sm:text-4xl font-bold text-primary-foreground">
-                        {step.letter}
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl font-bold text-primary-foreground">
+                        {skill.letter}
                       </span>
                     </div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-grow">
-                    <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-base sm:text-lg text-foreground/90 mb-3">
-                      {step.description}
-                    </p>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                      {step.detail}
-                    </p>
-                  </div>
-                  
-                  {/* Connector line */}
-                  {index < shiftSteps.length - 1 && (
-                    <div className="absolute left-[2.5rem] sm:left-[3rem] top-full w-0.5 h-8 bg-gradient-to-b from-primary/50 to-transparent" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* What Makes It Different */}
-        <section className="py-16 sm:py-20 bg-muted/30">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                What Makes SHIFT™ Different
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our methodology is designed for sustainable transformation, not temporary improvement.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {differentiators.map((item, index) => (
-                <div 
-                  key={index}
-                  className="bg-background rounded-2xl p-8 border border-border hover:border-primary/30 transition-colors text-center"
-                >
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 mb-6">
-                    <item.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* How We Apply SHIFT */}
-        <section className="py-16 sm:py-20">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                SHIFT™ in Action
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                We apply the SHIFT Methodology™ across three focused workshops, each addressing 
-                different team challenges.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {workshops.map((workshop) => (
-                <Link 
-                  key={workshop.key}
-                  to={workshop.link}
-                  className="group bg-background rounded-2xl p-6 border border-border hover:border-primary/30 hover:shadow-lg transition-all"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <workshop.icon className="w-6 h-6 text-primary" />
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-bold text-foreground">
+                        {skill.title}
+                      </h3>
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {workshop.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {workshop.description}
+                  <p className="text-muted-foreground leading-relaxed">
+                    {skill.description}
                   </p>
-                  <span className="inline-flex items-center text-sm font-medium text-primary">
-                    Learn more
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Expected Outcomes */}
+        {/* How SHIFT Supports the 3 Workshops */}
+        <section className="py-16 sm:py-24">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                How SHIFT Powers the Workshops
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
+                The three workshops are <strong className="text-foreground">NOT</strong> three different methodologies. They are three <strong className="text-foreground">outcome-focused applications</strong> of the same SHIFT skill set.
+              </p>
+              <div className="inline-flex items-center gap-4 bg-muted/50 rounded-xl px-6 py-4 border border-border">
+                <span className="text-foreground font-medium">SHIFT = the skill system</span>
+                <span className="text-muted-foreground">|</span>
+                <span className="text-foreground font-medium">Workshops = where those skills are applied</span>
+              </div>
+            </div>
+            
+            <div className="space-y-8 max-w-5xl mx-auto">
+              {workshops.map((workshop) => (
+                <div 
+                  key={workshop.key}
+                  className="bg-background rounded-2xl border border-border overflow-hidden hover:border-primary/30 transition-colors"
+                >
+                  <div className="p-6 sm:p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                      {/* Header */}
+                      <div className="lg:w-1/3">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-3 rounded-xl bg-primary/10">
+                            <workshop.icon className="w-6 h-6 text-primary" />
+                          </div>
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                          {workshop.title}
+                        </h3>
+                        <p className="text-primary font-medium mb-4">
+                          Primary Outcome: {workshop.primaryOutcome}
+                        </p>
+                        <Link 
+                          to={workshop.link}
+                          className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+                        >
+                          Learn more about this workshop
+                          <ArrowRight className="w-4 h-4 ml-1" />
+                        </Link>
+                      </div>
+                      
+                      {/* Skills & Details */}
+                      <div className="lg:w-2/3 lg:border-l lg:border-border lg:pl-6">
+                        <div className="mb-6">
+                          <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                            SHIFT Skills Activated
+                          </h4>
+                          <div className="space-y-2">
+                            {workshop.skillsActivated.map((item, index) => (
+                              <div key={index} className="flex items-start gap-2">
+                                <CheckCircle className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
+                                <span className="text-foreground">
+                                  <strong>{item.skill}</strong>
+                                  <span className="text-muted-foreground"> → {item.detail}</span>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-6">
+                          <div>
+                            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                              Tools Used
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {workshop.tools.map((tool, index) => (
+                                <span 
+                                  key={index}
+                                  className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full"
+                                >
+                                  {tool}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div className="sm:flex-grow">
+                            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                              Result
+                            </h4>
+                            <p className="text-foreground font-medium italic">
+                              "{workshop.result}"
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Value to Diagnostic */}
         <section className="py-16 sm:py-20 bg-muted/30">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                  What Teams Experience
+                  How SHIFT Adds Value to the Team Diagnostic
                 </h2>
-                <p className="text-muted-foreground">
-                  Teams that go through a SHIFT workshop consistently report these outcomes.
+                <p className="text-lg text-muted-foreground">
+                  The Team Diagnostic identifies which SHIFT skills need strengthening in your team.
                 </p>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  "Clearer understanding of priorities and expectations",
-                  "More honest and productive conversations",
-                  "Faster decision-making with less escalation",
-                  "Stronger sense of ownership and accountability",
-                  "Improved team energy and engagement",
-                  "Sustainable behaviour change, not just temporary motivation"
-                ].map((outcome, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-start gap-3 p-4 bg-background rounded-xl border border-border"
-                  >
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-foreground">{outcome}</span>
+              <div className="grid sm:grid-cols-3 gap-6">
+                <div className="bg-background rounded-2xl p-6 border border-border text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+                    <Target className="w-6 h-6 text-primary" />
                   </div>
-                ))}
+                  <h3 className="font-semibold text-foreground mb-2">Alignment Issues?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Indicates need to develop <strong className="text-foreground">Thinking</strong>, <strong className="text-foreground">Focus</strong>, and <strong className="text-foreground">Human Intelligence</strong> skills.
+                  </p>
+                </div>
+                
+                <div className="bg-background rounded-2xl p-6 border border-border text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+                    <Zap className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">Energy Issues?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Human Intelligence</strong>, and <strong className="text-foreground">Focus</strong> skills.
+                  </p>
+                </div>
+                
+                <div className="bg-background rounded-2xl p-6 border border-border text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-4">
+                    <Shield className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">Ownership Issues?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Indicates need to develop <strong className="text-foreground">Self-Management</strong>, <strong className="text-foreground">Thinking</strong>, and <strong className="text-foreground">Innovation</strong> skills.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="text-center mt-10">
+                <Button size="lg" asChild>
+                  <Link to="/team-diagnostic">
+                    Take the Free Team Diagnostic
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -331,8 +430,8 @@ export default function ShiftMethodology() {
                 Ready to SHIFT Your Team?
               </h2>
               <p className="text-muted-foreground mb-8">
-                Start with our free Team Diagnostic to understand where your team needs the most support, 
-                or book a consultation to discuss how SHIFT can work for you.
+                Start with our free Team Diagnostic to understand which SHIFT skills your team needs to develop, 
+                or book a consultation to discuss how we can help.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>

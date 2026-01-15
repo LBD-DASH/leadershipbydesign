@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DiagnosticResult, workshopDetails } from "@/lib/diagnosticScoring";
 import WorkshopCard from "./WorkshopCard";
 import ExpertContactForm from "./ExpertContactForm";
-import { MessageSquare, BarChart3 } from "lucide-react";
+import { MessageSquare, BarChart3, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DiagnosticResultsProps {
@@ -43,6 +44,34 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
             </span>
           </p>
         )}
+      </div>
+
+      {/* SHIFT Skills to Develop */}
+      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8 border border-primary/20">
+        <div className="flex items-center gap-3 mb-4">
+          <Sparkles className="w-5 h-5 text-primary" />
+          <h3 className="text-lg font-semibold text-foreground">SHIFT™ Skills to Develop</h3>
+        </div>
+        <p className="text-muted-foreground mb-6">
+          Based on your results, your team would benefit from strengthening these core capabilities:
+        </p>
+        <div className="grid sm:grid-cols-3 gap-4 mb-6">
+          {primaryWorkshop.shiftSkills.map((item, index) => (
+            <div key={index} className="bg-background rounded-xl p-4 border border-border">
+              <span className="text-primary font-semibold">{item.skill}</span>
+              <p className="text-sm text-muted-foreground mt-1">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+        <div className="text-center">
+          <Link 
+            to="/shift-methodology" 
+            className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+          >
+            Learn more about the SHIFT Methodology™
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Link>
+        </div>
       </div>
 
       {/* Score Visualization */}

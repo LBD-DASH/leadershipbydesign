@@ -68,6 +68,11 @@ export const workshopDetails = {
       'Values Assessment',
       'SHIFT Methodology™'
     ],
+    shiftSkills: [
+      { skill: 'Thinking', detail: 'shared understanding, decision clarity' },
+      { skill: 'Focus', detail: 'priorities, alignment to outcomes' },
+      { skill: 'Human Intelligence', detail: 'values, trust, psychological safety' }
+    ],
     resultSummary: 'Your team is working hard, but not in the same direction. Confusion and misalignment are draining energy and slowing execution.'
   },
   motivation: {
@@ -88,6 +93,11 @@ export const workshopDetails = {
       '6 Human Needs Assessment',
       'SHIFT Methodology™'
     ],
+    shiftSkills: [
+      { skill: 'Self-Management', detail: 'emotional awareness & regulation' },
+      { skill: 'Human Intelligence', detail: 'needs-awareness (self & others)' },
+      { skill: 'Focus', detail: 'reducing reactive behaviour' }
+    ],
     resultSummary: 'Your team understands the work - but energy, engagement, and emotional commitment are low.'
   },
   leadership: {
@@ -107,6 +117,11 @@ export const workshopDetails = {
     includes: [
       'Leadership Index',
       'SHIFT Methodology™'
+    ],
+    shiftSkills: [
+      { skill: 'Self-Management', detail: 'responsibility for behaviour and outcomes' },
+      { skill: 'Thinking', detail: 'independent decision-making' },
+      { skill: 'Innovation', detail: 'initiative instead of permission-seeking' }
     ],
     resultSummary: 'Your team is capable, but ownership and accountability are inconsistent. Avoidance is slowing performance.'
   }
