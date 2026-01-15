@@ -65,9 +65,9 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
                     "font-medium",
                     isHighest ? "text-primary" : "text-foreground"
                   )}>
-                    {key === 'clarity' && 'Team Alignment'}
-                    {key === 'motivation' && 'Team Energy'}
-                    {key === 'leadership' && 'Team Ownership'}
+                    {key === 'clarity' && 'SHIFT Team Alignment'}
+                    {key === 'motivation' && 'SHIFT Team Energy'}
+                    {key === 'leadership' && 'SHIFT Team Ownership'}
                   </span>
                   <span className="text-muted-foreground">{score}/{maxScore}</span>
                 </div>
