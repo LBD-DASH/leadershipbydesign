@@ -227,19 +227,23 @@ export default function AlignmentWorkshop() {
                 </h2>
                 <div className="space-y-4">
                   {/* SHIFT Methodology */}
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl p-6 border border-primary/30">
+                  <Link 
+                    to="/shift-methodology"
+                    className="block bg-gradient-to-br from-primary/10 to-primary/20 rounded-2xl p-6 border border-primary/30 hover:border-primary/50 transition-colors group"
+                  >
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2 rounded-lg bg-primary/30">
                         <Target className="w-5 h-5 text-primary" />
                       </div>
-                      <h3 className="text-lg font-semibold text-foreground">SHIFT Methodology™</h3>
+                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">SHIFT Methodology™</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                       Our proprietary SHIFT Methodology™ is the foundation of every workshop. This proven 
                       framework creates lasting transformation by addressing root causes, not just symptoms. 
                       It's what makes our workshops deliver sustainable change, not temporary fixes.
                     </p>
-                  </div>
+                    <span className="text-sm font-medium text-primary">Learn more about SHIFT →</span>
+                  </Link>
                   
                   {/* Values Assessment */}
                   <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 border border-primary/20">
