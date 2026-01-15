@@ -1,12 +1,17 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, CheckCircle, ArrowRight, FileText } from "lucide-react";
+import { Clock, CheckCircle, ArrowRight, FileText, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import alignmentImage from "@/assets/workshop-alignment.jpg";
 import motivationImage from "@/assets/workshop-motivation.jpg";
 import leadershipImage from "@/assets/workshop-leadership.jpg";
+
+interface ShiftSkill {
+  skill: string;
+  detail: string;
+}
 
 interface WorkshopCardProps {
   workshopKey: 'clarity' | 'motivation' | 'leadership';
@@ -15,6 +20,7 @@ interface WorkshopCardProps {
   summary: string;
   delivers: string[];
   includes?: string[];
+  shiftSkills?: ShiftSkill[];
   isRecommended: boolean;
   onFindOutMore: (workshopKey: 'clarity' | 'motivation' | 'leadership') => void;
 }
@@ -38,6 +44,7 @@ export default function WorkshopCard({
   summary,
   delivers,
   includes,
+  shiftSkills,
   isRecommended,
   onFindOutMore
 }: WorkshopCardProps) {
@@ -86,9 +93,35 @@ export default function WorkshopCard({
           </div>
         </div>
 
-        <p className="text-muted-foreground text-sm sm:text-base mb-6 leading-relaxed">
+        <p className="text-muted-foreground text-sm sm:text-base mb-4 leading-relaxed">
           {summary}
         </p>
+
+        {/* SHIFT Skills Badges */}
+        {shiftSkills && shiftSkills.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-1.5 text-xs uppercase tracking-wide text-muted-foreground font-medium mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              SHIFT™ Skills Developed:
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {shiftSkills.map((item, index) => (
+                <Badge 
+                  key={index} 
+                  variant="outline"
+                  className={cn(
+                    "text-xs font-medium",
+                    isRecommended 
+                      ? "border-primary/50 bg-primary/10 text-primary" 
+                      : "border-border bg-muted/50 text-foreground"
+                  )}
+                >
+                  {item.skill}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mb-4">
           <p className="text-xs uppercase tracking-wide text-muted-foreground font-medium mb-3">
