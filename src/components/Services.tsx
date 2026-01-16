@@ -1,6 +1,6 @@
 import ServiceCard from "./ServiceCard";
 import leadershipL5Image from "@/assets/leadership-l5-strategic.jpg";
-import leadershipL4Image from "@/assets/leadership-l4-motivational.jpg";
+import leadershipL2Image from "@/assets/leadership-l2-development.jpg";
 
 const services = [
   {
@@ -16,7 +16,7 @@ const services = [
   {
     title: "Executive Coaching",
     description: "Personalized one-on-one guidance tailored for senior leaders. We help you refine your leadership approach, enhance decision-making, and drive organizational excellence.",
-    image: leadershipL4Image
+    image: leadershipL2Image
   }
 ];
 
