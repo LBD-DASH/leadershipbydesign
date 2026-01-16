@@ -15,7 +15,7 @@ const Header = () => {
     path => location.pathname.startsWith(path)
   );
 
-  const isResourcesActive = ["/resources", "/blog", "/hellocoach"].some(
+  const isResourcesActive = ["/resources", "/blog", "/hellocoach", "/book"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -135,6 +135,12 @@ const Header = () => {
                   >
                     HelloCoach
                   </Link>
+                  <Link 
+                    to="/book" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    The Book
+                  </Link>
                 </div>
               </div>
             )}
@@ -246,6 +252,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 HelloCoach
+              </Link>
+              <Link 
+                to="/book" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                The Book
               </Link>
             </div>
 
