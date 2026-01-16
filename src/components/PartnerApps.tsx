@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink } from "lucide-react";
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
-import shiftLogo from "@/assets/shift-logo.jpg";
+import leadershipIndexLogo from "@/assets/leadership-index-logo.png";
 import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
 
 const partnerApps = [
@@ -21,9 +21,9 @@ const partnerApps = [
     comingSoon: false
   },
   {
-    name: "Shift Daily Companion",
-    logo: shiftLogo,
-    description: "Your daily companion for mindset shifts and personal transformation",
+    name: "Leadership Index",
+    logo: leadershipIndexLogo,
+    description: "Measure and elevate your leadership effectiveness with data-driven insights",
     link: null,
     comingSoon: true
   },
