@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Target, Clock, Users, CheckCircle, ArrowLeft, Calendar, Zap, Shield } from "lucide-react";
+import { Target, Clock, Users, CheckCircle, ArrowLeft, Calendar, Zap, Shield, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
 import heroImage from "@/assets/workshop-alignment-hero.jpg";
 import motivationImage from "@/assets/workshop-motivation.jpg";
 import leadershipImage from "@/assets/workshop-leadership.jpg";
-
 export default function AlignmentWorkshop() {
+  const [showDownloadForm, setShowDownloadForm] = useState(false);
+
   const outcomes = [
     {
       title: "Clear Priorities",
@@ -107,6 +110,15 @@ export default function AlignmentWorkshop() {
                       <Calendar className="w-5 h-5 mr-2" />
                       Book a Consultation
                     </Link>
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    onClick={() => setShowDownloadForm(true)}
+                    className="border-red-600 text-red-600 hover:bg-red-50"
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Download Overview
                   </Button>
                 </div>
               </div>
@@ -363,6 +375,12 @@ export default function AlignmentWorkshop() {
         </section>
       </main>
       <Footer />
+      
+      <WorkshopDownloadForm
+        open={showDownloadForm}
+        onOpenChange={setShowDownloadForm}
+        workshopKey="clarity"
+      />
     </>
   );
 }
