@@ -3,10 +3,12 @@ import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, FileText, Video, Download, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
 import shiftLogo from "@/assets/shift-logo.jpg";
 import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
+import bookCover from "@/assets/future-of-work-book.png";
 
 export default function Resources() {
   const leadershipArticles = [
@@ -136,6 +138,51 @@ export default function Resources() {
                 Explore our curated collection of articles, guides, videos, and case studies designed 
                 to support your leadership journey and organizational transformation.
               </p>
+            </section>
+
+            {/* Featured Book */}
+            <section className="mb-20">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-8 md:p-12">
+                <div className="grid md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
+                  <div className="flex justify-center">
+                    <Link to="/book">
+                      <img 
+                        src={bookCover} 
+                        alt="The Future of Work is Human by Kevin Britz"
+                        className="max-w-[250px] w-full rounded-lg shadow-xl hover:scale-105 transition-transform cursor-pointer"
+                      />
+                    </Link>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-primary font-medium mb-2">Featured Book</p>
+                    <h2 className="text-3xl font-bold mb-4 text-foreground">
+                      The Future of Work is Human
+                    </h2>
+                    <p className="text-muted-foreground mb-6">
+                      By Kevin Britz – Discover the WINGS framework and the essential human skills 
+                      that will define successful leadership in the rapidly evolving workplace.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                      <Link to="/book">
+                        <Button variant="outline">
+                          Learn More
+                        </Button>
+                      </Link>
+                      <a 
+                        href="https://www.amazon.com/Future-Work-Human-Kevin-Britz/dp/0796106045" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <Button>
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Buy on Amazon
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* Featured Partner Resources */}
