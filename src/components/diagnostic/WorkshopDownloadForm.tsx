@@ -84,76 +84,206 @@ export default function WorkshopDownloadForm({
     const outcomes = getWorkshopOutcomes(workshopKey);
     const steps = getWorkshopSteps(workshopKey);
     
+    const getWorkshopIcon = () => {
+      if (workshopKey === 'clarity') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
+      } else if (workshopKey === 'motivation') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+      } else {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>`;
+      }
+    };
+
+    const getProblemText = () => {
+      if (workshopKey === 'clarity') {
+        return {
+          p1: "Your team is busy. Everyone's working hard. But somehow, outcomes remain inconsistent. Different people have different ideas about what success looks like. Priorities shift frequently, and meetings create more questions than answers.",
+          p2: "This isn't a motivation problem. It's an alignment problem. And more effort won't fix it—only clarity will."
+        };
+      } else if (workshopKey === 'motivation') {
+        return {
+          p1: "Your team knows what to do. They have the skills. But something's missing. Energy is low, enthusiasm has faded, and people are going through the motions rather than bringing their best.",
+          p2: "This isn't a skills problem. It's an engagement problem. And pushing harder won't fix it—only reconnecting to purpose will."
+        };
+      } else {
+        return {
+          p1: "Your team has capable people. But decisions get stuck. Things fall through the cracks. People wait to be told what to do rather than taking initiative. Accountability feels like blame rather than ownership.",
+          p2: "This isn't a competence problem. It's an ownership problem. And more oversight won't fix it—only empowerment will."
+        };
+      }
+    };
+
+    const getWhoText = () => {
+      if (workshopKey === 'clarity') {
+        return "Leadership teams and cross-functional groups where effort is high but alignment is low. Ideal for teams experiencing frequent priority shifts, conflicting direction from different leaders, or a sense of \"busy but not productive.\"";
+      } else if (workshopKey === 'motivation') {
+        return "Teams where the work is understood but energy and commitment are lacking. Ideal for groups experiencing burnout, disengagement, or a disconnect between effort and meaning.";
+      } else {
+        return "Teams with capable individuals where accountability is inconsistent. Ideal for groups where decisions get escalated unnecessarily, ownership is unclear, or initiative is rare.";
+      }
+    };
+
+    const getIncludeTitle = () => {
+      if (workshopKey === 'clarity') return 'Values Assessment';
+      if (workshopKey === 'motivation') return '6 Human Needs Assessment';
+      return 'Leadership Index';
+    };
+
+    const getIncludeDesc = () => {
+      if (workshopKey === 'clarity') {
+        return 'Every participant completes our proprietary Values Assessment before the workshop. This reveals individual and collective values, helping the team understand what drives decision-making and where values may be creating invisible friction.';
+      } else if (workshopKey === 'motivation') {
+        return 'Every participant completes our 6 Human Needs Assessment before the workshop. Based on proven psychological research, this reveals which core human needs are being met or unmet within the team environment.';
+      } else {
+        return 'Every participant completes our Leadership Index assessment before the workshop. This comprehensive tool measures key leadership behaviours including decision-making confidence and accountability ownership.';
+      }
+    };
+
+    const problemText = getProblemText();
+    
     const html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${workshop.title} - Workshop Overview</title>
+  <title>${workshop.title} | Leadership by Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    @page { margin: 0; size: A4; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @page { 
+      margin: 0; 
+      size: A4;
+    }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       line-height: 1.6; 
-      color: #1a1a1a; 
+      color: #0a0a0a;
       background: #ffffff;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      font-size: 14px;
     }
     
+    /* Header */
+    .header {
+      background: #ffffff;
+      padding: 16px 40px;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #dc2626;
+      letter-spacing: -0.5px;
+    }
+    .header-nav {
+      font-size: 12px;
+      color: #737373;
+    }
+
+    /* Hero Section */
     .hero {
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      padding: 40px;
-      border-bottom: 4px solid #dc2626;
+      background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+      padding: 48px 40px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #737373;
+      font-size: 13px;
+      margin-bottom: 32px;
+      text-decoration: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
     }
     .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
-    .hero-badge .icon-box {
+    .hero-icon-box {
       background: rgba(220, 38, 38, 0.1);
       padding: 12px;
       border-radius: 12px;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .hero-badge .duration {
-      color: #64748b;
-      font-size: 14px;
+    .hero-duration {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #737373;
+      font-size: 13px;
     }
     h1 {
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 16px;
-      line-height: 1.2;
+      color: #0a0a0a;
+      margin-bottom: 20px;
+      line-height: 1.15;
+      letter-spacing: -1px;
     }
     .hero-description {
-      font-size: 18px;
-      color: #64748b;
+      font-size: 17px;
+      color: #525252;
       line-height: 1.7;
-      max-width: 600px;
     }
-    
+    .hero-image {
+      background: linear-gradient(135deg, #e5e5e5 0%, #d4d4d4 100%);
+      border-radius: 16px;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a3a3a3;
+      font-size: 14px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Problem Section */
     .problem-section {
-      padding: 40px;
+      padding: 56px 40px;
+    }
+    .problem-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      gap: 56px;
     }
     .section-title {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 16px;
+      color: #0a0a0a;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
     }
     .section-text {
-      color: #64748b;
-      line-height: 1.7;
+      color: #525252;
+      line-height: 1.75;
     }
-    .section-text p { margin-bottom: 12px; }
+    .section-text p {
+      margin-bottom: 16px;
+    }
+    .section-text p:last-child {
+      margin-bottom: 0;
+    }
     .who-box {
       display: flex;
       gap: 16px;
@@ -161,30 +291,38 @@ export default function WorkshopDownloadForm({
     }
     .who-icon {
       background: rgba(220, 38, 38, 0.1);
-      padding: 8px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      color: #dc2626;
       flex-shrink: 0;
     }
-    
+
+    /* Outcomes Section */
     .outcomes-section {
-      background: #f8fafc;
-      padding: 40px;
+      background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+      padding: 56px 40px;
       page-break-before: always;
     }
     .outcomes-header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+    }
+    .outcomes-header p {
+      color: #525252;
+      max-width: 560px;
+      margin: 0 auto;
     }
     .outcomes-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
     }
     .outcome-card {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 16px;
       padding: 20px;
+      transition: border-color 0.2s;
     }
     .outcome-header {
       display: flex;
@@ -198,24 +336,29 @@ export default function WorkshopDownloadForm({
     }
     .outcome-title {
       font-weight: 600;
-      color: #1a1a1a;
+      color: #0a0a0a;
       margin-bottom: 4px;
+      font-size: 15px;
     }
     .outcome-desc {
-      font-size: 14px;
-      color: #64748b;
+      font-size: 13px;
+      color: #525252;
+      line-height: 1.6;
     }
-    
+
+    /* Process Section */
     .process-section {
-      padding: 40px;
+      padding: 56px 40px;
+    }
+    .process-grid {
       display: grid;
       grid-template-columns: 3fr 2fr;
-      gap: 40px;
+      gap: 56px;
     }
     .steps-list {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
     .step-item {
       display: flex;
@@ -229,22 +372,27 @@ export default function WorkshopDownloadForm({
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: #dc2626;
       flex-shrink: 0;
     }
-    .step-content { padding-top: 8px; }
+    .step-content {
+      padding-top: 8px;
+    }
     .step-title {
       font-weight: 600;
-      color: #1a1a1a;
+      color: #0a0a0a;
       margin-bottom: 4px;
+      font-size: 15px;
     }
     .step-desc {
-      font-size: 14px;
-      color: #64748b;
+      font-size: 13px;
+      color: #525252;
+      line-height: 1.6;
     }
-    
+
+    /* Includes Section */
     .includes-section {
       display: flex;
       flex-direction: column;
@@ -253,8 +401,12 @@ export default function WorkshopDownloadForm({
     .include-card {
       background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%);
       border: 1px solid rgba(220, 38, 38, 0.2);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .include-card.primary {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.15) 100%);
+      border-color: rgba(220, 38, 38, 0.3);
     }
     .include-header {
       display: flex;
@@ -264,168 +416,157 @@ export default function WorkshopDownloadForm({
     }
     .include-icon {
       background: rgba(220, 38, 38, 0.2);
-      padding: 8px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      color: #dc2626;
     }
     .include-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
-      color: #1a1a1a;
+      color: #0a0a0a;
     }
     .include-desc {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
-    }
-    
-    .skills-section {
-      background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-      border-radius: 16px;
-      padding: 24px;
-      margin: 40px;
-    }
-    .skills-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .skills-icon { color: #dc2626; }
-    .skills-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-    .skills-desc {
-      color: #64748b;
-      margin-bottom: 20px;
-    }
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-    .skill-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .skill-name {
-      font-weight: 600;
-      color: #dc2626;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .skill-detail {
       font-size: 13px;
-      color: #64748b;
+      color: #525252;
+      line-height: 1.7;
     }
-    
+    .include-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #dc2626;
+    }
+
+    /* CTA Section */
     .cta-section {
       background: rgba(220, 38, 38, 0.05);
-      padding: 40px;
+      padding: 48px 40px;
       text-align: center;
-      border-top: 1px solid rgba(220, 38, 38, 0.2);
-    }
-    .cta-icon {
-      width: 48px;
-      height: 48px;
-      background: #dc2626;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      color: white;
     }
     .cta-title {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #0a0a0a;
       margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     .cta-desc {
-      color: #64748b;
-      max-width: 500px;
-      margin: 0 auto 20px;
+      color: #525252;
+      max-width: 480px;
+      margin: 0 auto 24px;
     }
-    .cta-contact {
-      font-size: 16px;
-      color: #dc2626;
-      font-weight: 600;
-    }
-    
-    .footer {
-      text-align: center;
-      padding: 24px;
-      border-top: 1px solid #e2e8f0;
-      color: #64748b;
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #dc2626;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
       font-size: 14px;
+      text-decoration: none;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0a0a0a;
+      padding: 32px 40px;
+      color: #a3a3a3;
+      font-size: 13px;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .footer-logo {
       font-weight: 700;
-      color: #dc2626;
+      color: #ffffff;
       font-size: 16px;
-      margin-bottom: 8px;
     }
-    
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-link {
+      color: #a3a3a3;
+      text-decoration: none;
+    }
+
     @media print {
-      body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
+      }
+      .hero-image {
+        background: #e5e5e5 !important;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">Leadership By Design</div>
+    <div class="header-nav">leadershipbydesign.lovable.app</div>
+  </div>
+
+  <!-- Hero Section -->
   <div class="hero">
-    <div class="hero-badge">
-      <div class="icon-box">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      </div>
-      <span class="duration">Morning workshop • ${workshop.duration}</span>
+    <div class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back to Diagnostic
     </div>
-    <h1>${workshop.title}</h1>
-    <p class="hero-description">${workshop.resultSummary}</p>
-  </div>
-
-  <div class="problem-section">
-    <div>
-      <h2 class="section-title">The Problem This Solves</h2>
-      <div class="section-text">
-        <p>${workshopKey === 'clarity' 
-          ? "Your team is busy. Everyone's working hard. But somehow, outcomes remain inconsistent. Different people have different ideas about what success looks like. Priorities shift frequently, and meetings create more questions than answers."
-          : workshopKey === 'motivation'
-          ? "Your team knows what to do. They have the skills. But something's missing. Energy is low, enthusiasm has faded, and people are going through the motions rather than bringing their best."
-          : "Your team has capable people. But decisions get stuck. Things fall through the cracks. People wait to be told what to do rather than taking initiative. Accountability feels like blame rather than ownership."
-        }</p>
-        <p>${workshopKey === 'clarity'
-          ? "This isn't a motivation problem. It's an alignment problem. And more effort won't fix it—only clarity will."
-          : workshopKey === 'motivation'
-          ? "This isn't a skills problem. It's an engagement problem. And pushing harder won't fix it—only reconnecting to purpose will."
-          : "This isn't a competence problem. It's an ownership problem. And more oversight won't fix it—only empowerment will."
-        }</p>
-      </div>
-    </div>
-    <div>
-      <h2 class="section-title">Who This Is For</h2>
-      <div class="who-box">
-        <div class="who-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <div class="hero-icon-box">
+            ${getWorkshopIcon()}
+          </div>
+          <div class="hero-duration">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Morning workshop
+          </div>
         </div>
-        <p class="section-text">${workshopKey === 'clarity'
-          ? "Leadership teams and cross-functional groups where effort is high but alignment is low. Ideal for teams experiencing frequent priority shifts, conflicting direction from different leaders, or a sense of \"busy but not productive.\""
-          : workshopKey === 'motivation'
-          ? "Teams where the work is understood but energy and commitment are lacking. Ideal for groups experiencing burnout, disengagement, or a disconnect between effort and meaning."
-          : "Teams with capable individuals where accountability is inconsistent. Ideal for groups where decisions get escalated unnecessarily, ownership is unclear, or initiative is rare."
-        }</p>
+        <h1>${workshop.title}</h1>
+        <p class="hero-description">${workshop.resultSummary}</p>
+      </div>
+      <div class="hero-image">
+        Workshop Session Image
       </div>
     </div>
   </div>
 
+  <!-- Problem + Who Section -->
+  <div class="problem-section">
+    <div class="problem-grid">
+      <div>
+        <h2 class="section-title">The Problem This Solves</h2>
+        <div class="section-text">
+          <p>${problemText.p1}</p>
+          <p>${problemText.p2}</p>
+        </div>
+      </div>
+      <div>
+        <h2 class="section-title">Who This Is For</h2>
+        <div class="who-box">
+          <div class="who-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <p class="section-text">${getWhoText()}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outcomes Section -->
   <div class="outcomes-section">
     <div class="outcomes-header">
       <h2 class="section-title">What You'll Achieve</h2>
-      <p class="section-text">Walk away with clarity, frameworks, and agreements that transform how your team works together.</p>
+      <p>Walk away with clarity, frameworks, and agreements that transform how your team works together.</p>
     </div>
     <div class="outcomes-grid">
       ${outcomes.map(outcome => `
@@ -442,82 +583,74 @@ export default function WorkshopDownloadForm({
     </div>
   </div>
 
+  <!-- Process Section -->
   <div class="process-section">
-    <div>
-      <h2 class="section-title">How It Works</h2>
-      <div class="steps-list">
-        ${steps.map(step => `
-          <div class="step-item">
-            <div class="step-number">${step.step}</div>
-            <div class="step-content">
-              <div class="step-title">${step.title}</div>
-              <div class="step-desc">${step.description}</div>
+    <div class="process-grid">
+      <div>
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-list">
+          ${steps.map(step => `
+            <div class="step-item">
+              <div class="step-number">${step.step}</div>
+              <div class="step-content">
+                <div class="step-title">${step.title}</div>
+                <div class="step-desc">${step.description}</div>
+              </div>
             </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-    <div class="includes-section">
-      <h2 class="section-title">What's Included</h2>
-      <div class="include-card">
-        <div class="include-header">
-          <div class="include-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          </div>
-          <div class="include-title">SHIFT Methodology™</div>
+          `).join('')}
         </div>
-        <p class="include-desc">Our proprietary SHIFT Methodology™ is the foundation of every workshop. This proven framework creates lasting transformation by addressing root causes, not just symptoms.</p>
       </div>
-      <div class="include-card">
-        <div class="include-header">
-          <div class="include-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <div class="includes-section">
+        <h2 class="section-title">What's Included</h2>
+        <div class="include-card primary">
+          <div class="include-header">
+            <div class="include-icon">
+              ${getWorkshopIcon()}
+            </div>
+            <div class="include-title">SHIFT Methodology™</div>
           </div>
-          <div class="include-title">${workshopKey === 'clarity' ? 'Values Assessment' : workshopKey === 'motivation' ? '6 Human Needs Assessment' : 'Leadership Index'}</div>
+          <p class="include-desc">Our proprietary SHIFT Methodology™ is the foundation of every workshop. This proven framework creates lasting transformation by addressing root causes, not just symptoms. It's what makes our workshops deliver sustainable change, not temporary fixes.</p>
+          <span class="include-link">Learn more about SHIFT →</span>
         </div>
-        <p class="include-desc">${workshopKey === 'clarity' 
-          ? 'Every participant completes our proprietary Values Assessment before the workshop. This reveals individual and collective values, helping the team understand what drives decision-making.'
-          : workshopKey === 'motivation'
-          ? 'Every participant completes our 6 Human Needs Assessment before the workshop. Based on proven psychological research, this reveals which core human needs are being met or unmet.'
-          : 'Every participant completes our Leadership Index assessment before the workshop. This comprehensive tool measures key leadership behaviours including decision-making confidence and accountability ownership.'
-        }</p>
+        <div class="include-card">
+          <div class="include-header">
+            <div class="include-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="include-title">${getIncludeTitle()}</div>
+          </div>
+          <p class="include-desc">${getIncludeDesc()}</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="skills-section">
-    <div class="skills-header">
-      <svg class="skills-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-      <span class="skills-title">SHIFT™ Skills Developed</span>
-    </div>
-    <p class="skills-desc">This workshop will help your team strengthen these core capabilities:</p>
-    <div class="skills-grid">
-      ${workshop.shiftSkills.map(skill => `
-        <div class="skill-card">
-          <div class="skill-name">${skill.skill}</div>
-          <div class="skill-detail">${skill.detail}</div>
-        </div>
-      `).join('')}
-    </div>
-  </div>
-
+  <!-- CTA Section -->
   <div class="cta-section">
-    <div class="cta-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    </div>
     <h2 class="cta-title">Ready to Transform Your Team?</h2>
-    <p class="cta-desc">Our experts can help you design a customized intervention based on your specific team dynamics and challenges.</p>
-    <p class="cta-contact">Contact: kevin@kevinbritz.com</p>
+    <p class="cta-desc">Book a call to discuss how the ${workshop.title} can help your team achieve breakthrough results.</p>
+    <div class="cta-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      Book a Consultation
+    </div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
-    <div class="footer-logo">Leadership By Design</div>
-    <p>© ${new Date().getFullYear()} All rights reserved.</p>
+    <div class="footer-content">
+      <div class="footer-logo">Leadership By Design</div>
+      <div class="footer-links">
+        <span class="footer-link">kevin@kevinbritz.com</span>
+        <span class="footer-link">© ${new Date().getFullYear()} All rights reserved</span>
+      </div>
+    </div>
   </div>
 
   <script>
     window.onload = function() {
-      window.print();
+      setTimeout(function() {
+        window.print();
+      }, 500);
     }
   </script>
 </body>
