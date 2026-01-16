@@ -43,7 +43,7 @@ export default function Hero() {
               size="lg" 
               className="w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
-              For Teams
+              Free Diagnostic for Teams
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -52,7 +52,7 @@ export default function Hero() {
               size="lg" 
               className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
-              For Leaders
+              Free Diagnostic for Leaders
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
