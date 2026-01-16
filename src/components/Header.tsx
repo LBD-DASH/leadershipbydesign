@@ -11,7 +11,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isProgrammesActive = ["/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology"].some(
+  const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -56,10 +56,10 @@ const Header = () => {
               <div className="absolute top-full left-0 pt-2">
                 <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[200px]">
                   <Link 
-                    to="/programmes" 
+                    to="/leadership-diagnostic" 
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
-                    Programmes Overview
+                    Leadership Diagnostic
                   </Link>
                   <Link 
                     to="/team-diagnostic" 
@@ -72,6 +72,13 @@ const Header = () => {
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     SHIFT Methodology™
+                  </Link>
+                  <div className="border-t border-border my-1"></div>
+                  <Link 
+                    to="/programmes" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    All Programmes
                   </Link>
                 </div>
               </div>
@@ -164,11 +171,11 @@ const Header = () => {
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Programmes</p>
               <Link 
-                to="/programmes" 
+                to="/leadership-diagnostic" 
                 className="block text-sm text-muted-foreground hover:text-foreground pl-3"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Programmes Overview
+                Leadership Diagnostic
               </Link>
               <Link 
                 to="/team-diagnostic" 
@@ -183,6 +190,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 SHIFT Methodology™
+              </Link>
+              <Link 
+                to="/programmes" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                All Programmes
               </Link>
             </div>
 
