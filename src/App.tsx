@@ -19,6 +19,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import HelloCoach from "./pages/HelloCoach";
 import Resources from "./pages/Resources";
+import Book from "./pages/Book";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdminList from "./pages/BlogAdminList";
@@ -54,6 +55,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/hellocoach" element={<HelloCoach />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/book" element={<Book />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/auth" element={<Auth />} />
