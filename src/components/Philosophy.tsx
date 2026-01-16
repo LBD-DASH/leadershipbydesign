@@ -14,11 +14,20 @@ export default function Philosophy() {
             Our Philosophy
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8" />
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            We believe that exceptional leadership is not innate—it is designed. Our unique approach 
-            focuses on crafting bespoke strategies and delivering measurable outcomes, empowering 
-            leaders to navigate complexity and inspire lasting change.
-          </p>
+          <div className="space-y-6 text-lg md:text-xl text-muted-foreground leading-relaxed text-left md:text-center">
+            <p>
+              We believe that exceptional leadership is not innate — it is designed, embodied, and made contagious.
+            </p>
+            <p>
+              At the core of our work is the understanding that leadership identity shapes behaviour, and behaviour shapes results. Leaders don't just influence through strategy and systems — they influence through how they show up, what they tolerate, and the energy they create around them.
+            </p>
+            <p>
+              Our approach integrates the principles of Contagious Identity with the SHIFT Methodology™, helping leaders consciously design the identity they lead from — and understand how that identity spreads through teams, culture, and performance.
+            </p>
+            <p>
+              By combining human behaviour diagnostics, practical skill development, and identity-level insight, we craft bespoke leadership strategies that deliver measurable outcomes. We equip leaders to navigate complexity, build ownership, and create lasting change — not through control, but through clarity, alignment, and example.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
