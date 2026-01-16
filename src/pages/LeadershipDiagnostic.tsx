@@ -1,36 +1,32 @@
-import { useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import SEO from '@/components/SEO';
-import LeadershipDiagnosticForm from '@/components/leadership-diagnostic/LeadershipDiagnosticForm';
-import LeadershipResults from '@/components/leadership-diagnostic/LeadershipResults';
-import { calculateLeadershipScores, getLeadershipResult, LeadershipResult } from '@/lib/leadershipScoring';
-import { supabase } from '@/integrations/supabase/client';
-import { motion } from 'framer-motion';
-import { Target, Compass, TrendingUp } from 'lucide-react';
+import { useState } from "react";
+import SEO from "@/components/SEO";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import LeadershipDiagnosticForm from "@/components/leadership-diagnostic/LeadershipDiagnosticForm";
+import LeadershipResults from "@/components/leadership-diagnostic/LeadershipResults";
+import { calculateLeadershipScores, getLeadershipResult, LeadershipResult } from "@/lib/leadershipScoring";
+import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
+import { ClipboardCheck } from "lucide-react";
 
 export default function LeadershipDiagnostic() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<LeadershipResult | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  
+
   const handleSubmit = async (answers: Record<number, number>) => {
     setIsSubmitting(true);
-    
-    // Calculate scores immediately
+
     const scores = calculateLeadershipScores(answers);
     const diagnosticResult = getLeadershipResult(scores);
-    
-    // Show results immediately
+
+    // Show results immediately - don't block on database
     setResult(diagnosticResult);
-    setIsSubmitting(false);
-    
-    // Scroll to top to see results
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     // Save to database in background (non-blocking)
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('leadership_diagnostic_submissions')
         .insert({
           answers,
@@ -46,106 +42,85 @@ export default function LeadershipDiagnostic() {
         })
         .select('id')
         .single();
-      
-      if (!error && data) {
+
+      if (data) {
         setSubmissionId(data.id);
       }
     } catch (error) {
-      console.error('Error saving submission:', error);
-      // Silent fail - don't block user experience
+      // Silent fail - results are already shown
+      console.error('Error saving diagnostic:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
+
   return (
     <>
-      <SEO 
-        title="Free Leadership Diagnostic | Discover Your Leadership Operating Level"
-        description="Take our free 20-question leadership diagnostic to discover your primary leadership operating level. Get instant insights and personalised development recommendations."
+      <SEO
+        title="Leadership Diagnostic | Leadership by Design"
+        description="Discover your leadership operating level with our free 20-question diagnostic. Get instant clarity on your strengths and growth opportunities."
+        canonicalUrl="/leadership-diagnostic"
         keywords="leadership diagnostic, leadership assessment, leadership development, leadership test, leadership profile"
       />
-      <Header />
       
-      <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        {/* Hero Section */}
-        {!result && (
-          <motion.section 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="pt-32 pb-16 px-4 sm:px-6 lg:px-8"
-          >
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
-                <Compass className="w-4 h-4" />
-                <span className="text-sm font-medium">Free Leadership Assessment</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                Discover Your Leadership
-                <span className="text-primary block">Operating Level</span>
-              </h1>
-              
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                Where are you operating as a leader right now? Take this 5-minute diagnostic 
-                to gain instant clarity on your leadership strengths and growth opportunities.
-              </p>
-              
-              {/* Benefits */}
-              <div className="grid sm:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
-                <div className="flex flex-col items-center gap-2 p-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Target className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">Instant Clarity</h3>
-                  <p className="text-sm text-gray-600">Know exactly where you stand</p>
-                </div>
-                <div className="flex flex-col items-center gap-2 p-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Compass className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">Clear Direction</h3>
-                  <p className="text-sm text-gray-600">Understand your growth path</p>
-                </div>
-                <div className="flex flex-col items-center gap-2 p-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900">Actionable Steps</h3>
-                  <p className="text-sm text-gray-600">Practical recommendations</p>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-        )}
+      <div className="min-h-screen bg-background">
+        <Header />
         
-        {/* Form or Results */}
-        <section className="pb-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            {result ? (
-              <motion.div
+        <main className="pt-24 pb-16">
+          {!result ? (
+            <>
+              {/* Hero Section */}
+              <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-8 sm:mb-12"
               >
-                <LeadershipResults result={result} submissionId={submissionId} />
-              </motion.div>
-            ) : (
-              <motion.div
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                  <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm font-medium">Free Leadership Assessment</span>
+                </div>
+                
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
+                  Discover Your Leadership
+                  <br />
+                  <span className="text-primary">Operating Level</span>
+                </h1>
+                
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
+                  Rate the 20 statements below and discover your primary leadership level with personalised development recommendations.
+                </p>
+                
+                <p className="text-xs sm:text-sm text-muted-foreground italic px-2">
+                  Answer based on how you actually lead - not how you aspire to lead.
+                </p>
+              </motion.section>
+
+              {/* Diagnostic Form */}
+              <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl"
               >
-                <LeadershipDiagnosticForm 
-                  onSubmit={handleSubmit} 
-                  isSubmitting={isSubmitting} 
-                />
-              </motion.div>
-            )}
-          </div>
-        </section>
-      </main>
-      
-      <Footer />
+                <LeadershipDiagnosticForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+              </motion.section>
+            </>
+          ) : (
+            /* Results Section */
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"
+            >
+              <LeadershipResults result={result} submissionId={submissionId} />
+            </motion.section>
+          )}
+        </main>
+        
+        <Footer />
+      </div>
     </>
   );
 }
