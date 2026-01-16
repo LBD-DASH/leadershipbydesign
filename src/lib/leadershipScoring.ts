@@ -27,7 +27,15 @@ export interface LeadershipLevelDetail {
   growthEdge: string;
   growthEdgeLevel: LeadershipLevel;
   recommendedPath: string;
+  image: string;
 }
+
+// Import images
+import leadershipL1Image from '@/assets/leadership-l1-productivity.jpg';
+import leadershipL2Image from '@/assets/leadership-l2-development.jpg';
+import leadershipL3Image from '@/assets/leadership-l3-purpose.jpg';
+import leadershipL4Image from '@/assets/leadership-l4-motivational.jpg';
+import leadershipL5Image from '@/assets/leadership-l5-strategic.jpg';
 
 export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDetail> = {
   L1: {
@@ -43,7 +51,8 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Leadership Development — moving from personal execution to enabling others to deliver.',
     growthEdgeLevel: 'L2',
-    recommendedPath: 'Leadership Development Programme'
+    recommendedPath: 'Leadership Development Programme',
+    image: leadershipL1Image
   },
   L2: {
     key: 'L2',
@@ -58,7 +67,8 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Personal Leadership — deepening self-awareness and leading from purpose rather than just process.',
     growthEdgeLevel: 'L3',
-    recommendedPath: 'Personal Leadership Programme'
+    recommendedPath: 'Personal Leadership Programme',
+    image: leadershipL2Image
   },
   L3: {
     key: 'L3',
@@ -73,7 +83,8 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Motivational Leadership — channelling your purpose into inspiring and energising others.',
     growthEdgeLevel: 'L4',
-    recommendedPath: 'Motivation & Engagement Workshop'
+    recommendedPath: 'Motivation & Engagement Workshop',
+    image: leadershipL3Image
   },
   L4: {
     key: 'L4',
@@ -88,7 +99,8 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Strategic Leadership — translating energy into long-term systems and direction.',
     growthEdgeLevel: 'L5',
-    recommendedPath: 'Strategic Leadership Programme'
+    recommendedPath: 'Strategic Leadership Programme',
+    image: leadershipL4Image
   },
   L5: {
     key: 'L5',
@@ -103,7 +115,8 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Foundation Strengthening — ensuring your strategic vision is grounded in personal and team operational excellence.',
     growthEdgeLevel: 'L1',
-    recommendedPath: 'Executive Coaching'
+    recommendedPath: 'Executive Coaching',
+    image: leadershipL5Image
   }
 };
 
