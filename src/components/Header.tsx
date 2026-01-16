@@ -15,7 +15,7 @@ const Header = () => {
     path => location.pathname.startsWith(path)
   );
 
-  const isResourcesActive = ["/resources", "/blog"].some(
+  const isResourcesActive = ["/resources", "/blog", "/hellocoach"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -85,14 +85,6 @@ const Header = () => {
             )}
           </div>
 
-          {/* HelloCoach standalone link */}
-          <NavLink 
-            to="/hellocoach" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
-          >
-            HelloCoach
-          </NavLink>
 
           {/* Resources Dropdown */}
           <div 
@@ -124,6 +116,12 @@ const Header = () => {
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     Blog
+                  </Link>
+                  <Link 
+                    to="/hellocoach" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    HelloCoach
                   </Link>
                 </div>
               </div>
@@ -200,14 +198,6 @@ const Header = () => {
               </Link>
             </div>
 
-            <Link 
-              to="/hellocoach" 
-              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              HelloCoach
-            </Link>
-
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resources</p>
               <Link 
@@ -223,6 +213,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Blog
+              </Link>
+              <Link 
+                to="/hellocoach" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                HelloCoach
               </Link>
             </div>
 
