@@ -27,17 +27,17 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {/* Results Header */}
-      <div className="text-center max-w-3xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+      <div className="text-center max-w-3xl mx-auto px-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
           Your Team's Primary Need Right Now:
         </h2>
-        <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
           {primaryWorkshop.resultSummary}
         </p>
         {secondaryRecommendation && (
-          <p className="text-sm text-muted-foreground mt-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-4">
             You may also benefit from addressing{' '}
             <span className="font-medium text-foreground">
               {workshopDetails[secondaryRecommendation].title.replace('The ', '').replace(' Workshop', '')}
@@ -47,49 +47,49 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
       </div>
 
       {/* SHIFT Skills to Develop */}
-      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8 border border-primary/20">
-        <div className="flex items-center gap-3 mb-4">
-          <Sparkles className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold text-foreground">SHIFT™ Skills to Develop</h3>
+      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-4 sm:p-6 md:p-8 border border-primary/20">
+        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+          <h3 className="text-base sm:text-lg font-semibold text-foreground">SHIFT™ Skills to Develop</h3>
         </div>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
           Based on your results, your team would benefit from strengthening these core capabilities:
         </p>
-        <div className="grid sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
           {primaryWorkshop.shiftSkills.map((item, index) => (
-            <div key={index} className="bg-background rounded-xl p-4 border border-border">
-              <span className="text-primary font-semibold">{item.skill}</span>
-              <p className="text-sm text-muted-foreground mt-1">{item.detail}</p>
+            <div key={index} className="bg-background rounded-xl p-3 sm:p-4 border border-border">
+              <span className="text-primary font-semibold text-sm sm:text-base">{item.skill}</span>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">{item.detail}</p>
             </div>
           ))}
         </div>
         <div className="text-center">
           <Link 
             to="/shift-methodology" 
-            className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+            className="inline-flex items-center text-xs sm:text-sm font-medium text-primary hover:underline"
           >
             Learn more about the SHIFT Methodology™
-            <ArrowRight className="w-4 h-4 ml-1" />
+            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
           </Link>
         </div>
       </div>
 
       {/* Score Visualization */}
-      <div className="bg-card rounded-2xl p-6 sm:p-8 border border-border">
-        <div className="flex items-center gap-3 mb-6">
-          <BarChart3 className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold text-foreground">Your Diagnostic Scores</h3>
+      <div className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border">
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+          <h3 className="text-base sm:text-lg font-semibold text-foreground">Your Diagnostic Scores</h3>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {workshopOrder.map((key) => {
             const score = scores[key];
             const percentage = (score / maxScore) * 100;
             const isHighest = key === primaryRecommendation;
             
             return (
-              <div key={key} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
+              <div key={key} className="space-y-1.5 sm:space-y-2">
+                <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
                   <span className={cn(
                     "font-medium",
                     isHighest ? "text-primary" : "text-foreground"
@@ -98,9 +98,9 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
                     {key === 'motivation' && 'SHIFT Team Energy'}
                     {key === 'leadership' && 'SHIFT Team Ownership'}
                   </span>
-                  <span className="text-muted-foreground">{score}/{maxScore}</span>
+                  <span className="text-muted-foreground flex-shrink-0">{score}/{maxScore}</span>
                 </div>
-                <div className="h-3 bg-muted rounded-full overflow-hidden">
+                <div className="h-2.5 sm:h-3 bg-muted rounded-full overflow-hidden">
                   <div
                     className={cn(
                       "h-full rounded-full transition-all duration-500",
@@ -114,18 +114,18 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
           })}
         </div>
         
-        <p className="text-xs text-muted-foreground mt-4">
+        <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4">
           Higher scores indicate greater friction in that area
         </p>
       </div>
 
       {/* Workshop Cards */}
       <div>
-        <h3 className="text-xl sm:text-2xl font-semibold text-foreground text-center mb-8">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground text-center mb-6 sm:mb-8">
           Choose Your Path Forward
         </h3>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {workshopOrder.map((key) => (
             <WorkshopCard
               key={key}
@@ -144,20 +144,21 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
       </div>
 
       {/* Speak to Expert CTA */}
-      <div className="bg-primary/5 rounded-2xl p-8 sm:p-10 text-center border border-primary/20">
-        <MessageSquare className="w-12 h-12 text-primary mx-auto mb-4" />
-        <h3 className="text-2xl font-bold text-foreground mb-3">
+      <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 md:p-10 text-center border border-primary/20">
+        <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-4" />
+        <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3">
           Want a Tailored Solution?
         </h3>
-        <p className="text-muted-foreground max-w-xl mx-auto mb-6">
+        <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6">
           Our experts can help you design a customized intervention based on your specific team dynamics and challenges.
         </p>
         <Button
           size="lg"
           onClick={() => setShowContactForm(true)}
-          className="px-8 py-6 text-lg font-semibold rounded-full"
+          className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full"
         >
-          Speak to an Expert - Design Your Solution
+          <span className="hidden sm:inline">Speak to an Expert - Design Your Solution</span>
+          <span className="sm:hidden">Speak to an Expert</span>
         </Button>
       </div>
 
