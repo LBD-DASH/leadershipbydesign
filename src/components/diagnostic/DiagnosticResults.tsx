@@ -123,9 +123,8 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
         {/* Download Button */}
         <div className="mt-4 sm:mt-6 pt-4 border-t border-border">
           <Button
-            variant="outline"
             onClick={() => setShowDownloadForm(true)}
-            className="w-full"
+            className="w-full bg-red-600 hover:bg-red-700 text-white"
           >
             <Download className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Download Your Results Overview</span>
