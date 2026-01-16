@@ -71,24 +71,24 @@ export default function TeamDiagnostic() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-12"
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-8 sm:mb-12"
               >
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 mb-6">
-                  <ClipboardCheck className="w-4 h-4" />
-                  <span className="text-sm font-medium">Free Team Assessment</span>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                  <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm font-medium">Free Team Assessment</span>
                 </div>
                 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
                   Your Team Doesn't Need Everything.
                   <br />
                   <span className="text-primary">It Needs the Right Thing.</span>
                 </h1>
                 
-                <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
                   Rate the 15 statements below and discover the single intervention that will unlock momentum fastest.
                 </p>
                 
-                <p className="text-sm text-muted-foreground italic">
+                <p className="text-xs sm:text-sm text-muted-foreground italic px-2">
                   Answer based on what you actually observe - not what you wish were true.
                 </p>
               </motion.section>
