@@ -17,6 +17,9 @@ export default function ServiceCard({ title, description, image, index }: Servic
     if (title === "SHIFT Leadership Development") {
       return "/leadership-levels";
     }
+    if (title === "Executive Coaching") {
+      return "/executive-coaching";
+    }
     return "/programmes";
   };
   
