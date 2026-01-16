@@ -31,7 +31,7 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
   };
   
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12 pt-24 sm:pt-28">
       {/* Hero Result Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -39,12 +39,12 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
-          <Sparkles className="w-4 h-4" />
-          <span className="text-sm font-medium">Your Leadership Operating Level</span>
+        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+          <Sparkles className="w-4 h-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">Your Leadership Operating Level</span>
         </div>
         
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 px-2 leading-tight">
           {primaryTitle}
         </h1>
         
@@ -54,7 +54,7 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
           </p>
         )}
         
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+        <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
           {primaryDetails.description}
         </p>
         
@@ -85,9 +85,9 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="bg-white rounded-2xl p-8 shadow-lg"
+        className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg"
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Your Leadership Profile</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Your Leadership Profile</h2>
         
         <div className="space-y-4">
           {levels.map((level) => {
@@ -99,15 +99,15 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
             
             return (
               <div key={level} className="space-y-1">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className={cn(
-                    "font-medium",
+                    "font-medium text-sm sm:text-base truncate",
                     isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-gray-600"
                   )}>
                     {details.title}
                   </span>
                   <span className={cn(
-                    "font-bold",
+                    "font-bold text-sm sm:text-base flex-shrink-0",
                     isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-gray-500"
                   )}>
                     {score}/{maxScore}
@@ -136,7 +136,13 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.6 }}
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Leadership Level Details</h2>
+        <div className="text-center mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Leadership Level Details</h2>
+          <p className="text-sm text-primary font-medium flex items-center justify-center gap-2">
+            <span className="inline-block w-2 h-2 bg-primary rounded-full"></span>
+            Internationally Recognised Programmes
+          </p>
+        </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {levels.map((level) => (
@@ -158,40 +164,40 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6 }}
-        className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-8"
+        className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8"
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">What's Next?</h2>
-        <p className="text-gray-600 text-center mb-8 max-w-2xl mx-auto">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 text-center">What's Next?</h2>
+        <p className="text-gray-600 text-center mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
           Leadership isn't one-size-fits-all. Choose your path forward.
         </p>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto">
           <Button 
             onClick={() => setShowDownloadForm(true)}
             variant="outline"
             size="lg"
-            className="h-auto py-4 flex-col gap-2"
+            className="h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
           >
-            <Download className="w-5 h-5" />
+            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
             <span>Save My Results</span>
           </Button>
           
           <Button 
             onClick={() => setShowExpertForm(true)}
             size="lg"
-            className="h-auto py-4 flex-col gap-2"
+            className="h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
             <span>Speak to an Expert</span>
           </Button>
           
-          <Link to="/programmes" className="sm:col-span-2 lg:col-span-1">
+          <Link to="/programmes" className="col-span-1 sm:col-span-2 lg:col-span-1">
             <Button 
               variant="secondary"
               size="lg"
-              className="w-full h-auto py-4 flex-col gap-2"
+              className="w-full h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
             >
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>Explore Programmes</span>
             </Button>
           </Link>
