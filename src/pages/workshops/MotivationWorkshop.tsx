@@ -1,14 +1,18 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Zap, Clock, Users, CheckCircle, ArrowLeft, Calendar, Target, Shield } from "lucide-react";
+import { Zap, Clock, Users, CheckCircle, ArrowLeft, Calendar, Target, Shield, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
 import heroImage from "@/assets/workshop-motivation-hero.jpg";
 import alignmentImage from "@/assets/workshop-alignment.jpg";
 import leadershipImage from "@/assets/workshop-leadership.jpg";
 
 export default function MotivationWorkshop() {
+  const [showDownloadForm, setShowDownloadForm] = useState(false);
+
   const outcomes = [
     {
       title: "Re-engagement",
@@ -107,6 +111,15 @@ export default function MotivationWorkshop() {
                       <Calendar className="w-5 h-5 mr-2" />
                       Book a Consultation
                     </Link>
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    onClick={() => setShowDownloadForm(true)}
+                    className="border-red-600 text-red-600 hover:bg-red-50"
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Download Overview
                   </Button>
                 </div>
               </div>
@@ -365,6 +378,12 @@ export default function MotivationWorkshop() {
         </section>
       </main>
       <Footer />
+      
+      <WorkshopDownloadForm
+        open={showDownloadForm}
+        onOpenChange={setShowDownloadForm}
+        workshopKey="motivation"
+      />
     </>
   );
 }
