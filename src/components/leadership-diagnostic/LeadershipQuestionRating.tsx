@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 interface LeadershipQuestionRatingProps {
   questionId: number;
@@ -7,42 +7,48 @@ interface LeadershipQuestionRatingProps {
   onChange: (questionId: number, value: number) => void;
 }
 
-const ratingLabels = [
-  { value: 1, label: 'Rarely true' },
-  { value: 2, label: 'Occasionally' },
-  { value: 3, label: 'Sometimes' },
-  { value: 4, label: 'Mostly true' },
-  { value: 5, label: 'Consistently' }
-];
-
-export default function LeadershipQuestionRating({ 
-  questionId, 
-  questionText, 
-  value, 
-  onChange 
-}: LeadershipQuestionRatingProps) {
+export default function LeadershipQuestionRating({ questionId, questionText, value, onChange }: LeadershipQuestionRatingProps) {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <p className="text-gray-800 font-medium mb-4">{questionText}</p>
-      
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1">
-        {ratingLabels.map((rating) => (
-          <button
-            key={rating.value}
-            type="button"
-            onClick={() => onChange(questionId, rating.value)}
-            className={cn(
-              "flex-1 py-3 px-2 rounded-lg text-sm font-medium transition-all duration-200",
-              "border-2 hover:border-primary/50",
-              value === rating.value
-                ? "bg-primary text-white border-primary"
-                : "bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100"
-            )}
-          >
-            <span className="block text-xs opacity-70 mb-0.5">{rating.value}</span>
-            <span className="block text-xs sm:text-[10px] lg:text-xs">{rating.label}</span>
-          </button>
-        ))}
+    <div className="py-4 border-b border-border/50 last:border-b-0">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+        {/* Question text */}
+        <p className="text-foreground font-medium text-sm sm:text-base leading-relaxed flex-1">
+          {questionId}. {questionText}
+        </p>
+        
+        {/* Rating buttons with labels below */}
+        <div className="flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                type="button"
+                onClick={() => onChange(questionId, rating)}
+                className={cn(
+                  "flex flex-col items-center gap-1 transition-all duration-200",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
+                )}
+                aria-label={`Rate ${rating}`}
+              >
+                <div
+                  className={cn(
+                    "w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 flex items-center justify-center font-semibold text-xs sm:text-sm transition-all duration-200",
+                    value === rating
+                      ? "bg-primary border-primary text-primary-foreground scale-110"
+                      : "border-muted-foreground/30 text-muted-foreground hover:border-primary/50 hover:text-primary hover:scale-105"
+                  )}
+                >
+                  {rating}
+                </div>
+              </button>
+            ))}
+          </div>
+          {/* Labels below numbers */}
+          <div className="flex justify-between mt-1 px-1">
+            <span className="text-[10px] text-muted-foreground">Disagree</span>
+            <span className="text-[10px] text-muted-foreground">Agree</span>
+          </div>
+        </div>
       </div>
     </div>
   );
