@@ -25,34 +25,43 @@ export default function LeadershipLevelCard({
   
   return (
     <div className={cn(
-      "bg-white rounded-2xl p-6 shadow-sm border-2 transition-all duration-300",
+      "bg-white rounded-2xl overflow-hidden shadow-sm border-2 transition-all duration-300",
       isPrimary ? "border-primary ring-2 ring-primary/20" : 
       isSecondary ? "border-amber-400 ring-2 ring-amber-400/20" : 
       "border-gray-100"
     )}>
-      {/* Header badges */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex gap-2">
-          {isPrimary && (
-            <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
-              Primary
-            </span>
-          )}
-          {isSecondary && (
-            <span className="bg-amber-400 text-white text-xs font-bold px-3 py-1 rounded-full">
-              Secondary
-            </span>
-          )}
+      {/* Image */}
+      <div className="relative h-40 overflow-hidden">
+        <img 
+          src={details.image} 
+          alt={details.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
+          <div className="flex gap-2">
+            {isPrimary && (
+              <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
+                Primary
+              </span>
+            )}
+            {isSecondary && (
+              <span className="bg-amber-400 text-white text-xs font-bold px-3 py-1 rounded-full">
+                Secondary
+              </span>
+            )}
+          </div>
+          <span className="text-2xl font-bold text-white">{percentage}%</span>
         </div>
-        <span className="text-2xl font-bold text-primary">{percentage}%</span>
       </div>
       
-      {/* Title */}
-      <h3 className="text-xl font-bold text-gray-900 mb-1">{details.title}</h3>
-      <p className="text-sm text-primary font-medium mb-3">{details.subtitle}</p>
-      
-      {/* Description */}
-      <p className="text-gray-600 text-sm mb-4">{details.description}</p>
+      <div className="p-6">
+        {/* Title */}
+        <h3 className="text-xl font-bold text-gray-900 mb-1">{details.title}</h3>
+        <p className="text-sm text-primary font-medium mb-3">{details.subtitle}</p>
+        
+        {/* Description */}
+        <p className="text-gray-600 text-sm mb-4">{details.description}</p>
       
       {/* Strengths */}
       <div className="mb-4">
@@ -96,6 +105,7 @@ export default function LeadershipLevelCard({
           <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Button>
       )}
+      </div>
     </div>
   );
 }
