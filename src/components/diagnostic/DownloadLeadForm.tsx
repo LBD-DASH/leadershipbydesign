@@ -824,15 +824,18 @@ export default function DownloadLeadForm({
       
       setIsComplete(true);
       toast.success("Your workshop overview is ready!");
-      
-      // Navigate to workshop page after a delay
+
+      // Close modal + go straight to the recommended workshop page
+      const targetRoute = workshopRoutes[result.primaryRecommendation];
+      onOpenChange(false);
+      navigate(targetRoute);
+
+      // Reset local state shortly after navigation
       setTimeout(() => {
         setIsComplete(false);
         setEmail("");
         setName("");
-        onOpenChange(false);
-        navigate(workshopRoutes[result.primaryRecommendation]);
-      }, 2000);
+      }, 0);
 
     } catch (error) {
       console.error("Error:", error);
