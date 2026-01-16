@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/lib/utils/navigation";
 
 interface ServiceCardProps {
   title: string;
@@ -12,6 +11,14 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ title, description, image, index }: ServiceCardProps) {
   const isEven = index % 2 === 0;
+  
+  // Determine link destination based on service title
+  const getLinkDestination = () => {
+    if (title === "SHIFT Leadership Development") {
+      return "/leadership-levels";
+    }
+    return "/programmes";
+  };
   
   return (
     <motion.div
@@ -41,7 +48,7 @@ export default function ServiceCard({ title, description, image, index }: Servic
           <p className="text-muted-foreground leading-relaxed mb-4 md:mb-6 text-base sm:text-lg">
             {description}
           </p>
-          <Link to={createPageUrl("Programmes")}>
+          <Link to={getLinkDestination()}>
             <button className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 group/btn text-base sm:text-lg">
               Learn More
               <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
