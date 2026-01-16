@@ -1,45 +1,9 @@
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Link, useParams, Navigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Lightbulb, Target, Users, MessageSquare } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Users, MessageSquare } from "lucide-react";
 
 const programmesData = {
-  "bespoke-programme-design": {
-    title: "Bespoke Programme Design",
-    subtitle: "Custom-built solutions tailored to your unique challenges",
-    description: "We design customized leadership development programmes that align perfectly with your organization's culture, challenges, and strategic goals.",
-    duration: "Flexible (3-12 months)",
-    format: "Tailored to Your Needs",
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80",
-    icon: Lightbulb,
-    whatYouLearn: [
-      "Solutions designed specifically for your organizational context",
-      "Integration of your company values and strategic objectives",
-      "Flexible delivery formats: workshops, coaching, or blended approaches",
-      "Custom frameworks and tools for your unique challenges",
-      "Ongoing support and programme iteration based on feedback",
-      "Measurable outcomes aligned with your business goals"
-    ],
-    idealFor: "Organizations seeking tailored leadership development, companies with specific cultural or strategic needs, teams requiring customized solutions"
-  },
-  "strategic-leadership-development": {
-    title: "Strategic Leadership Development",
-    subtitle: "Elevate your leadership impact at the executive level",
-    description: "An intensive programme for senior leaders focused on strategic thinking, organizational vision, and driving transformation.",
-    duration: "12 weeks",
-    format: "In-person & Coaching Sessions",
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
-    icon: Target,
-    whatYouLearn: [
-      "Advanced strategic thinking and decision-making frameworks",
-      "Leading organizational change and transformation initiatives",
-      "Building and communicating a compelling vision",
-      "Navigating complexity and ambiguity at the executive level",
-      "Developing high-performing leadership teams",
-      "Balancing short-term results with long-term strategic goals"
-    ],
-    idealFor: "Senior executives, C-suite leaders, directors preparing for executive roles, leaders driving major organizational change"
-  },
   "team-effectiveness-workshops": {
     title: "Team Effectiveness Workshops",
     subtitle: "Transform your team into a high-performing unit",

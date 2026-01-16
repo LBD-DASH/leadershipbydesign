@@ -1,29 +1,32 @@
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
-import { Lightbulb, Target, Users, MessageSquare, ClipboardCheck, ArrowRight } from "lucide-react";
+import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface Programme {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  duration: string;
+  format: string;
+  image: string;
+  icon: typeof Target;
+  isSpecialPage?: boolean;
+}
 
 const programmes = [
   {
-    id: "bespoke-programme-design",
-    title: "Bespoke Programme Design",
-    subtitle: "Custom-built solutions tailored to your unique challenges",
-    description: "We design customized leadership development programmes that align perfectly with your organization's culture, challenges, and strategic goals.",
-    duration: "Flexible (3-12 months)",
-    format: "Tailored to Your Needs",
-    image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80",
-    icon: Lightbulb
-  },
-  {
-    id: "strategic-leadership-development",
-    title: "Strategic Leadership Development",
-    subtitle: "Elevate your leadership impact at the executive level",
-    description: "An intensive programme for senior leaders focused on strategic thinking, organizational vision, and driving transformation.",
-    duration: "12 weeks",
-    format: "In-person & Coaching Sessions",
+    id: "shift-leadership-development",
+    title: "SHIFT Leadership Development",
+    subtitle: "Discover your leadership operating level",
+    description: "Our internationally recognised programme helps you understand where you're operating as a leader and design a development path tailored to your unique needs.",
+    duration: "Flexible",
+    format: "Diagnostic + Bespoke Development",
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
-    icon: Target
+    icon: Target,
+    isSpecialPage: true
   },
   {
     id: "team-effectiveness-workshops",
@@ -143,10 +146,10 @@ export default function Programmes() {
 
                     {/* Button */}
                     <Link 
-                      to={`/programmes/${programme.id}`}
+                      to={(programme as Programme).isSpecialPage ? `/programmes/${programme.id}` : `/programmes/${programme.id}`}
                       className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium py-3 px-4 rounded-md text-center transition-colors"
                     >
-                      Learn More
+                      {(programme as Programme).isSpecialPage ? 'Explore Programme' : 'Learn More'}
                     </Link>
                   </div>
                 </div>
