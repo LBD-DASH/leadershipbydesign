@@ -14,6 +14,7 @@ import MotivationWorkshop from "./pages/workshops/MotivationWorkshop";
 import LeadershipWorkshop from "./pages/workshops/LeadershipWorkshop";
 import ShiftMethodology from "./pages/ShiftMethodology";
 import ShiftLeadershipDevelopment from "./pages/ShiftLeadershipDevelopment";
+import ExecutiveCoaching from "./pages/ExecutiveCoaching";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import HelloCoach from "./pages/HelloCoach";
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/workshops/motivation" element={<MotivationWorkshop />} />
           <Route path="/workshops/leadership" element={<LeadershipWorkshop />} />
           <Route path="/shift-methodology" element={<ShiftMethodology />} />
+          <Route path="/executive-coaching" element={<ExecutiveCoaching />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/hellocoach" element={<HelloCoach />} />
