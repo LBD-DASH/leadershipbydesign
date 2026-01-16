@@ -1,6 +1,7 @@
 import ServiceCard from "./ServiceCard";
 import shiftLeadershipImage from "@/assets/service-shift-leadership.jpg";
 import executiveCoachingImage from "@/assets/service-executive-coaching.jpg";
+import teamWorkshopsImage from "@/assets/service-team-workshops.jpg";
 
 const services = [
   {
@@ -11,7 +12,7 @@ const services = [
   {
     title: "Team Workshops",
     description: "Interactive sessions designed to build cohesion, improve communication, and unlock your team's full potential through collaborative learning experiences.",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80"
+    image: teamWorkshopsImage
   },
   {
     title: "Executive Coaching",
