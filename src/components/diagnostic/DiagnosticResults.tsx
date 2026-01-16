@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { DiagnosticResult, workshopDetails } from "@/lib/diagnosticScoring";
 import WorkshopCard from "./WorkshopCard";
 import ExpertContactForm from "./ExpertContactForm";
-import { MessageSquare, BarChart3, Sparkles, ArrowRight } from "lucide-react";
+import DownloadLeadForm from "./DownloadLeadForm";
+import { MessageSquare, BarChart3, Sparkles, ArrowRight, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DiagnosticResultsProps {
@@ -14,6 +15,7 @@ interface DiagnosticResultsProps {
 
 export default function DiagnosticResults({ result, submissionId }: DiagnosticResultsProps) {
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showDownloadForm, setShowDownloadForm] = useState(false);
   
   const { scores, primaryRecommendation, secondaryRecommendation } = result;
   const primaryWorkshop = workshopDetails[primaryRecommendation];
@@ -117,6 +119,19 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
         <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4">
           Higher scores indicate greater friction in that area
         </p>
+
+        {/* Download Button */}
+        <div className="mt-4 sm:mt-6 pt-4 border-t border-border">
+          <Button
+            variant="outline"
+            onClick={() => setShowDownloadForm(true)}
+            className="w-full"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            <span className="hidden sm:inline">Download Your Results Overview</span>
+            <span className="sm:hidden">Download Results</span>
+          </Button>
+        </div>
       </div>
 
       {/* Workshop Cards */}
@@ -174,6 +189,14 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
         onOpenChange={setShowContactForm}
         submissionId={submissionId}
         primaryRecommendation={primaryRecommendation}
+      />
+
+      {/* Download Lead Form Modal */}
+      <DownloadLeadForm
+        open={showDownloadForm}
+        onOpenChange={setShowDownloadForm}
+        submissionId={submissionId}
+        result={result}
       />
     </div>
   );

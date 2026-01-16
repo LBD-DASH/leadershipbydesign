@@ -107,6 +107,41 @@ export type Database = {
         }
         Relationships: []
       }
+      workshop_downloads: {
+        Row: {
+          created_at: string
+          diagnostic_submission_id: string | null
+          email: string
+          id: string
+          name: string | null
+          workshop: string
+        }
+        Insert: {
+          created_at?: string
+          diagnostic_submission_id?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          workshop: string
+        }
+        Update: {
+          created_at?: string
+          diagnostic_submission_id?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          workshop?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workshop_downloads_diagnostic_submission_id_fkey"
+            columns: ["diagnostic_submission_id"]
+            isOneToOne: false
+            referencedRelation: "diagnostic_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
