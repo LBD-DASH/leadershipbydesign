@@ -51,7 +51,7 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Leadership Development — moving from personal execution to enabling others to deliver.',
     growthEdgeLevel: 'L2',
-    recommendedPath: 'Leadership Development Programme',
+    recommendedPath: 'SHIFT Methodology™ + Leadership Development',
     image: leadershipL1Image
   },
   L2: {
@@ -67,7 +67,7 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Personal Leadership — deepening self-awareness and leading from purpose rather than just process.',
     growthEdgeLevel: 'L3',
-    recommendedPath: 'Personal Leadership Programme',
+    recommendedPath: 'SHIFT Methodology™ + Personal Leadership',
     image: leadershipL2Image
   },
   L3: {
@@ -83,7 +83,7 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Motivational Leadership — channelling your purpose into inspiring and energising others.',
     growthEdgeLevel: 'L4',
-    recommendedPath: 'Motivation & Engagement Workshop',
+    recommendedPath: 'SHIFT Methodology™ + Motivation Workshop',
     image: leadershipL3Image
   },
   L4: {
@@ -99,7 +99,7 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Strategic Leadership — translating energy into long-term systems and direction.',
     growthEdgeLevel: 'L5',
-    recommendedPath: 'Strategic Leadership Programme',
+    recommendedPath: 'SHIFT Methodology™ + Strategic Leadership',
     image: leadershipL4Image
   },
   L5: {
@@ -115,7 +115,7 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
     ],
     growthEdge: 'Foundation Strengthening — ensuring your strategic vision is grounded in personal and team operational excellence.',
     growthEdgeLevel: 'L1',
-    recommendedPath: 'Executive Coaching',
+    recommendedPath: 'SHIFT Methodology™ + Executive Coaching',
     image: leadershipL5Image
   }
 };
