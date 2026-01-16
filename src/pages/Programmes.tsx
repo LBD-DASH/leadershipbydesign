@@ -55,9 +55,9 @@ export default function Programmes() {
     <>
       <SEO
         title="Programmes & Workshops"
-        description="Explore leadership development programmes including executive coaching, team effectiveness workshops, strategic leadership development, and bespoke programme design."
+        description="Explore leadership development programmes including executive coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design."
         canonicalUrl="/programmes"
-        keywords="leadership programmes, executive coaching, team workshops, leadership development, strategic planning workshops"
+        keywords="leadership programmes, executive coaching, team workshops, leadership development, SHIFT leadership development"
       />
       <div className="min-h-screen bg-background">
         <Header />

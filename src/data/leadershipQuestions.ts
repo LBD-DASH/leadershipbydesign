@@ -35,7 +35,7 @@ export const leadershipCategories: LeadershipCategory[] = [
   },
   {
     key: 'L5',
-    title: 'Strategic Leadership',
+    title: 'SHIFT Leadership Development',
     subtitle: 'Vision & System Builder: strategy, culture, long-term direction'
   }
 ];
