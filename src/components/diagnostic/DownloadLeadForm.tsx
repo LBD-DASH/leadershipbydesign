@@ -90,11 +90,23 @@ export default function DownloadLeadForm({
     return steps[key] || steps.clarity;
   };
 
+  const getHeroImageUrl = (key: string) => {
+    const baseUrl = 'https://leadershipbydesign.lovable.app';
+    if (key === 'clarity') {
+      return `${baseUrl}/assets/workshop-alignment-hero.jpg`;
+    } else if (key === 'motivation') {
+      return `${baseUrl}/assets/workshop-motivation-hero.jpg`;
+    } else {
+      return `${baseUrl}/assets/workshop-leadership-hero.jpg`;
+    }
+  };
+
   const generateWorkshopPDF = () => {
     const { scores, primaryRecommendation, secondaryRecommendation } = result;
     const workshop = workshopDetails[primaryRecommendation];
     const outcomes = getWorkshopOutcomes(primaryRecommendation);
     const steps = getWorkshopSteps(primaryRecommendation);
+    const heroImageUrl = getHeroImageUrl(primaryRecommendation);
     
     const getWorkshopIcon = () => {
       if (primaryRecommendation === 'clarity') {
@@ -259,15 +271,15 @@ export default function DownloadLeadForm({
       line-height: 1.7;
     }
     .hero-image {
-      background: linear-gradient(135deg, #e5e5e5 0%, #d4d4d4 100%);
       border-radius: 16px;
       height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #a3a3a3;
-      font-size: 14px;
+      overflow: hidden;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     /* Scores Section */
@@ -573,8 +585,9 @@ export default function DownloadLeadForm({
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
       }
-      .hero-image {
-        background: #e5e5e5 !important;
+      .hero-image img {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
   </style>
@@ -608,7 +621,7 @@ export default function DownloadLeadForm({
         <p class="hero-description">${workshop.resultSummary}</p>
       </div>
       <div class="hero-image">
-        Workshop Session Image
+        <img src="${heroImageUrl}" alt="${workshop.title}" crossorigin="anonymous" />
       </div>
     </div>
   </div>
