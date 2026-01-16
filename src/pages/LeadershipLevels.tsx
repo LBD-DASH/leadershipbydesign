@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Award, Sparkles } from "lucide-react";
+import { ArrowRight, Award, Sparkles, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -119,6 +119,62 @@ export default function LeadershipLevels() {
                   </motion.div>
                 );
               })}
+
+              {/* Design Your Leadership Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+              >
+                <Link to="/contact" className="block group h-full">
+                  <div className="bg-gradient-to-br from-primary/10 via-card to-primary/5 rounded-2xl overflow-hidden border-2 border-dashed border-primary/30 hover:border-primary hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                    {/* Icon Header */}
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                      <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                        <Pencil className="w-12 h-12 text-primary" />
+                      </div>
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-bold">
+                          Bespoke
+                        </span>
+                      </div>
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <span className="text-xs font-medium text-primary bg-primary/20 px-2 py-1 rounded">
+                          Tailored Development
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="font-serif text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                        Design Your Leadership
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-4 flex-1">
+                        Need a customised leadership development programme? Work with our experts to design a bespoke journey that addresses your unique challenges and aspirations.
+                      </p>
+                      
+                      {/* Key Features */}
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          Tailored to your organisation
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          Custom content & delivery
+                        </div>
+                      </div>
+
+                      <div className="flex items-center text-primary font-semibold text-sm group-hover:gap-2 transition-all">
+                        Get in Touch
+                        <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             </div>
           </div>
         </section>
