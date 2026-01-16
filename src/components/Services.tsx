@@ -1,12 +1,12 @@
 import ServiceCard from "./ServiceCard";
-import leadershipL5Image from "@/assets/leadership-l5-strategic.jpg";
-import leadershipL2Image from "@/assets/leadership-l2-development.jpg";
+import shiftLeadershipImage from "@/assets/service-shift-leadership.jpg";
+import executiveCoachingImage from "@/assets/service-executive-coaching.jpg";
 
 const services = [
   {
     title: "SHIFT Leadership Development",
     description: "Intensive executive development focused on strategic thinking, organizational vision, and driving transformation. We help senior leaders navigate complexity and inspire lasting change.",
-    image: leadershipL5Image
+    image: shiftLeadershipImage
   },
   {
     title: "Team Workshops",
@@ -16,7 +16,7 @@ const services = [
   {
     title: "Executive Coaching",
     description: "Personalized one-on-one guidance tailored for senior leaders. We help you refine your leadership approach, enhance decision-making, and drive organizational excellence.",
-    image: leadershipL2Image
+    image: executiveCoachingImage
   }
 ];
 

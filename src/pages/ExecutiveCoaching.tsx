@@ -5,7 +5,7 @@ import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ArrowLeft, CheckCircle2, Target, Brain, Users, Compass, Sparkles, Lightbulb, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import leadershipL2Image from '@/assets/leadership-l2-development.jpg';
+import executiveCoachingImage from '@/assets/service-executive-coaching.jpg';
 
 const shiftSkills = [
   { letter: 'S', title: 'Self-Management', description: 'Emotional regulation, energy mastery, confidence under pressure, and resilience.' },
@@ -113,7 +113,7 @@ export default function ExecutiveCoaching() {
               >
                 <div className="rounded-2xl overflow-hidden shadow-2xl">
                   <img 
-                    src={leadershipL2Image} 
+                    src={executiveCoachingImage} 
                     alt="Executive Coaching Session"
                     className="w-full h-[400px] object-cover"
                   />
