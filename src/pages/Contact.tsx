@@ -228,7 +228,7 @@ export default function Contact() {
                   <SelectContent>
                     <SelectItem value="Executive Coaching">Executive Coaching</SelectItem>
                     <SelectItem value="Team Workshops">Team Workshops</SelectItem>
-                    <SelectItem value="Strategic Planning">Strategic Planning</SelectItem>
+                    <SelectItem value="SHIFT Leadership Development">SHIFT Leadership Development</SelectItem>
                     <SelectItem value="Leadership Essentials">Leadership Essentials</SelectItem>
                     <SelectItem value="General Inquiry">General Inquiry</SelectItem>
                   </SelectContent>

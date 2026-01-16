@@ -97,14 +97,14 @@ export const leadershipLevelDetails: Record<LeadershipLevel, LeadershipLevelDeta
       'Drives change with optimism',
       'Develops people\'s strengths'
     ],
-    growthEdge: 'Strategic Leadership — translating energy into long-term systems and direction.',
+    growthEdge: 'SHIFT Leadership Development — translating energy into long-term systems and direction.',
     growthEdgeLevel: 'L5',
-    recommendedPath: 'SHIFT Methodology™ + Strategic Leadership',
+    recommendedPath: 'SHIFT Methodology™ + SHIFT Leadership Development',
     image: leadershipL4Image
   },
   L5: {
     key: 'L5',
-    title: 'Strategic Leader',
+    title: 'SHIFT Leadership Development Leader',
     subtitle: 'Vision & System Builder',
     description: 'You think beyond the immediate. You align people, culture, and strategy to create lasting impact and prepare your organisation for the future.',
     strengths: [

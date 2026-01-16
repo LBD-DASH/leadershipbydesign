@@ -2,7 +2,7 @@ import ServiceCard from "./ServiceCard";
 
 const services = [
   {
-    title: "Strategic Leadership",
+    title: "SHIFT Leadership Development",
     description: "Intensive executive development focused on strategic thinking, organizational vision, and driving transformation. We help senior leaders navigate complexity and inspire lasting change.",
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80"
   },
