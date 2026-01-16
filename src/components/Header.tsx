@@ -6,12 +6,12 @@ import ldbLogo from "@/assets/ldb-logo.png";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
-  const [servicesOpen, setServicesOpen] = useState(false);
+  const [programmesOpen, setProgrammesOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isServicesActive = ["/team-diagnostic", "/programmes", "/hellocoach", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology"].some(
+  const isProgrammesActive = ["/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -36,25 +36,31 @@ const Header = () => {
             Home
           </NavLink>
 
-          {/* Services Dropdown */}
+          {/* Programmes Dropdown */}
           <div 
             className="relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseEnter={() => setProgrammesOpen(true)}
+            onMouseLeave={() => setProgrammesOpen(false)}
           >
             <button 
               className={cn(
                 "flex items-center gap-1 text-sm font-medium transition-colors",
-                isServicesActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                isProgrammesActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              Services
-              <ChevronDown className={cn("w-4 h-4 transition-transform", servicesOpen && "rotate-180")} />
+              Programmes
+              <ChevronDown className={cn("w-4 h-4 transition-transform", programmesOpen && "rotate-180")} />
             </button>
             
-            {servicesOpen && (
+            {programmesOpen && (
               <div className="absolute top-full left-0 pt-2">
                 <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[200px]">
+                  <Link 
+                    to="/programmes" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Programmes Overview
+                  </Link>
                   <Link 
                     to="/team-diagnostic" 
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -62,27 +68,24 @@ const Header = () => {
                     Team Diagnostic
                   </Link>
                   <Link 
-                    to="/programmes" 
-                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  >
-                    Programmes
-                  </Link>
-                  <Link 
                     to="/shift-methodology" 
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     SHIFT Methodology™
                   </Link>
-                  <Link 
-                    to="/hellocoach" 
-                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  >
-                    HelloCoach
-                  </Link>
                 </div>
               </div>
             )}
           </div>
+
+          {/* HelloCoach standalone link */}
+          <NavLink 
+            to="/hellocoach" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground"
+          >
+            HelloCoach
+          </NavLink>
 
           {/* Resources Dropdown */}
           <div 
@@ -159,7 +162,14 @@ const Header = () => {
             </Link>
             
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Services</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Programmes</p>
+              <Link 
+                to="/programmes" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Programmes Overview
+              </Link>
               <Link 
                 to="/team-diagnostic" 
                 className="block text-sm text-muted-foreground hover:text-foreground pl-3"
@@ -168,27 +178,21 @@ const Header = () => {
                 Team Diagnostic
               </Link>
               <Link 
-                to="/programmes" 
-                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Programmes
-              </Link>
-              <Link 
                 to="/shift-methodology" 
                 className="block text-sm text-muted-foreground hover:text-foreground pl-3"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 SHIFT Methodology™
               </Link>
-              <Link 
-                to="/hellocoach" 
-                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                HelloCoach
-              </Link>
             </div>
+
+            <Link 
+              to="/hellocoach" 
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              HelloCoach
+            </Link>
 
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resources</p>
