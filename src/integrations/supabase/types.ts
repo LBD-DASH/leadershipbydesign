@@ -107,6 +107,60 @@ export type Database = {
         }
         Relationships: []
       }
+      leadership_diagnostic_submissions: {
+        Row: {
+          answers: Json
+          company: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_hybrid: boolean
+          l1_score: number
+          l2_score: number
+          l3_score: number
+          l4_score: number
+          l5_score: number
+          low_foundation_flag: boolean
+          name: string | null
+          primary_level: string
+          secondary_level: string | null
+        }
+        Insert: {
+          answers: Json
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_hybrid?: boolean
+          l1_score: number
+          l2_score: number
+          l3_score: number
+          l4_score: number
+          l5_score: number
+          low_foundation_flag?: boolean
+          name?: string | null
+          primary_level: string
+          secondary_level?: string | null
+        }
+        Update: {
+          answers?: Json
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_hybrid?: boolean
+          l1_score?: number
+          l2_score?: number
+          l3_score?: number
+          l4_score?: number
+          l5_score?: number
+          low_foundation_flag?: boolean
+          name?: string | null
+          primary_level?: string
+          secondary_level?: string | null
+        }
+        Relationships: []
+      }
       workshop_downloads: {
         Row: {
           created_at: string
