@@ -8,7 +8,8 @@ import { calculateScores, getRecommendation, DiagnosticResult } from "@/lib/diag
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { ClipboardCheck } from "lucide-react";
+import { ClipboardCheck, Clock, Target, Zap } from "lucide-react";
+import FloatingSocial from "@/components/FloatingSocial";
 
 export default function TeamDiagnostic() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,13 +67,29 @@ export default function TeamDiagnostic() {
         <main className="pt-24 pb-16">
           {!result ? (
             <>
-              {/* Hero Section */}
+              {/* Hero Section - Optimized for TikTok/Mobile */}
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-8 sm:mb-12"
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-6 sm:mb-12"
               >
+                {/* Quick Value Props - Mobile First */}
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Clock className="w-3.5 h-3.5 text-primary" />
+                    <span>3 min</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Target className="w-3.5 h-3.5 text-primary" />
+                    <span>15 questions</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Zap className="w-3.5 h-3.5 text-primary" />
+                    <span>Instant results</span>
+                  </div>
+                </div>
+
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
                   <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span className="text-xs sm:text-sm font-medium">Free Team Assessment</span>
@@ -117,6 +134,7 @@ export default function TeamDiagnostic() {
         </main>
         
         <Footer />
+        <FloatingSocial />
       </div>
     </>
   );
