@@ -1,218 +1,88 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 
-// Stacked documents visual component
-function StackedDocs({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="relative">
-      {/* Background stacked cards */}
-      <div className="absolute top-2 left-2 w-full h-full bg-primary/20 rounded-lg border border-primary/30" />
-      <div className="absolute top-1 left-1 w-full h-full bg-primary/30 rounded-lg border border-primary/40" />
-      {/* Main card */}
-      <div className="relative bg-background rounded-lg border-2 border-primary p-4 shadow-md">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-2 bg-primary rounded" />
-          <div className="w-16 h-2 bg-primary/50 rounded" />
-        </div>
-        <div className="space-y-2">
-          {items.map((item, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <div className="w-4 h-1 bg-primary/60 rounded" />
-              <span className="text-xs text-muted-foreground">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Org chart visual component
-function OrgChart() {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="w-12 h-6 bg-primary rounded mb-1" />
-      <div className="w-0.5 h-4 bg-primary/50" />
-      <div className="flex gap-4">
-        <div className="flex flex-col items-center">
-          <div className="w-0.5 h-3 bg-primary/50" />
-          <div className="w-8 h-5 bg-primary/70 rounded" />
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="w-0.5 h-3 bg-primary/50" />
-          <div className="w-8 h-5 bg-primary/70 rounded" />
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="w-0.5 h-3 bg-primary/50" />
-          <div className="w-8 h-5 bg-primary/70 rounded" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Text with description lines
-function TextBlock({ title, lines = 3 }: { title: string; lines?: number }) {
-  return (
-    <div className="space-y-2">
-      <h4 className="font-bold text-primary text-lg">{title}</h4>
-      <div className="space-y-1.5">
-        {Array.from({ length: lines }).map((_, i) => (
-          <div 
-            key={i} 
-            className="h-1.5 bg-muted-foreground/30 rounded" 
-            style={{ width: `${100 - i * 15}%` }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Simple list visual
-function ListBlock({ items }: { items: string[] }) {
-  return (
-    <div className="space-y-2">
-      {items.map((item, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary/50" />
-          <div className="h-1.5 bg-muted-foreground/30 rounded flex-1" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Card with icon header
-function CardBlock({ title, hasProgress }: { title: string; hasProgress?: boolean }) {
-  return (
-    <div className="bg-background rounded-lg border-2 border-primary/50 p-3 shadow-sm">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-6 h-4 bg-primary rounded" />
-        <span className="text-xs font-medium text-foreground">{title}</span>
-      </div>
-      {hasProgress && (
-        <div className="h-1.5 bg-muted rounded overflow-hidden">
-          <div className="h-full w-2/3 bg-primary/60 rounded" />
-        </div>
-      )}
-    </div>
-  );
-}
-
-interface NodePosition {
-  x: number;
-  y: number;
-}
-
-interface EcosystemItem {
-  id: string;
-  position: NodePosition;
-  content: React.ReactNode;
-  link?: string;
-  external?: boolean;
-}
-
-const ecosystemItems: EcosystemItem[] = [
-  {
-    id: "foundation",
-    position: { x: 8, y: 20 },
-    content: (
-      <StackedDocs 
-        title="Foundation" 
-        items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
-      />
-    ),
-    link: "/shift-methodology",
-  },
-  {
-    id: "assessment",
-    position: { x: 8, y: 55 },
-    content: <OrgChart />,
-    link: "/leadership-diagnostic",
-  },
-  {
-    id: "tools",
-    position: { x: 8, y: 80 },
-    content: (
-      <div className="space-y-2">
-        <CardBlock title="6 Human Needs" />
-        <CardBlock title="Purpose" hasProgress />
-        <CardBlock title="Values" />
-      </div>
-    ),
-  },
-  {
-    id: "purpose",
-    position: { x: 72, y: 15 },
-    content: <TextBlock title="Purpose" lines={3} />,
-    link: "https://findmypurpose.me",
-    external: true,
-  },
-  {
-    id: "values",
-    position: { x: 72, y: 45 },
-    content: <TextBlock title="Values" lines={3} />,
-    link: "https://valuesblueprint.online",
-    external: true,
-  },
-  {
-    id: "needs",
-    position: { x: 72, y: 75 },
-    content: <TextBlock title="6 Human Needs" lines={3} />,
-    link: "https://6humanneeds.online",
-    external: true,
-  },
-];
-
-// Connection line with dot
-function ConnectionLine({ 
-  startX, 
-  startY, 
-  endX, 
-  endY,
-  delay = 0 
+// Block component with the blue/gray style from the diagram
+function DiagramBlock({ 
+  children, 
+  className = "",
+  size = "normal"
 }: { 
-  startX: number; 
-  startY: number; 
-  endX: number; 
-  endY: number;
-  delay?: number;
+  children: React.ReactNode; 
+  className?: string;
+  size?: "small" | "normal" | "large" | "wide";
 }) {
+  const sizeClasses = {
+    small: "px-4 py-3 text-sm",
+    normal: "px-6 py-4",
+    large: "px-8 py-6",
+    wide: "px-8 py-4 w-full"
+  };
+  
   return (
-    <g>
-      <motion.line
-        x1={`${startX}%`}
-        y1={`${startY}%`}
-        x2={`${endX}%`}
-        y2={`${endY}%`}
-        stroke="hsl(var(--primary))"
+    <div className={`bg-[#6B8BA4] text-white font-medium text-center ${sizeClasses[size]} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+// Number icon with "1" like in the diagram
+function NumberIcon() {
+  return (
+    <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center">
+      <span className="text-white font-bold text-lg">1</span>
+    </div>
+  );
+}
+
+// Arrow line component
+function ArrowLine({ 
+  direction,
+  className = ""
+}: { 
+  direction: "left" | "right" | "up" | "down" | "up-left" | "up-right" | "down-left" | "down-right";
+  className?: string;
+}) {
+  const getPath = () => {
+    switch (direction) {
+      case "left":
+        return "M100,50 L10,50 M20,40 L10,50 L20,60";
+      case "right":
+        return "M0,50 L90,50 M80,40 L90,50 L80,60";
+      case "up":
+        return "M50,100 L50,10 M40,20 L50,10 L60,20";
+      case "down":
+        return "M50,0 L50,90 M40,80 L50,90 L60,80";
+      case "up-left":
+        return "M90,90 L20,20 M20,35 L20,20 L35,20";
+      case "up-right":
+        return "M10,90 L80,20 M65,20 L80,20 L80,35";
+      case "down-left":
+        return "M90,10 L20,80 M20,65 L20,80 L35,80";
+      case "down-right":
+        return "M10,10 L80,80 M65,80 L80,80 L80,65";
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <svg className={`w-12 h-12 ${className}`} viewBox="0 0 100 100">
+      <path
+        d={getPath()}
+        fill="none"
+        stroke="black"
         strokeWidth="2"
-        strokeOpacity="0.4"
-        initial={{ pathLength: 0 }}
-        whileInView={{ pathLength: 1 }}
-        transition={{ duration: 0.6, delay }}
-        viewport={{ once: true }}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <motion.circle
-        cx={`${endX}%`}
-        cy={`${endY}%`}
-        r="6"
-        fill="hsl(var(--primary))"
-        initial={{ scale: 0 }}
-        whileInView={{ scale: 1 }}
-        transition={{ duration: 0.3, delay: delay + 0.4 }}
-        viewport={{ once: true }}
-      />
-    </g>
+    </svg>
   );
 }
 
 export default function DigitalEcosystem() {
   return (
-    <section className="py-24 px-6 lg:px-8 bg-secondary/30 overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-24 px-6 lg:px-8 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <motion.h2
@@ -233,162 +103,155 @@ export default function DigitalEcosystem() {
           >
             Your leadership development journey — from assessment to contagious identity
           </motion.p>
-          <motion.div
-            className="w-24 h-1 bg-primary mx-auto mt-6"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          />
         </div>
 
-        {/* Desktop Diagram */}
-        <div className="hidden lg:block relative" style={{ height: "600px" }}>
-          {/* SVG Connection Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-            {/* Left side connections */}
-            <ConnectionLine startX={50} startY={50} endX={28} endY={25} delay={0.2} />
-            <ConnectionLine startX={50} startY={50} endX={28} endY={50} delay={0.3} />
-            <ConnectionLine startX={50} startY={50} endX={28} endY={75} delay={0.4} />
-            
-            {/* Right side connections */}
-            <ConnectionLine startX={50} startY={50} endX={68} endY={20} delay={0.2} />
-            <ConnectionLine startX={50} startY={50} endX={68} endY={50} delay={0.3} />
-            <ConnectionLine startX={50} startY={50} endX={68} endY={80} delay={0.4} />
-            
-            {/* Top connection */}
-            <ConnectionLine startX={50} startY={50} endX={50} endY={12} delay={0.1} />
-          </svg>
-
-          {/* Center Hub */}
-          <motion.div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 0.5, type: "spring" }}
-            viewport={{ once: true }}
-          >
-            <div className="w-32 h-32 rounded-2xl bg-background border-4 border-primary shadow-xl flex flex-col items-center justify-center">
-              <Sparkles className="w-10 h-10 text-primary mb-1" />
-              <span className="font-bold text-sm text-primary">LEADER</span>
-              <span className="text-[10px] text-muted-foreground">(Contagious Identity)</span>
-            </div>
-          </motion.div>
-
-          {/* Top Label */}
-          <motion.div
-            className="absolute left-1/2 -translate-x-1/2"
-            style={{ top: "2%" }}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-center">
-              <div className="w-4 h-4 rounded-full bg-primary mx-auto mb-2" />
-              <span className="text-sm font-medium text-muted-foreground">Leadership Index</span>
-              <span className="block text-[10px] text-muted-foreground/70">Coming Soon</span>
-            </div>
-          </motion.div>
-
-          {/* Left Column Items */}
-          <motion.div
-            className="absolute"
-            style={{ left: "2%", top: "10%", width: "24%" }}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <Link to="/shift-methodology" className="block hover:scale-105 transition-transform">
-              <StackedDocs 
-                title="Foundation" 
-                items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
-              />
+        {/* Desktop Diagram - matching the reference exactly */}
+        <motion.div 
+          className="hidden lg:block relative"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          {/* Top Row - Leadership Index */}
+          <div className="flex items-start gap-4 mb-8">
+            <NumberIcon />
+            <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+              <DiagramBlock size="wide" className="w-80">
+                Leadership Index
+              </DiagramBlock>
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="absolute"
-            style={{ left: "5%", top: "42%", width: "20%" }}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <Link to="/leadership-diagnostic" className="block hover:scale-105 transition-transform">
-              <div className="text-center mb-2">
-                <span className="text-xs font-medium text-muted-foreground">Leadership Assessment</span>
+          {/* Main Content Area */}
+          <div className="flex gap-8 items-start">
+            {/* Left Column - Stacked blocks */}
+            <div className="flex flex-col gap-0 w-56">
+              <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                <DiagramBlock className="mb-0">
+                  Leadership Index
+                </DiagramBlock>
+              </Link>
+              <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                <DiagramBlock className="ml-4">
+                  Values Assessment
+                </DiagramBlock>
+              </a>
+              <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                <DiagramBlock className="ml-8">
+                  6 Human Needs
+                </DiagramBlock>
+              </a>
+              <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                <DiagramBlock className="ml-12">
+                  Purpose
+                </DiagramBlock>
+              </a>
+            </div>
+
+            {/* Arrows pointing to/from center */}
+            <div className="flex flex-col justify-center gap-8 py-8">
+              <ArrowLine direction="left" />
+              <ArrowLine direction="left" />
+              <ArrowLine direction="left" />
+            </div>
+
+            {/* Center Hub */}
+            <div className="flex flex-col items-center">
+              <ArrowLine direction="up-left" className="mb-2" />
+              <div className="relative">
+                <ArrowLine direction="up-right" className="absolute -top-10 -right-10" />
+                <DiagramBlock size="large" className="w-52 h-40 flex flex-col items-center justify-center">
+                  <div className="text-xl font-bold mb-2">Leader</div>
+                  <div className="text-2xl font-bold mb-2">YOU</div>
+                  <div className="text-sm mt-4">Designing your</div>
+                  <div className="text-sm">COntagious Identity</div>
+                </DiagramBlock>
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
+                  <ArrowLine direction="down-right" />
+                </div>
               </div>
-              <OrgChart />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            className="absolute"
-            style={{ left: "2%", top: "68%", width: "24%" }}
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <div className="space-y-2">
-              <span className="text-xs font-medium text-muted-foreground block mb-2">Essential Tools</span>
-              <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer">
-                <CardBlock title="6 Human Needs" />
-              </a>
-              <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer">
-                <CardBlock title="Purpose Blueprint" hasProgress />
-              </a>
-              <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer">
-                <CardBlock title="Values Blueprint" />
-              </a>
             </div>
-          </motion.div>
 
-          {/* Right Column Items */}
-          <motion.div
-            className="absolute"
-            style={{ right: "5%", top: "12%", width: "22%" }}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            {/* Right Side Content */}
+            <div className="flex flex-col gap-6">
+              {/* Leadership Diagnostic Row */}
+              <div className="flex items-center gap-4">
+                <ArrowLine direction="right" />
+                <NumberIcon />
+                <Link to="/leadership-diagnostic" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="normal" className="w-56">
+                    Leadership Diagnostic
+                  </DiagramBlock>
+                </Link>
+              </div>
+
+              {/* Leadership Levels Grid - 3x2 */}
+              <div className="grid grid-cols-3 gap-2 ml-16">
+                <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="small">
+                    Leadership<br />Development
+                  </DiagramBlock>
+                </Link>
+                <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="small">
+                    Personal<br />Productivity
+                  </DiagramBlock>
+                </Link>
+                <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="small">
+                    Purpose<br />Lead Leader
+                  </DiagramBlock>
+                </Link>
+                <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="small">
+                    Motivational<br />Leader
+                  </DiagramBlock>
+                </Link>
+                <Link to="/leadership-levels" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock size="small">
+                    Strategy<br />Leadership
+                  </DiagramBlock>
+                </Link>
+              </div>
+
+              {/* Coaching */}
+              <div className="ml-16">
+                <Link to="/executive-coaching" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock className="w-56">
+                    Coaching
+                  </DiagramBlock>
+                </Link>
+              </div>
+
+              {/* Team Diagnostic */}
+              <div className="flex items-center gap-4 ml-8">
+                <NumberIcon />
+                <Link to="/team-diagnostic" className="hover:opacity-80 transition-opacity">
+                  <DiagramBlock className="w-48">
+                    Team Diagnostic
+                  </DiagramBlock>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Bar - Contagious Identity */}
+          <motion.div 
+            className="mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
-              <TextBlock title="Purpose" lines={3} />
-            </a>
+            <DiagramBlock size="wide" className="text-xl py-6">
+              Contagious Identity
+            </DiagramBlock>
           </motion.div>
-
-          <motion.div
-            className="absolute"
-            style={{ right: "5%", top: "42%", width: "22%" }}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
-              <TextBlock title="Values" lines={3} />
-            </a>
-          </motion.div>
-
-          <motion.div
-            className="absolute"
-            style={{ right: "5%", top: "72%", width: "22%" }}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
-              <TextBlock title="6 Human Needs" lines={3} />
-            </a>
-          </motion.div>
-        </div>
+        </motion.div>
 
         {/* Mobile Layout */}
-        <div className="lg:hidden space-y-8">
+        <div className="lg:hidden space-y-6">
           {/* Center Hub */}
           <motion.div
             className="flex justify-center"
@@ -397,88 +260,123 @@ export default function DigitalEcosystem() {
             transition={{ duration: 0.5, type: "spring" }}
             viewport={{ once: true }}
           >
-            <div className="w-28 h-28 rounded-2xl bg-background border-4 border-primary shadow-xl flex flex-col items-center justify-center">
-              <Sparkles className="w-8 h-8 text-primary mb-1" />
-              <span className="font-bold text-sm text-primary">LEADER</span>
-              <span className="text-[9px] text-muted-foreground text-center">(Contagious Identity)</span>
-            </div>
+            <DiagramBlock size="large" className="w-52">
+              <div className="text-lg font-bold">Leader YOU</div>
+              <div className="text-sm mt-2">Designing your</div>
+              <div className="text-sm">Contagious Identity</div>
+            </DiagramBlock>
           </motion.div>
 
-          {/* Foundation */}
+          {/* Leadership Index */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Foundation</h3>
-            <Link to="/shift-methodology">
-              <StackedDocs 
-                title="Foundation" 
-                items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
-              />
+            <div className="flex items-center gap-3 mb-4">
+              <NumberIcon />
+              <h3 className="text-lg font-semibold">Leadership Index</h3>
+            </div>
+            <Link to="/leadership-levels">
+              <DiagramBlock>Leadership Index</DiagramBlock>
             </Link>
           </motion.div>
 
-          {/* Assessment */}
+          {/* Assessment Tools */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
+            className="space-y-2"
           >
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Assessment</h3>
-            <Link to="/leadership-diagnostic" className="block">
-              <div className="bg-background rounded-lg border-2 border-primary/50 p-4">
-                <OrgChart />
-                <p className="text-xs text-muted-foreground text-center mt-3">Leadership Assessment</p>
-              </div>
-            </Link>
+            <h3 className="text-lg font-semibold mb-4">Assessment Tools</h3>
+            <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer">
+              <DiagramBlock>Values Assessment</DiagramBlock>
+            </a>
+            <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer">
+              <DiagramBlock>6 Human Needs</DiagramBlock>
+            </a>
+            <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer">
+              <DiagramBlock>Purpose</DiagramBlock>
+            </a>
           </motion.div>
 
-          {/* Essential Tools */}
+          {/* Leadership Diagnostic */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Essential Tools</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer">
-                <TextBlock title="Purpose" lines={2} />
-              </a>
-              <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer">
-                <TextBlock title="Values" lines={2} />
-              </a>
-              <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer">
-                <TextBlock title="6 Human Needs" lines={2} />
-              </a>
+            <div className="flex items-center gap-3 mb-4">
+              <NumberIcon />
+              <h3 className="text-lg font-semibold">Leadership Diagnostic</h3>
+            </div>
+            <Link to="/leadership-diagnostic">
+              <DiagramBlock>Leadership Diagnostic</DiagramBlock>
+            </Link>
+          </motion.div>
+
+          {/* Leadership Levels */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-lg font-semibold mb-4">Leadership Levels</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <Link to="/leadership-levels">
+                <DiagramBlock size="small">Leadership Development</DiagramBlock>
+              </Link>
+              <Link to="/leadership-levels">
+                <DiagramBlock size="small">Personal Productivity</DiagramBlock>
+              </Link>
+              <Link to="/leadership-levels">
+                <DiagramBlock size="small">Purpose Lead Leader</DiagramBlock>
+              </Link>
+              <Link to="/leadership-levels">
+                <DiagramBlock size="small">Motivational Leader</DiagramBlock>
+              </Link>
+              <Link to="/leadership-levels">
+                <DiagramBlock size="small">Strategy Leadership</DiagramBlock>
+              </Link>
             </div>
           </motion.div>
-        </div>
 
-        {/* Legend */}
-        <motion.div
-          className="mt-16 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary" />
-            <span>Core Framework</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded border-2 border-primary/50" />
-            <span>Tools & Assessments</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-1.5 bg-muted-foreground/30 rounded" />
-            <span>Resources</span>
-          </div>
-        </motion.div>
+          {/* Coaching & Team Diagnostic */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="space-y-3"
+          >
+            <Link to="/executive-coaching">
+              <DiagramBlock>Coaching</DiagramBlock>
+            </Link>
+            <div className="flex items-center gap-3">
+              <NumberIcon />
+              <Link to="/team-diagnostic" className="flex-1">
+                <DiagramBlock>Team Diagnostic</DiagramBlock>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Bottom Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <DiagramBlock size="wide" className="text-lg py-5">
+              Contagious Identity
+            </DiagramBlock>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
