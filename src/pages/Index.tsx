@@ -6,6 +6,7 @@ import Services from "@/components/Services";
 import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
 import TestimonialSlider from "@/components/TestimonialSlider";
+import FloatingSocial from "@/components/FloatingSocial";
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
         <PartnerApps />
         <ClientLogos />
         <TestimonialSlider />
+        <FloatingSocial />
       </div>
     </>
   );
