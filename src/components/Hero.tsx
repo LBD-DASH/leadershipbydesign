@@ -26,11 +26,20 @@ export default function Hero() {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight tracking-tight px-2"
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
         >
           Transforming Leaders<br />
           <span className="text-white/90">Driving Results</span>
         </motion.h1>
+        
+        <motion.p
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-8 sm:mb-10 px-4 font-light leading-relaxed"
+        >
+          We help leaders see what's really driving their decisions — and change it before it costs them performance, people, or profit.
+        </motion.p>
         
         <motion.div
           initial={{ y: 30, opacity: 0 }}
