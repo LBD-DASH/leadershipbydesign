@@ -11,7 +11,7 @@ const FloatingSocial = () => {
     >
       {/* LinkedIn Button */}
       <a
-        href="https://www.linkedin.com/in/kevinbritz/"
+        href="https://www.linkedin.com/in/kevinbritz-leadership/"
         target="_blank"
         rel="noopener noreferrer"
         className="group flex items-center gap-2 bg-[#0A66C2] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
