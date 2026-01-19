@@ -205,8 +205,8 @@ export default function DigitalEcosystem() {
             </div>
 
             {/* Center Hub */}
-            <div className="flex flex-row items-center justify-center gap-8">
-              {/* Center Leader Hub */}
+            <div className="flex items-center justify-center">
+              {/* Combined Leader + Contagious Identity Hub */}
               <motion.div
                 className="relative"
                 initial={{ scale: 0 }}
@@ -214,40 +214,14 @@ export default function DigitalEcosystem() {
                 transition={{ duration: 0.5, type: "spring" }}
                 viewport={{ once: true }}
               >
-                <div className="w-36 h-36 rounded-full bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-xl shadow-primary/30">
-                  <Crown className="w-10 h-10 mb-2" />
+                <div className="w-44 h-44 rounded-full bg-gradient-to-br from-primary via-primary to-emerald-600 text-primary-foreground flex flex-col items-center justify-center shadow-xl shadow-primary/30">
+                  <Sparkles className="w-10 h-10 mb-2" />
                   <span className="font-bold text-lg">LEADER</span>
-                  <span className="text-xs opacity-80">You</span>
+                  <span className="text-xs opacity-90 text-center px-4">(Contagious Identity)</span>
                 </div>
                 {/* Decorative ring */}
                 <div className="absolute inset-0 rounded-full border-4 border-primary/20 scale-125" />
-              </motion.div>
-
-              {/* Horizontal connection */}
-              <motion.div
-                className="w-8 h-0.5 bg-primary/30"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-                viewport={{ once: true }}
-              />
-
-              {/* Outcome */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
-                  <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-                    <Sparkles className="w-7 h-7" />
-                  </div>
-                  <div className="text-center">
-                    <h4 className="font-bold">{outcomeNode.title}</h4>
-                    <p className="text-sm text-white/80 mt-1">{outcomeNode.description}</p>
-                  </div>
-                </div>
+                <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 scale-150" />
               </motion.div>
             </div>
 
