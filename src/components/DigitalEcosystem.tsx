@@ -2,170 +2,149 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
   Compass, 
-  Target, 
   Heart, 
-  Lightbulb, 
-  Users, 
-  TrendingUp, 
-  Award,
-  Rocket,
-  Brain,
   Zap,
   Crown,
-  ArrowRight,
-  ArrowDown,
+  ChevronRight,
   Sparkles,
   BarChart3,
-  CheckCircle2,
   Layers,
-  BookOpen,
-  UserCheck,
-  MessageCircle
+  Users,
+  MessageCircle,
+  Rocket,
+  TrendingUp,
+  Lightbulb,
+  CheckCircle2
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-// Flow Node Component
+// Compact Flow Node
 function FlowNode({ 
   icon: Icon, 
   title, 
-  description,
-  variant = "default",
-  step,
-  className = ""
+  subtitle,
+  href,
+  external = false,
+  variant = "default"
 }: { 
-  icon: React.ElementType;
+  icon: LucideIcon;
   title: string;
-  description?: string;
-  variant?: "primary" | "secondary" | "accent" | "default";
-  step?: number;
-  className?: string;
+  subtitle?: string;
+  href: string;
+  external?: boolean;
+  variant?: "primary" | "accent" | "default";
 }) {
   const variants = {
-    primary: "bg-primary text-primary-foreground shadow-lg shadow-primary/25",
-    secondary: "bg-secondary text-secondary-foreground border border-border",
-    accent: "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl shadow-primary/30",
-    default: "bg-card text-card-foreground border border-border shadow-md"
+    primary: "bg-primary text-primary-foreground",
+    accent: "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg",
+    default: "bg-card text-card-foreground border border-border"
   };
 
+  const Wrapper = external ? 'a' : Link;
+  const wrapperProps = external 
+    ? { href, target: "_blank", rel: "noopener noreferrer" }
+    : { to: href };
+
   return (
-    <div className={`relative group ${className}`}>
-      {step && (
-        <div className="absolute -top-3 -left-3 w-7 h-7 rounded-full bg-foreground text-background text-xs font-bold flex items-center justify-center shadow-md z-10">
-          {step}
-        </div>
-      )}
-      <div className={`rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${variants[variant]}`}>
-        <div className="flex items-start gap-4">
-          <div className={`p-3 rounded-lg ${variant === "primary" || variant === "accent" ? "bg-white/20" : "bg-primary/10"}`}>
-            <Icon className={`w-6 h-6 ${variant === "primary" || variant === "accent" ? "text-current" : "text-primary"}`} />
+    <Wrapper {...wrapperProps as any} className="block group">
+      <div className={`rounded-lg p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${variants[variant]}`}>
+        <div className="flex items-center gap-2">
+          <div className={`p-1.5 rounded ${variant === "default" ? "bg-primary/10" : "bg-white/20"}`}>
+            <Icon className={`w-4 h-4 ${variant === "default" ? "text-primary" : "text-current"}`} />
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-base leading-tight">{title}</h4>
-            {description && (
-              <p className={`text-sm mt-1 leading-relaxed ${variant === "primary" || variant === "accent" ? "opacity-80" : "text-muted-foreground"}`}>
-                {description}
-              </p>
+          <div className="min-w-0">
+            <h4 className="font-semibold text-sm leading-tight">{title}</h4>
+            {subtitle && (
+              <p className={`text-xs leading-tight ${variant === "default" ? "text-muted-foreground" : "opacity-70"}`}>{subtitle}</p>
             )}
           </div>
         </div>
       </div>
+    </Wrapper>
+  );
+}
+
+// Flow Arrow
+function FlowArrow({ direction = "right" }: { direction?: "right" | "down" }) {
+  if (direction === "down") {
+    return (
+      <div className="flex justify-center py-1">
+        <div className="flex flex-col items-center">
+          <div className="w-px h-4 bg-gradient-to-b from-primary/60 to-primary/30" />
+          <ChevronRight className="w-4 h-4 text-primary/50 rotate-90 -mt-1" />
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center px-1">
+      <div className="w-6 h-px bg-gradient-to-r from-primary/60 to-primary/30" />
+      <ChevronRight className="w-4 h-4 text-primary/50 -ml-1" />
     </div>
   );
 }
 
-// Stack Component for grouped items
-function FlowStack({ 
-  title,
-  items,
-  step
-}: { 
-  title: string;
-  items: { icon: React.ElementType; label: string; href: string; external?: boolean }[];
-  step?: number;
-}) {
+// Mini Assessment Stack
+function AssessmentStack() {
+  const items = [
+    { icon: Crown, label: "Leadership Index", href: "/leadership-levels", external: false },
+    { icon: Heart, label: "Values", href: "https://valuesblueprint.online", external: true },
+    { icon: Zap, label: "6 Human Needs", href: "https://6humanneeds.online", external: true },
+    { icon: Compass, label: "Purpose", href: "https://findmypurpose.me", external: true },
+  ];
+
   return (
-    <div className="relative">
-      {step && (
-        <div className="absolute -top-3 -left-3 w-7 h-7 rounded-full bg-foreground text-background text-xs font-bold flex items-center justify-center shadow-md z-10">
-          {step}
-        </div>
-      )}
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-lg">
-        <div className="bg-primary/10 px-4 py-3 border-b border-border">
-          <h4 className="font-semibold text-sm uppercase tracking-wider text-primary">{title}</h4>
-        </div>
-        <div className="divide-y divide-border">
-          {items.map((item, i) => {
-            const Wrapper = item.external ? 'a' : Link;
-            const wrapperProps = item.external 
-              ? { href: item.href, target: "_blank", rel: "noopener noreferrer" }
-              : { to: item.href };
-            
-            return (
-              <Wrapper key={i} {...wrapperProps as any} className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors group">
-                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                  <item.icon className="w-4 h-4 text-primary" />
-                </div>
-                <span className="text-sm font-medium text-foreground">{item.label}</span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Wrapper>
-            );
-          })}
-        </div>
+    <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+      <div className="bg-primary/10 px-3 py-1.5 border-b border-border">
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary">Self-Discovery</span>
+      </div>
+      <div className="divide-y divide-border">
+        {items.map((item, i) => {
+          const Wrapper = item.external ? 'a' : Link;
+          const props = item.external 
+            ? { href: item.href, target: "_blank", rel: "noopener noreferrer" }
+            : { to: item.href };
+          return (
+            <Wrapper key={i} {...props as any} className="flex items-center gap-2 px-3 py-2 hover:bg-secondary/50 transition-colors group">
+              <item.icon className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-medium">{item.label}</span>
+            </Wrapper>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// Animated Connection Line
-function FlowLine({ direction = "down", className = "" }: { direction?: "down" | "right" | "left"; className?: string }) {
-  const directionStyles = {
-    down: "w-px h-12 bg-gradient-to-b from-primary/50 to-primary/20",
-    right: "h-px w-12 bg-gradient-to-r from-primary/50 to-primary/20",
-    left: "h-px w-12 bg-gradient-to-l from-primary/50 to-primary/20"
-  };
+// Leadership Levels Compact Grid
+function LevelsGrid() {
+  const levels = [
+    { level: 1, title: "Productivity", icon: CheckCircle2, color: "bg-emerald-500" },
+    { level: 2, title: "Development", icon: TrendingUp, color: "bg-blue-500" },
+    { level: 3, title: "Purpose", icon: Lightbulb, color: "bg-purple-500" },
+    { level: 4, title: "Motivational", icon: Heart, color: "bg-rose-500" },
+    { level: 5, title: "Strategic", icon: Rocket, color: "bg-amber-500" },
+  ];
 
   return (
-    <div className={`flex items-center justify-center ${className}`}>
-      <motion.div 
-        className={directionStyles[direction]}
-        initial={{ scaleY: direction === "down" ? 0 : 1, scaleX: direction !== "down" ? 0 : 1 }}
-        whileInView={{ scaleY: 1, scaleX: 1 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-      />
-      {direction === "down" && (
-        <ArrowDown className="w-4 h-4 text-primary/50 absolute -bottom-2" />
-      )}
+    <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+      <div className="bg-primary/10 px-3 py-1.5 border-b border-border flex items-center gap-1.5">
+        <Layers className="w-3.5 h-3.5 text-primary" />
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary">5 Levels</span>
+      </div>
+      <div className="p-2 grid grid-cols-5 gap-1">
+        {levels.map((l) => (
+          <Link key={l.level} to="/leadership-levels" className="group">
+            <div className="text-center p-1.5 rounded hover:bg-secondary/50 transition-colors">
+              <div className={`w-6 h-6 mx-auto rounded ${l.color} flex items-center justify-center text-white text-xs font-bold mb-1`}>
+                {l.level}
+              </div>
+              <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors leading-tight block">{l.title}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
-  );
-}
-
-// Leadership Level Mini Card
-function LevelCard({ 
-  level, 
-  title, 
-  icon: Icon,
-  color
-}: { 
-  level: number;
-  title: string;
-  icon: React.ElementType;
-  color: string;
-}) {
-  return (
-    <Link 
-      to="/leadership-levels" 
-      className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group"
-    >
-      <div className={`w-10 h-10 rounded-lg ${color} flex items-center justify-center text-white font-bold text-sm`}>
-        L{level}
-      </div>
-      <div className="flex-1 min-w-0">
-        <span className="text-xs text-muted-foreground">Level {level}</span>
-        <h5 className="text-sm font-medium text-foreground truncate">{title}</h5>
-      </div>
-      <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-    </Link>
   );
 }
 
@@ -174,363 +153,230 @@ export default function DigitalEcosystem() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+      transition: { staggerChildren: 0.08 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
-  const assessmentTools = [
-    { icon: Crown, label: "Leadership Index", href: "/leadership-levels", external: false },
-    { icon: Heart, label: "Values Assessment", href: "https://valuesblueprint.online", external: true },
-    { icon: Zap, label: "6 Human Needs", href: "https://6humanneeds.online", external: true },
-    { icon: Compass, label: "Purpose Discovery", href: "https://findmypurpose.me", external: true },
-  ];
-
-  const leadershipLevels = [
-    { level: 1, title: "Personal Productivity", icon: CheckCircle2, color: "bg-emerald-500" },
-    { level: 2, title: "Leadership Development", icon: TrendingUp, color: "bg-blue-500" },
-    { level: 3, title: "Purpose-Led Leader", icon: Lightbulb, color: "bg-purple-500" },
-    { level: 4, title: "Motivational Leader", icon: Heart, color: "bg-rose-500" },
-    { level: 5, title: "Strategic Leader", icon: Rocket, color: "bg-amber-500" },
-  ];
-
   return (
-    <section className="py-24 px-6 lg:px-8 bg-gradient-to-b from-background via-secondary/30 to-background overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-16 px-4 lg:px-8 bg-gradient-to-b from-background to-secondary/20 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <motion.span
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary uppercase tracking-widest mb-4"
+        <div className="text-center mb-10">
+          <motion.div
+            className="inline-flex items-center gap-2 text-xs font-medium text-primary uppercase tracking-widest mb-3"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             viewport={{ once: true }}
           >
-            <Layers className="w-4 h-4" />
-            Your Development Journey
-          </motion.span>
+            <Sparkles className="w-3.5 h-3.5" />
+            Your Journey
+          </motion.div>
           <motion.h2
-            className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6"
-            initial={{ opacity: 0, y: 20 }}
+            className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-3"
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
             Digital Ecosystem
           </motion.h2>
           <motion.p
-            className="text-lg text-muted-foreground max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
+            className="text-muted-foreground max-w-2xl mx-auto text-sm"
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            A comprehensive framework that guides you from self-discovery to leadership mastery, 
-            with integrated tools and assessments at every stage.
+            From self-discovery to leadership mastery — your complete development pathway
           </motion.p>
         </div>
 
-        {/* Desktop Flowchart */}
+        {/* Desktop Flow */}
         <motion.div 
           className="hidden lg:block"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true }}
         >
-          {/* Row 1: Entry Point */}
-          <motion.div variants={itemVariants} className="flex justify-center mb-6">
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                <Sparkles className="w-4 h-4" />
-                Start Your Journey
+          {/* Main Flow Row */}
+          <div className="flex items-start justify-center gap-0">
+            {/* Leader Hub */}
+            <motion.div variants={itemVariants} className="flex-shrink-0">
+              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-xl shadow-primary/25 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent_60%)]" />
+                <Crown className="w-7 h-7 mb-1 relative z-10" />
+                <span className="text-xs opacity-80 relative z-10">Leader</span>
+                <span className="text-2xl font-bold relative z-10">YOU</span>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          <FlowLine direction="down" className="relative h-8 mb-4" />
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
 
-          {/* Row 2: Self-Discovery Phase */}
-          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-8 mb-8">
-            {/* Assessment Stack */}
-            <div className="flex justify-end">
-              <div className="w-72">
-                <FlowStack 
-                  title="Self-Discovery Tools"
-                  step={1}
-                  items={assessmentTools}
-                />
-              </div>
-            </div>
+            {/* Self Discovery */}
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-40">
+              <AssessmentStack />
+            </motion.div>
 
-            {/* Center Hub */}
-            <div className="flex justify-center">
-              <div className="relative">
-                {/* Connection lines */}
-                <div className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 flex items-center">
-                  <div className="w-8 h-px bg-gradient-to-l from-primary/50 to-primary/20" />
-                  <div className="w-2 h-2 rounded-full bg-primary/50 -ml-1" />
-                </div>
-                <div className="absolute right-0 top-1/2 translate-x-full -translate-y-1/2 flex items-center">
-                  <div className="w-2 h-2 rounded-full bg-primary/50 -mr-1" />
-                  <div className="w-8 h-px bg-gradient-to-r from-primary/50 to-primary/20" />
-                </div>
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
 
-                <div className="w-64 h-64 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary/80 shadow-2xl shadow-primary/30 flex flex-col items-center justify-center text-primary-foreground relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent_60%)]" />
-                  <div className="relative z-10 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
-                      <Crown className="w-8 h-8" />
-                    </div>
-                    <span className="text-lg opacity-90 block">Leader</span>
-                    <span className="text-4xl font-bold block">YOU</span>
-                    <div className="mt-4 px-4">
-                      <span className="text-xs opacity-70 block">Developing your</span>
-                      <span className="text-sm font-semibold">Contagious Identity</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Leadership Diagnostic */}
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-44">
+              <FlowNode
+                icon={BarChart3}
+                title="Leadership Diagnostic"
+                subtitle="Assess your level"
+                href="/leadership-diagnostic"
+                variant="accent"
+              />
+            </motion.div>
 
-            {/* Diagnostic Entry */}
-            <div className="flex justify-start">
-              <div className="w-72">
-                <Link to="/leadership-diagnostic">
-                  <FlowNode
-                    icon={BarChart3}
-                    title="Leadership Diagnostic"
-                    description="Assess your current leadership level and get personalized recommendations"
-                    variant="accent"
-                    step={2}
-                  />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Connection Lines */}
-          <div className="flex justify-center mb-8">
-            <div className="grid grid-cols-3 gap-8 w-full">
-              <div className="flex justify-end pr-36">
-                <FlowLine direction="down" className="relative h-12" />
-              </div>
-              <div className="flex justify-center">
-                <FlowLine direction="down" className="relative h-12" />
-              </div>
-              <div className="flex justify-start pl-36">
-                <FlowLine direction="down" className="relative h-12" />
-              </div>
-            </div>
-          </div>
-
-          {/* Row 3: Development Phase */}
-          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-8 mb-8">
-            {/* Coaching */}
-            <div className="flex justify-end">
-              <div className="w-72">
-                <Link to="/executive-coaching">
-                  <FlowNode
-                    icon={MessageCircle}
-                    title="Executive Coaching"
-                    description="1-on-1 coaching sessions to accelerate your growth"
-                    variant="primary"
-                    step={3}
-                  />
-                </Link>
-              </div>
-            </div>
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
 
             {/* Leadership Levels */}
-            <div>
-              <div className="bg-card border border-border rounded-xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-4">
-                  <Layers className="w-5 h-5 text-primary" />
-                  <h4 className="font-semibold text-foreground">5 Leadership Levels</h4>
-                </div>
-                <div className="space-y-2">
-                  {leadershipLevels.map((level) => (
-                    <LevelCard key={level.level} {...level} />
-                  ))}
-                </div>
-              </div>
-            </div>
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-64">
+              <LevelsGrid />
+            </motion.div>
 
-            {/* SHIFT Programme */}
-            <div className="flex justify-start">
-              <div className="w-72">
-                <Link to="/shift-methodology">
-                  <FlowNode
-                    icon={Rocket}
-                    title="SHIFT Programme"
-                    description="Complete leadership development programme with measurable outcomes"
-                    variant="primary"
-                    step={4}
-                  />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
 
-          {/* Connection to Team */}
-          <FlowLine direction="down" className="relative h-8 mb-4" />
+            {/* Coaching */}
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-36">
+              <FlowNode
+                icon={MessageCircle}
+                title="Coaching"
+                subtitle="1-on-1 sessions"
+                href="/executive-coaching"
+                variant="primary"
+              />
+            </motion.div>
 
-          {/* Row 4: Team Impact */}
-          <motion.div variants={itemVariants} className="flex justify-center mb-8">
-            <div className="w-full max-w-2xl">
-              <Link to="/team-diagnostic">
-                <div className="relative">
-                  <div className="absolute -top-3 -left-3 w-7 h-7 rounded-full bg-foreground text-background text-xs font-bold flex items-center justify-center shadow-md z-10">
-                    5
-                  </div>
-                  <div className="bg-gradient-to-r from-secondary via-card to-secondary border border-border rounded-xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="p-4 rounded-xl bg-primary/10">
-                          <Users className="w-8 h-8 text-primary" />
-                        </div>
-                        <div>
-                          <h4 className="text-xl font-semibold text-foreground">Team Diagnostic</h4>
-                          <p className="text-muted-foreground">Evaluate team dynamics and identify growth opportunities</p>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-6 h-6 text-primary" />
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </motion.div>
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
 
-          {/* Final Outcome */}
-          <FlowLine direction="down" className="relative h-8 mb-4" />
+            {/* SHIFT */}
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-36">
+              <FlowNode
+                icon={Rocket}
+                title="SHIFT"
+                subtitle="Full programme"
+                href="/shift-methodology"
+                variant="primary"
+              />
+            </motion.div>
 
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-r from-primary via-primary to-primary/90 text-primary-foreground py-6 px-8 rounded-2xl text-center shadow-xl shadow-primary/25">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <Award className="w-6 h-6" />
-                <span className="text-xl font-bold">Contagious Leadership Identity</span>
-                <Award className="w-6 h-6" />
-              </div>
-              <p className="text-sm opacity-80">Transform into a leader who inspires, influences, and creates lasting impact</p>
+            <motion.div variants={itemVariants}><FlowArrow /></motion.div>
+
+            {/* Team Diagnostic */}
+            <motion.div variants={itemVariants} className="flex-shrink-0 w-40">
+              <FlowNode
+                icon={Users}
+                title="Team Diagnostic"
+                subtitle="Team dynamics"
+                href="/team-diagnostic"
+                variant="default"
+              />
+            </motion.div>
+          </div>
+
+          {/* Bottom Bar */}
+          <motion.div 
+            variants={itemVariants}
+            className="mt-8"
+          >
+            <div className="bg-gradient-to-r from-primary/80 via-primary to-primary/80 text-primary-foreground py-3 px-6 rounded-xl text-center shadow-lg">
+              <span className="font-semibold">Contagious Leadership Identity</span>
+              <span className="text-sm opacity-80 ml-2">— Transform into a leader who inspires</span>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Mobile Layout */}
+        {/* Mobile Flow */}
         <motion.div 
-          className="lg:hidden space-y-6"
+          className="lg:hidden space-y-3"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {/* Start Point */}
-          <motion.div variants={itemVariants} className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Sparkles className="w-4 h-4" />
-              Start Your Journey
-            </div>
-          </motion.div>
-
-          {/* Center Hub */}
+          {/* Leader Hub */}
           <motion.div variants={itemVariants} className="flex justify-center">
-            <div className="w-48 h-48 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-xl flex flex-col items-center justify-center text-primary-foreground">
-              <Crown className="w-10 h-10 mb-2 opacity-90" />
-              <span className="text-sm opacity-90">Leader</span>
-              <span className="text-3xl font-bold">YOU</span>
-              <span className="text-xs mt-2 opacity-70">Contagious Identity</span>
+            <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-xl flex flex-col items-center justify-center text-primary-foreground">
+              <Crown className="w-6 h-6 mb-1" />
+              <span className="text-xs opacity-80">Leader</span>
+              <span className="text-xl font-bold">YOU</span>
             </div>
           </motion.div>
 
-          {/* Step 1: Self-Discovery */}
+          <FlowArrow direction="down" />
+
+          {/* Self Discovery */}
           <motion.div variants={itemVariants}>
-            <FlowStack 
-              title="Step 1: Self-Discovery"
-              step={1}
-              items={assessmentTools}
+            <AssessmentStack />
+          </motion.div>
+
+          <FlowArrow direction="down" />
+
+          {/* Leadership Diagnostic */}
+          <motion.div variants={itemVariants}>
+            <FlowNode
+              icon={BarChart3}
+              title="Leadership Diagnostic"
+              subtitle="Assess your current level"
+              href="/leadership-diagnostic"
+              variant="accent"
             />
           </motion.div>
 
-          {/* Step 2: Diagnostic */}
+          <FlowArrow direction="down" />
+
+          {/* Levels */}
           <motion.div variants={itemVariants}>
-            <Link to="/leadership-diagnostic">
-              <FlowNode
-                icon={BarChart3}
-                title="Leadership Diagnostic"
-                description="Assess your current leadership level"
-                variant="accent"
-                step={2}
-              />
-            </Link>
+            <LevelsGrid />
           </motion.div>
 
-          {/* Step 3: Coaching */}
-          <motion.div variants={itemVariants}>
-            <Link to="/executive-coaching">
-              <FlowNode
-                icon={MessageCircle}
-                title="Executive Coaching"
-                description="1-on-1 coaching sessions"
-                variant="primary"
-                step={3}
-              />
-            </Link>
+          <FlowArrow direction="down" />
+
+          {/* Coaching & SHIFT */}
+          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-2">
+            <FlowNode
+              icon={MessageCircle}
+              title="Coaching"
+              subtitle="1-on-1"
+              href="/executive-coaching"
+              variant="primary"
+            />
+            <FlowNode
+              icon={Rocket}
+              title="SHIFT"
+              subtitle="Programme"
+              href="/shift-methodology"
+              variant="primary"
+            />
           </motion.div>
 
-          {/* Leadership Levels */}
+          <FlowArrow direction="down" />
+
+          {/* Team */}
           <motion.div variants={itemVariants}>
-            <div className="bg-card border border-border rounded-xl p-4 shadow-lg">
-              <div className="flex items-center gap-2 mb-4">
-                <Layers className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold text-foreground">5 Leadership Levels</h4>
-              </div>
-              <div className="grid grid-cols-1 gap-2">
-                {leadershipLevels.map((level) => (
-                  <LevelCard key={level.level} {...level} />
-                ))}
-              </div>
-            </div>
+            <FlowNode
+              icon={Users}
+              title="Team Diagnostic"
+              subtitle="Evaluate team dynamics"
+              href="/team-diagnostic"
+              variant="default"
+            />
           </motion.div>
 
-          {/* Step 4: SHIFT */}
-          <motion.div variants={itemVariants}>
-            <Link to="/shift-methodology">
-              <FlowNode
-                icon={Rocket}
-                title="SHIFT Programme"
-                description="Complete leadership development"
-                variant="primary"
-                step={4}
-              />
-            </Link>
-          </motion.div>
-
-          {/* Step 5: Team */}
-          <motion.div variants={itemVariants}>
-            <Link to="/team-diagnostic">
-              <FlowNode
-                icon={Users}
-                title="Team Diagnostic"
-                description="Evaluate team dynamics"
-                variant="secondary"
-                step={5}
-              />
-            </Link>
-          </motion.div>
-
-          {/* Final Outcome */}
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-5 px-6 rounded-xl text-center shadow-lg">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <Award className="w-5 h-5" />
-                <span className="font-bold">Contagious Leadership</span>
-              </div>
-              <p className="text-xs opacity-80">Transform into an inspiring leader</p>
+          {/* Bottom Bar */}
+          <motion.div variants={itemVariants} className="pt-2">
+            <div className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-3 px-4 rounded-xl text-center">
+              <span className="font-semibold text-sm">Contagious Leadership Identity</span>
             </div>
           </motion.div>
         </motion.div>
