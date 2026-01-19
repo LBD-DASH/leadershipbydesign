@@ -6,7 +6,7 @@ import teamWorkshopsImage from "@/assets/service-team-workshops.jpg";
 const services = [
   {
     title: "SHIFT Leadership Development",
-    description: "Intensive executive development focused on strategic thinking, organizational vision, and driving transformation. We help senior leaders navigate complexity and inspire lasting change.",
+    description: "Intensive executive development that sharpens how leaders think, align vision, and navigate complexity to drive lasting organizational change.",
     image: shiftLeadershipImage
   },
   {
