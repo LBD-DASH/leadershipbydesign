@@ -16,7 +16,7 @@ const services = [
   },
   {
     title: "Executive Coaching",
-    description: "Personalized one-on-one guidance tailored for senior leaders. We help you refine your leadership approach, enhance decision-making, and drive organizational excellence.",
+    description: "One-on-one SHIFT-based coaching for senior leaders ready to uncover blind spots, reclaim focus, and lead with clarity — resulting in sharper decisions, stronger presence, and measurable business impact.",
     image: executiveCoachingImage
   }
 ];
