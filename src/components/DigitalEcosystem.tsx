@@ -1,143 +1,212 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Compass, 
-  Target, 
-  Heart, 
-  Sparkles, 
-  Crown,
-  BarChart3,
-  Lightbulb,
-  Layers,
-  Star,
-  Users
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
 
-interface EcosystemNode {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  link?: string;
-  external?: boolean;
-  comingSoon?: boolean;
-  type: "foundation" | "essential" | "outcome";
+// Stacked documents visual component
+function StackedDocs({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="relative">
+      {/* Background stacked cards */}
+      <div className="absolute top-2 left-2 w-full h-full bg-primary/20 rounded-lg border border-primary/30" />
+      <div className="absolute top-1 left-1 w-full h-full bg-primary/30 rounded-lg border border-primary/40" />
+      {/* Main card */}
+      <div className="relative bg-background rounded-lg border-2 border-primary p-4 shadow-md">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-2 bg-primary rounded" />
+          <div className="w-16 h-2 bg-primary/50 rounded" />
+        </div>
+        <div className="space-y-2">
+          {items.map((item, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <div className="w-4 h-1 bg-primary/60 rounded" />
+              <span className="text-xs text-muted-foreground">{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-const foundationNodes: EcosystemNode[] = [
+// Org chart visual component
+function OrgChart() {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="w-12 h-6 bg-primary rounded mb-1" />
+      <div className="w-0.5 h-4 bg-primary/50" />
+      <div className="flex gap-4">
+        <div className="flex flex-col items-center">
+          <div className="w-0.5 h-3 bg-primary/50" />
+          <div className="w-8 h-5 bg-primary/70 rounded" />
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="w-0.5 h-3 bg-primary/50" />
+          <div className="w-8 h-5 bg-primary/70 rounded" />
+        </div>
+        <div className="flex flex-col items-center">
+          <div className="w-0.5 h-3 bg-primary/50" />
+          <div className="w-8 h-5 bg-primary/70 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Text with description lines
+function TextBlock({ title, lines = 3 }: { title: string; lines?: number }) {
+  return (
+    <div className="space-y-2">
+      <h4 className="font-bold text-primary text-lg">{title}</h4>
+      <div className="space-y-1.5">
+        {Array.from({ length: lines }).map((_, i) => (
+          <div 
+            key={i} 
+            className="h-1.5 bg-muted-foreground/30 rounded" 
+            style={{ width: `${100 - i * 15}%` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Simple list visual
+function ListBlock({ items }: { items: string[] }) {
+  return (
+    <div className="space-y-2">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-primary/50" />
+          <div className="h-1.5 bg-muted-foreground/30 rounded flex-1" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Card with icon header
+function CardBlock({ title, hasProgress }: { title: string; hasProgress?: boolean }) {
+  return (
+    <div className="bg-background rounded-lg border-2 border-primary/50 p-3 shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-6 h-4 bg-primary rounded" />
+        <span className="text-xs font-medium text-foreground">{title}</span>
+      </div>
+      {hasProgress && (
+        <div className="h-1.5 bg-muted rounded overflow-hidden">
+          <div className="h-full w-2/3 bg-primary/60 rounded" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface NodePosition {
+  x: number;
+  y: number;
+}
+
+interface EcosystemItem {
+  id: string;
+  position: NodePosition;
+  content: React.ReactNode;
+  link?: string;
+  external?: boolean;
+}
+
+const ecosystemItems: EcosystemItem[] = [
   {
-    id: "shift",
-    title: "SHIFT",
-    description: "Core leadership development methodology",
-    icon: <Layers className="w-6 h-6" />,
+    id: "foundation",
+    position: { x: 8, y: 20 },
+    content: (
+      <StackedDocs 
+        title="Foundation" 
+        items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
+      />
+    ),
     link: "/shift-methodology",
-    type: "foundation",
   },
   {
     id: "assessment",
-    title: "Leadership Assessment",
-    description: "Diagnose your leadership capabilities",
-    icon: <Compass className="w-6 h-6" />,
+    position: { x: 8, y: 55 },
+    content: <OrgChart />,
     link: "/leadership-diagnostic",
-    type: "foundation",
   },
   {
-    id: "index",
-    title: "Leadership Index",
-    description: "Measure and track leadership growth",
-    icon: <BarChart3 className="w-6 h-6" />,
-    comingSoon: true,
-    type: "foundation",
-  },
-];
-
-const essentialNodes: EcosystemNode[] = [
-  {
-    id: "6hn",
-    title: "6 Human Needs",
-    description: "Understand core motivational drivers",
-    icon: <Heart className="w-6 h-6" />,
-    link: "https://6humanneeds.online",
-    external: true,
-    type: "essential",
+    id: "tools",
+    position: { x: 8, y: 80 },
+    content: (
+      <div className="space-y-2">
+        <CardBlock title="6 Human Needs" />
+        <CardBlock title="Purpose" hasProgress />
+        <CardBlock title="Values" />
+      </div>
+    ),
   },
   {
     id: "purpose",
-    title: "Purpose Blueprint",
-    description: "Discover and align with your purpose",
-    icon: <Target className="w-6 h-6" />,
+    position: { x: 72, y: 15 },
+    content: <TextBlock title="Purpose" lines={3} />,
     link: "https://findmypurpose.me",
     external: true,
-    type: "essential",
   },
   {
     id: "values",
-    title: "Values Blueprint",
-    description: "Define your core leadership values",
-    icon: <Star className="w-6 h-6" />,
+    position: { x: 72, y: 45 },
+    content: <TextBlock title="Values" lines={3} />,
     link: "https://valuesblueprint.online",
     external: true,
-    type: "essential",
+  },
+  {
+    id: "needs",
+    position: { x: 72, y: 75 },
+    content: <TextBlock title="6 Human Needs" lines={3} />,
+    link: "https://6humanneeds.online",
+    external: true,
   },
 ];
 
-const outcomeNode: EcosystemNode = {
-  id: "identity",
-  title: "Contagious Identity",
-  description: "Lead with authentic influence",
-  icon: <Sparkles className="w-6 h-6" />,
-  type: "outcome",
-};
-
-function NodeCard({ node, index, side }: { node: EcosystemNode; index: number; side: "left" | "right" }) {
-  const content = (
-    <motion.div
-      className={`
-        flex items-start gap-4 p-4 rounded-xl bg-background border-2 
-        ${node.type === "foundation" ? "border-primary" : node.type === "essential" ? "border-primary/50" : "border-emerald-500"}
-        hover:shadow-lg hover:border-primary transition-all duration-300
-        ${side === "left" ? "flex-row" : "flex-row-reverse text-right"}
-        ${node.comingSoon ? "opacity-70" : ""}
-      `}
-      initial={{ opacity: 0, x: side === "left" ? -30 : 30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true }}
-    >
-      <div className={`
-        w-12 h-12 rounded-full flex items-center justify-center shrink-0
-        ${node.type === "foundation" ? "bg-primary text-primary-foreground" : 
-          node.type === "essential" ? "bg-secondary text-primary" : 
-          "bg-emerald-500 text-white"}
-      `}>
-        {node.icon}
-      </div>
-      <div className="flex-1 min-w-0">
-        <h4 className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
-          {node.title}
-          {node.comingSoon && (
-            <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-              Coming Soon
-            </span>
-          )}
-        </h4>
-        <p className="text-sm text-muted-foreground mt-1">{node.description}</p>
-      </div>
-    </motion.div>
+// Connection line with dot
+function ConnectionLine({ 
+  startX, 
+  startY, 
+  endX, 
+  endY,
+  delay = 0 
+}: { 
+  startX: number; 
+  startY: number; 
+  endX: number; 
+  endY: number;
+  delay?: number;
+}) {
+  return (
+    <g>
+      <motion.line
+        x1={`${startX}%`}
+        y1={`${startY}%`}
+        x2={`${endX}%`}
+        y2={`${endY}%`}
+        stroke="hsl(var(--primary))"
+        strokeWidth="2"
+        strokeOpacity="0.4"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        transition={{ duration: 0.6, delay }}
+        viewport={{ once: true }}
+      />
+      <motion.circle
+        cx={`${endX}%`}
+        cy={`${endY}%`}
+        r="6"
+        fill="hsl(var(--primary))"
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        transition={{ duration: 0.3, delay: delay + 0.4 }}
+        viewport={{ once: true }}
+      />
+    </g>
   );
-
-  if (node.link && !node.comingSoon) {
-    if (node.external) {
-      return (
-        <a href={node.link} target="_blank" rel="noopener noreferrer" className="block">
-          {content}
-        </a>
-      );
-    }
-    return <Link to={node.link} className="block">{content}</Link>;
-  }
-
-  return content;
 }
 
 export default function DigitalEcosystem() {
@@ -173,156 +242,220 @@ export default function DigitalEcosystem() {
           />
         </div>
 
-        {/* Hub and Spoke Diagram */}
-        <div className="relative">
-          {/* Desktop Layout */}
-          <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] gap-16 items-center">
-            {/* Left Column - Foundation */}
-            <div className="space-y-4">
-              <motion.div
-                className="text-sm font-semibold text-primary uppercase tracking-wider mb-6 text-right"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                Foundation
-              </motion.div>
-              {foundationNodes.map((node, i) => (
-                <div key={node.id} className="relative">
-                  <NodeCard node={node} index={i} side="left" />
-                  {/* Connection line */}
-                  <motion.div
-                    className="absolute right-0 top-1/2 w-8 h-0.5 bg-primary/30"
-                    style={{ transform: "translateX(100%)" }}
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
-                    viewport={{ once: true }}
-                  />
-                </div>
-              ))}
-            </div>
+        {/* Desktop Diagram */}
+        <div className="hidden lg:block relative" style={{ height: "600px" }}>
+          {/* SVG Connection Lines */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {/* Left side connections */}
+            <ConnectionLine startX={50} startY={50} endX={28} endY={25} delay={0.2} />
+            <ConnectionLine startX={50} startY={50} endX={28} endY={50} delay={0.3} />
+            <ConnectionLine startX={50} startY={50} endX={28} endY={75} delay={0.4} />
+            
+            {/* Right side connections */}
+            <ConnectionLine startX={50} startY={50} endX={68} endY={20} delay={0.2} />
+            <ConnectionLine startX={50} startY={50} endX={68} endY={50} delay={0.3} />
+            <ConnectionLine startX={50} startY={50} endX={68} endY={80} delay={0.4} />
+            
+            {/* Top connection */}
+            <ConnectionLine startX={50} startY={50} endX={50} endY={12} delay={0.1} />
+          </svg>
 
-            {/* Center Hub */}
-            <div className="flex items-center justify-center">
-              {/* Combined Leader + Contagious Identity Hub */}
-              <motion.div
-                className="relative"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                transition={{ duration: 0.5, type: "spring" }}
-                viewport={{ once: true }}
-              >
-                <div className="w-44 h-44 rounded-full bg-gradient-to-br from-primary via-primary to-emerald-600 text-primary-foreground flex flex-col items-center justify-center shadow-xl shadow-primary/30">
-                  <Sparkles className="w-10 h-10 mb-2" />
-                  <span className="font-bold text-lg">LEADER</span>
-                  <span className="text-xs opacity-90 text-center px-4">(Contagious Identity)</span>
-                </div>
-                {/* Decorative ring */}
-                <div className="absolute inset-0 rounded-full border-4 border-primary/20 scale-125" />
-                <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 scale-150" />
-              </motion.div>
+          {/* Center Hub */}
+          <motion.div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            viewport={{ once: true }}
+          >
+            <div className="w-32 h-32 rounded-2xl bg-background border-4 border-primary shadow-xl flex flex-col items-center justify-center">
+              <Sparkles className="w-10 h-10 text-primary mb-1" />
+              <span className="font-bold text-sm text-primary">LEADER</span>
+              <span className="text-[10px] text-muted-foreground">(Contagious Identity)</span>
             </div>
+          </motion.div>
 
-            {/* Right Column - Essential */}
-            <div className="space-y-4">
-              <motion.div
-                className="text-sm font-semibold text-primary uppercase tracking-wider mb-6"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                Essential Tools
-              </motion.div>
-              {essentialNodes.map((node, i) => (
-                <div key={node.id} className="relative">
-                  {/* Connection line */}
-                  <motion.div
-                    className="absolute left-0 top-1/2 w-8 h-0.5 bg-primary/30"
-                    style={{ transform: "translateX(-100%)" }}
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
-                    viewport={{ once: true }}
-                  />
-                  <NodeCard node={node} index={i} side="right" />
-                </div>
-              ))}
+          {/* Top Label */}
+          <motion.div
+            className="absolute left-1/2 -translate-x-1/2"
+            style={{ top: "2%" }}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-center">
+              <div className="w-4 h-4 rounded-full bg-primary mx-auto mb-2" />
+              <span className="text-sm font-medium text-muted-foreground">Leadership Index</span>
+              <span className="block text-[10px] text-muted-foreground/70">Coming Soon</span>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Mobile/Tablet Layout */}
-          <div className="lg:hidden space-y-12">
-            {/* Center Leader Hub */}
-            <motion.div
-              className="flex justify-center"
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 0.5, type: "spring" }}
-              viewport={{ once: true }}
-            >
-              <div className="w-28 h-28 rounded-full bg-primary text-primary-foreground flex flex-col items-center justify-center shadow-xl shadow-primary/30">
-                <Crown className="w-8 h-8 mb-1" />
-                <span className="font-bold">LEADER</span>
-                <span className="text-xs opacity-80">You</span>
+          {/* Left Column Items */}
+          <motion.div
+            className="absolute"
+            style={{ left: "2%", top: "10%", width: "24%" }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <Link to="/shift-methodology" className="block hover:scale-105 transition-transform">
+              <StackedDocs 
+                title="Foundation" 
+                items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
+              />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            className="absolute"
+            style={{ left: "5%", top: "42%", width: "20%" }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <Link to="/leadership-diagnostic" className="block hover:scale-105 transition-transform">
+              <div className="text-center mb-2">
+                <span className="text-xs font-medium text-muted-foreground">Leadership Assessment</span>
               </div>
-            </motion.div>
+              <OrgChart />
+            </Link>
+          </motion.div>
 
-            {/* Foundation Section */}
-            <div>
-              <motion.h3
-                className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 text-center"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-              >
-                Foundation
-              </motion.h3>
-              <div className="space-y-3">
-                {foundationNodes.map((node, i) => (
-                  <NodeCard key={node.id} node={node} index={i} side="left" />
-                ))}
-              </div>
+          <motion.div
+            className="absolute"
+            style={{ left: "2%", top: "68%", width: "24%" }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-muted-foreground block mb-2">Essential Tools</span>
+              <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer">
+                <CardBlock title="6 Human Needs" />
+              </a>
+              <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer">
+                <CardBlock title="Purpose Blueprint" hasProgress />
+              </a>
+              <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer">
+                <CardBlock title="Values Blueprint" />
+              </a>
             </div>
+          </motion.div>
 
-            {/* Essential Section */}
-            <div>
-              <motion.h3
-                className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 text-center"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-              >
-                Essential Tools
-              </motion.h3>
-              <div className="space-y-3">
-                {essentialNodes.map((node, i) => (
-                  <NodeCard key={node.id} node={node} index={i} side="left" />
-                ))}
-              </div>
+          {/* Right Column Items */}
+          <motion.div
+            className="absolute"
+            style={{ right: "5%", top: "12%", width: "22%" }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
+              <TextBlock title="Purpose" lines={3} />
+            </a>
+          </motion.div>
+
+          <motion.div
+            className="absolute"
+            style={{ right: "5%", top: "42%", width: "22%" }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
+              <TextBlock title="Values" lines={3} />
+            </a>
+          </motion.div>
+
+          <motion.div
+            className="absolute"
+            style={{ right: "5%", top: "72%", width: "22%" }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer" className="block hover:scale-105 transition-transform">
+              <TextBlock title="6 Human Needs" lines={3} />
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="lg:hidden space-y-8">
+          {/* Center Hub */}
+          <motion.div
+            className="flex justify-center"
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            transition={{ duration: 0.5, type: "spring" }}
+            viewport={{ once: true }}
+          >
+            <div className="w-28 h-28 rounded-2xl bg-background border-4 border-primary shadow-xl flex flex-col items-center justify-center">
+              <Sparkles className="w-8 h-8 text-primary mb-1" />
+              <span className="font-bold text-sm text-primary">LEADER</span>
+              <span className="text-[9px] text-muted-foreground text-center">(Contagious Identity)</span>
             </div>
+          </motion.div>
 
-            {/* Outcome */}
-            <motion.div
-              className="flex justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg">
-                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <div className="text-center">
-                  <h4 className="font-bold">{outcomeNode.title}</h4>
-                  <p className="text-sm text-white/80 mt-1">{outcomeNode.description}</p>
-                </div>
+          {/* Foundation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Foundation</h3>
+            <Link to="/shift-methodology">
+              <StackedDocs 
+                title="Foundation" 
+                items={["SHIFT Methodology", "Core Framework", "Development Path"]} 
+              />
+            </Link>
+          </motion.div>
+
+          {/* Assessment */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Assessment</h3>
+            <Link to="/leadership-diagnostic" className="block">
+              <div className="bg-background rounded-lg border-2 border-primary/50 p-4">
+                <OrgChart />
+                <p className="text-xs text-muted-foreground text-center mt-3">Leadership Assessment</p>
               </div>
-            </motion.div>
-          </div>
+            </Link>
+          </motion.div>
+
+          {/* Essential Tools */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Essential Tools</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <a href="https://findmypurpose.me" target="_blank" rel="noopener noreferrer">
+                <TextBlock title="Purpose" lines={2} />
+              </a>
+              <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer">
+                <TextBlock title="Values" lines={2} />
+              </a>
+              <a href="https://6humanneeds.online" target="_blank" rel="noopener noreferrer">
+                <TextBlock title="6 Human Needs" lines={2} />
+              </a>
+            </div>
+          </motion.div>
         </div>
 
         {/* Legend */}
@@ -335,15 +468,15 @@ export default function DigitalEcosystem() {
         >
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-primary" />
-            <span>Foundation</span>
+            <span>Core Framework</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full border-2 border-primary/50 bg-secondary" />
-            <span>Essential Tools</span>
+            <div className="w-3 h-3 rounded border-2 border-primary/50" />
+            <span>Tools & Assessments</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600" />
-            <span>Outcome</span>
+            <div className="w-6 h-1.5 bg-muted-foreground/30 rounded" />
+            <span>Resources</span>
           </div>
         </motion.div>
       </div>
