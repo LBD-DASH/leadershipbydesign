@@ -205,34 +205,7 @@ export default function DigitalEcosystem() {
             </div>
 
             {/* Center Hub */}
-            <div className="flex flex-col items-center gap-8">
-              {/* Top Outcome */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
-                  <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-                    <Sparkles className="w-7 h-7" />
-                  </div>
-                  <div className="text-center">
-                    <h4 className="font-bold">{outcomeNode.title}</h4>
-                    <p className="text-sm text-white/80 mt-1">{outcomeNode.description}</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Vertical connection */}
-              <motion.div
-                className="w-0.5 h-8 bg-primary/30"
-                initial={{ scaleY: 0 }}
-                whileInView={{ scaleY: 1 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-                viewport={{ once: true }}
-              />
-
+            <div className="flex flex-row items-center justify-center gap-8">
               {/* Center Leader Hub */}
               <motion.div
                 className="relative"
@@ -248,6 +221,33 @@ export default function DigitalEcosystem() {
                 </div>
                 {/* Decorative ring */}
                 <div className="absolute inset-0 rounded-full border-4 border-primary/20 scale-125" />
+              </motion.div>
+
+              {/* Horizontal connection */}
+              <motion.div
+                className="w-8 h-0.5 bg-primary/30"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+                viewport={{ once: true }}
+              />
+
+              {/* Outcome */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30">
+                  <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
+                    <Sparkles className="w-7 h-7" />
+                  </div>
+                  <div className="text-center">
+                    <h4 className="font-bold">{outcomeNode.title}</h4>
+                    <p className="text-sm text-white/80 mt-1">{outcomeNode.description}</p>
+                  </div>
+                </div>
               </motion.div>
             </div>
 
