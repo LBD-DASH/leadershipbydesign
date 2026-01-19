@@ -2,6 +2,7 @@ import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
+import DigitalEcosystem from "@/components/DigitalEcosystem";
 import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -20,6 +21,7 @@ const Index = () => {
         <Header />
         <Hero />
         <Services />
+        <DigitalEcosystem />
         <PartnerApps />
         <ClientLogos />
         <TestimonialSlider />
