@@ -11,7 +11,7 @@ const services = [
   },
   {
     title: "Team Workshops",
-    description: "Interactive sessions designed to build cohesion, improve communication, and unlock your team's full potential through collaborative learning experiences.",
+    description: "High-impact sessions that diagnose hidden team dysfunction, rebuild trust and alignment, and create shared ownership — so your team stops surviving and starts performing.",
     image: teamWorkshopsImage
   },
   {
