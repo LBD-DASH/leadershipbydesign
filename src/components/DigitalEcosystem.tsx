@@ -176,7 +176,7 @@ export default function DigitalEcosystem() {
         {/* Hub and Spoke Diagram */}
         <div className="relative">
           {/* Desktop Layout */}
-          <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] gap-8 items-center">
+          <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] gap-16 items-center">
             {/* Left Column - Foundation */}
             <div className="space-y-4">
               <motion.div
