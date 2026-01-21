@@ -74,6 +74,24 @@ export default function LeadershipDiagnostic() {
       if (insertedData) {
         setSubmissionId(insertedData.id);
       }
+
+      // Send welcome email if user joined waiting list
+      if (data.followUpPreference === 'yes' || data.followUpPreference === 'maybe') {
+        try {
+          await supabase.functions.invoke('send-welcome-email', {
+            body: {
+              name: data.name,
+              email: data.email,
+              diagnosticType: 'leadership',
+              primaryLevel: result.primaryLevel,
+              followUpPreference: data.followUpPreference
+            }
+          });
+        } catch (emailError) {
+          console.error('Error sending welcome email:', emailError);
+          // Don't block the flow if email fails
+        }
+      }
     } catch (error) {
       console.error('Error saving diagnostic:', error);
     } finally {
