@@ -22,7 +22,7 @@ interface WorkshopCardProps {
   includes?: string[];
   shiftSkills?: ShiftSkill[];
   isRecommended: boolean;
-  onFindOutMore: (workshopKey: 'clarity' | 'motivation' | 'leadership') => void;
+  onFindOutMore?: (workshopKey: 'clarity' | 'motivation' | 'leadership') => void;
 }
 
 const workshopImages = {

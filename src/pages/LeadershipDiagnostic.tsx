@@ -40,7 +40,7 @@ export default function LeadershipDiagnostic() {
     setUserData(data);
 
     try {
-      // Save to database with user data and waiting_list = true
+      // Save to database with user data and follow-up preference
       const { data: insertedData } = await supabase
         .from('leadership_diagnostic_submissions')
         .insert({
@@ -58,7 +58,8 @@ export default function LeadershipDiagnostic() {
           email: data.email,
           organisation: data.organisation || null,
           role: data.role || null,
-          waiting_list: true // They're on the list by submitting their details
+          follow_up_preference: data.followUpPreference,
+          waiting_list: data.followUpPreference === 'yes' || data.followUpPreference === 'maybe'
         })
         .select('id')
         .single();
