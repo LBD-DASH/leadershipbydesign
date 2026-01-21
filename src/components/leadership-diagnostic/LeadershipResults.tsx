@@ -2,21 +2,21 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { LeadershipResult, LeadershipLevel, leadershipLevelDetails, getHybridTitle } from '@/lib/leadershipScoring';
 import LeadershipLevelCard from './LeadershipLevelCard';
-import LeadershipDownloadForm from './LeadershipDownloadForm';
-import LeadershipExpertForm from './LeadershipExpertForm';
-import { Download, MessageCircle, AlertTriangle, Sparkles } from 'lucide-react';
+import NextStepChoice, { FollowUpPreference } from '@/components/shared/NextStepChoice';
+import { AlertTriangle, Sparkles, Target, Users, TrendingUp, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
 
 interface LeadershipResultsProps {
   result: LeadershipResult;
   submissionId: string | null;
+  userName?: string;
 }
 
-export default function LeadershipResults({ result, submissionId }: LeadershipResultsProps) {
-  const [showDownloadForm, setShowDownloadForm] = useState(false);
-  const [showExpertForm, setShowExpertForm] = useState(false);
+export default function LeadershipResults({ result, submissionId, userName }: LeadershipResultsProps) {
+  const [isUpdatingPreference, setIsUpdatingPreference] = useState(false);
   
   const primaryDetails = leadershipLevelDetails[result.primaryLevel];
   const levels: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
@@ -25,26 +25,60 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
   const primaryTitle = result.isHybrid && result.secondaryLevel
     ? getHybridTitle(result.primaryLevel, result.secondaryLevel)
     : primaryDetails.title;
-  
-  const handleFindOutMore = (level: LeadershipLevel) => {
-    setShowExpertForm(true);
+
+  const handleFollowUpSelect = async (preference: FollowUpPreference) => {
+    if (!submissionId) return;
+    
+    setIsUpdatingPreference(true);
+    
+    try {
+      await supabase
+        .from('leadership_diagnostic_submissions')
+        .update({
+          follow_up_preference: preference,
+          waiting_list: preference === 'yes' || preference === 'maybe'
+        })
+        .eq('id', submissionId);
+    } catch (error) {
+      console.error('Error updating preference:', error);
+    } finally {
+      setIsUpdatingPreference(false);
+    }
   };
   
   return (
-    <div className="space-y-8 sm:space-y-12 pt-24 sm:pt-28">
+    <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
+      {/* Behaviour-Based Confirmation */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="text-center"
+      >
+        <p className="text-sm text-muted-foreground italic max-w-2xl mx-auto px-4">
+          These results are based on observable leadership behaviour patterns, not personality traits or self-perception.
+        </p>
+      </motion.div>
+
       {/* Hero Result Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
         className="text-center"
       >
+        {userName && (
+          <p className="text-lg text-muted-foreground mb-2">
+            Thank you, {userName}
+          </p>
+        )}
+        
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
           <Sparkles className="w-4 h-4 flex-shrink-0" />
           <span className="text-xs sm:text-sm font-medium">Your Leadership Operating Level</span>
         </div>
         
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 px-2 leading-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 px-2 leading-tight">
           {primaryTitle}
         </h1>
         
@@ -54,7 +88,7 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
           </p>
         )}
         
-        <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
           {primaryDetails.description}
         </p>
         
@@ -85,9 +119,9 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg"
+        className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border shadow-sm"
       >
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Your Leadership Profile</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Your Leadership Profile</h2>
         
         <div className="space-y-4">
           {levels.map((level) => {
@@ -102,31 +136,73 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
                 <div className="flex items-center justify-between gap-2">
                   <span className={cn(
                     "font-medium text-sm sm:text-base truncate",
-                    isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-gray-600"
+                    isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-muted-foreground"
                   )}>
                     {details.title}
                   </span>
                   <span className={cn(
                     "font-bold text-sm sm:text-base flex-shrink-0",
-                    isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-gray-500"
+                    isPrimary ? "text-primary" : isSecondary ? "text-amber-600" : "text-muted-foreground"
                   )}>
                     {score}/{maxScore}
                   </span>
                 </div>
-                <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-4 bg-muted rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
                     transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                     className={cn(
                       "h-full rounded-full",
-                      isPrimary ? "bg-primary" : isSecondary ? "bg-amber-400" : "bg-gray-300"
+                      isPrimary ? "bg-primary" : isSecondary ? "bg-amber-400" : "bg-muted-foreground/30"
                     )}
                   />
                 </div>
               </div>
             );
           })}
+        </div>
+      </motion.div>
+
+      {/* What This Typically Impacts */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="bg-primary/5 border border-primary/10 rounded-2xl p-6 sm:p-8"
+      >
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4 text-center">
+          What This Typically Impacts
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-start gap-3">
+            <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Strategic Decision Quality</p>
+              <p className="text-xs text-muted-foreground">How you navigate complexity</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Users className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Team Trust & Followership</p>
+              <p className="text-xs text-muted-foreground">How others respond to your lead</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <TrendingUp className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Performance Under Pressure</p>
+              <p className="text-xs text-muted-foreground">Consistency when stakes are high</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Brain className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Long-Term Trajectory</p>
+              <p className="text-xs text-muted-foreground">Career and impact potential</p>
+            </div>
+          </div>
         </div>
       </motion.div>
       
@@ -137,10 +213,9 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
         transition={{ delay: 0.4, duration: 0.6 }}
       >
         <div className="text-center mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Leadership Level Details</h2>
-          <p className="text-sm text-primary font-medium flex items-center justify-center gap-2">
-            <span className="inline-block w-2 h-2 bg-primary rounded-full"></span>
-            Internationally Recognised Programmes
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Leadership Level Details</h2>
+          <p className="text-sm text-muted-foreground">
+            Explore each level and discover development pathways
           </p>
         </div>
         
@@ -153,71 +228,37 @@ export default function LeadershipResults({ result, submissionId }: LeadershipRe
               maxScore={maxScore}
               isPrimary={level === result.primaryLevel}
               isSecondary={result.isHybrid && level === result.secondaryLevel}
-              onFindOutMore={handleFindOutMore}
             />
           ))}
         </div>
       </motion.div>
       
-      {/* Next Steps */}
+      {/* Next Step - Permission Based */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6 }}
-        className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8"
       >
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 text-center">What's Next?</h2>
-        <p className="text-gray-600 text-center mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
-          Leadership isn't one-size-fits-all. Choose your path forward.
-        </p>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto">
-          <Button 
-            onClick={() => setShowDownloadForm(true)}
-            variant="outline"
-            size="lg"
-            className="h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
-          >
-            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Save My Results</span>
-          </Button>
-          
-          <Button 
-            onClick={() => setShowExpertForm(true)}
-            size="lg"
-            className="h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
-          >
-            <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Speak to an Expert</span>
-          </Button>
-          
-          <Link to="/programmes" className="col-span-1 sm:col-span-2 lg:col-span-1">
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full h-auto py-3 sm:py-4 flex-col gap-1 sm:gap-2 text-sm sm:text-base"
-            >
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Explore Programmes</span>
-            </Button>
-          </Link>
-        </div>
+        <NextStepChoice 
+          onSelect={handleFollowUpSelect}
+          isSubmitting={isUpdatingPreference}
+        />
       </motion.div>
-      
-      {/* Modal Forms */}
-      <LeadershipDownloadForm
-        open={showDownloadForm}
-        onOpenChange={setShowDownloadForm}
-        submissionId={submissionId}
-        result={result}
-      />
-      
-      <LeadershipExpertForm
-        open={showExpertForm}
-        onOpenChange={setShowExpertForm}
-        submissionId={submissionId}
-        primaryLevel={result.primaryLevel}
-      />
+
+      {/* Secondary Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
+        className="text-center space-y-4"
+      >
+        <Link to="/programmes">
+          <Button variant="outline" size="lg">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Explore Programmes
+          </Button>
+        </Link>
+      </motion.div>
     </div>
   );
 }

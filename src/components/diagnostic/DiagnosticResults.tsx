@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DiagnosticResult, workshopDetails } from "@/lib/diagnosticScoring";
 import WorkshopCard from "./WorkshopCard";
-import ExpertContactForm from "./ExpertContactForm";
-import DownloadLeadForm from "./DownloadLeadForm";
-import { MessageSquare, BarChart3, Sparkles, ArrowRight, Download } from "lucide-react";
+import NextStepChoice, { FollowUpPreference } from "@/components/shared/NextStepChoice";
+import { BarChart3, Sparkles, ArrowRight, Target, Users, TrendingUp, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticResultsProps {
   result: DiagnosticResult;
   submissionId: string | null;
+  userName?: string;
 }
 
-export default function DiagnosticResults({ result, submissionId }: DiagnosticResultsProps) {
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [showDownloadForm, setShowDownloadForm] = useState(false);
+export default function DiagnosticResults({ result, submissionId, userName }: DiagnosticResultsProps) {
+  const [isUpdatingPreference, setIsUpdatingPreference] = useState(false);
   
   const { scores, primaryRecommendation, secondaryRecommendation } = result;
   const primaryWorkshop = workshopDetails[primaryRecommendation];
@@ -23,15 +24,61 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
   const maxScore = 25;
   const workshopOrder: ('clarity' | 'motivation' | 'leadership')[] = ['clarity', 'motivation', 'leadership'];
 
+  const handleFollowUpSelect = async (preference: FollowUpPreference) => {
+    if (!submissionId) return;
+    
+    setIsUpdatingPreference(true);
+    
+    try {
+      await supabase
+        .from('diagnostic_submissions')
+        .update({
+          follow_up_preference: preference,
+          waiting_list: preference === 'yes' || preference === 'maybe'
+        })
+        .eq('id', submissionId);
+    } catch (error) {
+      console.error('Error updating preference:', error);
+    } finally {
+      setIsUpdatingPreference(false);
+    }
+  };
+
   const handleFindOutMore = (workshopKey: 'clarity' | 'motivation' | 'leadership') => {
-    // For now, open the contact form - later we can link to specific pages
-    setShowContactForm(true);
+    // Scroll to the next step section
+    const nextStepSection = document.getElementById('next-step-section');
+    if (nextStepSection) {
+      nextStepSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="space-y-8 sm:space-y-12">
+    <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
+      {/* Behaviour-Based Confirmation */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="text-center"
+      >
+        <p className="text-sm text-muted-foreground italic max-w-2xl mx-auto px-4">
+          These results are based on observable team dynamics, not personality profiles or opinions.
+        </p>
+      </motion.div>
+
       {/* Results Header */}
-      <div className="text-center max-w-3xl mx-auto px-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="text-center max-w-3xl mx-auto px-2"
+      >
+        {userName && (
+          <p className="text-lg text-muted-foreground mb-2">
+            Thank you, {userName}
+          </p>
+        )}
+        
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
           Your Team's Primary Need Right Now:
         </h2>
@@ -46,10 +93,57 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
             </span>
           </p>
         )}
-      </div>
+      </motion.div>
+
+      {/* What This Typically Impacts */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="bg-primary/5 border border-primary/10 rounded-2xl p-6 sm:p-8"
+      >
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4 text-center">
+          What This Typically Impacts
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-start gap-3">
+            <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Performance Consistency</p>
+              <p className="text-xs text-muted-foreground">How reliably the team delivers</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Users className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Team Dynamics</p>
+              <p className="text-xs text-muted-foreground">Trust, collaboration, and morale</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <TrendingUp className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Decision Quality</p>
+              <p className="text-xs text-muted-foreground">Speed and accuracy of choices</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Zap className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Momentum & Energy</p>
+              <p className="text-xs text-muted-foreground">Sustained drive toward goals</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* SHIFT Skills to Develop */}
-      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-4 sm:p-6 md:p-8 border border-primary/20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-4 sm:p-6 md:p-8 border border-primary/20"
+      >
         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
           <h3 className="text-base sm:text-lg font-semibold text-foreground">SHIFT™ Skills to Develop</h3>
@@ -74,10 +168,15 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
             <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
           </Link>
         </div>
-      </div>
+      </motion.div>
 
       {/* Score Visualization */}
-      <div className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border"
+      >
         <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
           <h3 className="text-base sm:text-lg font-semibold text-foreground">Your Diagnostic Scores</h3>
@@ -103,12 +202,14 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
                   <span className="text-muted-foreground flex-shrink-0">{score}/{maxScore}</span>
                 </div>
                 <div className="h-2.5 sm:h-3 bg-muted rounded-full overflow-hidden">
-                  <div
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
                     className={cn(
-                      "h-full rounded-full transition-all duration-500",
+                      "h-full rounded-full",
                       isHighest ? "bg-primary" : "bg-muted-foreground/30"
                     )}
-                    style={{ width: `${percentage}%` }}
                   />
                 </div>
               </div>
@@ -119,24 +220,16 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
         <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4">
           Higher scores indicate greater friction in that area
         </p>
-
-        {/* Download Button */}
-        <div className="mt-4 sm:mt-6 pt-4 border-t border-border">
-          <Button
-            onClick={() => setShowDownloadForm(true)}
-            className="w-full bg-red-600 hover:bg-red-700 text-white"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            <span className="hidden sm:inline">Download Your Results Overview</span>
-            <span className="sm:hidden">Download Results</span>
-          </Button>
-        </div>
-      </div>
+      </motion.div>
 
       {/* Workshop Cards */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+      >
         <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground text-center mb-6 sm:mb-8">
-          Choose Your Path Forward
+          Available Interventions
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -155,48 +248,41 @@ export default function DiagnosticResults({ result, submissionId }: DiagnosticRe
             />
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Speak to Expert CTA */}
-      <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 md:p-10 text-center border border-primary/20">
-        <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-4" />
-        <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3">
-          Want a Tailored Solution?
-        </h3>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto mb-6">
-          Our experts can help you design a customized intervention based on your specific team dynamics and challenges.
-        </p>
-        <Button
-          size="lg"
-          onClick={() => setShowContactForm(true)}
-          className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full"
-        >
-          <span className="hidden sm:inline">Speak to an Expert - Design Your Solution</span>
-          <span className="sm:hidden">Speak to an Expert</span>
-        </Button>
-      </div>
+      {/* Next Step - Permission Based */}
+      <motion.div 
+        id="next-step-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
+      >
+        <NextStepChoice 
+          onSelect={handleFollowUpSelect}
+          isSubmitting={isUpdatingPreference}
+        />
+      </motion.div>
+
+      {/* Secondary Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
+        className="text-center space-y-4"
+      >
+        <Link to="/shift-methodology">
+          <Button variant="outline" size="lg">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Explore SHIFT Methodology™
+          </Button>
+        </Link>
+      </motion.div>
 
       {/* Disclaimer */}
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
         This diagnostic identifies the single intervention most likely to improve performance right now. 
         It does not replace full assessments or coaching programs.
       </p>
-
-      {/* Contact Form Modal */}
-      <ExpertContactForm
-        open={showContactForm}
-        onOpenChange={setShowContactForm}
-        submissionId={submissionId}
-        primaryRecommendation={primaryRecommendation}
-      />
-
-      {/* Download Lead Form Modal */}
-      <DownloadLeadForm
-        open={showDownloadForm}
-        onOpenChange={setShowDownloadForm}
-        submissionId={submissionId}
-        result={result}
-      />
     </div>
   );
 }

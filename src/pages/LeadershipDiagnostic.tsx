@@ -4,53 +4,75 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LeadershipDiagnosticForm from "@/components/leadership-diagnostic/LeadershipDiagnosticForm";
 import LeadershipResults from "@/components/leadership-diagnostic/LeadershipResults";
+import LeadCaptureGate, { LeadCaptureData } from "@/components/shared/LeadCaptureGate";
 import { calculateLeadershipScores, getLeadershipResult, LeadershipResult } from "@/lib/leadershipScoring";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { ClipboardCheck } from "lucide-react";
 
+type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
+
 export default function LeadershipDiagnostic() {
+  const [stage, setStage] = useState<DiagnosticStage>('questionnaire');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<LeadershipResult | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
+  const [userData, setUserData] = useState<LeadCaptureData | null>(null);
 
-  const handleSubmit = async (answers: Record<number, number>) => {
-    setIsSubmitting(true);
-
+  const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
+    // Calculate scores but don't show results yet
     const scores = calculateLeadershipScores(answers);
     const diagnosticResult = getLeadershipResult(scores);
-
-    // Show results immediately - don't block on database
+    
     setResult(diagnosticResult);
+    setPendingAnswers(answers);
+    
+    // Move to lead capture stage
+    setStage('capture');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-    // Save to database in background (non-blocking)
+  const handleLeadCapture = async (data: LeadCaptureData) => {
+    if (!result || !pendingAnswers) return;
+    
+    setIsSubmitting(true);
+    setUserData(data);
+
     try {
-      const { data } = await supabase
+      // Save to database with user data and waiting_list = true
+      const { data: insertedData } = await supabase
         .from('leadership_diagnostic_submissions')
         .insert({
-          answers,
-          l1_score: scores.L1,
-          l2_score: scores.L2,
-          l3_score: scores.L3,
-          l4_score: scores.L4,
-          l5_score: scores.L5,
-          primary_level: diagnosticResult.primaryLevel,
-          secondary_level: diagnosticResult.secondaryLevel,
-          is_hybrid: diagnosticResult.isHybrid,
-          low_foundation_flag: diagnosticResult.lowFoundationFlag
+          answers: pendingAnswers,
+          l1_score: result.scores.L1,
+          l2_score: result.scores.L2,
+          l3_score: result.scores.L3,
+          l4_score: result.scores.L4,
+          l5_score: result.scores.L5,
+          primary_level: result.primaryLevel,
+          secondary_level: result.secondaryLevel,
+          is_hybrid: result.isHybrid,
+          low_foundation_flag: result.lowFoundationFlag,
+          name: data.name,
+          email: data.email,
+          organisation: data.organisation || null,
+          role: data.role || null,
+          waiting_list: true // They're on the list by submitting their details
         })
         .select('id')
         .single();
 
-      if (data) {
-        setSubmissionId(data.id);
+      if (insertedData) {
+        setSubmissionId(insertedData.id);
       }
     } catch (error) {
-      // Silent fail - results are already shown
       console.error('Error saving diagnostic:', error);
     } finally {
       setIsSubmitting(false);
+      // Move to results stage
+      setStage('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -67,7 +89,7 @@ export default function LeadershipDiagnostic() {
         <Header />
         
         <main className="pt-24 pb-16">
-          {!result ? (
+          {stage === 'questionnaire' && (
             <>
               {/* Hero Section */}
               <motion.section
@@ -103,18 +125,38 @@ export default function LeadershipDiagnostic() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl"
               >
-                <LeadershipDiagnosticForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+                <LeadershipDiagnosticForm onSubmit={handleQuestionnaireSubmit} isSubmitting={false} />
               </motion.section>
             </>
-          ) : (
-            /* Results Section */
+          )}
+
+          {stage === 'capture' && (
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="container mx-auto px-4 sm:px-6 lg:px-8"
+            >
+              <LeadCaptureGate 
+                onSubmit={handleLeadCapture} 
+                isSubmitting={isSubmitting}
+                variant="leadership"
+              />
+            </motion.section>
+          )}
+
+          {stage === 'results' && result && (
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"
             >
-              <LeadershipResults result={result} submissionId={submissionId} />
+              <LeadershipResults 
+                result={result} 
+                submissionId={submissionId}
+                userName={userData?.name}
+              />
             </motion.section>
           )}
         </main>

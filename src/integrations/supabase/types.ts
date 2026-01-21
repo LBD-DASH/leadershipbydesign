@@ -70,12 +70,16 @@ export type Database = {
           contacted_expert: boolean | null
           created_at: string
           email: string | null
+          follow_up_preference: string | null
           id: string
           leadership_score: number
           motivation_score: number
           name: string | null
+          organisation: string | null
           primary_recommendation: string
+          role: string | null
           secondary_recommendation: string | null
+          waiting_list: boolean | null
         }
         Insert: {
           answers: Json
@@ -84,12 +88,16 @@ export type Database = {
           contacted_expert?: boolean | null
           created_at?: string
           email?: string | null
+          follow_up_preference?: string | null
           id?: string
           leadership_score: number
           motivation_score: number
           name?: string | null
+          organisation?: string | null
           primary_recommendation: string
+          role?: string | null
           secondary_recommendation?: string | null
+          waiting_list?: boolean | null
         }
         Update: {
           answers?: Json
@@ -98,12 +106,16 @@ export type Database = {
           contacted_expert?: boolean | null
           created_at?: string
           email?: string | null
+          follow_up_preference?: string | null
           id?: string
           leadership_score?: number
           motivation_score?: number
           name?: string | null
+          organisation?: string | null
           primary_recommendation?: string
+          role?: string | null
           secondary_recommendation?: string | null
+          waiting_list?: boolean | null
         }
         Relationships: []
       }
@@ -113,6 +125,7 @@ export type Database = {
           company: string | null
           created_at: string
           email: string | null
+          follow_up_preference: string | null
           id: string
           is_hybrid: boolean
           l1_score: number
@@ -122,14 +135,18 @@ export type Database = {
           l5_score: number
           low_foundation_flag: boolean
           name: string | null
+          organisation: string | null
           primary_level: string
+          role: string | null
           secondary_level: string | null
+          waiting_list: boolean | null
         }
         Insert: {
           answers: Json
           company?: string | null
           created_at?: string
           email?: string | null
+          follow_up_preference?: string | null
           id?: string
           is_hybrid?: boolean
           l1_score: number
@@ -139,14 +156,18 @@ export type Database = {
           l5_score: number
           low_foundation_flag?: boolean
           name?: string | null
+          organisation?: string | null
           primary_level: string
+          role?: string | null
           secondary_level?: string | null
+          waiting_list?: boolean | null
         }
         Update: {
           answers?: Json
           company?: string | null
           created_at?: string
           email?: string | null
+          follow_up_preference?: string | null
           id?: string
           is_hybrid?: boolean
           l1_score?: number
@@ -156,8 +177,11 @@ export type Database = {
           l5_score?: number
           low_foundation_flag?: boolean
           name?: string | null
+          organisation?: string | null
           primary_level?: string
+          role?: string | null
           secondary_level?: string | null
+          waiting_list?: boolean | null
         }
         Relationships: []
       }
