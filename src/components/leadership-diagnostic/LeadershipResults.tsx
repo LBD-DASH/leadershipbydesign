@@ -214,7 +214,7 @@ export default function LeadershipResults({ result, submissionId, userName }: Le
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
-        className="bg-muted/50 rounded-xl p-6 border border-border"
+        className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
       >
         <SocialShareButtons
           title={`I just discovered my Leadership Operating Level: ${primaryTitle}`}
