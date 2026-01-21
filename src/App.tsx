@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import TeamDiagnostic from "./pages/TeamDiagnostic";
 import LeadershipDiagnostic from "./pages/LeadershipDiagnostic";
+import LeadershipDiagnosticLanding from "./pages/LeadershipDiagnosticLanding";
 import LeadershipLevels from "./pages/LeadershipLevels";
 import Programmes from "./pages/Programmes";
 import ProgrammeDetail from "./pages/ProgrammeDetail";
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/team-diagnostic" element={<TeamDiagnostic />} />
           <Route path="/leadership-diagnostic" element={<LeadershipDiagnostic />} />
+          <Route path="/leader-assessment" element={<LeadershipDiagnosticLanding />} />
           <Route path="/leadership-levels" element={<LeadershipLevels />} />
           <Route path="/programmes" element={<Programmes />} />
           <Route path="/programmes/shift-leadership-development" element={<ShiftLeadershipDevelopment />} />
