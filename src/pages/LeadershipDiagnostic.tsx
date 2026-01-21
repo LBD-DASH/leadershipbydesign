@@ -9,6 +9,7 @@ import { calculateLeadershipScores, getLeadershipResult, LeadershipResult } from
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { ClipboardCheck } from "lucide-react";
+import { useUtmParams } from "@/hooks/useUtmParams";
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
@@ -19,6 +20,7 @@ export default function LeadershipDiagnostic() {
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
   const [userData, setUserData] = useState<LeadCaptureData | null>(null);
+  const utmParams = useUtmParams();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     // Calculate scores but don't show results yet
@@ -40,7 +42,7 @@ export default function LeadershipDiagnostic() {
     setUserData(data);
 
     try {
-      // Save to database with user data and follow-up preference
+      // Save to database with user data, follow-up preference, and UTM params
       const { data: insertedData } = await supabase
         .from('leadership_diagnostic_submissions')
         .insert({
@@ -59,7 +61,12 @@ export default function LeadershipDiagnostic() {
           organisation: data.organisation || null,
           role: data.role || null,
           follow_up_preference: data.followUpPreference,
-          waiting_list: data.followUpPreference === 'yes' || data.followUpPreference === 'maybe'
+          waiting_list: data.followUpPreference === 'yes' || data.followUpPreference === 'maybe',
+          utm_source: utmParams.utm_source,
+          utm_medium: utmParams.utm_medium,
+          utm_campaign: utmParams.utm_campaign,
+          utm_content: utmParams.utm_content,
+          utm_term: utmParams.utm_term
         })
         .select('id')
         .single();

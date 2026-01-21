@@ -79,6 +79,11 @@ export type Database = {
           primary_recommendation: string
           role: string | null
           secondary_recommendation: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
           waiting_list: boolean | null
         }
         Insert: {
@@ -97,6 +102,11 @@ export type Database = {
           primary_recommendation: string
           role?: string | null
           secondary_recommendation?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
           waiting_list?: boolean | null
         }
         Update: {
@@ -115,6 +125,11 @@ export type Database = {
           primary_recommendation?: string
           role?: string | null
           secondary_recommendation?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
           waiting_list?: boolean | null
         }
         Relationships: []
@@ -139,6 +154,11 @@ export type Database = {
           primary_level: string
           role: string | null
           secondary_level: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
           waiting_list: boolean | null
         }
         Insert: {
@@ -160,6 +180,11 @@ export type Database = {
           primary_level: string
           role?: string | null
           secondary_level?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
           waiting_list?: boolean | null
         }
         Update: {
@@ -181,6 +206,11 @@ export type Database = {
           primary_level?: string
           role?: string | null
           secondary_level?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
           waiting_list?: boolean | null
         }
         Relationships: []
