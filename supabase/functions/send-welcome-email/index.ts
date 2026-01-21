@@ -40,9 +40,11 @@ const corsHeaders = {
 interface WelcomeEmailRequest {
   name: string;
   email: string;
-  diagnosticType: "leadership" | "team";
+  diagnosticType: "leadership" | "team" | "shift";
   primaryLevel?: string;
   primaryRecommendation?: string;
+  primaryDevelopment?: string;
+  primaryStrength?: string;
   followUpPreference: "yes" | "maybe";
 }
 
@@ -66,6 +68,17 @@ const getTeamWorkshopName = (recommendation: string): string => {
   return workshops[recommendation] || recommendation;
 };
 
+const getShiftSkillName = (skill: string): string => {
+  const skills: Record<string, string> = {
+    S: "Self-Management",
+    H: "Human Intelligence",
+    I: "Innovation",
+    F: "Focus",
+    T: "Thinking",
+  };
+  return skills[skill] || skill;
+};
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -78,6 +91,8 @@ const handler = async (req: Request): Promise<Response> => {
       diagnosticType, 
       primaryLevel, 
       primaryRecommendation,
+      primaryDevelopment,
+      primaryStrength,
       followUpPreference 
     }: WelcomeEmailRequest = await req.json();
 
@@ -86,13 +101,22 @@ const handler = async (req: Request): Promise<Response> => {
 
     let diagnosticResult = "";
     let nextStepText = "";
+    let diagnosticLabel = "";
 
     if (diagnosticType === "leadership" && primaryLevel) {
       diagnosticResult = getLeadershipLevelName(primaryLevel);
+      diagnosticLabel = "Leadership";
       nextStepText = `Your results indicate that <strong>${diagnosticResult}</strong> is your primary leadership style. This insight is the first step toward understanding how you lead and where you can grow.`;
     } else if (diagnosticType === "team" && primaryRecommendation) {
       diagnosticResult = getTeamWorkshopName(primaryRecommendation);
+      diagnosticLabel = "Team";
       nextStepText = `Based on your team's diagnostic, we recommend the <strong>${diagnosticResult}</strong> as your priority focus area. This will help address the key challenges your team is facing.`;
+    } else if (diagnosticType === "shift" && primaryDevelopment && primaryStrength) {
+      const devSkill = getShiftSkillName(primaryDevelopment);
+      const strengthSkill = getShiftSkillName(primaryStrength);
+      diagnosticResult = `${devSkill} (Focus) / ${strengthSkill} (Strength)`;
+      diagnosticLabel = "SHIFT Skills";
+      nextStepText = `Your SHIFT profile shows <strong>${strengthSkill}</strong> as your strongest skill and <strong>${devSkill}</strong> as your priority development area. Focused growth here will unlock your next level of effectiveness.`;
     }
 
     const urgencyText = isEager
@@ -125,7 +149,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <tr>
                     <td style="padding: 40px;">
                       <p style="margin: 0 0 20px 0; color: #374151; font-size: 16px; line-height: 1.6;">
-                        Thank you for completing the ${diagnosticType === "leadership" ? "Leadership" : "Team"} Diagnostic. We're excited to help you unlock your full potential.
+                        Thank you for completing the ${diagnosticLabel || diagnosticType.charAt(0).toUpperCase() + diagnosticType.slice(1)} Diagnostic. We're excited to help you unlock your full potential.
                       </p>
                       
                       <!-- Diagnostic Result Box -->
@@ -143,7 +167,7 @@ const handler = async (req: Request): Promise<Response> => {
                       <p style="margin: 0 0 16px 0; color: #374151;">In the meantime, here's what you can expect:</p>
                       
                       <ul style="margin: 0 0 24px 0; padding-left: 20px; color: #374151;">
-                        <li style="margin-bottom: 8px;">Exclusive insights and resources tailored to your ${diagnosticType === "leadership" ? "leadership style" : "team's needs"}</li>
+                        <li style="margin-bottom: 8px;">Exclusive insights and resources tailored to your ${diagnosticType === "leadership" ? "leadership style" : diagnosticType === "shift" ? "SHIFT profile" : "team's needs"}</li>
                         <li style="margin-bottom: 8px;">Priority access to workshops and development programs</li>
                         <li style="margin-bottom: 8px;">Tips and strategies from our expert coaches</li>
                       </ul>
