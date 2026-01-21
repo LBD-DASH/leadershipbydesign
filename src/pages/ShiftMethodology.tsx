@@ -154,8 +154,8 @@ export default function ShiftMethodology() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild>
-                  <Link to="/team-diagnostic">
-                    Take the Team Diagnostic
+                  <Link to="/shift-diagnostic">
+                    Take the SHIFT Diagnostic
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                 </Button>
