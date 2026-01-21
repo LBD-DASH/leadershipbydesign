@@ -5,6 +5,7 @@ import { AlertTriangle, Sparkles, Target, Users, TrendingUp, Brain } from 'lucid
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import SocialShareButtons from '@/components/shared/SocialShareButtons';
 
 interface LeadershipResultsProps {
   result: LeadershipResult;
@@ -208,11 +209,24 @@ export default function LeadershipResults({ result, submissionId, userName }: Le
         </div>
       </motion.div>
 
-      {/* Secondary Actions */}
+      {/* Social Sharing */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
+        className="bg-muted/50 rounded-xl p-6 border border-border"
+      >
+        <SocialShareButtons
+          title={`I just discovered my Leadership Operating Level: ${primaryTitle}`}
+          description="Take the free Leadership Diagnostic to discover yours!"
+        />
+      </motion.div>
+
+      {/* Secondary Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
         className="text-center space-y-4"
       >
         <Link to="/programmes">

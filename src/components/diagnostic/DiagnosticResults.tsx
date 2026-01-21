@@ -5,6 +5,7 @@ import WorkshopCard from "./WorkshopCard";
 import { BarChart3, Sparkles, ArrowRight, Target, Users, TrendingUp, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import SocialShareButtons from "@/components/shared/SocialShareButtons";
 
 interface DiagnosticResultsProps {
   result: DiagnosticResult;
@@ -216,11 +217,24 @@ export default function DiagnosticResults({ result, submissionId, userName }: Di
         </div>
       </motion.div>
 
-      {/* Secondary Actions */}
+      {/* Social Sharing */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6 }}
+        className="bg-muted/50 rounded-xl p-6 border border-border"
+      >
+        <SocialShareButtons
+          title={`I just identified my team's primary development need: ${primaryWorkshop.title.replace('The ', '').replace(' Workshop', '')}`}
+          description="Take the free Team Diagnostic to discover what's holding your team back!"
+        />
+      </motion.div>
+
+      {/* Secondary Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
         className="text-center space-y-4"
       >
         <Link to="/shift-methodology">
