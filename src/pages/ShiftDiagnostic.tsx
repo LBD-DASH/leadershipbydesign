@@ -95,10 +95,10 @@ export default function ShiftDiagnostic() {
   return (
     <>
       <SEO
-        title="SHIFT Skills Diagnostic | Discover Your Leadership Profile"
-        description="Take the free SHIFT Skills Diagnostic to discover your strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        title="SHIFT Team Diagnostic | Discover Your Team's Skills Profile"
+        description="Take the free SHIFT Team Diagnostic to discover your team's strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
         canonicalUrl="/shift-diagnostic"
-        keywords="SHIFT skills, leadership diagnostic, self-management, human intelligence, innovation, focus, thinking, leadership development"
+        keywords="SHIFT skills, team diagnostic, self-management, human intelligence, innovation, focus, thinking, team development"
       />
       
       <div className="min-h-screen bg-background">
@@ -132,21 +132,21 @@ export default function ShiftDiagnostic() {
 
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
                   <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm font-medium">Free SHIFT Skills Assessment</span>
+                  <span className="text-xs sm:text-sm font-medium">Free SHIFT Team Assessment</span>
                 </div>
                 
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
-                  Discover Your
+                  Discover Your Team's
                   <br />
                   <span className="text-primary">SHIFT Skills Profile</span>
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
-                  Rate the 20 statements below and discover your strongest skill and where to focus your development.
+                  Rate the 20 statements below and discover your team's strongest skill and where to focus development.
                 </p>
                 
                 <p className="text-xs sm:text-sm text-muted-foreground italic px-2">
-                  Answer based on how you actually behave - not how you aspire to behave.
+                  Answer based on what you actually observe in your team - not what you wish were true.
                 </p>
               </motion.section>
 

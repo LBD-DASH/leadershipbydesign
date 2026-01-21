@@ -48,32 +48,32 @@ export const shiftCategories: ShiftCategory[] = [
 
 export const shiftQuestions: ShiftQuestion[] = [
   // Self-Management (S) - Questions 1-4
-  { id: 1, text: 'I remain calm and composed under pressure.', skill: 'S' },
-  { id: 2, text: 'I regulate my energy effectively throughout the day.', skill: 'S' },
-  { id: 3, text: 'I take responsibility for my reactions, regardless of circumstances.', skill: 'S' },
-  { id: 4, text: 'I manage my emotions without letting them drive my decisions.', skill: 'S' },
+  { id: 1, text: 'My team remains calm and composed under pressure.', skill: 'S' },
+  { id: 2, text: 'My team regulates energy effectively throughout demanding periods.', skill: 'S' },
+  { id: 3, text: 'My team takes responsibility for reactions, regardless of circumstances.', skill: 'S' },
+  { id: 4, text: 'My team manages emotions without letting them drive decisions.', skill: 'S' },
   
   // Human Intelligence (H) - Questions 5-8
-  { id: 5, text: 'I quickly read how others are feeling in a conversation.', skill: 'H' },
-  { id: 6, text: 'I adapt my approach based on what drives different people.', skill: 'H' },
-  { id: 7, text: 'I build trust easily with diverse personalities.', skill: 'H' },
-  { id: 8, text: 'I understand what motivates others beyond surface-level.', skill: 'H' },
+  { id: 5, text: 'My team quickly reads how others are feeling in conversations.', skill: 'H' },
+  { id: 6, text: 'My team adapts their approach based on what drives different people.', skill: 'H' },
+  { id: 7, text: 'My team builds trust easily with diverse personalities.', skill: 'H' },
+  { id: 8, text: 'My team understands what motivates others beyond surface-level.', skill: 'H' },
   
   // Innovation (I) - Questions 9-12
-  { id: 9, text: 'I question assumptions rather than accept them.', skill: 'I' },
-  { id: 10, text: 'I take initiative without waiting for permission.', skill: 'I' },
-  { id: 11, text: 'I look for better ways to do things, even when current methods work.', skill: 'I' },
-  { id: 12, text: 'I propose new ideas confidently, even if they might be rejected.', skill: 'I' },
+  { id: 9, text: 'My team questions assumptions rather than accepting them.', skill: 'I' },
+  { id: 10, text: 'My team takes initiative without waiting for permission.', skill: 'I' },
+  { id: 11, text: 'My team looks for better ways to do things, even when current methods work.', skill: 'I' },
+  { id: 12, text: 'My team proposes new ideas confidently, even if they might be rejected.', skill: 'I' },
   
   // Focus (F) - Questions 13-16
-  { id: 13, text: 'I prioritise ruthlessly when under pressure.', skill: 'F' },
-  { id: 14, text: 'I stay on track despite distractions and competing demands.', skill: 'F' },
-  { id: 15, text: 'I align my effort to outcomes, not just activity.', skill: 'F' },
-  { id: 16, text: 'I say no to low-value work, even when it\'s easy.', skill: 'F' },
+  { id: 13, text: 'My team prioritises ruthlessly when under pressure.', skill: 'F' },
+  { id: 14, text: 'My team stays on track despite distractions and competing demands.', skill: 'F' },
+  { id: 15, text: 'My team aligns effort to outcomes, not just activity.', skill: 'F' },
+  { id: 16, text: 'My team says no to low-value work, even when it\'s easy.', skill: 'F' },
   
   // Thinking (T) - Questions 17-20
-  { id: 17, text: 'I make decisions independently without over-relying on others.', skill: 'T' },
-  { id: 18, text: 'I consider context and nuance before forming conclusions.', skill: 'T' },
-  { id: 19, text: 'I weigh options objectively rather than going with my gut.', skill: 'T' },
-  { id: 20, text: 'I take ownership of my conclusions and defend them when challenged.', skill: 'T' },
+  { id: 17, text: 'My team makes decisions independently without over-relying on others.', skill: 'T' },
+  { id: 18, text: 'My team considers context and nuance before forming conclusions.', skill: 'T' },
+  { id: 19, text: 'My team weighs options objectively rather than going with gut instinct.', skill: 'T' },
+  { id: 20, text: 'My team takes ownership of conclusions and defends them when challenged.', skill: 'T' },
 ];

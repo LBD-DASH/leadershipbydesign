@@ -32,7 +32,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         className="text-center"
       >
         <p className="text-sm text-muted-foreground italic max-w-2xl mx-auto px-4">
-          These results are based on observable behaviour patterns, not personality traits or self-perception.
+          These results are based on observable team dynamics, not personality profiles or opinions.
         </p>
       </motion.div>
 
@@ -51,11 +51,11 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
           <Sparkles className="w-4 h-4 flex-shrink-0" />
-          <span className="text-xs sm:text-sm font-medium">Your SHIFT Skills Profile</span>
+          <span className="text-xs sm:text-sm font-medium">Your Team's SHIFT Skills Profile</span>
         </div>
         
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 px-2 leading-tight">
-          {getSkillTitle(result.primaryStrength)} is Your Strength
+          {getSkillTitle(result.primaryStrength)} is Your Team's Strength
         </h1>
         
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
@@ -143,7 +143,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         transition={{ delay: 0.4, duration: 0.6 }}
         className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border shadow-sm"
       >
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Your SHIFT Profile</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Your Team's SHIFT Profile</h2>
         
         <div className="space-y-4">
           {skillOrder.map((skill) => {
@@ -236,8 +236,8 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         className="bg-muted/50 rounded-xl p-6 border border-border"
       >
         <SocialShareButtons
-          title={`I just discovered my SHIFT profile - ${getSkillTitle(result.primaryStrength)} is my strongest skill!`}
-          description="Take the free SHIFT Skills Diagnostic to discover your leadership profile."
+          title={`I just discovered my team's SHIFT profile - ${getSkillTitle(result.primaryStrength)} is our strongest skill!`}
+          description="Take the free SHIFT Team Diagnostic to discover your team's skills profile."
         />
       </motion.div>
 
@@ -266,8 +266,8 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
 
       {/* Disclaimer */}
       <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
-        This diagnostic provides a snapshot based on self-assessment. For deeper insight and development planning,
-        consider a conversation with one of our coaches.
+        This diagnostic identifies team skill patterns based on your observations. 
+        It does not replace full assessments or coaching programs.
       </p>
     </div>
   );
