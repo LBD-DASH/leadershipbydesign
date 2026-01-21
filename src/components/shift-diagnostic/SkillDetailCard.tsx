@@ -19,6 +19,14 @@ const skillImages: Record<ShiftSkill, string> = {
   T: thinkingImg,
 };
 
+const skillTints: Record<ShiftSkill, string> = {
+  S: 'bg-rose-50/50 dark:bg-rose-950/20',
+  H: 'bg-sky-50/50 dark:bg-sky-950/20',
+  I: 'bg-amber-50/50 dark:bg-amber-950/20',
+  F: 'bg-emerald-50/50 dark:bg-emerald-950/20',
+  T: 'bg-violet-50/50 dark:bg-violet-950/20',
+};
+
 interface SkillDetailCardProps {
   skill: SkillDetail;
   score: number;
@@ -35,7 +43,8 @@ export default function SkillDetailCard({ skill, score, isPrimary, isStrength }:
   return (
     <div
       className={cn(
-        'bg-card rounded-2xl border shadow-sm transition-all',
+        'rounded-2xl border shadow-sm transition-all',
+        skillTints[skill.key],
         isStrength && 'border-green-200 ring-1 ring-green-500/20 dark:border-green-800',
         isPrimary && 'border-amber-200 ring-1 ring-amber-500/20 dark:border-amber-800',
         !isPrimary && !isStrength && 'border-border'
