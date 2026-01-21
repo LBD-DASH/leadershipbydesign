@@ -26,6 +26,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdminList from "./pages/BlogAdminList";
 import BlogAdmin from "./pages/BlogAdmin";
+import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -63,6 +64,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route
             path="/blog-admin"
             element={
