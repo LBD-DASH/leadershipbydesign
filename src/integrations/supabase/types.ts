@@ -215,6 +215,81 @@ export type Database = {
         }
         Relationships: []
       }
+      shift_diagnostic_submissions: {
+        Row: {
+          answers: Json
+          created_at: string
+          email: string | null
+          focus_score: number
+          follow_up_preference: string | null
+          human_intelligence_score: number
+          id: string
+          innovation_score: number
+          name: string | null
+          organisation: string | null
+          primary_development: string
+          primary_strength: string
+          role: string | null
+          secondary_development: string | null
+          self_management_score: number
+          thinking_score: number
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          waiting_list: boolean | null
+        }
+        Insert: {
+          answers: Json
+          created_at?: string
+          email?: string | null
+          focus_score: number
+          follow_up_preference?: string | null
+          human_intelligence_score: number
+          id?: string
+          innovation_score: number
+          name?: string | null
+          organisation?: string | null
+          primary_development: string
+          primary_strength: string
+          role?: string | null
+          secondary_development?: string | null
+          self_management_score: number
+          thinking_score: number
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          waiting_list?: boolean | null
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          email?: string | null
+          focus_score?: number
+          follow_up_preference?: string | null
+          human_intelligence_score?: number
+          id?: string
+          innovation_score?: number
+          name?: string | null
+          organisation?: string | null
+          primary_development?: string
+          primary_strength?: string
+          role?: string | null
+          secondary_development?: string | null
+          self_management_score?: number
+          thinking_score?: number
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          waiting_list?: boolean | null
+        }
+        Relationships: []
+      }
       workshop_downloads: {
         Row: {
           created_at: string

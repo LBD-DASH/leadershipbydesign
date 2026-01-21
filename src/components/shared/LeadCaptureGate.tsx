@@ -23,7 +23,7 @@ export type FollowUpPreference = "yes" | "maybe" | "no";
 interface LeadCaptureGateProps {
   onSubmit: (data: LeadCaptureData) => void;
   isSubmitting?: boolean;
-  variant: 'leadership' | 'team';
+  variant: 'leadership' | 'team' | 'shift';
 }
 
 const followUpOptions: { 
