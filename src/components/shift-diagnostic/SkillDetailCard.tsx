@@ -3,6 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp, CheckCircle, AlertCircle, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SkillDetail, getScoreInterpretation } from '@/lib/shiftScoring';
+import { ShiftSkill } from '@/data/shiftQuestions';
+
+import selfManagementImg from '@/assets/shift-skill-self-management.jpg';
+import humanIntelligenceImg from '@/assets/shift-skill-human-intelligence.jpg';
+import innovationImg from '@/assets/shift-skill-innovation.jpg';
+import focusImg from '@/assets/shift-skill-focus.jpg';
+import thinkingImg from '@/assets/shift-skill-thinking.jpg';
+
+const skillImages: Record<ShiftSkill, string> = {
+  S: selfManagementImg,
+  H: humanIntelligenceImg,
+  I: innovationImg,
+  F: focusImg,
+  T: thinkingImg,
+};
 
 interface SkillDetailCardProps {
   skill: SkillDetail;
@@ -33,22 +48,17 @@ export default function SkillDetailCard({ skill, score, isPrimary, isStrength }:
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <div
             className={cn(
-              'w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0',
-              isStrength && 'bg-green-100 dark:bg-green-900/50',
-              isPrimary && 'bg-amber-100 dark:bg-amber-900/50',
-              !isPrimary && !isStrength && 'bg-primary/10'
+              'w-12 h-12 rounded-full flex-shrink-0 overflow-hidden ring-2',
+              isStrength && 'ring-green-500',
+              isPrimary && 'ring-amber-500',
+              !isPrimary && !isStrength && 'ring-primary/30'
             )}
           >
-            <span
-              className={cn(
-                'font-bold text-xl',
-                isStrength && 'text-green-600',
-                isPrimary && 'text-amber-600',
-                !isPrimary && !isStrength && 'text-primary'
-              )}
-            >
-              {skill.key}
-            </span>
+            <img
+              src={skillImages[skill.key]}
+              alt={skill.title}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
