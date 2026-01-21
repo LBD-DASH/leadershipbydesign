@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
 import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -324,6 +325,20 @@ export default function Programmes() {
                   </div>
                 </div>
               </div>
+            </motion.section>
+
+            {/* Social Share Section */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
+            >
+              <SocialShareButtons
+                title="Explore leadership development programmes and workshops"
+                description="Discover programmes designed to develop leaders at every level—from emerging managers to seasoned executives."
+              />
             </motion.section>
           </div>
         </main>

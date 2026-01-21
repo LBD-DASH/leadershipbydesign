@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
+import SocialShareButtons from "@/components/shared/SocialShareButtons";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/workshop-alignment-hero.jpg";
 import motivationImage from "@/assets/workshop-motivation.jpg";
 import leadershipImage from "@/assets/workshop-leadership.jpg";
@@ -371,6 +373,24 @@ export default function AlignmentWorkshop() {
                 </Button>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Social Share Section */}
+        <section className="py-12">
+          <div className="container mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="max-w-2xl mx-auto bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
+            >
+              <SocialShareButtons
+                title="SHIFT Team Alignment Workshop | Get your team rowing in the same direction"
+                description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities and unclear success metrics."
+              />
+            </motion.div>
           </div>
         </section>
       </main>

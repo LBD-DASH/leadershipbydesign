@@ -1,7 +1,10 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Users, MessageSquare } from "lucide-react";
+import { motion } from "framer-motion";
 
 const programmesData = {
   "team-effectiveness-workshops": {
@@ -142,7 +145,7 @@ export default function ProgrammeDetail() {
           </div>
 
           {/* CTA Button */}
-          <div className="text-center">
+          <div className="text-center mb-12">
             <Link 
               to="/contact"
               className="inline-block bg-primary text-primary-foreground hover:bg-primary/90 font-medium py-4 px-12 rounded-md text-lg transition-colors"
@@ -150,8 +153,22 @@ export default function ProgrammeDetail() {
               Contact Us to Learn More
             </Link>
           </div>
+
+          {/* Social Share Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
+          >
+            <SocialShareButtons
+              title={`${programme.title} | Leadership by Design`}
+              description={programme.description}
+            />
+          </motion.div>
         </div>
       </main>
+      <Footer />
     </div>
     </>
   );
