@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DiagnosticResult, workshopDetails } from "@/lib/diagnosticScoring";
 import WorkshopCard from "./WorkshopCard";
-import NextStepChoice, { FollowUpPreference } from "@/components/shared/NextStepChoice";
 import { BarChart3, Sparkles, ArrowRight, Target, Users, TrendingUp, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticResultsProps {
   result: DiagnosticResult;
@@ -16,41 +13,11 @@ interface DiagnosticResultsProps {
 }
 
 export default function DiagnosticResults({ result, submissionId, userName }: DiagnosticResultsProps) {
-  const [isUpdatingPreference, setIsUpdatingPreference] = useState(false);
-  
   const { scores, primaryRecommendation, secondaryRecommendation } = result;
   const primaryWorkshop = workshopDetails[primaryRecommendation];
   
   const maxScore = 25;
   const workshopOrder: ('clarity' | 'motivation' | 'leadership')[] = ['clarity', 'motivation', 'leadership'];
-
-  const handleFollowUpSelect = async (preference: FollowUpPreference) => {
-    if (!submissionId) return;
-    
-    setIsUpdatingPreference(true);
-    
-    try {
-      await supabase
-        .from('diagnostic_submissions')
-        .update({
-          follow_up_preference: preference,
-          waiting_list: preference === 'yes' || preference === 'maybe'
-        })
-        .eq('id', submissionId);
-    } catch (error) {
-      console.error('Error updating preference:', error);
-    } finally {
-      setIsUpdatingPreference(false);
-    }
-  };
-
-  const handleFindOutMore = (workshopKey: 'clarity' | 'motivation' | 'leadership') => {
-    // Scroll to the next step section
-    const nextStepSection = document.getElementById('next-step-section');
-    if (nextStepSection) {
-      nextStepSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
@@ -244,30 +211,16 @@ export default function DiagnosticResults({ result, submissionId, userName }: Di
               includes={workshopDetails[key].includes}
               shiftSkills={workshopDetails[key].shiftSkills}
               isRecommended={key === primaryRecommendation}
-              onFindOutMore={handleFindOutMore}
             />
           ))}
         </div>
-      </motion.div>
-
-      {/* Next Step - Permission Based */}
-      <motion.div 
-        id="next-step-section"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.6 }}
-      >
-        <NextStepChoice 
-          onSelect={handleFollowUpSelect}
-          isSubmitting={isUpdatingPreference}
-        />
       </motion.div>
 
       {/* Secondary Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
         className="text-center space-y-4"
       >
         <Link to="/shift-methodology">

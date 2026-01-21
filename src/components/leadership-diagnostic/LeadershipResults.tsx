@@ -1,13 +1,10 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { LeadershipResult, LeadershipLevel, leadershipLevelDetails, getHybridTitle } from '@/lib/leadershipScoring';
 import LeadershipLevelCard from './LeadershipLevelCard';
-import NextStepChoice, { FollowUpPreference } from '@/components/shared/NextStepChoice';
 import { AlertTriangle, Sparkles, Target, Users, TrendingUp, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { supabase } from '@/integrations/supabase/client';
 
 interface LeadershipResultsProps {
   result: LeadershipResult;
@@ -16,8 +13,6 @@ interface LeadershipResultsProps {
 }
 
 export default function LeadershipResults({ result, submissionId, userName }: LeadershipResultsProps) {
-  const [isUpdatingPreference, setIsUpdatingPreference] = useState(false);
-  
   const primaryDetails = leadershipLevelDetails[result.primaryLevel];
   const levels: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
   const maxScore = 20; // 4 questions x 5 max points
@@ -25,26 +20,6 @@ export default function LeadershipResults({ result, submissionId, userName }: Le
   const primaryTitle = result.isHybrid && result.secondaryLevel
     ? getHybridTitle(result.primaryLevel, result.secondaryLevel)
     : primaryDetails.title;
-
-  const handleFollowUpSelect = async (preference: FollowUpPreference) => {
-    if (!submissionId) return;
-    
-    setIsUpdatingPreference(true);
-    
-    try {
-      await supabase
-        .from('leadership_diagnostic_submissions')
-        .update({
-          follow_up_preference: preference,
-          waiting_list: preference === 'yes' || preference === 'maybe'
-        })
-        .eq('id', submissionId);
-    } catch (error) {
-      console.error('Error updating preference:', error);
-    } finally {
-      setIsUpdatingPreference(false);
-    }
-  };
   
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
@@ -232,24 +207,12 @@ export default function LeadershipResults({ result, submissionId, userName }: Le
           ))}
         </div>
       </motion.div>
-      
-      {/* Next Step - Permission Based */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.6 }}
-      >
-        <NextStepChoice 
-          onSelect={handleFollowUpSelect}
-          isSubmitting={isUpdatingPreference}
-        />
-      </motion.div>
 
       {/* Secondary Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
         className="text-center space-y-4"
       >
         <Link to="/programmes">

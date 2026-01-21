@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, Sparkles } from "lucide-react";
+import { Lock, Sparkles, MessageCircle, Clock, User } from "lucide-react";
 import { z } from "zod";
+import { cn } from "@/lib/utils";
 
 const leadCaptureSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -13,13 +14,39 @@ const leadCaptureSchema = z.object({
   role: z.string().trim().max(100, "Role must be less than 100 characters").optional(),
 });
 
-export type LeadCaptureData = z.infer<typeof leadCaptureSchema>;
+export type LeadCaptureData = z.infer<typeof leadCaptureSchema> & {
+  followUpPreference: FollowUpPreference;
+};
+
+export type FollowUpPreference = "yes" | "maybe" | "no";
 
 interface LeadCaptureGateProps {
   onSubmit: (data: LeadCaptureData) => void;
   isSubmitting?: boolean;
   variant: 'leadership' | 'team';
 }
+
+const followUpOptions: { 
+  value: FollowUpPreference; 
+  label: string; 
+  icon: React.ElementType;
+}[] = [
+  {
+    value: "yes",
+    label: "Yes — add me to the Priority Insight Waiting List for a short follow-up",
+    icon: MessageCircle,
+  },
+  {
+    value: "maybe",
+    label: "Maybe later — keep me on the waiting list for insights and updates",
+    icon: Clock,
+  },
+  {
+    value: "no",
+    label: "No — I'll reflect independently",
+    icon: User,
+  },
+];
 
 export default function LeadCaptureGate({ onSubmit, isSubmitting = false, variant }: LeadCaptureGateProps) {
   const [formData, setFormData] = useState({
@@ -28,11 +55,11 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
     organisation: "",
     role: "",
   });
+  const [followUpPreference, setFollowUpPreference] = useState<FollowUpPreference>("maybe");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
@@ -54,7 +81,10 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
       return;
     }
 
-    onSubmit(result.data);
+    onSubmit({
+      ...result.data,
+      followUpPreference,
+    });
   };
 
   return (
@@ -62,9 +92,9 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="min-h-[60vh] flex items-center justify-center px-4"
+      className="min-h-[60vh] flex items-center justify-center px-4 py-8"
     >
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -89,81 +119,140 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">
-                Name <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Your full name"
-                value={formData.name}
-                onChange={handleChange("name")}
-                className={errors.name ? "border-destructive" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.name && (
-                <p className="text-xs text-destructive">{errors.name}</p>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium">
+                  Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your full name"
+                  value={formData.name}
+                  onChange={handleChange("name")}
+                  className={errors.name ? "border-destructive" : ""}
+                  disabled={isSubmitting}
+                />
+                {errors.name && (
+                  <p className="text-xs text-destructive">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  value={formData.email}
+                  onChange={handleChange("email")}
+                  className={errors.email ? "border-destructive" : ""}
+                  disabled={isSubmitting}
+                />
+                {errors.email && (
+                  <p className="text-xs text-destructive">{errors.email}</p>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@company.com"
-                value={formData.email}
-                onChange={handleChange("email")}
-                className={errors.email ? "border-destructive" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.email && (
-                <p className="text-xs text-destructive">{errors.email}</p>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="organisation" className="text-sm font-medium">
+                  Organisation <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Input
+                  id="organisation"
+                  type="text"
+                  placeholder="Your company"
+                  value={formData.organisation}
+                  onChange={handleChange("organisation")}
+                  className={errors.organisation ? "border-destructive" : ""}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role" className="text-sm font-medium">
+                  Role <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Input
+                  id="role"
+                  type="text"
+                  placeholder="Your current role"
+                  value={formData.role}
+                  onChange={handleChange("role")}
+                  className={errors.role ? "border-destructive" : ""}
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="organisation" className="text-sm font-medium">
-                Organisation <span className="text-muted-foreground text-xs">(optional)</span>
+            {/* Follow-up Preference */}
+            <div className="pt-4 border-t border-border">
+              <Label className="text-sm font-medium mb-3 block">
+                Your Next Step (Optional)
               </Label>
-              <Input
-                id="organisation"
-                type="text"
-                placeholder="Your company or organisation"
-                value={formData.organisation}
-                onChange={handleChange("organisation")}
-                className={errors.organisation ? "border-destructive" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.organisation && (
-                <p className="text-xs text-destructive">{errors.organisation}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-sm font-medium">
-                Role <span className="text-muted-foreground text-xs">(optional)</span>
-              </Label>
-              <Input
-                id="role"
-                type="text"
-                placeholder="Your current role"
-                value={formData.role}
-                onChange={handleChange("role")}
-                className={errors.role ? "border-destructive" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.role && (
-                <p className="text-xs text-destructive">{errors.role}</p>
-              )}
+              <p className="text-xs text-muted-foreground mb-3">
+                Would you like support interpreting or acting on these insights?
+              </p>
+              
+              <div className="space-y-2">
+                {followUpOptions.map((option) => {
+                  const Icon = option.icon;
+                  const isSelected = followUpPreference === option.value;
+                  
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setFollowUpPreference(option.value)}
+                      disabled={isSubmitting}
+                      className={cn(
+                        "w-full text-left p-3 rounded-lg border transition-all duration-200",
+                        "hover:border-primary/50 hover:bg-primary/5",
+                        "focus:outline-none focus:ring-2 focus:ring-primary/20",
+                        "disabled:opacity-60 disabled:cursor-not-allowed",
+                        isSelected 
+                          ? "border-primary bg-primary/5" 
+                          : "border-border bg-background"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "flex-shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors",
+                          isSelected 
+                            ? "border-primary bg-primary" 
+                            : "border-muted-foreground/40"
+                        )}>
+                          {isSelected && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <Icon className={cn(
+                            "w-4 h-4 flex-shrink-0",
+                            isSelected ? "text-primary" : "text-muted-foreground"
+                          )} />
+                          <span className={cn(
+                            "text-xs sm:text-sm",
+                            isSelected ? "text-foreground" : "text-foreground/80"
+                          )}>
+                            {option.label}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full mt-6"
+              className="w-full mt-4"
               size="lg"
               disabled={isSubmitting}
             >
