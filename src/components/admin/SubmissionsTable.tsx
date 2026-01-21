@@ -29,10 +29,19 @@ interface SubmissionsTableProps {
     waiting_list?: boolean | null;
     primary_level?: string;
     primary_recommendation?: string;
+    primary_development?: string;
+    primary_strength?: string;
   }>;
-  type: 'leadership' | 'team';
+  type: 'leadership' | 'team' | 'shift';
   isLoading: boolean;
 }
+
+const getResultLabel = (sub: SubmissionsTableProps['submissions'][0], type: SubmissionsTableProps['type']) => {
+  if (type === 'leadership') return sub.primary_level || '-';
+  if (type === 'team') return sub.primary_recommendation || '-';
+  if (type === 'shift') return sub.primary_development ? `Dev: ${sub.primary_development}` : '-';
+  return '-';
+};
 
 export default function SubmissionsTable({ title, submissions, type, isLoading }: SubmissionsTableProps) {
   const [search, setSearch] = useState('');
@@ -128,7 +137,7 @@ export default function SubmissionsTable({ title, submissions, type, isLoading }
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
-                          {type === 'leadership' ? sub.primary_level : sub.primary_recommendation}
+                          {getResultLabel(sub, type)}
                         </Badge>
                       </TableCell>
                       <TableCell>
