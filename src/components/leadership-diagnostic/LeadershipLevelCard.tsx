@@ -9,7 +9,7 @@ interface LeadershipLevelCardProps {
   maxScore: number;
   isPrimary: boolean;
   isSecondary: boolean;
-  onFindOutMore: (level: LeadershipLevel) => void;
+  onFindOutMore?: (level: LeadershipLevel) => void;
 }
 
 export default function LeadershipLevelCard({
@@ -95,7 +95,7 @@ export default function LeadershipLevelCard({
       </div>
       
       {/* CTA */}
-      {(isPrimary || isSecondary) && (
+      {(isPrimary || isSecondary) && onFindOutMore && (
         <Button 
           onClick={() => onFindOutMore(level)}
           variant="outline"
