@@ -212,11 +212,11 @@ export function getShiftInsights(result: ShiftResult): { title: string; descript
   return [
     {
       title: `${primary.title} needs attention`,
-      description: `Your lowest score suggests ${primary.title.toLowerCase()} is where focused development would create the biggest impact on your effectiveness.`,
+      description: `Your team's lowest score suggests ${primary.title.toLowerCase()} is where focused development would create the biggest impact on team effectiveness.`,
     },
     {
-      title: `${strength.title} is your foundation`,
-      description: `This is your strongest skill—leverage it while developing others. Consider how you can use this strength to support your growth areas.`,
+      title: `${strength.title} is your team's foundation`,
+      description: `This is your team's strongest skill—leverage it while developing others. Consider how you can use this strength to support growth areas.`,
     },
   ];
 }
