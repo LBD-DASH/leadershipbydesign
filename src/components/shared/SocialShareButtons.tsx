@@ -28,7 +28,7 @@ export default function SocialShareButtons({ title, description, url }: SocialSh
         variant="outline"
         size="sm"
         onClick={() => handleShare('linkedin')}
-        className="gap-2"
+        className="gap-2 bg-[#0A66C2] hover:bg-[#004182] text-white border-[#0A66C2] hover:border-[#004182]"
       >
         <Linkedin className="w-4 h-4" />
         LinkedIn
@@ -37,7 +37,7 @@ export default function SocialShareButtons({ title, description, url }: SocialSh
         variant="outline"
         size="sm"
         onClick={() => handleShare('twitter')}
-        className="gap-2"
+        className="gap-2 bg-black hover:bg-neutral-800 text-white border-black hover:border-neutral-800"
       >
         <Twitter className="w-4 h-4" />
         Twitter
