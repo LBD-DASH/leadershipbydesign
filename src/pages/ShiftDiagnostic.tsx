@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Brain, Users, Lightbulb, Target, Cpu } from 'lucide-react';
+import { ClipboardCheck, Clock, Target, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingSocial from '@/components/FloatingSocial';
@@ -15,14 +14,6 @@ import { useUtmParams } from '@/hooks/useUtmParams';
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
-const skillPreviews = [
-  { icon: Brain, letter: 'S', title: 'Self-Management', desc: 'Regulate emotions and energy' },
-  { icon: Users, letter: 'H', title: 'Human Intelligence', desc: 'Read and connect with people' },
-  { icon: Lightbulb, letter: 'I', title: 'Innovation', desc: 'Challenge and create new ways' },
-  { icon: Target, letter: 'F', title: 'Focus', desc: 'Prioritise what matters most' },
-  { icon: Cpu, letter: 'T', title: 'Thinking', desc: 'Make independent decisions' },
-];
-
 export default function ShiftDiagnostic() {
   const [stage, setStage] = useState<DiagnosticStage>('questionnaire');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,16 +24,12 @@ export default function ShiftDiagnostic() {
   const utmParams = useUtmParams();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
-    setIsSubmitting(true);
-    try {
-      const scores = calculateShiftScores(answers);
-      const shiftResult = getShiftResult(scores);
-      setResult(shiftResult);
-      setPendingAnswers(answers);
-      setStage('capture');
-    } finally {
-      setIsSubmitting(false);
-    }
+    const scores = calculateShiftScores(answers);
+    const shiftResult = getShiftResult(scores);
+    setResult(shiftResult);
+    setPendingAnswers(answers);
+    setStage('capture');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLeadCapture = async (data: LeadCaptureData) => {
@@ -97,6 +84,7 @@ export default function ShiftDiagnostic() {
       }
 
       setStage('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error saving submission:', error);
     } finally {
@@ -112,85 +100,105 @@ export default function ShiftDiagnostic() {
         canonicalUrl="/shift-diagnostic"
         keywords="SHIFT skills, leadership diagnostic, self-management, human intelligence, innovation, focus, thinking, leadership development"
       />
-      <Header />
-      <FloatingSocial />
-
-      <main className="min-h-screen bg-background">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+      
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <main className="pt-24 pb-16">
           {stage === 'questionnaire' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
-            >
-              {/* Back link */}
-              <Link
-                to="/shift-methodology"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            <>
+              {/* Hero Section - Matches Team/Leadership Diagnostic */}
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center mb-6 sm:mb-12"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to SHIFT Methodology
-              </Link>
-
-              {/* Hero */}
-              <div className="text-center space-y-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-                  Discover Your SHIFT Profile
-                </h1>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  Answer 20 quick questions to identify your strongest skill and where to focus your development.
-                </p>
-              </div>
-
-              {/* Skill previews */}
-              <div className="grid grid-cols-5 gap-2 sm:gap-4">
-                {skillPreviews.map(({ icon: Icon, letter, title, desc }) => (
-                  <div key={letter} className="text-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                      <span className="text-primary font-bold text-lg">{letter}</span>
-                    </div>
-                    <p className="text-xs font-medium text-foreground hidden sm:block">{title}</p>
+                {/* Quick Value Props - Mobile First */}
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Clock className="w-3.5 h-3.5 text-primary" />
+                    <span>4 min</span>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Target className="w-3.5 h-3.5 text-primary" />
+                    <span>20 questions</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                    <Zap className="w-3.5 h-3.5 text-primary" />
+                    <span>Instant results</span>
+                  </div>
+                </div>
 
-              {/* Form */}
-              <ShiftDiagnosticForm
-                onSubmit={handleQuestionnaireSubmit}
-                isSubmitting={isSubmitting}
-              />
-            </motion.div>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                  <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm font-medium">Free SHIFT Skills Assessment</span>
+                </div>
+                
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
+                  Discover Your
+                  <br />
+                  <span className="text-primary">SHIFT Skills Profile</span>
+                </h1>
+                
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
+                  Rate the 20 statements below and discover your strongest skill and where to focus your development.
+                </p>
+                
+                <p className="text-xs sm:text-sm text-muted-foreground italic px-2">
+                  Answer based on how you actually behave - not how you aspire to behave.
+                </p>
+              </motion.section>
+
+              {/* Diagnostic Form */}
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl"
+              >
+                <ShiftDiagnosticForm
+                  onSubmit={handleQuestionnaireSubmit}
+                  isSubmitting={false}
+                />
+              </motion.section>
+            </>
           )}
 
           {stage === 'capture' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="container mx-auto px-4 sm:px-6 lg:px-8"
             >
               <LeadCaptureGate
                 onSubmit={handleLeadCapture}
                 isSubmitting={isSubmitting}
                 variant="shift"
               />
-            </motion.div>
+            </motion.section>
           )}
 
           {stage === 'results' && result && (
-            <motion.div
+            <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"
             >
               <ShiftResultsPage
                 result={result}
                 submissionId={submissionId}
                 userName={userData?.name}
               />
-            </motion.div>
+            </motion.section>
           )}
-        </div>
-      </main>
-
-      <Footer />
+        </main>
+        
+        <Footer />
+        <FloatingSocial />
+      </div>
     </>
   );
 }

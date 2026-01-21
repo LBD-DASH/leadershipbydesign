@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Target, Zap, TrendingUp, Users } from 'lucide-react';
+import { ArrowRight, Target, Users, TrendingUp, Brain, Sparkles, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInterpretation } from '@/lib/shiftScoring';
-import { shiftCategories, ShiftSkill } from '@/data/shiftQuestions';
+import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
 
@@ -20,43 +20,57 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
   const insights = getShiftInsights(result);
 
   const skillOrder: ShiftSkill[] = ['S', 'H', 'I', 'F', 'T'];
+  const maxScore = 20;
 
   return (
-    <div className="space-y-8">
-      {/* Hero */}
+    <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
+      {/* Behaviour-Based Confirmation */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center space-y-4"
+        transition={{ duration: 0.4 }}
+        className="text-center"
       >
-        <p className="text-sm text-primary font-medium">Your SHIFT Skills Profile</p>
-        <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
-          {userName ? `${userName}, here's` : "Here's"} your profile
-        </h1>
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          Based on your responses, we've identified your strongest skill and where to focus your development.
+        <p className="text-sm text-muted-foreground italic max-w-2xl mx-auto px-4">
+          These results are based on observable behaviour patterns, not personality traits or self-perception.
         </p>
       </motion.div>
 
-      {/* Key insights */}
+      {/* Hero Result Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="text-center"
+      >
+        {userName && (
+          <p className="text-lg text-muted-foreground mb-2">
+            Thank you, {userName}
+          </p>
+        )}
+        
+        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
+          <Sparkles className="w-4 h-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">Your SHIFT Skills Profile</span>
+        </div>
+        
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 px-2 leading-tight">
+          {getSkillTitle(result.primaryStrength)} is Your Strength
+        </h1>
+        
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
+          {strengthSkill.description}
+        </p>
+      </motion.div>
+
+      {/* Key Insights */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
         className="grid sm:grid-cols-2 gap-4"
       >
-        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
-              <Target className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-amber-900 dark:text-amber-100">{insights[0].title}</h3>
-              <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">{insights[0].description}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl p-5">
+        <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-2xl p-5 sm:p-6">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
               <Zap className="w-5 h-5 text-green-600" />
@@ -67,55 +81,114 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
             </div>
           </div>
         </div>
+        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
+              <Target className="w-5 h-5 text-amber-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-amber-900 dark:text-amber-100">{insights[0].title}</h3>
+              <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">{insights[0].description}</p>
+            </div>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Score visualization */}
+      {/* What This Typically Impacts */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="bg-card rounded-xl border border-border p-6"
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="bg-primary/5 border border-primary/10 rounded-2xl p-6 sm:p-8"
       >
-        <h2 className="font-semibold text-foreground mb-4">Your SHIFT Scores</h2>
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-4 text-center">
+          What This Typically Impacts
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex items-start gap-3">
+            <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Decision Quality</p>
+              <p className="text-xs text-muted-foreground">How you navigate complexity</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Users className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Team Influence</p>
+              <p className="text-xs text-muted-foreground">How others respond to your lead</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <TrendingUp className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Career Progress</p>
+              <p className="text-xs text-muted-foreground">Long-term impact potential</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <Brain className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-foreground text-sm">Daily Effectiveness</p>
+              <p className="text-xs text-muted-foreground">Consistency when stakes are high</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Score Visualization */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        className="bg-card rounded-2xl p-4 sm:p-6 md:p-8 border border-border shadow-sm"
+      >
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 text-center">Your SHIFT Profile</h2>
+        
         <div className="space-y-4">
           {skillOrder.map((skill) => {
             const score = result.scores[skill];
-            const percentage = (score / 20) * 100;
+            const percentage = (score / maxScore) * 100;
             const isPrimary = skill === result.primaryDevelopment;
             const isStrength = skill === result.primaryStrength;
-            const interpretation = getScoreInterpretation(score);
-
+            const details = skillDetails[skill];
+            
             return (
               <div key={skill} className="space-y-1">
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span
                       className={cn(
-                        'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold',
-                        isPrimary && 'bg-amber-100 text-amber-600',
+                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold',
                         isStrength && 'bg-green-100 text-green-600',
+                        isPrimary && 'bg-amber-100 text-amber-600',
                         !isPrimary && !isStrength && 'bg-muted text-muted-foreground'
                       )}
                     >
                       {skill}
                     </span>
-                    <span className="font-medium text-foreground">{getSkillTitle(skill)}</span>
+                    <span className={cn(
+                      "font-medium text-sm sm:text-base truncate",
+                      isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
+                    )}>
+                      {details.title}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={cn('text-xs', interpretation.color)}>{interpretation.label}</span>
-                    <span className="font-medium text-foreground">{score}/20</span>
-                  </div>
+                  <span className={cn(
+                    "font-bold text-sm sm:text-base flex-shrink-0",
+                    isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
+                  )}>
+                    {score}/{maxScore}
+                  </span>
                 </div>
-                <div className="h-3 bg-muted rounded-full overflow-hidden">
-                  <motion.div
+                <div className="h-4 bg-muted rounded-full overflow-hidden">
+                  <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
+                    transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                     className={cn(
-                      'h-full rounded-full',
-                      isPrimary && 'bg-amber-500',
-                      isStrength && 'bg-green-500',
-                      !isPrimary && !isStrength && 'bg-primary/60'
+                      "h-full rounded-full",
+                      isStrength ? "bg-green-500" : isPrimary ? "bg-amber-400" : "bg-muted-foreground/30"
                     )}
                   />
                 </div>
@@ -123,40 +196,26 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
             );
           })}
         </div>
+        
+        <p className="text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4">
+          Higher scores indicate stronger capability in that skill
+        </p>
       </motion.div>
 
-      {/* Impact areas */}
-      <motion.div
+      {/* Detailed Level Cards */}
+      <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="space-y-4"
+        transition={{ delay: 0.5, duration: 0.6 }}
       >
-        <h2 className="font-semibold text-foreground">What This Typically Impacts</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { icon: Target, label: 'Decision Quality' },
-            { icon: Users, label: 'Team Influence' },
-            { icon: TrendingUp, label: 'Career Progress' },
-            { icon: Zap, label: 'Daily Effectiveness' },
-          ].map(({ icon: Icon, label }) => (
-            <div key={label} className="bg-muted/50 rounded-lg p-4 text-center">
-              <Icon className="w-5 h-5 text-primary mx-auto mb-2" />
-              <span className="text-xs text-muted-foreground">{label}</span>
-            </div>
-          ))}
+        <div className="text-center mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">SHIFT Skill Details</h2>
+          <p className="text-sm text-muted-foreground">
+            Explore each skill and discover development pathways
+          </p>
         </div>
-      </motion.div>
-
-      {/* All skills breakdown */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="space-y-4"
-      >
-        <h2 className="font-semibold text-foreground">Skill Breakdown</h2>
-        <div className="space-y-3">
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillOrder.map((skill) => (
             <SkillDetailCard
               key={skill}
@@ -169,49 +228,44 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         </div>
       </motion.div>
 
-      {/* Social sharing */}
+      {/* Social Sharing */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="bg-muted/50 rounded-xl p-6 text-center"
+        transition={{ delay: 0.6, duration: 0.6 }}
+        className="bg-muted/50 rounded-xl p-6 border border-border"
       >
-        <h3 className="font-semibold text-foreground mb-2">Share Your Profile</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Let others know about the SHIFT Skills Diagnostic
-        </p>
         <SocialShareButtons
           title={`I just discovered my SHIFT profile - ${getSkillTitle(result.primaryStrength)} is my strongest skill!`}
           description="Take the free SHIFT Skills Diagnostic to discover your leadership profile."
         />
       </motion.div>
 
-      {/* CTA */}
+      {/* Secondary Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
         className="text-center space-y-4"
       >
-        <h3 className="font-semibold text-foreground">Ready to develop your skills?</h3>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Explore our programmes designed to strengthen each SHIFT skill through practical application.
-        </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button asChild size="lg">
-            <Link to="/programmes">
+          <Link to="/programmes">
+            <Button size="lg">
               Explore Programmes
               <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link to="/shift-methodology">Learn About SHIFT</Link>
-          </Button>
+            </Button>
+          </Link>
+          <Link to="/shift-methodology">
+            <Button variant="outline" size="lg">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Learn About SHIFT
+            </Button>
+          </Link>
         </div>
       </motion.div>
 
       {/* Disclaimer */}
-      <p className="text-xs text-muted-foreground text-center max-w-lg mx-auto">
+      <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
         This diagnostic provides a snapshot based on self-assessment. For deeper insight and development planning,
         consider a conversation with one of our coaches.
       </p>

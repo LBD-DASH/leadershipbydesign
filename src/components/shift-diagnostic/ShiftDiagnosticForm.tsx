@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { CheckCircle } from 'lucide-react';
 import { shiftQuestions, shiftCategories } from '@/data/shiftQuestions';
 import ShiftQuestionRating from './ShiftQuestionRating';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 
 interface ShiftDiagnosticFormProps {
   onSubmit: (answers: Record<number, number>) => void;
@@ -17,10 +16,8 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
-  const totalQuestions = shiftQuestions.length;
+  const allAnswered = shiftQuestions.every((q) => answers[q.id] !== undefined);
   const answeredCount = Object.keys(answers).length;
-  const allAnswered = answeredCount === totalQuestions;
-  const progress = (answeredCount / totalQuestions) * 100;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,30 +27,35 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-12">
       {shiftCategories.map((category) => {
         const categoryQuestions = shiftQuestions.filter((q) => q.skill === category.key);
         const categoryAnswered = categoryQuestions.filter((q) => answers[q.id] !== undefined).length;
-        const categoryComplete = categoryAnswered === categoryQuestions.length;
-
+        
         return (
-          <div key={category.key} className="bg-card rounded-xl border border-border p-6">
-            <div className="flex items-center justify-between mb-4">
+          <div key={category.key} className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border">
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="text-primary font-bold text-lg">{category.key}</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">{category.title}</h3>
-                  <p className="text-xs text-muted-foreground">{category.description}</p>
+                  <h3 className="text-xl sm:text-2xl font-semibold text-foreground">{category.title}</h3>
+                  <p className="text-muted-foreground text-sm mt-1">{category.description}</p>
                 </div>
               </div>
-              {categoryComplete && (
-                <CheckCircle className="w-5 h-5 text-green-500" />
-              )}
+              <div className="flex items-center gap-2 text-sm">
+                {categoryAnswered === categoryQuestions.length ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <span className="text-muted-foreground">
+                    {categoryAnswered}/{categoryQuestions.length}
+                  </span>
+                )}
+              </div>
             </div>
-
-            <div className="space-y-1">
+            
+            <div className="space-y-2">
               {categoryQuestions.map((question) => (
                 <ShiftQuestionRating
                   key={question.id}
@@ -68,29 +70,43 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
         );
       })}
 
-      {/* Sticky progress bar and submit */}
-      <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t border-border py-4 -mx-4 px-4 sm:-mx-6 sm:px-6">
-        <div className="max-w-2xl mx-auto space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">
-              {answeredCount} of {totalQuestions} questions answered
-            </span>
-            <span className="text-muted-foreground">{Math.round(progress)}%</span>
+      {/* Progress and Submit */}
+      <div className="sticky bottom-4 bg-background/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-border">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <p className="text-sm text-muted-foreground">
+              {answeredCount} of {shiftQuestions.length} questions answered
+            </p>
+            <div className="w-full sm:w-48 h-2 bg-muted rounded-full mt-2">
+              <div 
+                className="h-full bg-primary rounded-full transition-all duration-300"
+                style={{ width: `${(answeredCount / shiftQuestions.length) * 100}%` }}
+              />
+            </div>
           </div>
-          <Progress value={progress} className="h-2" />
+          
           <Button
             type="submit"
-            className="w-full"
             size="lg"
             disabled={!allAnswered || isSubmitting}
+            className="w-full sm:w-auto px-8 py-6 text-lg font-semibold rounded-full group"
           >
-            {isSubmitting
-              ? 'Processing...'
-              : allAnswered
-              ? 'See Your SHIFT Profile'
-              : 'Please answer all questions'}
+            {isSubmitting ? (
+              "Processing..."
+            ) : (
+              <>
+                See My Results
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </Button>
         </div>
+        
+        {!allAnswered && (
+          <p className="text-xs text-muted-foreground text-center mt-3">
+            Please answer all questions to see your results
+          </p>
+        )}
       </div>
     </form>
   );
