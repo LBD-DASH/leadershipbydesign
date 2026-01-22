@@ -40,16 +40,23 @@ const Auth = () => {
 
   useEffect(() => {
     // Check if user came from password reset email
+    // Only show reset form if we have an active session (recovery token creates a session)
     if (searchParams.get("mode") === "reset") {
-      setShowResetPassword(true);
+      if (isAuthenticated) {
+        setShowResetPassword(true);
+      } else if (!authLoading) {
+        // No session and not loading - show error
+        toast.error("Password reset link expired or invalid. Please request a new one.");
+        setShowForgotPassword(true);
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, isAuthenticated, authLoading]);
 
   useEffect(() => {
-    if (isAuthenticated && !showResetPassword) {
+    if (isAuthenticated && !showResetPassword && searchParams.get("mode") !== "reset") {
       navigate("/blog-admin");
     }
-  }, [isAuthenticated, navigate, showResetPassword]);
+  }, [isAuthenticated, navigate, showResetPassword, searchParams]);
 
   const validateForm = () => {
     try {
