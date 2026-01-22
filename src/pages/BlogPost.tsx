@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, User, ArrowLeft, Share2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -126,8 +127,7 @@ const BlogPost = () => {
 
             {/* Content */}
             <div className="max-w-3xl mx-auto">
-              <div 
-                className="blog-content prose prose-lg dark:prose-invert max-w-none 
+              <div className="blog-content prose prose-lg dark:prose-invert max-w-none 
                   prose-headings:font-semibold prose-headings:text-foreground prose-headings:mt-8 prose-headings:mb-4
                   prose-h1:text-3xl prose-h1:mt-10 prose-h1:mb-6
                   prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
@@ -140,43 +140,9 @@ const BlogPost = () => {
                   prose-ol:my-6 prose-ol:pl-6
                   prose-blockquote:border-l-4 prose-blockquote:border-primary/30 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:my-8
                   prose-img:rounded-lg prose-img:my-8"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-              <style>{`
-                .blog-content {
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                }
-                .blog-content p {
-                  margin-bottom: 1.5em;
-                  line-height: 1.8;
-                }
-                .blog-content p:empty {
-                  display: block;
-                  min-height: 1em;
-                }
-                .blog-content h2 {
-                  margin-top: 2.5em;
-                  margin-bottom: 1em;
-                }
-                .blog-content h3 {
-                  margin-top: 2em;
-                  margin-bottom: 0.75em;
-                }
-                .blog-content ul, .blog-content ol {
-                  margin: 1.5em 0;
-                  padding-left: 1.5em;
-                }
-                .blog-content li {
-                  margin: 0.5em 0;
-                }
-                .blog-content blockquote {
-                  margin: 2em 0;
-                  padding: 1em 1.5em;
-                  background: hsl(var(--muted) / 0.3);
-                  border-radius: 0.5rem;
-                }
-              `}</style>
+              >
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              </div>
             </div>
 
             {/* Author Bio */}
