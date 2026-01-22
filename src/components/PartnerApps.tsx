@@ -10,7 +10,7 @@ const partnerApps = [
   {
     name: "Confidence Culture",
     logo: confidenceCultureLogo,
-    description: "Build unshakeable confidence and develop a winning mindset",
+    description: "Transform your mindset and cultivate elite confidence for peak performance",
     link: "https://confidenceculture.online",
     comingSoon: false
   },
