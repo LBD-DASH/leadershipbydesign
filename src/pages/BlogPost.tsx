@@ -127,19 +127,19 @@ const BlogPost = () => {
 
             {/* Content */}
             <div className="max-w-3xl mx-auto">
-              <div className="blog-content prose prose-lg dark:prose-invert max-w-none
+              <div className="blog-content prose prose-xl dark:prose-invert max-w-none
                   prose-headings:font-bold prose-headings:text-foreground prose-headings:tracking-tight
-                  prose-h2:text-2xl prose-h2:mt-16 prose-h2:mb-6 prose-h2:pt-8 prose-h2:border-t prose-h2:border-border/40
-                  prose-h3:text-xl prose-h3:mt-12 prose-h3:mb-4
-                  prose-p:text-muted-foreground prose-p:leading-[1.9] prose-p:mb-7 prose-p:text-base
+                  prose-h2:text-2xl prose-h2:mt-20 prose-h2:mb-8 prose-h2:pt-10 prose-h2:border-t prose-h2:border-border/40
+                  prose-h3:text-xl prose-h3:mt-14 prose-h3:mb-5
+                  prose-p:text-muted-foreground prose-p:leading-[2.05] prose-p:mb-9 prose-p:text-[1.06rem]
                   prose-strong:text-foreground prose-strong:font-semibold
                   prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-primary/80
                   prose-em:text-foreground/85 prose-em:not-italic
-                  prose-ul:my-8 prose-ul:pl-6 prose-ul:space-y-3
-                  prose-ol:my-8 prose-ol:pl-6 prose-ol:space-y-3
-                  prose-li:text-muted-foreground prose-li:leading-relaxed prose-li:pl-2
-                  prose-blockquote:border-l-4 prose-blockquote:border-primary/40 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:italic prose-blockquote:my-10 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg
-                  prose-img:rounded-xl prose-img:my-10 prose-img:shadow-md
+                  prose-ul:my-10 prose-ul:pl-6 prose-ul:space-y-4
+                  prose-ol:my-10 prose-ol:pl-6 prose-ol:space-y-4
+                  prose-li:text-muted-foreground prose-li:leading-relaxed prose-li:pl-1
+                  prose-blockquote:border-l-4 prose-blockquote:border-primary/40 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:italic prose-blockquote:my-12 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg
+                  prose-img:rounded-xl prose-img:my-12 prose-img:shadow-md
                   [&>*:first-child]:mt-0"
               >
                 <ReactMarkdown>{post.content}</ReactMarkdown>
