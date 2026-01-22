@@ -1,11 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink } from "lucide-react";
+import confidenceCultureLogo from "@/assets/confidence-culture-logo.png";
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
 import leadershipIndexLogo from "@/assets/leadership-index-logo.png";
 import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
 
 const partnerApps = [
+  {
+    name: "Confidence Culture",
+    logo: confidenceCultureLogo,
+    description: "Build unshakeable confidence and develop a winning mindset",
+    link: "https://confidenceculture.online",
+    comingSoon: false
+  },
   {
     name: "6 Human Needs",
     logo: partnerLogo1,
