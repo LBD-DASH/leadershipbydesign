@@ -210,6 +210,7 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Send welcome email to the user
     const emailResponse = await sendEmail({
       from: "Leadership by Design <onboarding@resend.dev>",
       to: [email],
@@ -218,6 +219,70 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     console.log("Welcome email sent successfully:", emailResponse);
+
+    // Send notification email to Kevin
+    const notificationHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>New Waiting List Signup</title>
+        </head>
+        <body style="margin: 0; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h1 style="margin: 0 0 20px 0; color: #1e3a5f; font-size: 24px;">🎯 New Waiting List Signup!</h1>
+            
+            <div style="background-color: #f0f9ff; border-left: 4px solid #1e3a5f; padding: 16px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+              <p style="margin: 0; font-size: 16px; color: #374151;"><strong>Diagnostic Type:</strong> ${diagnosticLabel || diagnosticType}</p>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; width: 140px;">Name</td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937; font-weight: 500;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280;">Email</td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                  <a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280;">Follow-up</td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                  <span style="background-color: ${isEager ? '#dcfce7' : '#fef3c7'}; color: ${isEager ? '#166534' : '#92400e'}; padding: 4px 12px; border-radius: 9999px; font-size: 14px; font-weight: 500;">
+                    ${isEager ? '✅ Ready Now' : '⏳ Maybe Later'}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 0; color: #6b7280;">Result</td>
+                <td style="padding: 12px 0; color: #1f2937; font-weight: 500;">${diagnosticResult}</td>
+              </tr>
+            </table>
+            
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <a href="mailto:${email}" style="display: inline-block; background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+                Reply to ${firstName}
+              </a>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    try {
+      const notificationResponse = await sendEmail({
+        from: "Leadership by Design <onboarding@resend.dev>",
+        to: ["kevin@kevinbritz.com"],
+        subject: `🎯 New ${diagnosticLabel} Waiting List: ${name} (${isEager ? 'Ready Now' : 'Maybe'})`,
+        html: notificationHtml,
+      });
+      console.log("Notification email sent to Kevin:", notificationResponse);
+    } catch (notifyError) {
+      console.error("Failed to send notification to Kevin:", notifyError);
+      // Don't fail the whole request if notification fails
+    }
 
     return new Response(JSON.stringify(emailResponse), {
       status: 200,
