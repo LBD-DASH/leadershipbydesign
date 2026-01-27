@@ -32,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     // Send email to the lead
     const leadEmailResponse = await resend.emails.send({
-      from: "Leadership by Design <noreply@kevinbritz.com>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: [email],
       subject: "Your Leadership Checklist is Ready 📋",
       html: `
@@ -94,7 +94,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to Kevin
     const notificationResponse = await resend.emails.send({
-      from: "Leadership by Design <noreply@kevinbritz.com>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: ["kevin@kevinbritz.com"],
       subject: `📥 New Lead Magnet Download: ${name}`,
       html: `
