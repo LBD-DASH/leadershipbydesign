@@ -16,8 +16,8 @@ export default function LeadershipMistakesChecklist() {
 
       <Header />
 
-      <main className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-12 md:py-16">
+      <main className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-8 md:py-12">
           <article className="mx-auto max-w-3xl">
             <header className="text-center pb-8 border-b">
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
