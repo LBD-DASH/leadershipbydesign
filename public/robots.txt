@@ -12,5 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /leadership-mistakes-checklist.html
 
 Sitemap: https://leadershipbydesign.co/sitemap.xml
