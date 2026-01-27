@@ -89,10 +89,10 @@ export default function LeadershipMistakes() {
       }
 
       setIsSuccess(true);
-      toast.success("Check your email for the download link!");
+      toast.success("Your checklist is downloading!");
 
-      // Open PDF in new tab (you'll need to add the actual PDF URL here)
-      // window.open("YOUR_PDF_URL_HERE", "_blank");
+      // Open checklist in new tab for instant download
+      window.open("/leadership-mistakes-checklist.html", "_blank");
       
     } catch (error) {
       console.error("Submission error:", error);
