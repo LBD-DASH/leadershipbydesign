@@ -26,10 +26,10 @@ export default function Hero() {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
+          className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
         >
-          Transforming Leaders<br />
-          <span className="text-white/90">Driving Results</span>
+          We Turn Managers Into Leaders<br />
+          <span className="text-white/90">Who Scale Teams Without Burnout</span>
         </motion.h1>
         
         <motion.p
