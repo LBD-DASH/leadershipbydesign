@@ -47,7 +47,11 @@ export default function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            <Link to="/contact">
+            <a 
+              href="https://calendar.app.google/F3D2TZ5ccJ58q4ML8" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               <Button 
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90 px-10 sm:px-12 py-6 sm:py-7 text-lg sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group"
@@ -56,7 +60,7 @@ export default function Hero() {
                 Book Your Free Strategy Call
                 <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </div>
