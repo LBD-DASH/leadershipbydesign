@@ -115,7 +115,8 @@ export default function ExecutiveCoaching() {
                   <img 
                     src={executiveCoachingImage} 
                     alt="Executive Coaching Session"
-                    className="w-full h-[400px] object-cover"
+                    className="w-full aspect-[4/3] object-cover object-top"
+                    loading="lazy"
                   />
                 </div>
               </motion.div>

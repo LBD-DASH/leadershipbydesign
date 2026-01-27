@@ -30,12 +30,13 @@ export default function LeadershipLevelCard({
       isSecondary ? "border-amber-400 ring-2 ring-amber-400/20" : 
       "border-gray-100"
     )}>
-      {/* Image */}
-      <div className="relative h-40 overflow-hidden">
+      {/* Image - Responsive */}
+      <div className="relative aspect-video overflow-hidden">
         <img 
           src={details.image} 
           alt={details.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">

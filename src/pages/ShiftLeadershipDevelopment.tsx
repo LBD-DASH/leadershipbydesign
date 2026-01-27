@@ -124,11 +124,12 @@ export default function ShiftLeadershipDevelopment() {
                       isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-gray-100 hover:border-primary/30'
                     }`}
                   >
-                    <div className="relative h-40 overflow-hidden">
+                    <div className="relative aspect-video overflow-hidden">
                       <img 
                         src={levelImages[level]} 
                         alt={details.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                       <div className="absolute bottom-3 left-4">

@@ -34,10 +34,10 @@ export default function ServiceCard({ title, description, image, index }: Servic
       <div className={`bg-card rounded-2xl md:rounded-3xl shadow-lg border border-border overflow-hidden hover:shadow-2xl transition-all duration-500 ${
         isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
       } flex flex-col lg:flex`}>
-        {/* Image */}
-        <div className="lg:w-2/5 w-full h-56 sm:h-64 lg:h-auto relative overflow-hidden">
+        {/* Image - Responsive */}
+        <div className="lg:w-2/5 w-full aspect-video lg:aspect-auto relative overflow-hidden">
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+            className="absolute inset-0 bg-cover bg-center bg-top transition-transform duration-500 group-hover:scale-110"
             style={{ backgroundImage: `url('${image}')` }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />

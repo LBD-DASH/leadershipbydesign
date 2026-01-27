@@ -70,12 +70,13 @@ export default function LeadershipLevels() {
                   >
                     <Link to="/leadership-diagnostic" className="block group">
                       <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300 h-full">
-                        {/* Image */}
-                        <div className="relative h-48 overflow-hidden">
+                        {/* Image - Responsive */}
+                        <div className="relative aspect-video overflow-hidden">
                           <img
                             src={details.image}
                             alt={details.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                           <div className="absolute top-4 left-4">
