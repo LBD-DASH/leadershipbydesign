@@ -92,7 +92,7 @@ export default function LeadershipMistakes() {
       toast.success("Your checklist is downloading!");
 
       // Open checklist in new tab for instant download
-      window.open("/leadership-mistakes-checklist.html", "_blank");
+      window.open("/leadership-mistakes-checklist", "_blank");
       
     } catch (error) {
       console.error("Submission error:", error);
