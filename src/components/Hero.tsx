@@ -20,7 +20,7 @@ export default function Hero() {
       />
       
       {/* Main Content - Centered */}
-      <div className="relative z-10 flex-1 flex items-center justify-center">
+      <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
             initial={{ y: 30, opacity: 0 }}
@@ -36,7 +36,7 @@ export default function Hero() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-8 sm:mb-10 px-4 font-light leading-relaxed"
+            className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-6 sm:mb-8 px-4 font-light leading-relaxed"
           >
             90-Day Leadership Transformation System Used by 200+ Companies
           </motion.p>
@@ -46,6 +46,7 @@ export default function Hero() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
+            className="mb-4 sm:mb-6"
           >
             <a 
               href="https://calendar.app.google/F3D2TZ5ccJ58q4ML8" 
@@ -62,39 +63,37 @@ export default function Hero() {
               </Button>
             </a>
           </motion.div>
+          
+          {/* Secondary CTAs - Diagnostics */}
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
+          >
+            <Link to="/team-diagnostic" className="w-full sm:w-auto">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
+              >
+                Free Diagnostic for Teams
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/leadership-diagnostic" className="w-full sm:w-auto">
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
+              >
+                Free Diagnostic for Leaders
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </div>
-      
-      {/* Bottom CTAs - Diagnostics */}
-      <motion.div
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        className="relative z-10 pb-8 sm:pb-12"
-      >
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4">
-          <Link to="/team-diagnostic" className="w-full sm:w-auto">
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
-            >
-              Free Diagnostic for Teams
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-          <Link to="/leadership-diagnostic" className="w-full sm:w-auto">
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
-            >
-              Free Diagnostic for Leaders
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </div>
-      </motion.div>
     </motion.div>
   );
 }
