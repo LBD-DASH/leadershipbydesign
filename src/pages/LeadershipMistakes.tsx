@@ -114,11 +114,11 @@ export default function LeadershipMistakes() {
       
       <main className="min-h-screen bg-gradient-to-b from-background via-primary/5 to-background">
         {/* Hero Image Section - Responsive */}
-        <div className="relative w-full aspect-[21/9] sm:aspect-[3/1] md:aspect-[4/1] lg:aspect-[5/1] overflow-hidden">
+        <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] md:aspect-[3/1] lg:aspect-[4/1] overflow-hidden">
           <img 
             src={heroImage} 
             alt="Leadership team having a productive conversation" 
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-center"
             loading="eager"
             sizes="100vw"
           />
