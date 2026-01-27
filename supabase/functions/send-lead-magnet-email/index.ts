@@ -27,8 +27,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing required fields");
     }
 
-    // PDF URL - Update this when you upload your PDF
-    const pdfUrl = "https://fdtlljyfjdlrymfeguoa.supabase.co/storage/v1/object/public/blog-images/leadership-mistakes-checklist.pdf";
+    // Checklist URL - using the hosted HTML version
+    const pdfUrl = "https://leadershipbydesign.lovable.app/leadership-mistakes-checklist.html";
     
     // Send email to the lead
     const leadEmailResponse = await resend.emails.send({
