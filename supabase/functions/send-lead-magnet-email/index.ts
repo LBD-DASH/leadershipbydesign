@@ -70,7 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
             <p style="margin: 0; font-size: 14px;">
               <strong>Want to go deeper?</strong><br>
-              Take our free <a href="https://leadershipbydesign.lovable.app/leader-assessment" style="color: #7c3aed;">Leadership Diagnostic</a> to discover your leadership style and get personalized recommendations.
+              <a href="https://www.leadershipbydesign.co/programmes" style="color: #7c3aed;">Explore our programmes</a> to discover how we can help you lead with greater impact.
             </p>
           </div>
           
