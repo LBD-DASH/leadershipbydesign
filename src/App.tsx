@@ -33,6 +33,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import LeadershipMistakes from "./pages/LeadershipMistakes";
+import LeadershipMistakesChecklist from "./pages/LeadershipMistakesChecklist";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/leadership-mistakes" element={<LeadershipMistakes />} />
+          <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route
