@@ -28,7 +28,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Checklist URL (kept off navigation + noindex)
-    const pdfUrl = "https://www.leadershipbydesign.co/leadership-mistakes-checklist";
+    const pdfUrl = "https://leadershipbydesign.co/leadership-mistakes-checklist";
     
     // Send email to the lead
     const leadEmailResponse = await resend.emails.send({
