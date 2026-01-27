@@ -134,6 +134,45 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_magnet_downloads: {
+        Row: {
+          downloaded_at: string
+          email: string
+          id: string
+          lead_magnet: string
+          name: string
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          downloaded_at?: string
+          email: string
+          id?: string
+          lead_magnet: string
+          name: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          downloaded_at?: string
+          email?: string
+          id?: string
+          lead_magnet?: string
+          name?: string
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: []
+      }
       leadership_diagnostic_submissions: {
         Row: {
           answers: Json
