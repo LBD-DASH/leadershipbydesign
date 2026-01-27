@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-
+import heroImage from "@/assets/leadership-mistakes-hero.jpg";
 const formSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
@@ -108,12 +108,22 @@ export default function LeadershipMistakes() {
         title="5 Leadership Mistakes Costing You Your Best Employees | Free Checklist"
         description="Download the free checklist that reveals why your top performers are quietly looking elsewhere. Fix these 5 common leadership mistakes today."
         keywords="leadership mistakes, employee retention, leadership checklist, free leadership guide, retain top performers"
-        canonicalUrl="https://leadershipbydesign.lovable.app/leadership-mistakes"
+        canonicalUrl="/leadership-mistakes"
       />
       <Header />
       
       <main className="min-h-screen bg-gradient-to-b from-background via-primary/5 to-background">
-        <div className="container mx-auto px-4 py-16 md:py-24">
+        {/* Hero Image Section */}
+        <div className="relative h-48 md:h-64 lg:h-80 overflow-hidden">
+          <img 
+            src={heroImage} 
+            alt="Leadership team having a productive conversation" 
+            className="w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        </div>
+        
+        <div className="container mx-auto px-4 py-12 md:py-16 -mt-16 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               
