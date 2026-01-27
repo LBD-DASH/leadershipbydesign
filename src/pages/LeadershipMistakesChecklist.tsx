@@ -1,4 +1,7 @@
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -104,6 +107,18 @@ export default function LeadershipMistakesChecklist() {
                   I’ll identify one team member’s strength and find a way to amplify it
                 </li>
               </ul>
+            </section>
+
+            <section className="mt-10 text-center">
+              <p className="text-muted-foreground mb-4">
+                Ready to take your leadership to the next level?
+              </p>
+              <Button asChild size="lg">
+                <Link to="/programmes">
+                  Explore All Programmes
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </section>
           </article>
         </div>
