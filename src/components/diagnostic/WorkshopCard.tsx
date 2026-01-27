@@ -69,12 +69,13 @@ export default function WorkshopCard({
         </Badge>
       )}
 
-      {/* Workshop Image */}
-      <div className="relative h-40 sm:h-48 overflow-hidden">
+      {/* Workshop Image - Responsive */}
+      <div className="relative aspect-video overflow-hidden">
         <img 
           src={workshopImages[workshopKey]} 
           alt={title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>

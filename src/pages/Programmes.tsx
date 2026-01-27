@@ -127,11 +127,12 @@ export default function Programmes() {
                     >
                       <Link to="/leadership-diagnostic" className="block group">
                         <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
-                          <div className="relative h-40 overflow-hidden">
+                          <div className="relative aspect-video overflow-hidden">
                             <img
                               src={details.image}
                               alt={details.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                              loading="lazy"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                             <div className="absolute top-3 left-3">
@@ -241,11 +242,12 @@ export default function Programmes() {
                   >
                     <Link to={workshop.link} className="block group">
                       <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
-                        <div className="relative h-40 overflow-hidden">
+                        <div className="relative aspect-video overflow-hidden">
                           <img
                             src={workshop.image}
                             alt={workshop.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                         </div>
@@ -292,11 +294,12 @@ export default function Programmes() {
 
               <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
                 <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative h-64 md:h-auto overflow-hidden">
+                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
                     <img
                       src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80"
                       alt="Executive Coaching"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
                     />
                   </div>
                   <div className="p-6 sm:p-8 flex flex-col justify-center">
