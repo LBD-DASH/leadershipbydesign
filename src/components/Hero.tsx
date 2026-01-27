@@ -38,7 +38,7 @@ export default function Hero() {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-8 sm:mb-10 px-4 font-light leading-relaxed"
         >
-          We help leaders see what's really driving their decisions — and change it before it costs them performance, people, or profit.
+          90-Day Leadership Transformation System Used by 200+ Companies
         </motion.p>
         
         <motion.div
