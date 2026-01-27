@@ -27,8 +27,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing required fields");
     }
 
-    // Checklist URL - using the hosted HTML version
-    const pdfUrl = "https://leadershipbydesign.lovable.app/leadership-mistakes-checklist.html";
+    // Checklist URL - using the custom domain
+    const pdfUrl = "https://www.leadershipbydesign.co/leadership-mistakes-checklist.html";
     
     // Send email to the lead
     const leadEmailResponse = await resend.emails.send({
