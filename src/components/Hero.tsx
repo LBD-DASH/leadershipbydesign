@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/lib/utils/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -10,7 +9,7 @@ export default function Hero() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[85vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[85vh] flex flex-col overflow-hidden"
     >
       {/* Background Image with Overlay */}
       <div 
@@ -20,53 +19,78 @@ export default function Hero() {
         }}
       />
       
-      {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <motion.h1
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
-        >
-          We Turn Managers Into Leaders<br />
-          <span className="text-white/90">Who Scale Teams Without Burnout</span>
-        </motion.h1>
-        
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-8 sm:mb-10 px-4 font-light leading-relaxed"
-        >
-          90-Day Leadership Transformation System Used by 200+ Companies
-        </motion.p>
-        
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="flex flex-col sm:flex-row justify-center items-center gap-4 px-4"
-        >
+      {/* Main Content - Centered */}
+      <div className="relative z-10 flex-1 flex items-center justify-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h1
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
+          >
+            We Turn Managers Into Leaders<br />
+            <span className="text-white/90">Who Scale Teams Without Burnout</span>
+          </motion.h1>
+          
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-8 sm:mb-10 px-4 font-light leading-relaxed"
+          >
+            90-Day Leadership Transformation System Used by 200+ Companies
+          </motion.p>
+          
+          {/* Primary CTA - Strategy Call */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            <Link to="/contact">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/90 px-10 sm:px-12 py-6 sm:py-7 text-lg sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group"
+              >
+                <Phone className="mr-3 w-5 h-5" />
+                Book Your Free Strategy Call
+                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+      
+      {/* Bottom CTAs - Diagnostics */}
+      <motion.div
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="relative z-10 pb-8 sm:pb-12"
+      >
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4">
           <Link to="/team-diagnostic" className="w-full sm:w-auto">
             <Button 
               size="lg" 
-              className="w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
+              variant="outline"
+              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
             >
               Free Diagnostic for Teams
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
           <Link to="/leadership-diagnostic" className="w-full sm:w-auto">
             <Button 
               size="lg" 
-              className="w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
+              variant="outline"
+              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
             >
               Free Diagnostic for Leaders
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
