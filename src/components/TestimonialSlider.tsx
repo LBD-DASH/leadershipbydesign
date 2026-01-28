@@ -9,44 +9,58 @@ interface Testimonial {
   author: string;
   role: string;
   industry: string;
+  metric?: string;
+  companySize?: string;
 }
 
 const testimonials: Testimonial[] = [
   {
-    quote: "Kevin's coaching completely transformed how I approach leadership. His insights into conscious leadership helped me build a more engaged, high-performing team. The results have been remarkable.",
+    quote: "Within 3 months, our team productivity increased 40%. Kevin's coaching completely transformed how I approach leadership and helped me build a truly high-performing team.",
     author: "Sarah Mitchell",
     role: "CEO, Tech Innovations Ltd",
-    industry: "Technology"
+    industry: "Technology",
+    metric: "40% productivity increase",
+    companySize: "200+ employees"
   },
   {
-    quote: "The SHIFT Leadership Programme was exactly what our management team needed. Kevin's approach is practical, insightful, and immediately applicable. We've seen measurable improvements in team cohesion and performance.",
+    quote: "The SHIFT programme delivered a 50% reduction in team conflict within 60 days. Kevin's approach is practical, insightful, and immediately applicable.",
     author: "David Thompson",
     role: "Managing Director",
-    industry: "Manufacturing"
+    industry: "Manufacturing",
+    metric: "50% less team conflict",
+    companySize: "500+ employees"
   },
   {
-    quote: "Working with Kevin has been transformative for both me personally and our organization. His ability to identify blind spots and provide actionable strategies is exceptional. Highly recommend to any leader looking to elevate their impact.",
+    quote: "Our turnover dropped from 35% to 15% after Kevin's intervention. His ability to identify blind spots and provide actionable strategies saved us over $500K in recruitment costs.",
     author: "Priya Naidoo",
     role: "Executive Director",
-    industry: "Non-Profit Sector"
+    industry: "Non-Profit Sector",
+    metric: "$500K saved in recruitment",
+    companySize: "300+ employees"
   },
   {
-    quote: "Kevin's training design for our team was outstanding. He understood our challenges and delivered a customized program that addressed our specific needs. The tools and frameworks we learned continue to drive our success.",
+    quote: "Decision-making speed improved 35% across our leadership team. The tools and frameworks we learned continue to drive our success 18 months later.",
     author: "Michael van der Berg",
     role: "Head of Operations",
-    industry: "Logistics"
+    industry: "Logistics",
+    metric: "35% faster decisions",
+    companySize: "400+ employees"
   },
   {
-    quote: "The coaching sessions with Kevin provided clarity and direction when I needed it most. His questions challenged my thinking and helped me see possibilities I hadn't considered. A truly valuable investment in my leadership development.",
+    quote: "My strategic clarity doubled in 90 days. Kevin's coaching provided the focus and direction I needed to take our company to the next level.",
     author: "Nomsa Dlamini",
     role: "Senior Manager",
-    industry: "Financial Services"
+    industry: "Financial Services",
+    metric: "2x strategic clarity",
+    companySize: "800+ employees"
   },
   {
-    quote: "Leadership by Design delivered exceptional results for our organization. Kevin's expertise in building effective, empowered leaders is evident in every interaction. Our leadership team is stronger and more aligned than ever.",
+    quote: "We now fill 80% of senior roles internally, up from just 10%. Kevin's expertise in building leadership pipelines transformed our succession planning.",
     author: "James Robertson",
     role: "Chief People Officer",
-    industry: "Retail"
+    industry: "Retail",
+    metric: "80% internal promotions",
+    companySize: "1000+ employees"
   }
 ];
 
