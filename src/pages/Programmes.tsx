@@ -7,63 +7,53 @@ import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Penc
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring";
-
 const levelOrder: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
-
-const teamWorkshops = [
-  {
-    id: "alignment",
-    title: "Alignment Workshop",
-    subtitle: "Clarity & Direction",
-    description: "Build strategic clarity and get everyone rowing in the same direction with shared purpose and goals.",
-    duration: "1-2 days",
-    format: "In-person Workshop",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
-    link: "/workshops/alignment"
-  },
-  {
-    id: "motivation",
-    title: "Motivation Workshop",
-    subtitle: "Energy & Engagement",
-    description: "Reignite team energy and create sustainable motivation through purpose-driven engagement strategies.",
-    duration: "1-2 days",
-    format: "In-person Workshop",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
-    link: "/workshops/motivation"
-  },
-  {
-    id: "leadership",
-    title: "Leadership Workshop",
-    subtitle: "Accountability & Ownership",
-    description: "Develop leadership capabilities at every level and create a culture of accountability and ownership.",
-    duration: "1-2 days",
-    format: "In-person Workshop",
-    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
-    link: "/workshops/leadership"
-  }
-];
-
+const teamWorkshops = [{
+  id: "alignment",
+  title: "Alignment Workshop",
+  subtitle: "Clarity & Direction",
+  description: "Build strategic clarity and get everyone rowing in the same direction with shared purpose and goals.",
+  duration: "1-2 days",
+  format: "In-person Workshop",
+  image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
+  link: "/workshops/alignment"
+}, {
+  id: "motivation",
+  title: "Motivation Workshop",
+  subtitle: "Energy & Engagement",
+  description: "Reignite team energy and create sustainable motivation through purpose-driven engagement strategies.",
+  duration: "1-2 days",
+  format: "In-person Workshop",
+  image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+  link: "/workshops/motivation"
+}, {
+  id: "leadership",
+  title: "Leadership Workshop",
+  subtitle: "Accountability & Ownership",
+  description: "Develop leadership capabilities at every level and create a culture of accountability and ownership.",
+  duration: "1-2 days",
+  format: "In-person Workshop",
+  image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
+  link: "/workshops/leadership"
+}];
 export default function Programmes() {
-  return (
-    <>
-      <SEO
-        title="Programmes & Workshops"
-        description="Explore leadership development programmes including executive coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design."
-        canonicalUrl="/programmes"
-        keywords="leadership programmes, executive coaching, team workshops, leadership development, SHIFT leadership development"
-      />
+  return <>
+      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including executive coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" keywords="leadership programmes, executive coaching, team workshops, leadership development, SHIFT leadership development" />
       <div className="min-h-screen bg-background">
         <Header />
       
         <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6
+          }} className="text-center mb-16">
               <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Programmes & Workshops
               </h1>
@@ -74,21 +64,23 @@ export default function Programmes() {
             </motion.div>
 
             {/* Leadership Development Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Compass className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    Leadership Development
-                  </h2>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
                   <p className="text-muted-foreground">Discover your leadership operating level</p>
                 </div>
               </div>
@@ -116,24 +108,23 @@ export default function Programmes() {
               {/* Leadership Level Cards */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {levelOrder.map((level, index) => {
-                  const details = leadershipLevelDetails[level];
-                  return (
-                    <motion.div
-                      key={level}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                    >
+                const details = leadershipLevelDetails[level];
+                return <motion.div key={level} initial={{
+                  opacity: 0,
+                  y: 20
+                }} whileInView={{
+                  opacity: 1,
+                  y: 0
+                }} viewport={{
+                  once: true
+                }} transition={{
+                  delay: index * 0.1,
+                  duration: 0.5
+                }}>
                       <Link to="/leadership-diagnostic" className="block group">
                         <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
                           <div className="relative aspect-video overflow-hidden">
-                            <img
-                              src={details.image}
-                              alt={details.title}
-                              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                              loading="lazy"
-                            />
+                            <img src={details.image} alt={details.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                             <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                             <div className="absolute top-3 left-3">
                               <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
@@ -152,17 +143,22 @@ export default function Programmes() {
                           </div>
                         </div>
                       </Link>
-                    </motion.div>
-                  );
-                })}
+                    </motion.div>;
+              })}
 
                 {/* Design Your Leadership Card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                >
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                delay: 0.5,
+                duration: 0.5
+              }}>
                   <Link to="/contact" className="block group h-full">
                     <div className="bg-gradient-to-br from-primary/10 via-card to-primary/5 rounded-xl overflow-hidden border-2 border-dashed border-primary/30 hover:border-primary hover:shadow-lg transition-all duration-300 h-full flex flex-col">
                       <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
@@ -191,13 +187,17 @@ export default function Programmes() {
             </motion.section>
 
             {/* Team Workshops Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Users className="w-6 h-6 text-primary" />
@@ -232,23 +232,22 @@ export default function Programmes() {
 
               {/* Team Workshop Cards */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamWorkshops.map((workshop, index) => (
-                  <motion.div
-                    key={workshop.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                  >
+                {teamWorkshops.map((workshop, index) => <motion.div key={workshop.id} initial={{
+                opacity: 0,
+                y: 20
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                delay: index * 0.1,
+                duration: 0.5
+              }}>
                     <Link to={workshop.link} className="block group">
                       <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
                         <div className="relative aspect-video overflow-hidden">
-                          <img
-                            src={workshop.image}
-                            alt={workshop.title}
-                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                          />
+                          <img src={workshop.image} alt={workshop.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                           <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                         </div>
                         <div className="p-4">
@@ -267,19 +266,22 @@ export default function Programmes() {
                         </div>
                       </div>
                     </Link>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.section>
 
             {/* Executive Coaching Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-16"
-            >
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-16">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <MessageSquare className="w-6 h-6 text-primary" />
@@ -295,12 +297,7 @@ export default function Programmes() {
               <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img
-                      src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80"
-                      alt="Executive Coaching"
-                      className="w-full h-full object-cover object-top"
-                      loading="lazy"
-                    />
+                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80" alt="Executive Coaching" className="w-full h-full object-cover object-top" loading="lazy" />
                   </div>
                   <div className="p-6 sm:p-8 flex flex-col justify-center">
                     <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
@@ -331,23 +328,23 @@ export default function Programmes() {
             </motion.section>
 
             {/* Social Share Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
-            >
-              <SocialShareButtons
-                title="Explore leadership development programmes and workshops"
-                description="Discover programmes designed to develop leaders at every level—from emerging managers to seasoned executives."
-              />
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50">
+              <SocialShareButtons title="Explore leadership development programmes and workshops" description="Discover programmes designed to develop leaders at every level—from emerging managers to seasoned executives." />
             </motion.section>
           </div>
         </main>
         
         <Footer />
       </div>
-    </>
-  );
+    </>;
 }
