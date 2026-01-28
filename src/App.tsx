@@ -29,6 +29,7 @@ import BlogAdminList from "./pages/BlogAdminList";
 import BlogAdmin from "./pages/BlogAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
+import CaseStudies from "./pages/CaseStudies";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/leadership-mistakes" element={<LeadershipMistakes />} />
           <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
+          <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route

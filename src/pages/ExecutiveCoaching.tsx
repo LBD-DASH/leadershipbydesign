@@ -39,12 +39,12 @@ const sessionStructure = [
 ];
 
 const outcomes = [
-  'Clear understanding of your leadership strengths and growth areas',
-  'Higher confidence, clarity, and strategic presence',
-  'Stronger ability to influence people, teams, and executive decisions',
-  'Communicate with more authority and connection',
-  'Lead with focus, calmness, and resilience under pressure',
-  'Increased impact on business performance and culture'
+  'Pinpoint your leadership strengths and growth areas (94% diagnostic accuracy)',
+  '2x increase in strategic clarity within 90 days',
+  '35% improvement in team influence and engagement',
+  'Communicate with measurably more authority and connection',
+  'Lead with calm focus under pressure (reported by 92% of clients)',
+  '40% faster decision-making on complex strategic issues'
 ];
 
 export default function ExecutiveCoaching() {

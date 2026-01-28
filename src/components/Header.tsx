@@ -15,7 +15,7 @@ const Header = () => {
     path => location.pathname.startsWith(path)
   );
 
-  const isResourcesActive = ["/resources", "/blog", "/hellocoach", "/book", "/leadership-mistakes"].some(
+  const isResourcesActive = ["/resources", "/blog", "/hellocoach", "/book", "/leadership-mistakes", "/case-studies"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -142,6 +142,12 @@ const Header = () => {
                     Leadership Checklist
                   </Link>
                   <Link 
+                    to="/case-studies" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Case Studies
+                  </Link>
+                  <Link 
                     to="/book" 
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
@@ -265,6 +271,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Leadership Checklist
+              </Link>
+              <Link 
+                to="/case-studies" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Case Studies
               </Link>
               <Link 
                 to="/book" 

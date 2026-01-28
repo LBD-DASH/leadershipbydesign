@@ -222,11 +222,11 @@ export default function ShiftLeadershipDevelopment() {
                 </div>
                 <ul className="space-y-4">
                   {[
-                    'Clear understanding of your leadership operating level',
-                    'Personalised development roadmap',
-                    'Practical tools and frameworks',
-                    'Ongoing coaching and support',
-                    'Measurable leadership growth'
+                    'Pinpoint your exact leadership operating level (94% accuracy rate)',
+                    'Personalised development roadmap with clear milestones',
+                    '35% average improvement in leadership effectiveness scores',
+                    '40% faster decision-making within 60 days',
+                    'Ongoing coaching support with measurable progress tracking'
                   ].map((outcome, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />

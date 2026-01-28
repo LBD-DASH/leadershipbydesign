@@ -321,28 +321,41 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#3A7CA5] to-[#2d6384] rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-white">
+            <div className="bg-gradient-to-br from-[#3A7CA5] to-[#2d6384] rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-white mb-8">
               <h3 className="font-serif text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
                 Why Work With Me?
               </h3>
               <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-white/90">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
-                  <span>Bespoke strategies tailored to your needs</span>
+                  <span>40% average productivity gains in 90 days</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
-                  <span>Measurable, results-driven approach</span>
+                  <span>50% reduction in team conflict</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
-                  <span>Expert guidance from an experienced consultant</span>
+                  <span>200+ companies transformed</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
-                  <span>Ongoing support throughout your journey</span>
+                  <span>35% faster decision-making</span>
                 </li>
               </ul>
+            </div>
+
+            {/* Risk Reversal */}
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-2xl p-6 text-center">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <h4 className="font-bold text-green-800 dark:text-green-200 mb-2">
+                90-Day Results Guarantee
+              </h4>
+              <p className="text-sm text-green-700 dark:text-green-300">
+                If you don't see measurable results in 90 days, we work for free until you do.
+              </p>
             </div>
           </motion.div>
         </div>

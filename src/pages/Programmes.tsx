@@ -81,7 +81,7 @@ export default function Programmes() {
                 </div>
                 <div>
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
-                  <p className="text-muted-foreground">Discover your leadership operating level</p>
+                  <p className="text-muted-foreground">35% faster decisions • 40% productivity gains • 94% accuracy rate</p>
                 </div>
               </div>
 
@@ -206,7 +206,7 @@ export default function Programmes() {
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
                     Team Effectiveness Workshops
                   </h2>
-                  <p className="text-muted-foreground">Transform your team into a high-performing unit</p>
+                  <p className="text-muted-foreground">50% less conflict • 40% better meetings • Results in 60 days</p>
                 </div>
               </div>
 
@@ -290,7 +290,7 @@ export default function Programmes() {
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
                     Executive Coaching
                   </h2>
-                  <p className="text-muted-foreground">Personalised one-on-one leadership development</p>
+                  <p className="text-muted-foreground">2x strategic clarity • 35% faster decisions • 90-day results guarantee</p>
                 </div>
               </div>
 
@@ -304,7 +304,7 @@ export default function Programmes() {
                       One-on-One Executive Coaching
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Tailored coaching engagements for leaders seeking to enhance their effectiveness, navigate complex challenges, and accelerate their growth. Our experienced coaches work with you to unlock your potential.
+                      Executives achieve 2x strategic clarity in 90 days. Tailored coaching for leaders seeking to enhance their effectiveness, navigate complex challenges, and accelerate their growth with measurable outcomes.
                     </p>
                     <div className="flex gap-4 mb-6 text-sm">
                       <div>

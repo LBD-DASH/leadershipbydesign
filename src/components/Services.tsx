@@ -6,18 +6,21 @@ import teamWorkshopsImage from "@/assets/service-team-workshops.jpg";
 const services = [
   {
     title: "SHIFT Leadership Development",
-    description: "Intensive executive development that sharpens how leaders think, align vision, and navigate complexity to drive lasting organizational change.",
-    image: shiftLeadershipImage
+    description: "Leaders report 35% faster decision-making within 60 days. Intensive executive development that sharpens how leaders think, align vision, and navigate complexity.",
+    image: shiftLeadershipImage,
+    metric: "35% faster decisions in 60 days"
   },
   {
     title: "Team Workshops",
-    description: "High-impact sessions that diagnose hidden team dysfunction, rebuild trust and alignment, and create shared ownership — so your team stops surviving and starts performing.",
-    image: teamWorkshopsImage
+    description: "Teams see 50% reduction in conflict and 40% improvement in meeting effectiveness. High-impact sessions that rebuild trust and create shared ownership.",
+    image: teamWorkshopsImage,
+    metric: "50% less conflict, 40% better meetings"
   },
   {
     title: "Executive Coaching",
-    description: "One-on-one SHIFT-based coaching for senior leaders ready to uncover blind spots, reclaim focus, and lead with clarity — resulting in sharper decisions, stronger presence, and measurable business impact.",
-    image: executiveCoachingImage
+    description: "Executives achieve 2x strategic clarity in 90 days. One-on-one SHIFT-based coaching for senior leaders ready to lead with focus and measurable business impact.",
+    image: executiveCoachingImage,
+    metric: "2x strategic clarity in 90 days"
   }
 ];
 
