@@ -41,13 +41,13 @@ export default function AdminAllProgrammes() {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Admin Dashboard
               </Link>
-              <h1 className="text-3xl font-bold text-foreground">All Programmes (Detailed)</h1>
+              <h1 className="text-3xl font-bold text-foreground">Programme Overviews</h1>
               <p className="text-muted-foreground mt-1">
-                Comprehensive programme catalogue with full topics and outcomes
+                Comprehensive programme catalogue with full topics and outcomes for client discussions
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {adminProgrammesData.map((programme) => (
                 <Link key={programme.id} to={`/admin/programmes/${programme.id}`}>
                   <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
@@ -61,14 +61,14 @@ export default function AdminAllProgrammes() {
                       <CardTitle className="text-lg group-hover:text-primary transition-colors">
                         {programme.title}
                       </CardTitle>
-                      <CardDescription className="line-clamp-2">{programme.description}</CardDescription>
+                      <CardDescription>{programme.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
                         <Badge variant="outline">{programme.level}</Badge>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>{programme.topics.length} topics</span>
-                          <ArrowRight className="w-4 h-4 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">{programme.topics.length} topics</span>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                         </div>
                       </div>
                     </CardContent>
