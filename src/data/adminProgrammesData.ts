@@ -164,7 +164,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Legacy building'
     ],
     targetAudience: 'Executives, C-suite leaders, and senior directors shaping organisational direction',
-    duration: '6-8 days (modular)',
+    duration: '4 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
