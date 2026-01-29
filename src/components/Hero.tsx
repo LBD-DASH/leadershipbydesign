@@ -34,7 +34,7 @@ export default function Hero() {
               className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
             >
               We Turn Managers Into Leaders<br />
-              <span className="text-white/90">Who Scale Teams Without Burnout</span>
+              <span className="text-white/90">Who Scale Business Performance</span>
             </motion.h1>
             
             <motion.p
