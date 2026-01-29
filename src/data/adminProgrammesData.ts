@@ -1,4 +1,4 @@
-import { BarChart3, Target, Users, Zap, Star, Award, Sparkles } from 'lucide-react';
+import { BarChart3, Target, Users, Zap, Star, Award, Sparkles, Compass, Heart, Crown } from 'lucide-react';
 import leadershipL1 from '@/assets/leadership-l1-productivity.jpg';
 import leadershipL2 from '@/assets/leadership-l2-development.jpg';
 import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
@@ -6,6 +6,9 @@ import leadershipL4 from '@/assets/leadership-l4-motivational.jpg';
 import leadershipL5 from '@/assets/leadership-l5-strategic.jpg';
 import leadershipWomen from '@/assets/leadership-women.jpg';
 import grandMastersTeam from '@/assets/grand-masters-team.jpg';
+import workshopAlignment from '@/assets/workshop-alignment.jpg';
+import workshopMotivation from '@/assets/workshop-motivation.jpg';
+import workshopLeadership from '@/assets/workshop-leadership.jpg';
 
 export interface ProgrammeData {
   id: string;
@@ -226,6 +229,93 @@ export const adminProgrammesData: ProgrammeData[] = [
     targetAudience: 'Teams seeking foundational leadership development and individuals beginning their leadership journey',
     duration: '8 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
+  },
+  {
+    id: 'workshop-alignment',
+    title: 'Team Alignment Workshop',
+    subtitle: 'Team Effectiveness Workshop',
+    level: 'Workshop',
+    levelBadge: 'Team Development',
+    description: 'Diagnose hidden team dysfunction and rebuild alignment. This workshop helps teams move from confusion to clarity by establishing shared purpose, clear roles, and collaborative working agreements.',
+    icon: Compass,
+    image: workshopAlignment,
+    topics: [
+      'Team purpose and vision alignment',
+      'Role clarity and accountability',
+      'Communication protocols',
+      'Decision-making frameworks',
+      'Conflict resolution strategies',
+      'Collaborative working agreements'
+    ],
+    outcomes: [
+      'Shared understanding of team purpose',
+      'Clear roles and responsibilities',
+      'Improved team communication',
+      'Effective decision-making processes',
+      'Reduced conflict and dysfunction',
+      'Stronger team cohesion'
+    ],
+    targetAudience: 'Teams experiencing misalignment, unclear roles, or communication breakdowns',
+    duration: '1-2 days',
+    format: 'In-person Workshop | Virtual Facilitation'
+  },
+  {
+    id: 'workshop-motivation',
+    title: 'Team Motivation Workshop',
+    subtitle: 'Team Effectiveness Workshop',
+    level: 'Workshop',
+    levelBadge: 'Team Development',
+    description: 'Reignite team energy and engagement. This workshop addresses the root causes of disengagement and helps teams rediscover purpose, build trust, and create shared ownership of outcomes.',
+    icon: Heart,
+    image: workshopMotivation,
+    topics: [
+      'Understanding intrinsic motivation',
+      'Building psychological safety',
+      'Recognition and appreciation',
+      'Autonomy and empowerment',
+      'Purpose-driven work',
+      'Team energy management'
+    ],
+    outcomes: [
+      'Increased team engagement',
+      'Stronger sense of purpose',
+      'Improved trust and safety',
+      'Greater autonomy and ownership',
+      'Enhanced team morale',
+      'Sustainable motivation practices'
+    ],
+    targetAudience: 'Teams struggling with low morale, disengagement, or burnout',
+    duration: '1-2 days',
+    format: 'In-person Workshop | Virtual Facilitation'
+  },
+  {
+    id: 'workshop-leadership',
+    title: 'Team Leadership Workshop',
+    subtitle: 'Team Effectiveness Workshop',
+    level: 'Workshop',
+    levelBadge: 'Team Development',
+    description: 'Develop leadership capability across the team. This workshop builds shared leadership skills and helps teams take collective ownership of their performance and development.',
+    icon: Crown,
+    image: workshopLeadership,
+    topics: [
+      'Shared leadership principles',
+      'Situational leadership application',
+      'Coaching and feedback skills',
+      'Leading through influence',
+      'Team accountability structures',
+      'Developing others mindset'
+    ],
+    outcomes: [
+      'Distributed leadership capability',
+      'Stronger peer coaching culture',
+      'Enhanced feedback skills',
+      'Greater team accountability',
+      'Improved influence and collaboration',
+      'Leadership pipeline development'
+    ],
+    targetAudience: 'Teams wanting to build leadership depth and shared accountability',
+    duration: '1-2 days',
+    format: 'In-person Workshop | Virtual Facilitation'
   }
 ];
 
