@@ -137,7 +137,7 @@ export function OverviewFooter() {
   return (
     <div className="mt-auto pt-8 border-t border-muted text-center text-sm text-muted-foreground">
       <p className="font-medium text-foreground mb-1">Leadership by Design</p>
-      <p>kevin@kevinbritz.com | leadershipbydesign.lovable.app</p>
+      <p>kevin@kevinbritz.com | leadershipbydesign.co</p>
       <p className="mt-2 text-xs">© {new Date().getFullYear()} Leadership by Design. All rights reserved.</p>
     </div>
   );

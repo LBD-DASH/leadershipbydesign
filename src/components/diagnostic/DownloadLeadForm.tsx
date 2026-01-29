@@ -91,7 +91,7 @@ export default function DownloadLeadForm({
   };
 
   const getHeroImageUrl = (key: string) => {
-    const baseUrl = 'https://leadershipbydesign.lovable.app';
+    const baseUrl = 'https://leadershipbydesign.co';
     if (key === 'clarity') {
       return `${baseUrl}/assets/workshop-alignment-hero.jpg`;
     } else if (key === 'motivation') {
@@ -596,7 +596,7 @@ export default function DownloadLeadForm({
   <!-- Header -->
   <div class="header">
     <div class="logo">Leadership By Design</div>
-    <div class="header-nav">leadershipbydesign.lovable.app</div>
+    <div class="header-nav">leadershipbydesign.co</div>
   </div>
 
   <!-- Hero Section -->

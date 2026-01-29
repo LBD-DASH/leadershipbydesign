@@ -44,28 +44,128 @@
     <meta name="twitter:description" content="Transform your leadership with expert executive coaching, team workshops, and bespoke leadership development programmes." />
     <meta name="twitter:image" content="https://leadershipbydesign.co/og-image.jpg" />
 
-    <!-- Structured Data -->
+    <!-- Structured Data - Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "name": "Leadership by Design",
-      "description": "Expert leadership development and executive coaching services in South Africa",
+      "alternateName": "LBD",
+      "description": "Expert leadership development and executive coaching services in South Africa. We help leaders achieve measurable results through the SHIFT Methodology.",
       "url": "https://leadershipbydesign.co",
-      "logo": "https://leadershipbydesign.co/logo.png",
+      "logo": "https://leadershipbydesign.co/favicon.png",
+      "image": "https://leadershipbydesign.co/og-image.jpg",
       "founder": {
         "@type": "Person",
-        "name": "Kevin Britz"
+        "name": "Kevin Britz",
+        "jobTitle": "Executive Coach & Leadership Development Specialist",
+        "url": "https://leadershipbydesign.co/about"
       },
       "address": {
         "@type": "PostalAddress",
-        "addressCountry": "ZA"
+        "addressCountry": "ZA",
+        "addressRegion": "South Africa"
       },
-      "areaServed": "South Africa",
-      "serviceType": ["Executive Coaching", "Leadership Development", "Team Workshops", "Strategic Planning"],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "-25.7479",
+        "longitude": "28.2293"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "South Africa"
+      },
+      "priceRange": "$$",
+      "serviceType": ["Executive Coaching", "Leadership Development", "Team Workshops", "SHIFT Leadership Programme", "Leadership Diagnostics"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Leadership Development Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Executive Coaching",
+              "description": "One-on-one coaching for senior leaders to achieve 2x strategic clarity in 90 days"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "SHIFT Leadership Development",
+              "description": "Leaders report 35% faster decision-making within 60 days"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Team Workshops",
+              "description": "High-impact sessions achieving 50% reduction in team conflict"
+            }
+          }
+        ]
+      },
       "telephone": "+27844141852",
       "email": "kevin@kevinbritz.com",
-      "sameAs": []
+      "sameAs": [
+        "https://www.linkedin.com/in/kevinbritz/"
+      ],
+      "knowsAbout": ["Leadership Development", "Executive Coaching", "Team Building", "Organisational Development", "Strategic Planning", "SHIFT Methodology"]
+    }
+    </script>
+
+    <!-- Structured Data - FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the SHIFT Leadership Methodology?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SHIFT is our proprietary leadership development methodology that helps leaders understand their current operating level and develop the skills needed to progress. It focuses on five key areas: Self-management, Human Intelligence, Innovation, Focus, and Thinking."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does executive coaching take to show results?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our executive coaching programmes typically deliver measurable results within 90 days. Executives report achieving 2x strategic clarity and 35% faster decision-making within this timeframe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What types of team workshops do you offer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We offer three core team workshops: Alignment Workshop (clarity & direction), Motivation Workshop (energy & engagement), and Leadership Workshop (accountability & ownership). Each is 1-2 days and can be delivered in-person or virtually."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I know which leadership programme is right for me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Take our free 5-minute Leadership Diagnostic to discover your primary leadership operating level (L1-L5) and receive personalised development recommendations tailored to your specific needs."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - WebSite with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Leadership by Design",
+      "url": "https://leadershipbydesign.co",
+      "description": "Transform your leadership with expert executive coaching, team workshops, and bespoke leadership development programmes."
     }
     </script>
   </head>

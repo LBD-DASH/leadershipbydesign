@@ -65,7 +65,7 @@ export default function TeamDevelopmentFramework() {
               </p>
               <div className="mt-12 pt-12 border-t border-white/20">
                 <p className="text-sm text-primary-foreground/70">
-                  © Leadership by Design | leadershipbydesign.lovable.app
+                  © Leadership by Design | leadershipbydesign.co
                 </p>
               </div>
             </div>
@@ -505,15 +505,15 @@ export default function TeamDevelopmentFramework() {
                 Want expert guidance on implementing this framework with your team?
               </p>
               <p className="text-sm">
-                <strong>Take our Team Diagnostic:</strong> leadershipbydesign.lovable.app/team-diagnostic
+                <strong>Take our Team Diagnostic:</strong> leadershipbydesign.co/team-diagnostic
               </p>
               <p className="text-sm mt-2">
-                <strong>Contact us:</strong> leadershipbydesign.lovable.app/contact
+                <strong>Contact us:</strong> leadershipbydesign.co/contact
               </p>
             </div>
 
             <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
-              <p>© Leadership by Design | leadershipbydesign.lovable.app</p>
+              <p>© Leadership by Design | leadershipbydesign.co</p>
               <p className="mt-1">This framework is intended for personal and organisational development use.</p>
             </div>
           </div>

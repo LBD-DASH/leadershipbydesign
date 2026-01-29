@@ -81,7 +81,7 @@ export default function WorkshopDownloadForm({
   };
 
   const getHeroImageUrl = () => {
-    const baseUrl = 'https://leadershipbydesign.lovable.app';
+    const baseUrl = 'https://leadershipbydesign.co';
     if (workshopKey === 'clarity') {
       return `${baseUrl}/assets/workshop-alignment-hero.jpg`;
     } else if (workshopKey === 'motivation') {
@@ -523,7 +523,7 @@ export default function WorkshopDownloadForm({
   <!-- Header -->
   <div class="header">
     <div class="logo">Leadership By Design</div>
-    <div class="header-nav">leadershipbydesign.lovable.app</div>
+    <div class="header-nav">leadershipbydesign.co</div>
   </div>
 
   <!-- Hero Section -->

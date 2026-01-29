@@ -70,7 +70,7 @@ export default function MotivationWorkshop() {
       <SEO
         title="SHIFT Team Energy Workshop | Leadership by Design"
         description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Address fatigue, compliance without commitment, and unmet human needs using the SHIFT Methodology™."
-        canonicalUrl="https://leadershipbydesign.lovable.app/workshops/motivation"
+        canonicalUrl="/workshops/motivation"
       />
       <Header />
       <main className="min-h-screen bg-background">

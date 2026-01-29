@@ -109,7 +109,7 @@ export default function ShiftMethodology() {
       <SEO
         title="SHIFT Methodology™ | Leadership by Design"
         description="The SHIFT Methodology™ develops the five human skills required for performance: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
-        canonicalUrl="https://leadershipbydesign.lovable.app/shift-methodology"
+        canonicalUrl="/shift-methodology"
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">

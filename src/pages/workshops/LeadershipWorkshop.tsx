@@ -70,7 +70,7 @@ export default function LeadershipWorkshop() {
       <SEO
         title="SHIFT Team Ownership Workshop | Leadership by Design"
         description="A morning workshop for capable teams where ownership is inconsistent. Address delayed decisions, avoided conversations, and dependency on authority using the SHIFT Methodology™."
-        canonicalUrl="https://leadershipbydesign.lovable.app/workshops/leadership"
+        canonicalUrl="/workshops/leadership"
       />
       <Header />
       <main className="min-h-screen bg-background">
