@@ -50,7 +50,16 @@ export default function AdminAllProgrammes() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {adminProgrammesData.map((programme) => (
                 <Link key={programme.id} to={`/admin/programmes/${programme.id}`}>
-                  <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
+                  <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer overflow-hidden">
+                    {programme.image && (
+                      <div className="aspect-video overflow-hidden">
+                        <img 
+                          src={programme.image} 
+                          alt={programme.title}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
                     <CardHeader>
                       <div className="flex items-center justify-between mb-2">
                         <div className="p-2 rounded-lg bg-primary/10">
@@ -61,7 +70,7 @@ export default function AdminAllProgrammes() {
                       <CardTitle className="text-lg group-hover:text-primary transition-colors">
                         {programme.title}
                       </CardTitle>
-                      <CardDescription>{programme.description}</CardDescription>
+                      <CardDescription className="line-clamp-2">{programme.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">

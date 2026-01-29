@@ -1,4 +1,9 @@
 import { BarChart3, Target, Users, Zap, Star, Award, Sparkles } from 'lucide-react';
+import leadershipL1 from '@/assets/leadership-l1-productivity.jpg';
+import leadershipL2 from '@/assets/leadership-l2-development.jpg';
+import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
+import leadershipL4 from '@/assets/leadership-l4-motivational.jpg';
+import leadershipL5 from '@/assets/leadership-l5-strategic.jpg';
 
 export interface ProgrammeData {
   id: string;
@@ -8,6 +13,7 @@ export interface ProgrammeData {
   levelBadge: string;
   description: string;
   icon: typeof BarChart3;
+  image?: string;
   topics: string[];
   outcomes: string[];
   targetAudience: string;
@@ -24,6 +30,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Foundation',
     description: 'Building the foundation for personal effectiveness and professional growth. This programme focuses on developing core skills that enable individuals to maximise their contribution and deliver consistent results.',
     icon: Target,
+    image: leadershipL1,
     topics: [
       'Power of enthusiasm',
       'Increasing productivity',
@@ -52,6 +59,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Supervisory',
     description: 'Transitioning from individual contributor to team leader. This programme equips supervisors and team leads with essential management skills to lead small teams effectively.',
     icon: Users,
+    image: leadershipL2,
     topics: [
       'Effective communication',
       'Time management',
@@ -80,6 +88,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Management',
     description: 'Leading with purpose and self-awareness. This programme develops middle managers who lead through personal example and create meaningful work environments.',
     icon: Star,
+    image: leadershipL3,
     topics: [
       'Self knowledge and emotional intelligence',
       'Follow through with persistence',
@@ -108,6 +117,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Senior Leadership',
     description: 'Inspiring and empowering others to achieve extraordinary results. This programme develops senior leaders who drive motivation and engagement across large teams and functions.',
     icon: Zap,
+    image: leadershipL4,
     topics: [
       'Developing & empowering people',
       'Leading change effectively',
@@ -136,6 +146,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Executive',
     description: 'Shaping the future of the organisation. This programme develops executive leaders who create vision, drive strategy, and transform organisational culture.',
     icon: BarChart3,
+    image: leadershipL5,
     topics: [
       'Power of strategic leadership',
       'Strategic purpose and direction',
