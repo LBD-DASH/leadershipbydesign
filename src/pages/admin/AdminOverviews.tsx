@@ -84,7 +84,7 @@ export default function AdminOverviews() {
   return (
     <>
       <SEO
-        title="Programme Overviews | Admin | Leadership by Design"
+        title="Programmes & Workshops | Admin | Leadership by Design"
         description="Access downloadable programme overviews for client discussions"
       />
       <div className="min-h-screen flex flex-col bg-background">
@@ -99,7 +99,7 @@ export default function AdminOverviews() {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Admin Dashboard
               </Link>
-              <h1 className="text-3xl font-bold text-foreground">Programme Overviews</h1>
+              <h1 className="text-3xl font-bold text-foreground">Programmes & Workshops</h1>
               <p className="text-muted-foreground mt-1">
                 Downloadable 1-2 page overviews for client discussions
               </p>
