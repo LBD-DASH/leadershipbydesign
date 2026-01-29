@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
+import { useLeadNotification } from "@/hooks/useLeadNotification";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { processLead } = useLeadNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +43,16 @@ export default function Contact() {
       });
 
       if (error) throw error;
+
+      // Process lead for scoring and notification (non-blocking)
+      processLead({
+        name: formData.full_name,
+        email: formData.email,
+        role: formData.role,
+        company: formData.company,
+        message: formData.message,
+        source: 'contact-form'
+      }).catch(err => console.error('Lead processing error:', err));
 
       setSubmitted(true);
       setFormData({

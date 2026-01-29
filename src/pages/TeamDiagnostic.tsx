@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { ClipboardCheck, Clock, Target, Zap } from "lucide-react";
 import FloatingSocial from "@/components/FloatingSocial";
 import { useUtmParams } from "@/hooks/useUtmParams";
+import { useLeadNotification } from "@/hooks/useLeadNotification";
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
@@ -22,6 +23,7 @@ export default function TeamDiagnostic() {
   const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
   const [userData, setUserData] = useState<LeadCaptureData | null>(null);
   const utmParams = useUtmParams();
+  const { processLead } = useLeadNotification();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     // Calculate scores but don't show results yet
@@ -89,6 +91,21 @@ export default function TeamDiagnostic() {
           // Don't block the flow if email fails
         }
       }
+
+      // Process lead for scoring and notification (non-blocking)
+      processLead({
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        organisation: data.organisation,
+        followUpPreference: data.followUpPreference,
+        source: 'team-diagnostic',
+        diagnosticResult: {
+          type: 'team',
+          primaryRecommendation: result.primaryRecommendation,
+          scores: result.scores
+        }
+      }).catch(err => console.error('Lead processing error:', err));
     } catch (error) {
       console.error('Error saving diagnostic:', error);
     } finally {

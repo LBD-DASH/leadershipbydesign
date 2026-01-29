@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { ClipboardCheck } from "lucide-react";
 import { useUtmParams } from "@/hooks/useUtmParams";
+import { useLeadNotification } from "@/hooks/useLeadNotification";
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
@@ -21,6 +22,7 @@ export default function LeadershipDiagnostic() {
   const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
   const [userData, setUserData] = useState<LeadCaptureData | null>(null);
   const utmParams = useUtmParams();
+  const { processLead } = useLeadNotification();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     // Calculate scores but don't show results yet
@@ -92,6 +94,21 @@ export default function LeadershipDiagnostic() {
           // Don't block the flow if email fails
         }
       }
+
+      // Process lead for scoring and notification (non-blocking)
+      processLead({
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        organisation: data.organisation,
+        followUpPreference: data.followUpPreference,
+        source: 'leadership-diagnostic',
+        diagnosticResult: {
+          type: 'leadership',
+          primaryLevel: result.primaryLevel,
+          scores: result.scores
+        }
+      }).catch(err => console.error('Lead processing error:', err));
     } catch (error) {
       console.error('Error saving diagnostic:', error);
     } finally {
