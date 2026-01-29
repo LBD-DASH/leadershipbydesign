@@ -49,7 +49,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Individual contributors and emerging professionals looking to build foundational leadership skills',
     duration: '8 weeks',
-    format: 'Workshop + Coaching'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'l2-development',
@@ -78,7 +78,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Supervisors, team leaders, and first-time managers responsible for small teams',
     duration: '13 weeks',
-    format: 'Workshop + Coaching + SHIFT Methodology + Action Board Presentation'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'l3-purpose',
@@ -107,7 +107,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Middle managers and department heads seeking to deepen their leadership impact',
     duration: '4-5 days',
-    format: 'Workshop + Executive Coaching + 360 Feedback'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'l4-motivational',
@@ -136,7 +136,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Senior managers, directors, and functional leaders driving large-scale initiatives',
     duration: '5-6 days',
-    format: 'Workshop + Executive Coaching + Action Learning'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'l5-strategic',
@@ -165,7 +165,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Executives, C-suite leaders, and senior directors shaping organisational direction',
     duration: '6-8 days (modular)',
-    format: 'Executive Workshop + 1:1 Coaching + Board Engagement'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'leadership-women',
@@ -193,7 +193,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'Women leaders at all levels seeking to advance their careers and leadership impact',
     duration: '3-4 days',
-    format: 'Workshop + Peer Coaching + Mentoring Network'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
     id: 'grand-masters',
@@ -221,7 +221,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     ],
     targetAudience: 'New employees, graduates, and individuals beginning their leadership journey',
     duration: '1-2 days',
-    format: 'Interactive Workshop'
+    format: 'Online LMS Portal | Hard Copy | Online Coaching'
   }
 ];
 
