@@ -1,120 +1,94 @@
 
-# Programme Overview Pages for Admin - Implementation Plan
 
-## Overview
-Create downloadable 1-2 page programme overview documents for each major programme, accessible to logged-in admins. These will follow the proven pattern established by the Team Development Framework page.
+# Admin Programmes Catalogue - Implementation Plan
 
-## Programmes to Create Overview Pages For
+## Summary
 
-| Programme | Route | Page Count |
-|-----------|-------|------------|
-| Executive Coaching | `/admin/overview/executive-coaching` | 2 pages |
-| SHIFT Leadership Development | `/admin/overview/shift-leadership` | 2 pages |
-| SHIFT Methodology | `/admin/overview/shift-methodology` | 2 pages |
-| Team Alignment Workshop | `/admin/overview/workshop-alignment` | 1 page |
-| Team Motivation Workshop | `/admin/overview/workshop-motivation` | 1 page |
-| Team Leadership Workshop | `/admin/overview/workshop-leadership` | 1 page |
-| Leadership Levels (L1-L5) | `/admin/overview/leadership-levels` | 2 pages |
+Create a new **"All Programmes (Detailed)"** section in the admin area that mirrors the public Programmes page structure but includes comprehensive programme details from the Multichoice Leadership Pipeline document. This will serve as a detailed reference for client discussions.
 
-## Page Structure (Each Overview)
+## What You'll Get
 
-**Page 1 - Programme Summary:**
-- Leadership by Design branding header
-- Programme title and tagline
-- Key statistics/outcomes (e.g., "2x strategic clarity in 90 days")
-- Who it's for / Ideal client profile
-- Duration and format details
-- Core components or methodology overview
+### A New Admin Section
+- Access from Admin Dashboard via a new "All Programmes" card
+- Grid layout showing all programme cards at a glance
+- Clicking any programme card opens a detailed view with:
+  - Programme topics covered
+  - Expected outcomes
+  - Target audience
+  - Recommended development path
 
-**Page 2 (where applicable):**
-- What's included / Session structure
-- Expected outcomes with metrics
-- Investment overview (placeholder text)
-- Next steps / Call to action
-- Contact information
+### Programmes Included (from your PDF)
+
+| Programme | Level | Topics | Outcomes |
+|-----------|-------|--------|----------|
+| Effective Personal Productivity | L1 | Power of enthusiasm, Increasing productivity, Communication & Creative Listening, Qualities of a successful executive | Delivering results, Building commonality, Understanding values, Increasing performance |
+| Effective Leadership Development | L2 | Effective communication, Time management, Problem-solving, Art of delegation, Developing potential | Keys to leading a team, Resolving conflict, Building relationships, Agile adaptability |
+| Effective Personal Leadership | L3 | Self knowledge, Follow through with persistence, Effective planning, Cognitive self-awareness | Building purpose and resilience, Balanced life, Understanding vision |
+| Effective Motivational Leadership | L4 | Developing & empowering people, Leading change, Vision and communication, Personal leadership potential | Understanding people, Motivating across boundaries, Driving motivation, Leading global teams |
+| Effective Strategic Leadership | L5 | Power of strategic leadership, Strategic purpose, Strategic assessment, Making strategy happen | Creative vision, Developing strategy, Cultural transformation, Leading by example |
+| Leadership for Women | Special | Six essentials to leadership, Living a balanced life, Discover your purpose, Art of communication, Leader of the future | Building purpose and resilience, Persistence, Understanding leadership importance |
+| Grand Masters of Success | Foundation | I CAN approach, How to master my time | Foundational leadership, Essential time management skills, Accountability |
+
+---
 
 ## Technical Implementation
 
-### 1. Create Admin Overviews Index Page
-**Route:** `/admin/overviews`
-**Purpose:** Dashboard showing all available programme overviews with cards linking to each
+### New Files to Create
 
-### 2. Create Reusable Overview Template Component
-**File:** `src/components/admin/ProgrammeOverviewTemplate.tsx`
-**Purpose:** Standardised print-ready layout with:
-- Consistent branding header
-- Print/Download action bar
-- Page break handling
-- Footer with contact details
+1. **`src/pages/admin/AdminAllProgrammes.tsx`**
+   - Grid page listing all programmes as cards
+   - Similar layout to existing `AdminOverviews.tsx`
+   - Clicking a card navigates to detailed programme view
 
-### 3. Individual Overview Pages
-**Directory:** `src/pages/admin/overviews/`
-- `ExecutiveCoachingOverview.tsx`
-- `ShiftLeadershipOverview.tsx`
-- `ShiftMethodologyOverview.tsx`
-- `AlignmentWorkshopOverview.tsx`
-- `MotivationWorkshopOverview.tsx`
-- `LeadershipWorkshopOverview.tsx`
-- `LeadershipLevelsOverview.tsx`
+2. **`src/pages/admin/programmes/ProgrammeDetailView.tsx`**
+   - Detailed view showing programme topics and outcomes
+   - Uses existing `ProgrammeOverviewTemplate` for consistent styling
+   - Print/download capability inherited from template
 
-### 4. Admin Protection
-Wrap all `/admin/overviews/*` routes with admin authentication check using the existing `useAdminAuth` hook pattern.
+3. **`src/data/adminProgrammesData.ts`**
+   - Centralised data file containing all programme information
+   - Topics, outcomes, descriptions, target audience for each programme
+   - Easy to update when programme content changes
 
-### 5. Navigation Updates
-- Add "Programme Overviews" link to Admin Dashboard
-- Create overview index page with cards for each programme
+### Files to Modify
 
-## Print Styling Approach
+1. **`src/App.tsx`**
+   - Add routes for `/admin/programmes` and `/admin/programmes/:id`
 
-Following the Team Development Framework pattern:
-```css
-@media print {
-  @page {
-    size: letter;
-    margin: 0.5in;
-  }
-  .print-page {
-    page-break-after: always;
-    page-break-inside: avoid;
-  }
-  body {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-}
+2. **`src/components/admin/AdminDashboardContent.tsx`**
+   - Add new card linking to "All Programmes (Detailed)"
+
+### Route Structure
+
+```text
+/admin
+  |-- /admin/overviews          (existing - 1-2 page downloadable overviews)
+  |-- /admin/programmes         (NEW - all programmes grid)
+      |-- /admin/programmes/:id (NEW - detailed programme view)
 ```
 
-## Content Sources
-
-Content will be extracted from existing pages:
-- `ExecutiveCoaching.tsx` - SHIFT framework, assessments, outcomes
-- `ShiftLeadershipDevelopment.tsx` - Leadership levels, bespoke design
-- `ShiftMethodology.tsx` - 5 SHIFT skills, workshop applications
-- `AlignmentWorkshop.tsx` / `MotivationWorkshop.tsx` / `LeadershipWorkshop.tsx` - Workshop details
-- `leadershipScoring.ts` - Leadership level details (L1-L5)
-
-## File Changes Summary
-
-### New Files (9)
-1. `src/pages/admin/AdminOverviews.tsx` - Index page
-2. `src/components/admin/ProgrammeOverviewTemplate.tsx` - Reusable template
-3. `src/pages/admin/overviews/ExecutiveCoachingOverview.tsx`
-4. `src/pages/admin/overviews/ShiftLeadershipOverview.tsx`
-5. `src/pages/admin/overviews/ShiftMethodologyOverview.tsx`
-6. `src/pages/admin/overviews/AlignmentWorkshopOverview.tsx`
-7. `src/pages/admin/overviews/MotivationWorkshopOverview.tsx`
-8. `src/pages/admin/overviews/LeadershipWorkshopOverview.tsx`
-9. `src/pages/admin/overviews/LeadershipLevelsOverview.tsx`
-
-### Modified Files (2)
-1. `src/App.tsx` - Add routes for all new overview pages
-2. `src/components/admin/AdminDashboardContent.tsx` - Add link to Programme Overviews
+---
 
 ## User Flow
 
-1. Admin logs in via footer "Admin" link at `/auth`
-2. Navigates to `/admin` dashboard
-3. Clicks "Programme Overviews" link
-4. Sees grid of all available programme overview cards
-5. Clicks any programme to view its professional overview
-6. Uses Print/Download PDF buttons to save for client discussions
+1. Admin logs in at `/admin`
+2. Sees two options:
+   - **Programme Overviews** - existing 1-2 page PDF-ready documents
+   - **All Programmes (Detailed)** - new comprehensive programme catalogue
+3. Clicking "All Programmes" shows grid of 8 programme cards
+4. Clicking any card shows full detail page with:
+   - Programme description
+   - Topics covered (bullet list)
+   - Expected outcomes (bullet list)
+   - Target audience / level indicator
+   - Print/download options
+
+---
+
+## Design Approach
+
+- Reuses existing UI components (`Card`, `Badge`, `Button`)
+- Follows established admin styling patterns
+- Print-optimised using existing `@media print` CSS
+- Mobile-responsive grid layout
+
