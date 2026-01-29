@@ -1,197 +1,100 @@
 
+# Plan: Complete Lead Scoring Implementation for All Forms
 
-# AI-Powered Lead Scoring & Notification System
-
-## Overview
-
-This plan implements an intelligent lead management system that:
-1. Scores every lead based on multiple factors (role, company size, urgency signals, etc.)
-2. Uses AI (Anthropic Claude) to analyze each lead and generate personalized insights
-3. Sends temperature-based email notifications (Hot leads get urgent alerts, Warm leads get standard notifications)
-4. Applies to all 5 existing lead capture forms on your website
+## Summary
+Apply the lead scoring system to the remaining forms: the Expert Contact Form and the Contact page form. The Contact form currently uses an edge function for email but lacks database storage for lead tracking.
 
 ---
 
-## Current Lead Capture Forms
+## Current State Analysis
 
-Your website has 5 lead capture points that will benefit from this system:
+### Forms WITH Lead Scoring (Already Complete)
+- Leadership Diagnostic - Saves to `leadership_diagnostic_submissions` with all scoring fields
+- Team Diagnostic - Saves to `diagnostic_submissions` with all scoring fields
+- SHIFT Diagnostic - Saves to `shift_diagnostic_submissions` with all scoring fields
+- Leadership Mistakes (Lead Magnet) - Saves to `lead_magnet_downloads` with scoring fields
 
-| Form | Location | Fields Captured |
-|------|----------|-----------------|
-| Leadership Mistakes Checklist | `/leadership-mistakes` | Name, Email |
-| Leadership Diagnostic Gate | `/leadership-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
-| Team Diagnostic Gate | `/team-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
-| SHIFT Diagnostic Gate | `/shift-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
-| Contact Form | `/contact` | Name, Email, Company, Role, Service Interest, Message |
+### Forms NEEDING Lead Scoring
+1. **ExpertContactForm.tsx** - Updates `diagnostic_submissions.contacted_expert` but no lead scoring
+2. **Contact.tsx** - Sends email via edge function but no database table to store leads
 
 ---
 
 ## Implementation Plan
 
-### Phase 1: Create Lead Scoring Utilities
+### Step 1: Create `contact_form_submissions` Table
+Add a new table to store contact form submissions with lead scoring columns:
 
-**New file: `src/lib/leadScoring.ts`**
-
-Create a utility that scores leads based on:
-- **Role weight** (C-suite = 30pts, Director = 25pts, Manager = 20pts, etc.)
-- **Company signals** (organization provided = +10pts)
-- **Urgency signals** ("yes" follow-up = 30pts, "maybe" = 15pts)
-- **Message quality** (longer messages = higher intent)
-- **Source multiplier** (diagnostics = 1.2x, contact form = 1.3x)
-
-Temperature classification:
-- **Hot (70-100)**: Immediate action required
-- **Warm (40-69)**: Follow up within 24-48 hours
-- **Cool (0-39)**: Nurture sequence only
-
----
-
-### Phase 2: Create AI Analysis Edge Function
-
-**New file: `supabase/functions/analyze-lead/index.ts`**
-
-This function will:
-1. Accept lead data and score
-2. Call the Anthropic API to generate:
-   - Buyer persona identification
-   - Personalized outreach recommendations
-   - Conversation starters based on their diagnostic results
-   - Urgency assessment
-3. Return AI analysis for inclusion in notification emails
-
-Example AI prompt:
 ```text
-Analyze this leadership development lead:
-- Name: [name], Role: [role], Company: [company]
-- Diagnostic: Leadership Level [L3] - Purpose Leadership
-- Follow-up preference: [yes - ready for call]
-
-Provide: 1) Buyer persona, 2) Key pain points likely, 
-3) Recommended approach, 4) Suggested opening line
+contact_form_submissions:
+- id (uuid, primary key)
+- created_at (timestamp)
+- name (text)
+- email (text)
+- company (text, nullable)
+- role (text, nullable)
+- service_interest (text, nullable)
+- message (text, nullable)
+- utm_source, utm_medium, utm_campaign, utm_content, utm_term (text, nullable)
+- lead_score (int4, nullable)
+- lead_temperature (text, nullable)
+- buyer_persona (text, nullable)
+- company_size (text, nullable)
+- urgency (text, nullable)
+- ai_analysis (text, nullable)
+- next_action (text, nullable)
+- scoring_breakdown (jsonb, nullable)
 ```
 
----
+### Step 2: Update Contact.tsx Form
+Modify the handleSubmit function to:
+1. Calculate lead score using existing `calculateLeadScore()`
+2. Save to new `contact_form_submissions` table with all scoring fields
+3. Call `processLead()` for AI analysis and notifications
+4. Update the AI analysis asynchronously
 
-### Phase 3: Create Lead Notification Edge Function
+### Step 3: Update ExpertContactForm.tsx
+This form is triggered AFTER someone completes a diagnostic and wants to speak to an expert. This is a high-intent action that should:
+1. Calculate lead score (with source as `'expert-consultation'`)
+2. Update the type in `LeadData` to include `'expert-consultation'`
+3. Call `processLead()` for AI analysis and notification
+4. Update the existing diagnostic submission with the lead scoring data
 
-**New file: `supabase/functions/send-lead-notification/index.ts`**
-
-This function will:
-1. Accept lead data, score, and AI analysis
-2. Generate beautifully formatted HTML emails based on temperature:
-   - **Hot leads**: Red/orange alert styling, "IMMEDIATE ACTION" header, sends to both Kevin AND Lauren
-   - **Warm leads**: Blue styling, standard notification, sends to Kevin only
-   - **Cool leads**: No email, just database storage
-3. Include quick-action buttons (Reply, Book Call)
-4. Display diagnostic insights and AI recommendations
-
----
-
-### Phase 4: Integrate with Existing Forms
-
-**Modify these files to add lead scoring:**
-
-1. **`src/pages/LeadershipDiagnostic.tsx`**
-   - After saving submission, call lead scoring
-   - Invoke `analyze-lead` edge function
-   - Invoke `send-lead-notification` with results
-
-2. **`src/pages/ShiftDiagnostic.tsx`**
-   - Same integration pattern
-
-3. **`src/pages/TeamDiagnostic.tsx`**
-   - Same integration pattern
-
-4. **`src/pages/LeadershipMistakes.tsx`**
-   - Score with limited data (name, email only)
-   - Lower base score but still tracked
-
-5. **`src/pages/Contact.tsx`**
-   - Highest potential score (they're actively reaching out)
-   - Full AI analysis with message context
-
----
-
-### Phase 5: Create Shared Hook
-
-**New file: `src/hooks/useLeadNotification.ts`**
-
-A reusable hook that handles:
-- Score calculation
-- Edge function calls
-- Error handling
-- Loading states
-
-This keeps the integration clean across all forms.
+### Step 4: Update Lead Scoring Types
+Add `'expert-consultation'` to the source types in `leadScoring.ts` and give it a high multiplier (1.4x) since requesting expert contact is the highest intent action.
 
 ---
 
 ## Technical Details
 
-### Lead Scoring Logic
+### Files to Modify
+1. **src/utils/leadScoring.ts** - Add `'expert-consultation'` source type with 1.4x multiplier
+2. **src/pages/Contact.tsx** - Add database save with lead scoring, add UTM params support
+3. **src/components/diagnostic/ExpertContactForm.tsx** - Add lead scoring and notification processing
 
-```text
-Base Score Components:
-+30 - C-suite role (CEO, Founder, MD)
-+25 - Director level
-+20 - Manager level
-+15 - Other specified role
-+10 - Organisation provided
-+30 - Follow-up: "Yes, ready now"
-+15 - Follow-up: "Maybe later"
-+10 - Team size 50+
-+5  - Team size 11-50
+### Files to Create
+None - all code changes to existing files
 
-Multipliers:
-x1.3 - Contact form (direct inquiry)
-x1.2 - Diagnostic completion
-x1.1 - Lead magnet download
+### Database Changes
+- Create new `contact_form_submissions` table with RLS policies allowing public insert and authenticated read
 
-Temperature:
-70+ = HOT (immediate notification)
-40-69 = WARM (standard notification)
-0-39 = COOL (no immediate email)
-```
-
-### Email Recipients
-
-| Temperature | Recipients | Subject Format |
-|-------------|------------|----------------|
-| Hot | kevin@kevinbritz.com, lauren@kevinbritz.com | "HOT LEAD: [Name] from [Company]" |
-| Warm | kevin@kevinbritz.com only | "Warm Lead: [Name]" |
-| Cool | No email | Database only |
-
-### Database Updates
-
-No schema changes required - all data is already captured. The scoring happens in real-time when the form submits.
-
----
-
-## Files to Create
-
-1. `src/lib/leadScoring.ts` - Scoring logic and types
-2. `supabase/functions/analyze-lead/index.ts` - AI analysis
-3. `supabase/functions/send-lead-notification/index.ts` - Email notifications
-4. `src/hooks/useLeadNotification.ts` - Reusable integration hook
-
-## Files to Modify
-
-1. `src/pages/LeadershipDiagnostic.tsx` - Add lead scoring call
-2. `src/pages/ShiftDiagnostic.tsx` - Add lead scoring call
-3. `src/pages/TeamDiagnostic.tsx` - Add lead scoring call
-4. `src/pages/LeadershipMistakes.tsx` - Add lead scoring call
-5. `src/pages/Contact.tsx` - Add lead scoring call
-6. `supabase/config.toml` - Register new edge functions
+### Edge Function Changes
+None required - existing `processLead()` will handle AI analysis and notifications
 
 ---
 
 ## Expected Outcome
 
 After implementation:
-- Every lead is automatically scored on submission
-- AI analyzes each lead's likely pain points and persona
-- Hot leads trigger immediate alerts to both Kevin and Lauren
-- Warm leads get standard notifications to Kevin
-- All emails include actionable insights and quick-reply buttons
-- No changes to user-facing forms - all happens behind the scenes
+- Every contact form submission will be scored, stored, and trigger notifications
+- Expert consultation requests will be flagged as highest priority leads (hot by default due to 1.4x multiplier)
+- All lead data will be visible in the admin dashboard (requires adding the new table to the dashboard)
+- Hot/warm leads from contact forms will trigger email notifications to Kevin
 
+---
+
+## Testing Checklist
+1. Submit contact form with CEO role - should score as hot lead
+2. Click "Speak to Expert" on diagnostic results - should trigger high-priority notification
+3. Verify data appears in Supabase tables with all scoring fields populated
+4. Confirm email notifications are sent for hot/warm leads
