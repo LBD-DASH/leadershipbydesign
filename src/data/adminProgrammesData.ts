@@ -77,8 +77,8 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Developing team members'
     ],
     targetAudience: 'Supervisors, team leaders, and first-time managers responsible for small teams',
-    duration: '3-4 days',
-    format: 'Workshop + Coaching + Mentoring'
+    duration: '13 weeks',
+    format: 'Workshop + Coaching + SHIFT Methodology + Action Board Presentation'
   },
   {
     id: 'l3-purpose',
