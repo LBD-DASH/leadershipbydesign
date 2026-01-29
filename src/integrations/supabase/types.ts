@@ -62,6 +62,78 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_form_submissions: {
+        Row: {
+          ai_analysis: string | null
+          buyer_persona: string | null
+          company: string | null
+          company_size: string | null
+          created_at: string
+          email: string
+          id: string
+          lead_score: number | null
+          lead_temperature: string | null
+          message: string | null
+          name: string
+          next_action: string | null
+          role: string | null
+          scoring_breakdown: Json | null
+          service_interest: string | null
+          urgency: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
+          company?: string | null
+          company_size?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
+          message?: string | null
+          name: string
+          next_action?: string | null
+          role?: string | null
+          scoring_breakdown?: Json | null
+          service_interest?: string | null
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
+          company?: string | null
+          company_size?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
+          message?: string | null
+          name?: string
+          next_action?: string | null
+          role?: string | null
+          scoring_breakdown?: Json | null
+          service_interest?: string | null
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: []
+      }
       diagnostic_submissions: {
         Row: {
           ai_analysis: string | null

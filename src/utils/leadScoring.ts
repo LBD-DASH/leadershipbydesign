@@ -10,7 +10,7 @@ export interface LeadData {
   teamSize?: string;
   message?: string;
   followUpPreference?: 'yes' | 'maybe' | 'no';
-  source: 'leadership-diagnostic' | 'team-diagnostic' | 'shift-diagnostic' | 'contact-form' | 'lead-magnet';
+  source: 'leadership-diagnostic' | 'team-diagnostic' | 'shift-diagnostic' | 'contact-form' | 'lead-magnet' | 'expert-consultation';
   diagnosticResult?: {
     type: 'leadership' | 'team' | 'shift';
     primaryLevel?: string;
@@ -98,11 +98,12 @@ function getMessageQualityScore(message?: string): number {
 
 function getSourceMultiplier(source: LeadData['source']): number {
   switch (source) {
-    case 'contact-form': return 1.3;      // Highest intent - actively reaching out
+    case 'expert-consultation': return 1.4; // Highest intent - requesting expert contact after diagnostic
+    case 'contact-form': return 1.3;        // High intent - actively reaching out
     case 'leadership-diagnostic': return 1.2;
     case 'team-diagnostic': return 1.2;
     case 'shift-diagnostic': return 1.2;
-    case 'lead-magnet': return 1.1;       // Lower intent - just downloading content
+    case 'lead-magnet': return 1.1;         // Lower intent - just downloading content
     default: return 1.0;
   }
 }
