@@ -9,14 +9,6 @@ import { ArrowLeft, ArrowRight, Loader2, User, Users, Zap, Target, Shield, Layer
 
 const programmeOverviews = [
   {
-    title: 'All Programmes',
-    description: 'Complete catalogue of all Leadership by Design programmes and workshops',
-    route: '/admin/overview/all-programmes',
-    pages: 4,
-    icon: Layers,
-    category: 'Catalogue'
-  },
-  {
     title: 'Executive Coaching',
     description: 'One-on-one coaching built on the SHIFT framework for senior leaders',
     route: '/admin/overview/executive-coaching',
