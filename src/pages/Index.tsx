@@ -6,6 +6,7 @@ import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import FloatingSocial from "@/components/FloatingSocial";
+import ChatWidget from "@/components/chat/ChatWidget";
 const Index = () => {
   return (
     <>
@@ -23,6 +24,7 @@ const Index = () => {
         <PartnerApps />
         <TestimonialSlider />
         <FloatingSocial />
+        <ChatWidget />
       </div>
     </>
   );
