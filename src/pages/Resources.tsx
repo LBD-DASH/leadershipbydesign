@@ -25,7 +25,13 @@ export default function Resources() {
       type: "Article", 
       duration: "6 min read",
       image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop&crop=faces",
-      description: "Learn proven strategies for creating cohesive, motivated teams that consistently deliver results."
+      description: "Learn proven strategies for creating cohesive, motivated teams that consistently deliver results.",
+      stats: [
+        { value: "21%", label: "Higher profitability in engaged teams (Gallup)" },
+        { value: "17%", label: "Productivity increase with strong team dynamics" },
+        { value: "41%", label: "Lower absenteeism in high-performing teams" },
+        { value: "59%", label: "Less turnover with team psychological safety" }
+      ]
     },
     { 
       title: "Emotional Intelligence in Leadership", 
@@ -315,35 +321,53 @@ export default function Resources() {
                 {leadershipArticles.map((article, idx) => {
                   const CardWrapper = article.link ? 'a' : 'div';
                   const cardProps = article.link ? { href: article.link, target: "_blank", rel: "noopener noreferrer" } : {};
+                  const hasStats = 'stats' in article && article.stats;
                   
                   return (
-                    <CardWrapper key={idx} {...cardProps}>
+                    <CardWrapper key={idx} {...cardProps} className={hasStats ? "md:col-span-2" : ""}>
                       <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
-                        <div className="relative h-48 overflow-hidden">
-                          <img 
-                            src={article.image} 
-                            alt={article.title}
-                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute top-3 left-3">
-                            <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
-                              {article.type}
-                            </span>
+                        <div className={`grid ${hasStats ? "md:grid-cols-2" : ""}`}>
+                          <div>
+                            <div className="relative h-48 overflow-hidden">
+                              <img 
+                                src={article.image} 
+                                alt={article.title}
+                                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute top-3 left-3">
+                                <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                                  {article.type}
+                                </span>
+                              </div>
+                            </div>
+                            <CardHeader className="pb-2">
+                              <CardTitle className="text-lg group-hover:text-primary transition-colors">{article.title}</CardTitle>
+                              <CardDescription>{article.description}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">{article.duration}</span>
+                                <Button variant="ghost" size="sm" className="group/btn">
+                                  Read More
+                                  <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                                </Button>
+                              </div>
+                            </CardContent>
                           </div>
+                          {hasStats && (
+                            <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-6 flex flex-col justify-center">
+                              <p className="text-sm font-semibold text-primary mb-4 uppercase tracking-wide">Key Statistics</p>
+                              <div className="grid grid-cols-2 gap-4">
+                                {article.stats.map((stat, statIdx) => (
+                                  <div key={statIdx} className="text-center p-3 bg-background/80 rounded-lg">
+                                    <div className="text-2xl font-bold text-primary">{stat.value}</div>
+                                    <div className="text-xs text-muted-foreground leading-tight mt-1">{stat.label}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-lg group-hover:text-primary transition-colors">{article.title}</CardTitle>
-                          <CardDescription>{article.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">{article.duration}</span>
-                            <Button variant="ghost" size="sm" className="group/btn">
-                              Read More
-                              <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                            </Button>
-                          </div>
-                        </CardContent>
                       </Card>
                     </CardWrapper>
                   );
