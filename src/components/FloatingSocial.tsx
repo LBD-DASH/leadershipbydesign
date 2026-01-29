@@ -7,7 +7,7 @@ const FloatingSocial = () => {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 1, duration: 0.5 }}
-      className="fixed bottom-24 right-6 z-50 flex flex-col gap-3"
+      className="fixed bottom-6 left-6 z-50 flex flex-col gap-3"
     >
       {/* LinkedIn Button */}
       <a
