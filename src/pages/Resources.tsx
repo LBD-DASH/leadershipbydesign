@@ -52,7 +52,8 @@ export default function Resources() {
       type: "PDF", 
       duration: "8 pages",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=350&fit=crop",
-      description: "A structured approach to building and nurturing high-performing teams."
+      description: "A structured approach to building and nurturing high-performing teams.",
+      internalLink: "/team-development-framework"
     },
     { 
       title: "Communication Strategy Template", 
