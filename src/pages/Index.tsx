@@ -1,13 +1,11 @@
 import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import RiskReversal from "@/components/RiskReversal";
 import Services from "@/components/Services";
 import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import FloatingSocial from "@/components/FloatingSocial";
-
 const Index = () => {
   return (
     <>
@@ -20,7 +18,6 @@ const Index = () => {
       <div className="min-h-screen">
         <Header />
         <Hero />
-        <RiskReversal />
         <ClientLogos />
         <Services />
         <PartnerApps />
