@@ -43,7 +43,7 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-6 sm:mb-8 px-4 font-light leading-relaxed"
             >
-              90-Day Leadership System That Delivers 40% Productivity Gains — Used by 200+ Companies
+              90-Day Leadership System That Delivers 40% Productivity Gains
             </motion.p>
             
             {/* Primary CTA - I'm Interested */}
