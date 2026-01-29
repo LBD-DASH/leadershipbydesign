@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import TeamDiagnostic from "./pages/TeamDiagnostic";
 import TeamDiagnosticLanding from "./pages/TeamDiagnosticLanding";
@@ -36,9 +36,8 @@ import AlignmentWorkshopOverview from "./pages/admin/overviews/AlignmentWorkshop
 import MotivationWorkshopOverview from "./pages/admin/overviews/MotivationWorkshopOverview";
 import LeadershipWorkshopOverview from "./pages/admin/overviews/LeadershipWorkshopOverview";
 import LeadershipLevelsOverview from "./pages/admin/overviews/LeadershipLevelsOverview";
-import Auth from "./pages/Auth";
 import CaseStudies from "./pages/CaseStudies";
-import ProtectedRoute from "./components/ProtectedRoute";
+import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import LeadershipMistakes from "./pages/LeadershipMistakes";
@@ -81,7 +80,7 @@ const App = () => (
           <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
           <Route path="/team-development-framework" element={<TeamDevelopmentFramework />} />
           <Route path="/case-studies" element={<CaseStudies />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
           <Route path="/admin/overview/executive-coaching" element={<ExecutiveCoachingOverview />} />
@@ -94,17 +93,17 @@ const App = () => (
           <Route
             path="/blog-admin"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <BlogAdminList />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           />
           <Route
             path="/blog-admin/:slug"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <BlogAdmin />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
