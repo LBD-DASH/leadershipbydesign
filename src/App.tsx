@@ -35,6 +35,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 import LeadershipMistakes from "./pages/LeadershipMistakes";
 import LeadershipMistakesChecklist from "./pages/LeadershipMistakesChecklist";
+import TeamDevelopmentFramework from "./pages/TeamDevelopmentFramework";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/leadership-mistakes" element={<LeadershipMistakes />} />
           <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
+          <Route path="/team-development-framework" element={<TeamDevelopmentFramework />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<AdminDashboard />} />
