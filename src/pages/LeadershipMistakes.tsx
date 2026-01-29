@@ -7,7 +7,8 @@ import { Download, CheckCircle, Shield, Zap, Users, AlertTriangle } from "lucide
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
-import { useLeadNotification } from "@/hooks/useLeadNotification";
+import { calculateLeadScore } from "@/utils/leadScoring";
+import { processLead } from "@/utils/notifications";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -32,7 +33,6 @@ export default function LeadershipMistakes() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const utmParams = useUtmParams();
-  const { processLead } = useLeadNotification();
 
   const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
@@ -60,8 +60,19 @@ export default function LeadershipMistakes() {
     setIsSubmitting(true);
 
     try {
-      // Save to database
-      const { error: dbError } = await supabase
+      // Prepare lead data for scoring
+      const leadData = {
+        name: result.data.name,
+        email: result.data.email,
+        source: 'lead-magnet' as const
+      };
+
+      // Calculate lead score
+      const leadScore = calculateLeadScore(leadData);
+      console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
+
+      // Save to database with lead scoring
+      const { data: insertedData, error: dbError } = await supabase
         .from("lead_magnet_downloads")
         .insert({
           name: result.data.name,
@@ -72,7 +83,13 @@ export default function LeadershipMistakes() {
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
           utm_term: utmParams.utm_term,
-        });
+          // Lead scoring data
+          lead_score: leadScore.score,
+          lead_temperature: leadScore.temperature,
+          buyer_persona: leadScore.buyerPersona
+        })
+        .select('id')
+        .single();
 
       if (dbError) throw dbError;
 
@@ -90,11 +107,16 @@ export default function LeadershipMistakes() {
         // Don't block success if email fails - they can still download
       }
 
-      // Process lead for scoring and notification (non-blocking)
-      processLead({
-        name: result.data.name,
-        email: result.data.email,
-        source: 'lead-magnet'
+      // Process lead for AI analysis and notification (non-blocking)
+      processLead(leadData).then(({ aiAnalysis }) => {
+        // Update the submission with AI analysis
+        if (insertedData?.id && aiAnalysis) {
+          supabase
+            .from('lead_magnet_downloads')
+            .update({ ai_analysis: aiAnalysis })
+            .eq('id', insertedData.id)
+            .then(() => console.log('💾 AI analysis saved'));
+        }
       }).catch(err => console.error('Lead processing error:', err));
 
       setIsSuccess(true);
