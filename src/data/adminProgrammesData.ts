@@ -48,7 +48,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Greater self-discipline'
     ],
     targetAudience: 'Individual contributors and emerging professionals looking to build foundational leadership skills',
-    duration: '2-3 days',
+    duration: '8 weeks',
     format: 'Workshop + Coaching'
   },
   {
