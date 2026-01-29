@@ -24,6 +24,7 @@ export async function getAIAnalysis(
         leadData: {
           name: leadData.name,
           email: leadData.email,
+          phone: leadData.phone,
           role: leadData.role,
           organisation: leadData.organisation,
           company: leadData.company,
@@ -78,6 +79,7 @@ export async function sendLeadNotification(
         leadData: {
           name: leadData.name,
           email: leadData.email,
+          phone: leadData.phone,
           role: leadData.role,
           organisation: leadData.organisation,
           company: leadData.company,

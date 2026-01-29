@@ -4,6 +4,7 @@
 export interface LeadData {
   name: string;
   email: string;
+  phone?: string;
   role?: string;
   organisation?: string;
   company?: string;

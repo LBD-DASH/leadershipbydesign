@@ -10,6 +10,7 @@ interface LeadNotificationRequest {
   leadData: {
     name: string;
     email: string;
+    phone?: string;
     role?: string;
     organisation?: string;
     company?: string;
@@ -70,6 +71,12 @@ function generateHotLeadEmail(data: LeadNotificationRequest): string {
             <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Email:</td>
             <td style="padding: 8px 0; color: #1f2937; font-size: 14px;"><a href="mailto:${leadData.email}" style="color: #2563eb;">${leadData.email}</a></td>
           </tr>
+          ${leadData.phone ? `
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Phone:</td>
+            <td style="padding: 8px 0; color: #1f2937; font-size: 14px;"><a href="tel:${leadData.phone}" style="color: #2563eb; font-weight: 600;">📞 ${leadData.phone}</a></td>
+          </tr>
+          ` : ''}
           <tr>
             <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Role:</td>
             <td style="padding: 8px 0; color: #1f2937; font-size: 14px;">${leadData.role || 'Not provided'}</td>
@@ -180,6 +187,12 @@ function generateWarmLeadEmail(data: LeadNotificationRequest): string {
           <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Email:</td>
           <td style="padding: 6px 0; color: #1f2937; font-size: 14px;"><a href="mailto:${leadData.email}" style="color: #2563eb;">${leadData.email}</a></td>
         </tr>
+        ${leadData.phone ? `
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Phone:</td>
+          <td style="padding: 6px 0; color: #1f2937; font-size: 14px;"><a href="tel:${leadData.phone}" style="color: #2563eb; font-weight: 600;">📞 ${leadData.phone}</a></td>
+        </tr>
+        ` : ''}
         <tr>
           <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Role:</td>
           <td style="padding: 6px 0; color: #1f2937; font-size: 14px;">${leadData.role || 'Not provided'}</td>
@@ -246,6 +259,7 @@ function generateLaurenNotificationEmail(data: LeadNotificationRequest): string 
   <ul style="line-height: 1.8;">
     <li><strong>Name:</strong> ${leadData.name}</li>
     <li><strong>Email:</strong> ${leadData.email}</li>
+    ${leadData.phone ? `<li><strong>Phone:</strong> <a href="tel:${leadData.phone}">${leadData.phone}</a></li>` : ''}
     <li><strong>Score:</strong> ${leadScore.score}/100</li>
     <li><strong>Source:</strong> ${leadData.source}</li>
   </ul>
