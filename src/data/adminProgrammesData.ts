@@ -5,6 +5,7 @@ import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
 import leadershipL4 from '@/assets/leadership-l4-motivational.jpg';
 import leadershipL5 from '@/assets/leadership-l5-strategic.jpg';
 import leadershipWomen from '@/assets/leadership-women.jpg';
+import grandMastersTeam from '@/assets/grand-masters-team.jpg';
 
 export interface ProgrammeData {
   id: string;
@@ -205,6 +206,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Entry Level',
     description: 'The essential starting point for leadership development. This programme establishes core mindsets and habits that underpin all future leadership growth.',
     icon: Award,
+    image: grandMastersTeam,
     topics: [
       'I CAN approach to challenges',
       'How to master my time',
@@ -221,8 +223,8 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Consistent habit formation',
       'Readiness for L1 development'
     ],
-    targetAudience: 'New employees, graduates, and individuals beginning their leadership journey',
-    duration: '1-2 days',
+    targetAudience: 'Teams seeking foundational leadership development and individuals beginning their leadership journey',
+    duration: '8 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
   }
 ];
