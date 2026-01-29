@@ -116,7 +116,8 @@ export default function Resources() {
       type: "Case Study", 
       duration: "10 min read",
       image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&h=350&fit=crop",
-      description: "How a non-profit organization revitalized its leadership team and increased community impact."
+      description: "How a non-profit organization revitalized its leadership team and increased community impact.",
+      link: "https://fordfoundation.org/work/learning/research-reports/new-leader-endless-possibility-bringing-a-legacy-organization-into-a-new-era"
     },
   ];
 
