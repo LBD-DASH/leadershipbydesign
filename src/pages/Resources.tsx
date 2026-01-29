@@ -60,7 +60,8 @@ export default function Resources() {
       type: "PDF", 
       duration: "5 pages",
       image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=350&fit=crop",
-      description: "Ready-to-use templates for crafting clear and impactful communication plans."
+      description: "Ready-to-use templates for crafting clear and impactful communication plans.",
+      link: "https://www.process.st/templates/communication-strategy-template/"
     },
   ];
 
@@ -367,8 +368,17 @@ export default function Resources() {
               
               <div className="grid md:grid-cols-3 gap-6">
                 {downloadableGuides.map((guide, idx) => {
-                  const CardWrapper = guide.internalLink ? Link : 'div';
-                  const cardProps = guide.internalLink ? { to: guide.internalLink } : {};
+                  const hasInternalLink = 'internalLink' in guide && guide.internalLink;
+                  const hasExternalLink = 'link' in guide && guide.link;
+                  
+                  const CardWrapper = hasInternalLink ? Link : hasExternalLink ? 'a' : 'div';
+                  const cardProps = hasInternalLink 
+                    ? { to: guide.internalLink } 
+                    : hasExternalLink 
+                      ? { href: (guide as any).link, target: "_blank", rel: "noopener noreferrer" } 
+                      : {};
+                  
+                  const buttonText = hasInternalLink ? 'View Framework' : hasExternalLink ? 'View Template' : 'Download';
                   
                   return (
                     <CardWrapper key={idx} {...cardProps as any}>
@@ -393,8 +403,8 @@ export default function Resources() {
                           <div className="flex items-center justify-between">
                             <span className="text-sm text-muted-foreground">{guide.duration}</span>
                             <Button variant="ghost" size="sm" className="group/btn">
-                              {guide.internalLink ? 'Take Assessment' : 'Download'}
-                              {guide.internalLink ? (
+                              {buttonText}
+                              {hasInternalLink || hasExternalLink ? (
                                 <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                               ) : (
                                 <Download className="w-4 h-4 ml-1 group-hover/btn:translate-y-0.5 transition-transform" />
