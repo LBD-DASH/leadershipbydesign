@@ -106,7 +106,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Leading by example'
     ],
     targetAudience: 'Middle managers and department heads seeking to deepen their leadership impact',
-    duration: '4-5 days',
+    duration: '12 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
