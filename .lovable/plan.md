@@ -1,100 +1,120 @@
 
-# Plan: Complete Lead Scoring Implementation for All Forms
+# Programme Overview Pages for Admin - Implementation Plan
 
-## Summary
-Apply the lead scoring system to the remaining forms: the Expert Contact Form and the Contact page form. The Contact form currently uses an edge function for email but lacks database storage for lead tracking.
+## Overview
+Create downloadable 1-2 page programme overview documents for each major programme, accessible to logged-in admins. These will follow the proven pattern established by the Team Development Framework page.
 
----
+## Programmes to Create Overview Pages For
 
-## Current State Analysis
+| Programme | Route | Page Count |
+|-----------|-------|------------|
+| Executive Coaching | `/admin/overview/executive-coaching` | 2 pages |
+| SHIFT Leadership Development | `/admin/overview/shift-leadership` | 2 pages |
+| SHIFT Methodology | `/admin/overview/shift-methodology` | 2 pages |
+| Team Alignment Workshop | `/admin/overview/workshop-alignment` | 1 page |
+| Team Motivation Workshop | `/admin/overview/workshop-motivation` | 1 page |
+| Team Leadership Workshop | `/admin/overview/workshop-leadership` | 1 page |
+| Leadership Levels (L1-L5) | `/admin/overview/leadership-levels` | 2 pages |
 
-### Forms WITH Lead Scoring (Already Complete)
-- Leadership Diagnostic - Saves to `leadership_diagnostic_submissions` with all scoring fields
-- Team Diagnostic - Saves to `diagnostic_submissions` with all scoring fields
-- SHIFT Diagnostic - Saves to `shift_diagnostic_submissions` with all scoring fields
-- Leadership Mistakes (Lead Magnet) - Saves to `lead_magnet_downloads` with scoring fields
+## Page Structure (Each Overview)
 
-### Forms NEEDING Lead Scoring
-1. **ExpertContactForm.tsx** - Updates `diagnostic_submissions.contacted_expert` but no lead scoring
-2. **Contact.tsx** - Sends email via edge function but no database table to store leads
+**Page 1 - Programme Summary:**
+- Leadership by Design branding header
+- Programme title and tagline
+- Key statistics/outcomes (e.g., "2x strategic clarity in 90 days")
+- Who it's for / Ideal client profile
+- Duration and format details
+- Core components or methodology overview
 
----
+**Page 2 (where applicable):**
+- What's included / Session structure
+- Expected outcomes with metrics
+- Investment overview (placeholder text)
+- Next steps / Call to action
+- Contact information
 
-## Implementation Plan
+## Technical Implementation
 
-### Step 1: Create `contact_form_submissions` Table
-Add a new table to store contact form submissions with lead scoring columns:
+### 1. Create Admin Overviews Index Page
+**Route:** `/admin/overviews`
+**Purpose:** Dashboard showing all available programme overviews with cards linking to each
 
-```text
-contact_form_submissions:
-- id (uuid, primary key)
-- created_at (timestamp)
-- name (text)
-- email (text)
-- company (text, nullable)
-- role (text, nullable)
-- service_interest (text, nullable)
-- message (text, nullable)
-- utm_source, utm_medium, utm_campaign, utm_content, utm_term (text, nullable)
-- lead_score (int4, nullable)
-- lead_temperature (text, nullable)
-- buyer_persona (text, nullable)
-- company_size (text, nullable)
-- urgency (text, nullable)
-- ai_analysis (text, nullable)
-- next_action (text, nullable)
-- scoring_breakdown (jsonb, nullable)
+### 2. Create Reusable Overview Template Component
+**File:** `src/components/admin/ProgrammeOverviewTemplate.tsx`
+**Purpose:** Standardised print-ready layout with:
+- Consistent branding header
+- Print/Download action bar
+- Page break handling
+- Footer with contact details
+
+### 3. Individual Overview Pages
+**Directory:** `src/pages/admin/overviews/`
+- `ExecutiveCoachingOverview.tsx`
+- `ShiftLeadershipOverview.tsx`
+- `ShiftMethodologyOverview.tsx`
+- `AlignmentWorkshopOverview.tsx`
+- `MotivationWorkshopOverview.tsx`
+- `LeadershipWorkshopOverview.tsx`
+- `LeadershipLevelsOverview.tsx`
+
+### 4. Admin Protection
+Wrap all `/admin/overviews/*` routes with admin authentication check using the existing `useAdminAuth` hook pattern.
+
+### 5. Navigation Updates
+- Add "Programme Overviews" link to Admin Dashboard
+- Create overview index page with cards for each programme
+
+## Print Styling Approach
+
+Following the Team Development Framework pattern:
+```css
+@media print {
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+  .print-page {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
 ```
 
-### Step 2: Update Contact.tsx Form
-Modify the handleSubmit function to:
-1. Calculate lead score using existing `calculateLeadScore()`
-2. Save to new `contact_form_submissions` table with all scoring fields
-3. Call `processLead()` for AI analysis and notifications
-4. Update the AI analysis asynchronously
+## Content Sources
 
-### Step 3: Update ExpertContactForm.tsx
-This form is triggered AFTER someone completes a diagnostic and wants to speak to an expert. This is a high-intent action that should:
-1. Calculate lead score (with source as `'expert-consultation'`)
-2. Update the type in `LeadData` to include `'expert-consultation'`
-3. Call `processLead()` for AI analysis and notification
-4. Update the existing diagnostic submission with the lead scoring data
+Content will be extracted from existing pages:
+- `ExecutiveCoaching.tsx` - SHIFT framework, assessments, outcomes
+- `ShiftLeadershipDevelopment.tsx` - Leadership levels, bespoke design
+- `ShiftMethodology.tsx` - 5 SHIFT skills, workshop applications
+- `AlignmentWorkshop.tsx` / `MotivationWorkshop.tsx` / `LeadershipWorkshop.tsx` - Workshop details
+- `leadershipScoring.ts` - Leadership level details (L1-L5)
 
-### Step 4: Update Lead Scoring Types
-Add `'expert-consultation'` to the source types in `leadScoring.ts` and give it a high multiplier (1.4x) since requesting expert contact is the highest intent action.
+## File Changes Summary
 
----
+### New Files (9)
+1. `src/pages/admin/AdminOverviews.tsx` - Index page
+2. `src/components/admin/ProgrammeOverviewTemplate.tsx` - Reusable template
+3. `src/pages/admin/overviews/ExecutiveCoachingOverview.tsx`
+4. `src/pages/admin/overviews/ShiftLeadershipOverview.tsx`
+5. `src/pages/admin/overviews/ShiftMethodologyOverview.tsx`
+6. `src/pages/admin/overviews/AlignmentWorkshopOverview.tsx`
+7. `src/pages/admin/overviews/MotivationWorkshopOverview.tsx`
+8. `src/pages/admin/overviews/LeadershipWorkshopOverview.tsx`
+9. `src/pages/admin/overviews/LeadershipLevelsOverview.tsx`
 
-## Technical Details
+### Modified Files (2)
+1. `src/App.tsx` - Add routes for all new overview pages
+2. `src/components/admin/AdminDashboardContent.tsx` - Add link to Programme Overviews
 
-### Files to Modify
-1. **src/utils/leadScoring.ts** - Add `'expert-consultation'` source type with 1.4x multiplier
-2. **src/pages/Contact.tsx** - Add database save with lead scoring, add UTM params support
-3. **src/components/diagnostic/ExpertContactForm.tsx** - Add lead scoring and notification processing
+## User Flow
 
-### Files to Create
-None - all code changes to existing files
-
-### Database Changes
-- Create new `contact_form_submissions` table with RLS policies allowing public insert and authenticated read
-
-### Edge Function Changes
-None required - existing `processLead()` will handle AI analysis and notifications
-
----
-
-## Expected Outcome
-
-After implementation:
-- Every contact form submission will be scored, stored, and trigger notifications
-- Expert consultation requests will be flagged as highest priority leads (hot by default due to 1.4x multiplier)
-- All lead data will be visible in the admin dashboard (requires adding the new table to the dashboard)
-- Hot/warm leads from contact forms will trigger email notifications to Kevin
-
----
-
-## Testing Checklist
-1. Submit contact form with CEO role - should score as hot lead
-2. Click "Speak to Expert" on diagnostic results - should trigger high-priority notification
-3. Verify data appears in Supabase tables with all scoring fields populated
-4. Confirm email notifications are sent for hot/warm leads
+1. Admin logs in via footer "Admin" link at `/auth`
+2. Navigates to `/admin` dashboard
+3. Clicks "Programme Overviews" link
+4. Sees grid of all available programme overview cards
+5. Clicks any programme to view its professional overview
+6. Uses Print/Download PDF buttons to save for client discussions
