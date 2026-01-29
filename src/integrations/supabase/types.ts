@@ -64,21 +64,29 @@ export type Database = {
       }
       diagnostic_submissions: {
         Row: {
+          ai_analysis: string | null
           answers: Json
+          buyer_persona: string | null
           clarity_score: number
           company: string | null
+          company_size: string | null
           contacted_expert: boolean | null
           created_at: string
           email: string | null
           follow_up_preference: string | null
           id: string
+          lead_score: number | null
+          lead_temperature: string | null
           leadership_score: number
           motivation_score: number
           name: string | null
+          next_action: string | null
           organisation: string | null
           primary_recommendation: string
           role: string | null
+          scoring_breakdown: Json | null
           secondary_recommendation: string | null
+          urgency: string | null
           utm_campaign: string | null
           utm_content: string | null
           utm_medium: string | null
@@ -87,21 +95,29 @@ export type Database = {
           waiting_list: boolean | null
         }
         Insert: {
+          ai_analysis?: string | null
           answers: Json
+          buyer_persona?: string | null
           clarity_score: number
           company?: string | null
+          company_size?: string | null
           contacted_expert?: boolean | null
           created_at?: string
           email?: string | null
           follow_up_preference?: string | null
           id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
           leadership_score: number
           motivation_score: number
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_recommendation: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_recommendation?: string | null
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -110,21 +126,29 @@ export type Database = {
           waiting_list?: boolean | null
         }
         Update: {
+          ai_analysis?: string | null
           answers?: Json
+          buyer_persona?: string | null
           clarity_score?: number
           company?: string | null
+          company_size?: string | null
           contacted_expert?: boolean | null
           created_at?: string
           email?: string | null
           follow_up_preference?: string | null
           id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
           leadership_score?: number
           motivation_score?: number
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_recommendation?: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_recommendation?: string | null
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -136,10 +160,14 @@ export type Database = {
       }
       lead_magnet_downloads: {
         Row: {
+          ai_analysis: string | null
+          buyer_persona: string | null
           downloaded_at: string
           email: string
           id: string
           lead_magnet: string
+          lead_score: number | null
+          lead_temperature: string | null
           name: string
           utm_campaign: string | null
           utm_content: string | null
@@ -148,10 +176,14 @@ export type Database = {
           utm_term: string | null
         }
         Insert: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
           downloaded_at?: string
           email: string
           id?: string
           lead_magnet: string
+          lead_score?: number | null
+          lead_temperature?: string | null
           name: string
           utm_campaign?: string | null
           utm_content?: string | null
@@ -160,10 +192,14 @@ export type Database = {
           utm_term?: string | null
         }
         Update: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
           downloaded_at?: string
           email?: string
           id?: string
           lead_magnet?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
           name?: string
           utm_campaign?: string | null
           utm_content?: string | null
@@ -175,8 +211,11 @@ export type Database = {
       }
       leadership_diagnostic_submissions: {
         Row: {
+          ai_analysis: string | null
           answers: Json
+          buyer_persona: string | null
           company: string | null
+          company_size: string | null
           created_at: string
           email: string | null
           follow_up_preference: string | null
@@ -187,12 +226,17 @@ export type Database = {
           l3_score: number
           l4_score: number
           l5_score: number
+          lead_score: number | null
+          lead_temperature: string | null
           low_foundation_flag: boolean
           name: string | null
+          next_action: string | null
           organisation: string | null
           primary_level: string
           role: string | null
+          scoring_breakdown: Json | null
           secondary_level: string | null
+          urgency: string | null
           utm_campaign: string | null
           utm_content: string | null
           utm_medium: string | null
@@ -201,8 +245,11 @@ export type Database = {
           waiting_list: boolean | null
         }
         Insert: {
+          ai_analysis?: string | null
           answers: Json
+          buyer_persona?: string | null
           company?: string | null
+          company_size?: string | null
           created_at?: string
           email?: string | null
           follow_up_preference?: string | null
@@ -213,12 +260,17 @@ export type Database = {
           l3_score: number
           l4_score: number
           l5_score: number
+          lead_score?: number | null
+          lead_temperature?: string | null
           low_foundation_flag?: boolean
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_level: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_level?: string | null
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -227,8 +279,11 @@ export type Database = {
           waiting_list?: boolean | null
         }
         Update: {
+          ai_analysis?: string | null
           answers?: Json
+          buyer_persona?: string | null
           company?: string | null
+          company_size?: string | null
           created_at?: string
           email?: string | null
           follow_up_preference?: string | null
@@ -239,12 +294,17 @@ export type Database = {
           l3_score?: number
           l4_score?: number
           l5_score?: number
+          lead_score?: number | null
+          lead_temperature?: string | null
           low_foundation_flag?: boolean
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_level?: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_level?: string | null
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -256,7 +316,10 @@ export type Database = {
       }
       shift_diagnostic_submissions: {
         Row: {
+          ai_analysis: string | null
           answers: Json
+          buyer_persona: string | null
+          company_size: string | null
           created_at: string
           email: string | null
           focus_score: number
@@ -264,14 +327,19 @@ export type Database = {
           human_intelligence_score: number
           id: string
           innovation_score: number
+          lead_score: number | null
+          lead_temperature: string | null
           name: string | null
+          next_action: string | null
           organisation: string | null
           primary_development: string
           primary_strength: string
           role: string | null
+          scoring_breakdown: Json | null
           secondary_development: string | null
           self_management_score: number
           thinking_score: number
+          urgency: string | null
           utm_campaign: string | null
           utm_content: string | null
           utm_medium: string | null
@@ -280,7 +348,10 @@ export type Database = {
           waiting_list: boolean | null
         }
         Insert: {
+          ai_analysis?: string | null
           answers: Json
+          buyer_persona?: string | null
+          company_size?: string | null
           created_at?: string
           email?: string | null
           focus_score: number
@@ -288,14 +359,19 @@ export type Database = {
           human_intelligence_score: number
           id?: string
           innovation_score: number
+          lead_score?: number | null
+          lead_temperature?: string | null
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_development: string
           primary_strength: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_development?: string | null
           self_management_score: number
           thinking_score: number
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -304,7 +380,10 @@ export type Database = {
           waiting_list?: boolean | null
         }
         Update: {
+          ai_analysis?: string | null
           answers?: Json
+          buyer_persona?: string | null
+          company_size?: string | null
           created_at?: string
           email?: string | null
           focus_score?: number
@@ -312,14 +391,19 @@ export type Database = {
           human_intelligence_score?: number
           id?: string
           innovation_score?: number
+          lead_score?: number | null
+          lead_temperature?: string | null
           name?: string | null
+          next_action?: string | null
           organisation?: string | null
           primary_development?: string
           primary_strength?: string
           role?: string | null
+          scoring_breakdown?: Json | null
           secondary_development?: string | null
           self_management_score?: number
           thinking_score?: number
+          urgency?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null

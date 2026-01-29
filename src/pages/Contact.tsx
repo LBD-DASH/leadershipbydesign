@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
-import { useLeadNotification } from "@/hooks/useLeadNotification";
+import { calculateLeadScore } from "@/utils/leadScoring";
+import { processLead } from "@/utils/notifications";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -24,13 +25,26 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { processLead } = useLeadNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
+      // Prepare lead data for scoring
+      const leadData = {
+        name: formData.full_name,
+        email: formData.email,
+        role: formData.role,
+        company: formData.company,
+        message: formData.message,
+        source: 'contact-form' as const
+      };
+
+      // Calculate lead score
+      const leadScore = calculateLeadScore(leadData);
+      console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
+
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: {
           name: formData.full_name,
@@ -39,20 +53,17 @@ export default function Contact() {
           phone: formData.role,
           serviceInterest: formData.service_interest,
           message: formData.message,
+          // Include lead scoring data in email
+          leadScore: leadScore.score,
+          leadTemperature: leadScore.temperature,
+          buyerPersona: leadScore.buyerPersona,
         }
       });
 
       if (error) throw error;
 
-      // Process lead for scoring and notification (non-blocking)
-      processLead({
-        name: formData.full_name,
-        email: formData.email,
-        role: formData.role,
-        company: formData.company,
-        message: formData.message,
-        source: 'contact-form'
-      }).catch(err => console.error('Lead processing error:', err));
+      // Process lead for AI analysis and notification (non-blocking)
+      processLead(leadData).catch(err => console.error('Lead processing error:', err));
 
       setSubmitted(true);
       setFormData({

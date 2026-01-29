@@ -11,7 +11,8 @@ import { motion } from "framer-motion";
 import { ClipboardCheck, Clock, Target, Zap } from "lucide-react";
 import FloatingSocial from "@/components/FloatingSocial";
 import { useUtmParams } from "@/hooks/useUtmParams";
-import { useLeadNotification } from "@/hooks/useLeadNotification";
+import { calculateLeadScore, formatDiagnosticContext } from "@/utils/leadScoring";
+import { processLead } from "@/utils/notifications";
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
@@ -23,7 +24,6 @@ export default function TeamDiagnostic() {
   const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
   const [userData, setUserData] = useState<LeadCaptureData | null>(null);
   const utmParams = useUtmParams();
-  const { processLead } = useLeadNotification();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     // Calculate scores but don't show results yet
@@ -45,7 +45,28 @@ export default function TeamDiagnostic() {
     setUserData(data);
 
     try {
-      // Save to database with user data, follow-up preference, and UTM params
+      // Prepare lead data for scoring
+      const leadData = {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        organisation: data.organisation,
+        followUpPreference: data.followUpPreference,
+        source: 'team-diagnostic' as const,
+        diagnosticResult: {
+          type: 'team' as const,
+          primaryRecommendation: result.primaryRecommendation,
+          scores: result.scores
+        }
+      };
+
+      // Calculate lead score
+      const leadScore = calculateLeadScore(leadData);
+      const diagnosticContext = formatDiagnosticContext(leadData);
+
+      console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
+
+      // Save to database with user data, follow-up preference, UTM params, AND lead scoring
       const { data: insertedData } = await supabase
         .from('diagnostic_submissions')
         .insert({
@@ -65,7 +86,15 @@ export default function TeamDiagnostic() {
           utm_medium: utmParams.utm_medium,
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
-          utm_term: utmParams.utm_term
+          utm_term: utmParams.utm_term,
+          // Lead scoring data
+          lead_score: leadScore.score,
+          lead_temperature: leadScore.temperature,
+          buyer_persona: leadScore.buyerPersona,
+          company_size: leadScore.companySize,
+          urgency: leadScore.urgency,
+          next_action: leadScore.nextAction,
+          scoring_breakdown: leadScore.breakdown
         })
         .select('id')
         .single();
@@ -92,18 +121,15 @@ export default function TeamDiagnostic() {
         }
       }
 
-      // Process lead for scoring and notification (non-blocking)
-      processLead({
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        organisation: data.organisation,
-        followUpPreference: data.followUpPreference,
-        source: 'team-diagnostic',
-        diagnosticResult: {
-          type: 'team',
-          primaryRecommendation: result.primaryRecommendation,
-          scores: result.scores
+      // Process lead for AI analysis and notification (non-blocking)
+      processLead(leadData, diagnosticContext).then(({ aiAnalysis }) => {
+        // Update the submission with AI analysis
+        if (insertedData?.id && aiAnalysis) {
+          supabase
+            .from('diagnostic_submissions')
+            .update({ ai_analysis: aiAnalysis })
+            .eq('id', insertedData.id)
+            .then(() => console.log('💾 AI analysis saved'));
         }
       }).catch(err => console.error('Lead processing error:', err));
     } catch (error) {
