@@ -33,7 +33,8 @@ export default function Resources() {
       type: "Article", 
       duration: "10 min read",
       image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop&crop=faces",
-      description: "Master the art of understanding and managing emotions to become a more effective leader."
+      description: "Master the art of understanding and managing emotions to become a more effective leader.",
+      link: "https://hbr.org/2004/01/what-makes-a-leader"
     },
   ];
 
