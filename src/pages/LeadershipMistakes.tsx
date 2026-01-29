@@ -7,6 +7,7 @@ import { Download, CheckCircle, Shield, Zap, Users, AlertTriangle } from "lucide
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
+import { useLeadNotification } from "@/hooks/useLeadNotification";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -31,6 +32,7 @@ export default function LeadershipMistakes() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const utmParams = useUtmParams();
+  const { processLead } = useLeadNotification();
 
   const handleChange = (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
@@ -87,6 +89,13 @@ export default function LeadershipMistakes() {
         console.error("Email error:", emailError);
         // Don't block success if email fails - they can still download
       }
+
+      // Process lead for scoring and notification (non-blocking)
+      processLead({
+        name: result.data.name,
+        email: result.data.email,
+        source: 'lead-magnet'
+      }).catch(err => console.error('Lead processing error:', err));
 
       setIsSuccess(true);
       toast.success("Your checklist is downloading!");

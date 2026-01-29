@@ -11,6 +11,7 @@ import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptur
 import { supabase } from '@/integrations/supabase/client';
 import { calculateShiftScores, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
 import { useUtmParams } from '@/hooks/useUtmParams';
+import { useLeadNotification } from '@/hooks/useLeadNotification';
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
@@ -22,6 +23,7 @@ export default function ShiftDiagnostic() {
   const [pendingAnswers, setPendingAnswers] = useState<Record<number, number> | null>(null);
   const [userData, setUserData] = useState<LeadCaptureData | null>(null);
   const utmParams = useUtmParams();
+  const { processLead } = useLeadNotification();
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     const scores = calculateShiftScores(answers);
@@ -82,6 +84,22 @@ export default function ShiftDiagnostic() {
           },
         });
       }
+
+      // Process lead for scoring and notification (non-blocking)
+      processLead({
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        organisation: data.organisation,
+        followUpPreference: data.followUpPreference,
+        source: 'shift-diagnostic',
+        diagnosticResult: {
+          type: 'shift',
+          primaryDevelopment: result.primaryDevelopment,
+          primaryStrength: result.primaryStrength,
+          scores: result.scores
+        }
+      }).catch(err => console.error('Lead processing error:', err));
 
       setStage('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
