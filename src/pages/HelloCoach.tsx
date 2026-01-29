@@ -75,20 +75,20 @@ export default function HelloCoach() {
         <Header />
       
       {/* Hero Section with Ambassador Card */}
-      <section className="pt-24 pb-16 px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
+      <section className="pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
         <div className="max-w-4xl mx-auto text-center">
           {/* HelloCoach Logo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
-            <div className="w-32 h-32 mx-auto bg-black rounded-2xl flex items-center justify-center shadow-xl">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto bg-black rounded-2xl flex items-center justify-center shadow-xl">
               <img 
                 src={hellocoachLogo}
                 alt="HelloCoach"
-                className="w-24 h-24 object-contain"
+                className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
               />
             </div>
           </motion.div>
@@ -97,7 +97,7 @@ export default function HelloCoach() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="font-serif text-5xl md:text-6xl font-bold text-white mb-4"
+            className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4"
           >
             Proud Ambassador
           </motion.h1>
@@ -106,7 +106,7 @@ export default function HelloCoach() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-xl text-white/90 mb-12"
+            className="text-lg sm:text-xl text-white/90 mb-8 sm:mb-12"
           >
             Unlock Your Full Potential with Professional Coaching
           </motion.p>
@@ -116,21 +116,21 @@ export default function HelloCoach() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="bg-white rounded-2xl p-8 shadow-2xl"
+            className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-2xl"
           >
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Sparkles className="w-5 h-5 text-[#3A7CA5]" />
-              <h3 className="font-bold text-xl text-foreground">Special Offer</h3>
-              <Sparkles className="w-5 h-5 text-[#3A7CA5]" />
+            <div className="flex items-center justify-center gap-2 mb-2 sm:mb-3">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#3A7CA5]" />
+              <h3 className="font-bold text-lg sm:text-xl text-foreground">Special Offer</h3>
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#3A7CA5]" />
             </div>
             
-            <p className="text-muted-foreground mb-6">
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
               Use this promo code to get your special offer today!
             </p>
 
-            <div className="bg-[#2d6384] text-white rounded-xl p-6 mb-6">
-              <p className="text-sm font-medium mb-2 opacity-90">PROMO CODE</p>
-              <p className="text-3xl font-bold tracking-wider">LunchTimeSeries</p>
+            <div className="bg-[#2d6384] text-white rounded-lg sm:rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
+              <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 opacity-90">PROMO CODE</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold tracking-wider break-all">LunchTimeSeries</p>
             </div>
 
             <a 
@@ -140,10 +140,10 @@ export default function HelloCoach() {
             >
               <Button 
                 size="lg"
-                className="w-full bg-[#3A7CA5] hover:bg-[#2d6384] text-white font-semibold py-6 text-lg"
+                className="w-full bg-[#3A7CA5] hover:bg-[#2d6384] text-white font-semibold py-5 sm:py-6 text-base sm:text-lg"
               >
                 Join HelloCoach Today
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </a>
           </motion.div>

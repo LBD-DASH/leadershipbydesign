@@ -35,10 +35,10 @@ export default function RiskReversal({ variant = "banner", className = "" }: Ris
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className={`py-12 px-6 lg:px-8 ${className}`}
+      className={`py-10 sm:py-12 px-4 sm:px-6 lg:px-8 ${className}`}
     >
       <div className="max-w-4xl mx-auto">
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/40 dark:to-emerald-950/40 border-2 border-green-200 dark:border-green-800 rounded-2xl p-8 md:p-10 text-center relative overflow-hidden">
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/40 dark:to-emerald-950/40 border-2 border-green-200 dark:border-green-800 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 text-center relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0" style={{
@@ -47,19 +47,19 @@ export default function RiskReversal({ variant = "banner", className = "" }: Ris
           </div>
           
           <div className="relative z-10">
-            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Shield className="w-8 h-8 text-green-600" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
             </div>
             
-            <h3 className="font-serif text-2xl md:text-3xl font-bold text-green-800 dark:text-green-100 mb-4">
+            <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-green-800 dark:text-green-100 mb-3 sm:mb-4">
               Our 90-Day Results Guarantee
             </h3>
             
-            <p className="text-xl md:text-2xl font-semibold text-green-700 dark:text-green-200 mb-6 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-green-700 dark:text-green-200 mb-4 sm:mb-6 max-w-2xl mx-auto px-2">
               If you don't see measurable results in 90 days, we work for free until you do.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-green-700 dark:text-green-300">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-6 text-sm text-green-700 dark:text-green-300">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
                 <span>40% average productivity gains</span>

@@ -46,19 +46,19 @@ const partnerApps = [
 
 export default function PartnerApps() {
   return (
-    <section className="py-24 px-6 lg:px-8 bg-background">
+    <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4 sm:mb-6">
             Our Apps & Tools
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-6" />
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <div className="w-16 sm:w-24 h-1 bg-primary mx-auto mb-4 sm:mb-6" />
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
             Explore these carefully selected tools that complement our leadership development approach.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
           {partnerApps.map((app) => {
             const Wrapper = app.link ? 'a' : 'div';
             const wrapperProps = app.link 
@@ -68,16 +68,16 @@ export default function PartnerApps() {
             return (
               <Wrapper key={app.name} {...wrapperProps}>
                 <Card className="hover:shadow-xl transition-all duration-300 h-full">
-                  <CardContent className="p-8 flex flex-col items-center justify-center min-h-[320px]">
-                    <div className="w-full h-40 flex items-center justify-center mb-6">
+                  <CardContent className="p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center min-h-[280px] sm:min-h-[300px] lg:min-h-[320px]">
+                    <div className="w-full h-28 sm:h-32 lg:h-40 flex items-center justify-center mb-4 sm:mb-6">
                       <img 
                         src={app.logo} 
                         alt={app.name} 
                         className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
                       />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-foreground">{app.name}</h3>
-                    <p className="text-sm text-muted-foreground text-center mb-4">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">{app.name}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground text-center mb-3 sm:mb-4 line-clamp-3">
                       {app.description}
                     </p>
                     {app.comingSoon ? (
