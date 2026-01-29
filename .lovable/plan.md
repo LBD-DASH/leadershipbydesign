@@ -1,220 +1,197 @@
 
-# Content Overhaul Plan: Converting Visitors to Clients
 
-This plan addresses your 5 action items to transform the website copy from generic messaging to specific, results-focused content that builds trust and drives conversions.
-
----
+# AI-Powered Lead Scoring & Notification System
 
 ## Overview
 
-The overhaul touches multiple pages and components across the site, with the goal of replacing vague language with specific metrics, adding risk reversal guarantees, creating a dedicated case study page, enhancing testimonials, and developing buyer-focused blog content.
+This plan implements an intelligent lead management system that:
+1. Scores every lead based on multiple factors (role, company size, urgency signals, etc.)
+2. Uses AI (Anthropic Claude) to analyze each lead and generate personalized insights
+3. Sends temperature-based email notifications (Hot leads get urgent alerts, Warm leads get standard notifications)
+4. Applies to all 5 existing lead capture forms on your website
 
 ---
 
-## 1. Rewrite All Copy with Specificity
+## Current Lead Capture Forms
 
-### Current State
-The site uses generic phrases like "measurable improvements," "remarkable results," and "transform your leadership" without concrete numbers.
+Your website has 5 lead capture points that will benefit from this system:
 
-### Changes Required
-
-**Hero Section** (`src/components/Hero.tsx`)
-- Current: "90-Day Leadership Transformation System Used by 200+ Companies"
-- Updated: "90-Day Leadership System That Delivers 40% Productivity Gains - Used by 200+ Companies"
-
-**Services Section** (`src/components/Services.tsx`)
-- Add specific outcomes to each service card:
-  - SHIFT Leadership Development: "Leaders report 35% faster decision-making within 60 days"
-  - Team Workshops: "Teams see 50% reduction in conflict and 40% improvement in meeting effectiveness"
-  - Executive Coaching: "Executives achieve 2x strategic clarity in 90 days"
-
-**Testimonials** (`src/components/TestimonialSlider.tsx`)
-- Replace vague testimonials with specific metrics where possible:
-  - "We've seen measurable improvements" becomes "Team productivity increased 40% in 3 months"
-  - Add company size context: "Manufacturing company (500+ employees)"
-
-**Programme Outcomes** (`src/pages/ShiftLeadershipDevelopment.tsx`, `src/pages/ExecutiveCoaching.tsx`)
-- Transform generic outcomes into specific metrics:
-  - "Clear understanding of your leadership operating level" becomes "Pinpoint your exact leadership operating level (94% accuracy rate)"
-  - "Measurable leadership growth" becomes "Average 35% improvement in leadership effectiveness scores"
-
-**Workshop Pages** (`src/pages/workshops/AlignmentWorkshop.tsx`, `MotivationWorkshop.tsx`, `LeadershipWorkshop.tsx`)
-- Add specific outcomes to each workshop description
+| Form | Location | Fields Captured |
+|------|----------|-----------------|
+| Leadership Mistakes Checklist | `/leadership-mistakes` | Name, Email |
+| Leadership Diagnostic Gate | `/leadership-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
+| Team Diagnostic Gate | `/team-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
+| SHIFT Diagnostic Gate | `/shift-diagnostic` | Name, Email, Organisation, Role, Follow-up Preference |
+| Contact Form | `/contact` | Name, Email, Company, Role, Service Interest, Message |
 
 ---
 
-## 2. Add Risk Reversal Guarantee
+## Implementation Plan
 
-### New Component
-Create `src/components/RiskReversal.tsx` - A prominent guarantee banner/section
+### Phase 1: Create Lead Scoring Utilities
 
-### Guarantee Statement
-"If you don't see measurable results in 90 days, we work for free until you do"
+**New file: `src/lib/leadScoring.ts`**
 
-### Implementation Locations
-- Homepage: Below Hero section
-- Executive Coaching page: In the CTA section
-- SHIFT Leadership Development page: Before final CTA
-- Contact page: In the "Why Work With Me?" section
+Create a utility that scores leads based on:
+- **Role weight** (C-suite = 30pts, Director = 25pts, Manager = 20pts, etc.)
+- **Company signals** (organization provided = +10pts)
+- **Urgency signals** ("yes" follow-up = 30pts, "maybe" = 15pts)
+- **Message quality** (longer messages = higher intent)
+- **Source multiplier** (diagnostics = 1.2x, contact form = 1.3x)
 
-### Design
-- High-contrast banner with shield/guarantee icon
-- Prominent placement to reduce purchase anxiety
-- Brief qualifying text explaining what "measurable results" means
-
----
-
-## 3. Create Case Study Page with Numbers
-
-### New Page
-Create `src/pages/CaseStudies.tsx`
-
-### Structure
-Three detailed case studies with real numbers:
-
-**Case Study 1: Tech Company Scaling**
-- Challenge: Rapid growth causing culture erosion
-- Solution: SHIFT Leadership Programme for 25 managers
-- Results: 
-  - "$2M revenue increase in 12 months"
-  - "50% reduction in employee turnover"
-  - "Employee NPS improved from 32 to 67"
-
-**Case Study 2: Manufacturing Transformation**
-- Challenge: High turnover and low engagement
-- Solution: Team Effectiveness Workshops + Executive Coaching
-- Results:
-  - "Turnover reduced from 35% to 15%"
-  - "$500K saved in recruitment costs"
-  - "Production efficiency up 28%"
-
-**Case Study 3: Financial Services Leadership Pipeline**
-- Challenge: No internal leadership succession plan
-- Solution: Bespoke Leadership Development Programme
-- Results:
-  - "80% of senior roles now filled internally"
-  - "Time-to-promotion reduced by 40%"
-  - "Leadership bench strength score: 4.2/5 (from 2.1)"
-
-### Navigation
-- Add to main navigation under "Resources" or as standalone menu item
-- Link from Homepage services section
-- Link from Programme pages as social proof
+Temperature classification:
+- **Hot (70-100)**: Immediate action required
+- **Warm (40-69)**: Follow up within 24-48 hours
+- **Cool (0-39)**: Nurture sequence only
 
 ---
 
-## 4. Add Video Testimonials Section
+### Phase 2: Create AI Analysis Edge Function
 
-### New Component Enhancement
-Enhance `src/components/TestimonialSlider.tsx` to support video testimonials
+**New file: `supabase/functions/analyze-lead/index.ts`**
 
-### Video Testimonial Structure
-For each video testimonial:
-- Client headshot/thumbnail
-- Full name + Job title + Company name (with permission)
-- Video embed (YouTube/Vimeo)
-- Pull quote highlight
-- Key metric achieved
+This function will:
+1. Accept lead data and score
+2. Call the Anthropic API to generate:
+   - Buyer persona identification
+   - Personalized outreach recommendations
+   - Conversation starters based on their diagnostic results
+   - Urgency assessment
+3. Return AI analysis for inclusion in notification emails
 
-### Initial Video Placeholders
-Since real video testimonials may need to be recorded:
-- Create the structure to accommodate videos
-- Use enhanced text testimonials with photos as placeholders
-- Add "Featured" and "Video" badges to differentiate
+Example AI prompt:
+```text
+Analyze this leadership development lead:
+- Name: [name], Role: [role], Company: [company]
+- Diagnostic: Leadership Level [L3] - Purpose Leadership
+- Follow-up preference: [yes - ready for call]
 
-### Testimonial Enhancement
-Update existing testimonials to include:
-- Industry and company size context
-- Specific numbers where available
-- Real names and companies (with client permission)
+Provide: 1) Buyer persona, 2) Key pain points likely, 
+3) Recommended approach, 4) Suggested opening line
+```
 
 ---
 
-## 5. Create Buyer-Keyword Targeted Blog Content
+### Phase 3: Create Lead Notification Edge Function
 
-### Blog Strategy Shift
-Move from thought leadership to buyer intent keywords.
+**New file: `supabase/functions/send-lead-notification/index.ts`**
 
-### New Blog Posts to Create (via Blog Admin)
+This function will:
+1. Accept lead data, score, and AI analysis
+2. Generate beautifully formatted HTML emails based on temperature:
+   - **Hot leads**: Red/orange alert styling, "IMMEDIATE ACTION" header, sends to both Kevin AND Lauren
+   - **Warm leads**: Blue styling, standard notification, sends to Kevin only
+   - **Cool leads**: No email, just database storage
+3. Include quick-action buttons (Reply, Book Call)
+4. Display diagnostic insights and AI recommendations
 
-**Post 1: "How to Reduce Team Turnover by 50% in 6 Months"**
-- Target keyword: "reduce team turnover"
-- Content: Framework + case study reference + CTA to Team Diagnostic
+---
 
-**Post 2: "Why Your Leadership Training Isn't Working (And How to Fix It)"**
-- Target keyword: "leadership training not working"
-- Content: Problem diagnosis + SHIFT methodology introduction + CTA
+### Phase 4: Integrate with Existing Forms
 
-**Post 3: "The True Cost of Poor Leadership (And ROI of Development)"**
-- Target keyword: "cost of poor leadership"
-- Content: Statistics + calculator concept + case study links
+**Modify these files to add lead scoring:**
 
-**Post 4: "How to Build a Leadership Pipeline That Actually Works"**
-- Target keyword: "build leadership pipeline"
-- Content: Step-by-step framework + success metrics + CTA
+1. **`src/pages/LeadershipDiagnostic.tsx`**
+   - After saving submission, call lead scoring
+   - Invoke `analyze-lead` edge function
+   - Invoke `send-lead-notification` with results
 
-**Post 5: "Executive Coaching ROI: What the Numbers Really Show"**
-- Target keyword: "executive coaching ROI"
-- Content: Research + client results + consultation CTA
+2. **`src/pages/ShiftDiagnostic.tsx`**
+   - Same integration pattern
 
-### Blog Page Updates (`src/pages/Blog.tsx`)
-- Add category filter for "Buyer Guides" vs "Insights"
-- Feature buyer-focused content more prominently
-- Add internal links to relevant services/diagnostics within posts
+3. **`src/pages/TeamDiagnostic.tsx`**
+   - Same integration pattern
+
+4. **`src/pages/LeadershipMistakes.tsx`**
+   - Score with limited data (name, email only)
+   - Lower base score but still tracked
+
+5. **`src/pages/Contact.tsx`**
+   - Highest potential score (they're actively reaching out)
+   - Full AI analysis with message context
+
+---
+
+### Phase 5: Create Shared Hook
+
+**New file: `src/hooks/useLeadNotification.ts`**
+
+A reusable hook that handles:
+- Score calculation
+- Edge function calls
+- Error handling
+- Loading states
+
+This keeps the integration clean across all forms.
+
+---
+
+## Technical Details
+
+### Lead Scoring Logic
+
+```text
+Base Score Components:
++30 - C-suite role (CEO, Founder, MD)
++25 - Director level
++20 - Manager level
++15 - Other specified role
++10 - Organisation provided
++30 - Follow-up: "Yes, ready now"
++15 - Follow-up: "Maybe later"
++10 - Team size 50+
++5  - Team size 11-50
+
+Multipliers:
+x1.3 - Contact form (direct inquiry)
+x1.2 - Diagnostic completion
+x1.1 - Lead magnet download
+
+Temperature:
+70+ = HOT (immediate notification)
+40-69 = WARM (standard notification)
+0-39 = COOL (no immediate email)
+```
+
+### Email Recipients
+
+| Temperature | Recipients | Subject Format |
+|-------------|------------|----------------|
+| Hot | kevin@kevinbritz.com, lauren@kevinbritz.com | "HOT LEAD: [Name] from [Company]" |
+| Warm | kevin@kevinbritz.com only | "Warm Lead: [Name]" |
+| Cool | No email | Database only |
+
+### Database Updates
+
+No schema changes required - all data is already captured. The scoring happens in real-time when the form submits.
 
 ---
 
 ## Files to Create
 
-| File | Purpose |
-|------|---------|
-| `src/components/RiskReversal.tsx` | Guarantee banner component |
-| `src/pages/CaseStudies.tsx` | Dedicated case studies page |
-| `src/components/VideoTestimonial.tsx` | Video testimonial card component |
+1. `src/lib/leadScoring.ts` - Scoring logic and types
+2. `supabase/functions/analyze-lead/index.ts` - AI analysis
+3. `supabase/functions/send-lead-notification/index.ts` - Email notifications
+4. `src/hooks/useLeadNotification.ts` - Reusable integration hook
 
 ## Files to Modify
 
-| File | Changes |
-|------|---------|
-| `src/components/Hero.tsx` | Update headline with specific metric |
-| `src/components/Services.tsx` | Add specific outcomes to each service |
-| `src/components/TestimonialSlider.tsx` | Add specific metrics, company context |
-| `src/pages/ShiftLeadershipDevelopment.tsx` | Add specific programme outcomes |
-| `src/pages/ExecutiveCoaching.tsx` | Add specific coaching outcomes |
-| `src/pages/Contact.tsx` | Add risk reversal in "Why Work With Me" |
-| `src/pages/Index.tsx` | Add RiskReversal component |
-| `src/pages/About.tsx` | Update values with specific outcomes |
-| `src/pages/Programmes.tsx` | Add case study links, specific metrics |
-| `src/App.tsx` | Add route for Case Studies page |
-| `src/components/Header.tsx` | Add Case Studies to navigation |
+1. `src/pages/LeadershipDiagnostic.tsx` - Add lead scoring call
+2. `src/pages/ShiftDiagnostic.tsx` - Add lead scoring call
+3. `src/pages/TeamDiagnostic.tsx` - Add lead scoring call
+4. `src/pages/LeadershipMistakes.tsx` - Add lead scoring call
+5. `src/pages/Contact.tsx` - Add lead scoring call
+6. `supabase/config.toml` - Register new edge functions
 
 ---
 
-## Technical Notes
+## Expected Outcome
 
-- All content changes maintain the existing design system and semantic color tokens
-- Blog posts will be created via the existing Blog Admin interface (database-driven)
-- Case study page follows existing page patterns (Header, Footer, SEO component)
-- Risk reversal component is reusable across multiple pages
-- Video testimonials use lazy loading for performance
+After implementation:
+- Every lead is automatically scored on submission
+- AI analyzes each lead's likely pain points and persona
+- Hot leads trigger immediate alerts to both Kevin and Lauren
+- Warm leads get standard notifications to Kevin
+- All emails include actionable insights and quick-reply buttons
+- No changes to user-facing forms - all happens behind the scenes
 
----
-
-## Recommended Implementation Order
-
-1. Create Risk Reversal component (quick win, high impact)
-2. Update Hero with specific metric
-3. Enhance testimonials with specifics
-4. Update Services copy with metrics
-5. Create Case Studies page
-6. Update programme pages with specific outcomes
-7. Create buyer-focused blog posts (via Blog Admin)
-
----
-
-## Content Notes
-
-The specific numbers used (40% productivity gains, 50% turnover reduction, $2M revenue increase) are examples. Before publishing, these should be:
-- Verified against actual client results
-- Approved by clients for public use
-- Or clearly marked as "typical results" with appropriate disclaimers
