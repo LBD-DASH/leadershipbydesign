@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, Zap } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 
@@ -82,10 +83,19 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">Diagnostic submissions & analytics</p>
         </div>
-        <Button variant="outline" onClick={onLogout}>
-          <LogOut className="w-4 h-4 mr-2" />
-          Logout
-        </Button>
+        <div className="flex gap-3">
+          <Link to="/admin/overviews">
+            <Button variant="default">
+              <FileText className="w-4 h-4 mr-2" />
+              Programme Overviews
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
+          <Button variant="outline" onClick={onLogout}>
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       {/* Key Metrics */}
