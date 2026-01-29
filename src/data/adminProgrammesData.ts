@@ -194,7 +194,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Work-life integration'
     ],
     targetAudience: 'Women leaders at all levels seeking to advance their careers and leadership impact',
-    duration: '3-4 days',
+    duration: '8 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
