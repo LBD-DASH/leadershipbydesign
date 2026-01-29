@@ -90,10 +90,16 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 text-center">
+        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs sm:text-sm text-muted-foreground">
             © {new Date().getFullYear()} Leadership by Design. All rights reserved.
           </p>
+          <Link 
+            to="/auth" 
+            className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </footer>
