@@ -135,7 +135,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Talent development expertise'
     ],
     targetAudience: 'Senior managers, directors, and functional leaders driving large-scale initiatives',
-    duration: '5-6 days',
+    duration: '8 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching'
   },
   {
