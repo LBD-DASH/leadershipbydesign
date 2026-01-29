@@ -20,6 +20,9 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, MessageSquare } from "lucide-react";
+import { calculateLeadScore } from "@/utils/leadScoring";
+import { processLead } from "@/utils/notifications";
+import { useUtmParams } from "@/hooks/useUtmParams";
 
 interface ExpertContactFormProps {
   open: boolean;
@@ -42,6 +45,7 @@ export default function ExpertContactForm({
     teamSize: '',
     message: ''
   });
+  const utmParams = useUtmParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +58,21 @@ export default function ExpertContactForm({
     setIsSubmitting(true);
 
     try {
+      // Prepare lead data with expert-consultation source (highest intent)
+      const leadData = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        teamSize: formData.teamSize,
+        message: formData.message,
+        followUpPreference: 'yes' as const, // Expert consultation = highest intent
+        source: 'expert-consultation' as const
+      };
+
+      // Calculate lead score (will get 1.4x multiplier for expert-consultation)
+      const leadScore = calculateLeadScore(leadData);
+      console.log(`📊 Expert consultation lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
+
       if (submissionId) {
         const { error } = await supabase
           .from('diagnostic_submissions')
@@ -61,12 +80,25 @@ export default function ExpertContactForm({
             name: formData.name,
             email: formData.email,
             company: formData.company || null,
-            contacted_expert: true
+            contacted_expert: true,
+            lead_score: leadScore.score,
+            lead_temperature: leadScore.temperature,
+            buyer_persona: leadScore.buyerPersona,
+            company_size: leadScore.companySize,
+            urgency: leadScore.urgency,
+            next_action: leadScore.nextAction,
+            scoring_breakdown: leadScore.breakdown,
+            follow_up_preference: 'yes' // Mark as high intent
           })
           .eq('id', submissionId);
 
         if (error) throw error;
       }
+
+      // Process lead for AI analysis and notifications (non-blocking)
+      // This will trigger email notifications for hot/warm leads
+      processLead(leadData, `Expert consultation request following Team Diagnostic. Primary recommendation: ${primaryRecommendation}`)
+        .catch(err => console.error('Lead processing error:', err));
 
       toast.success("Thank you! We'll be in touch within 24 hours.");
       onOpenChange(false);

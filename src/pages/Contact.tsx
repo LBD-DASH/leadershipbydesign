@@ -12,6 +12,7 @@ import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
+import { useUtmParams } from "@/hooks/useUtmParams";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const utmParams = useUtmParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +46,35 @@ export default function Contact() {
       // Calculate lead score
       const leadScore = calculateLeadScore(leadData);
       console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
+
+      // Save to database with lead scoring data
+      const { error: dbError } = await supabase
+        .from('contact_form_submissions')
+        .insert({
+          name: formData.full_name,
+          email: formData.email,
+          company: formData.company || null,
+          role: formData.role || null,
+          service_interest: formData.service_interest || null,
+          message: formData.message || null,
+          utm_source: utmParams.utm_source || null,
+          utm_medium: utmParams.utm_medium || null,
+          utm_campaign: utmParams.utm_campaign || null,
+          utm_content: utmParams.utm_content || null,
+          utm_term: utmParams.utm_term || null,
+          lead_score: leadScore.score,
+          lead_temperature: leadScore.temperature,
+          buyer_persona: leadScore.buyerPersona,
+          company_size: leadScore.companySize,
+          urgency: leadScore.urgency,
+          next_action: leadScore.nextAction,
+          scoring_breakdown: leadScore.breakdown
+        });
+
+      if (dbError) {
+        console.error('Database save error:', dbError);
+        // Continue with email even if database save fails
+      }
 
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: {
