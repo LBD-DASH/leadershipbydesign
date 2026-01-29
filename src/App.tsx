@@ -36,6 +36,8 @@ import AlignmentWorkshopOverview from "./pages/admin/overviews/AlignmentWorkshop
 import MotivationWorkshopOverview from "./pages/admin/overviews/MotivationWorkshopOverview";
 import LeadershipWorkshopOverview from "./pages/admin/overviews/LeadershipWorkshopOverview";
 import LeadershipLevelsOverview from "./pages/admin/overviews/LeadershipLevelsOverview";
+import AdminAllProgrammes from "./pages/admin/AdminAllProgrammes";
+import ProgrammeDetailView from "./pages/admin/programmes/ProgrammeDetailView";
 import CaseStudies from "./pages/CaseStudies";
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -90,6 +92,8 @@ const App = () => (
           <Route path="/admin/overview/workshop-motivation" element={<MotivationWorkshopOverview />} />
           <Route path="/admin/overview/workshop-leadership" element={<LeadershipWorkshopOverview />} />
           <Route path="/admin/overview/leadership-levels" element={<LeadershipLevelsOverview />} />
+          <Route path="/admin/programmes" element={<AdminAllProgrammes />} />
+          <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
           <Route
             path="/blog-admin"
             element={
