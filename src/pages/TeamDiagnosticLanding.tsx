@@ -30,7 +30,7 @@ export default function TeamDiagnosticLanding() {
         keywords="team assessment, team diagnostic, team performance, team issues, team alignment, team motivation, free team quiz"
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background">
         <Header />
         
         <main className="pt-20 pb-12">
@@ -58,14 +58,23 @@ export default function TeamDiagnosticLanding() {
             </div>
 
             {/* Main Headline - Punchy for Social */}
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="mb-3"
+            >
+              <span className="text-4xl">🔍</span>
+            </motion.div>
+            
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 leading-tight">
               Your Team's Real Problem
               <br />
-              <span className="text-primary">Isn't What You Think</span>
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Isn't What You Think</span>
             </h1>
             
-            <p className="text-base text-muted-foreground mb-6">
-              Most leaders fix the wrong thing. This 3-minute test reveals the ONE intervention that will actually unlock your team.
+            <p className="text-base text-muted-foreground mb-6 leading-relaxed">
+              <span className="font-semibold text-foreground">Most leaders fix the wrong thing.</span> This 3-minute test reveals the ONE intervention that will actually unlock your team.
             </p>
 
             {/* Primary CTA - Large, Thumb-Friendly */}
@@ -77,7 +86,7 @@ export default function TeamDiagnosticLanding() {
               <Link to="/team-diagnostic">
                 <Button 
                   size="lg" 
-                  className="w-full sm:w-auto text-lg py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="w-full sm:w-auto text-lg py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                 >
                   Start Free Assessment
                   <ArrowRight className="ml-2 w-5 h-5" />

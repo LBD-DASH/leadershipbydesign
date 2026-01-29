@@ -30,7 +30,7 @@ export default function LeadershipDiagnosticLanding() {
         keywords="leadership test, leadership assessment, free leadership quiz, leadership level, leadership diagnostic, leadership development"
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background">
         <Header />
         
         <main className="pt-20 pb-12">
@@ -58,14 +58,23 @@ export default function LeadershipDiagnosticLanding() {
             </div>
 
             {/* Main Headline - Punchy for Social */}
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="mb-3"
+            >
+              <span className="text-4xl">🎯</span>
+            </motion.div>
+            
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 leading-tight">
               What Level Leader
               <br />
-              <span className="text-primary">Are You Really?</span>
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Are You Really?</span>
             </h1>
             
-            <p className="text-base text-muted-foreground mb-6">
-              Most leaders overestimate their level. This 4-minute test shows you the truth — and exactly how to level up.
+            <p className="text-base text-muted-foreground mb-6 leading-relaxed">
+              <span className="font-semibold text-foreground">Most leaders overestimate their level.</span> This 4-minute test shows you the truth — and exactly how to level up.
             </p>
 
             {/* Primary CTA - Large, Thumb-Friendly */}
@@ -77,7 +86,7 @@ export default function LeadershipDiagnosticLanding() {
               <Link to="/leadership-diagnostic">
                 <Button 
                   size="lg" 
-                  className="w-full sm:w-auto text-lg py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="w-full sm:w-auto text-lg py-6 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                 >
                   Start Free Assessment
                   <ArrowRight className="ml-2 w-5 h-5" />
