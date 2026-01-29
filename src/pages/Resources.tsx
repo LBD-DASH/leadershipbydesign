@@ -44,7 +44,8 @@ export default function Resources() {
       type: "PDF", 
       duration: "12 pages",
       image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=350&fit=crop",
-      description: "Comprehensive self-assessment tools to evaluate and enhance your leadership capabilities."
+      description: "Comprehensive self-assessment tools to evaluate and enhance your leadership capabilities.",
+      internalLink: "/leadership-diagnostic"
     },
     { 
       title: "Team Development Framework", 
@@ -364,35 +365,46 @@ export default function Resources() {
               </div>
               
               <div className="grid md:grid-cols-3 gap-6">
-                {downloadableGuides.map((guide, idx) => (
-                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={guide.image} 
-                        alt={guide.title}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
-                          {guide.type}
-                        </span>
-                      </div>
-                    </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">{guide.title}</CardTitle>
-                      <CardDescription>{guide.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">{guide.duration}</span>
-                        <Button variant="ghost" size="sm" className="group/btn">
-                          Download
-                          <Download className="w-4 h-4 ml-1 group-hover/btn:translate-y-0.5 transition-transform" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {downloadableGuides.map((guide, idx) => {
+                  const CardWrapper = guide.internalLink ? Link : 'div';
+                  const cardProps = guide.internalLink ? { to: guide.internalLink } : {};
+                  
+                  return (
+                    <CardWrapper key={idx} {...cardProps as any}>
+                      <Card className="hover:shadow-lg transition-shadow overflow-hidden group cursor-pointer h-full">
+                        <div className="relative h-48 overflow-hidden">
+                          <img 
+                            src={guide.image} 
+                            alt={guide.title}
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                              {guide.type}
+                            </span>
+                          </div>
+                        </div>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">{guide.title}</CardTitle>
+                          <CardDescription>{guide.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{guide.duration}</span>
+                            <Button variant="ghost" size="sm" className="group/btn">
+                              {guide.internalLink ? 'Take Assessment' : 'Download'}
+                              {guide.internalLink ? (
+                                <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                              ) : (
+                                <Download className="w-4 h-4 ml-1 group-hover/btn:translate-y-0.5 transition-transform" />
+                              )}
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CardWrapper>
+                  );
+                })}
               </div>
             </section>
 
