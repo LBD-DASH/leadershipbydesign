@@ -33,6 +33,7 @@ export default function ShiftLeadershipDevelopment() {
       <SEO 
         title="SHIFT Leadership Development | Internationally Recognised Programmes"
         description="Discover your leadership operating level and develop with our internationally recognised SHIFT Leadership Development programmes. Bespoke solutions tailored to your needs."
+        canonicalUrl="/shift-leadership-development"
         keywords="SHIFT leadership, leadership development, leadership programmes, executive coaching, bespoke leadership, leadership operating level"
       />
       <Header />

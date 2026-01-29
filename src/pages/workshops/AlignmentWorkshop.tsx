@@ -69,7 +69,7 @@ export default function AlignmentWorkshop() {
       <SEO
         title="SHIFT Team Alignment Workshop | Leadership by Design"
         description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working using the SHIFT Methodology™."
-        canonicalUrl="https://leadershipbydesign.lovable.app/workshops/alignment"
+        canonicalUrl="/workshops/alignment"
       />
       <Header />
       <main className="min-h-screen bg-background">
