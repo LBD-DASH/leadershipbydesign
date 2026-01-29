@@ -4,6 +4,7 @@ import leadershipL2 from '@/assets/leadership-l2-development.jpg';
 import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
 import leadershipL4 from '@/assets/leadership-l4-motivational.jpg';
 import leadershipL5 from '@/assets/leadership-l5-strategic.jpg';
+import leadershipWomen from '@/assets/leadership-women.jpg';
 
 export interface ProgrammeData {
   id: string;
@@ -175,6 +176,7 @@ export const adminProgrammesData: ProgrammeData[] = [
     levelBadge: 'Women in Leadership',
     description: 'Empowering women to lead with authenticity and impact. This programme addresses the unique challenges and opportunities women face in leadership roles.',
     icon: Sparkles,
+    image: leadershipWomen,
     topics: [
       'Six essentials to leadership',
       'Living a balanced life',
