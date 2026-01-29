@@ -518,6 +518,31 @@ export default function TeamDevelopmentFramework() {
             </div>
           </div>
         </div>
+
+        {/* Interactive CTA Section - hidden when printing */}
+        <div className="print:hidden bg-gradient-to-br from-primary to-primary/80 text-white py-16 px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Assess Your Team?
+            </h2>
+            <p className="text-lg text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
+              Take our free Team Diagnostic to get personalised insights into your team's 
+              strengths and development areas. Get instant recommendations based on this framework.
+            </p>
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-6 text-lg"
+            >
+              <Link to="/team-diagnostic">
+                Take the Team Diagnostic
+              </Link>
+            </Button>
+            <p className="mt-4 text-sm text-primary-foreground/70">
+              Free • 5 minutes • Instant results
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Print styles */}
