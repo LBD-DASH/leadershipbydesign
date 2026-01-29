@@ -36,6 +36,7 @@ import AlignmentWorkshopOverview from "./pages/admin/overviews/AlignmentWorkshop
 import MotivationWorkshopOverview from "./pages/admin/overviews/MotivationWorkshopOverview";
 import LeadershipWorkshopOverview from "./pages/admin/overviews/LeadershipWorkshopOverview";
 import LeadershipLevelsOverview from "./pages/admin/overviews/LeadershipLevelsOverview";
+import AllProgrammesOverview from "./pages/admin/overviews/AllProgrammesOverview";
 import CaseStudies from "./pages/CaseStudies";
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -83,6 +84,7 @@ const App = () => (
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
+          <Route path="/admin/overview/all-programmes" element={<AllProgrammesOverview />} />
           <Route path="/admin/overview/executive-coaching" element={<ExecutiveCoachingOverview />} />
           <Route path="/admin/overview/shift-leadership" element={<ShiftLeadershipOverview />} />
           <Route path="/admin/overview/shift-methodology" element={<ShiftMethodologyOverview />} />
