@@ -28,6 +28,14 @@ import BlogPost from "./pages/BlogPost";
 import BlogAdminList from "./pages/BlogAdminList";
 import BlogAdmin from "./pages/BlogAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminOverviews from "./pages/admin/AdminOverviews";
+import ExecutiveCoachingOverview from "./pages/admin/overviews/ExecutiveCoachingOverview";
+import ShiftLeadershipOverview from "./pages/admin/overviews/ShiftLeadershipOverview";
+import ShiftMethodologyOverview from "./pages/admin/overviews/ShiftMethodologyOverview";
+import AlignmentWorkshopOverview from "./pages/admin/overviews/AlignmentWorkshopOverview";
+import MotivationWorkshopOverview from "./pages/admin/overviews/MotivationWorkshopOverview";
+import LeadershipWorkshopOverview from "./pages/admin/overviews/LeadershipWorkshopOverview";
+import LeadershipLevelsOverview from "./pages/admin/overviews/LeadershipLevelsOverview";
 import Auth from "./pages/Auth";
 import CaseStudies from "./pages/CaseStudies";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -75,6 +83,14 @@ const App = () => (
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/overviews" element={<AdminOverviews />} />
+          <Route path="/admin/overview/executive-coaching" element={<ExecutiveCoachingOverview />} />
+          <Route path="/admin/overview/shift-leadership" element={<ShiftLeadershipOverview />} />
+          <Route path="/admin/overview/shift-methodology" element={<ShiftMethodologyOverview />} />
+          <Route path="/admin/overview/workshop-alignment" element={<AlignmentWorkshopOverview />} />
+          <Route path="/admin/overview/workshop-motivation" element={<MotivationWorkshopOverview />} />
+          <Route path="/admin/overview/workshop-leadership" element={<LeadershipWorkshopOverview />} />
+          <Route path="/admin/overview/leadership-levels" element={<LeadershipLevelsOverview />} />
           <Route
             path="/blog-admin"
             element={
