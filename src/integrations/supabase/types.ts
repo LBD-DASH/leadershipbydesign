@@ -76,6 +76,7 @@ export type Database = {
           message: string | null
           name: string
           next_action: string | null
+          phone: string | null
           role: string | null
           scoring_breakdown: Json | null
           service_interest: string | null
@@ -99,6 +100,7 @@ export type Database = {
           message?: string | null
           name: string
           next_action?: string | null
+          phone?: string | null
           role?: string | null
           scoring_breakdown?: Json | null
           service_interest?: string | null
@@ -122,6 +124,7 @@ export type Database = {
           message?: string | null
           name?: string
           next_action?: string | null
+          phone?: string | null
           role?: string | null
           scoring_breakdown?: Json | null
           service_interest?: string | null
@@ -154,6 +157,7 @@ export type Database = {
           name: string | null
           next_action: string | null
           organisation: string | null
+          phone: string | null
           primary_recommendation: string
           role: string | null
           scoring_breakdown: Json | null
@@ -185,6 +189,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_recommendation: string
           role?: string | null
           scoring_breakdown?: Json | null
@@ -216,6 +221,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_recommendation?: string
           role?: string | null
           scoring_breakdown?: Json | null
@@ -241,6 +247,7 @@ export type Database = {
           lead_score: number | null
           lead_temperature: string | null
           name: string
+          phone: string | null
           utm_campaign: string | null
           utm_content: string | null
           utm_medium: string | null
@@ -257,6 +264,7 @@ export type Database = {
           lead_score?: number | null
           lead_temperature?: string | null
           name: string
+          phone?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -273,6 +281,7 @@ export type Database = {
           lead_score?: number | null
           lead_temperature?: string | null
           name?: string
+          phone?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
@@ -304,6 +313,7 @@ export type Database = {
           name: string | null
           next_action: string | null
           organisation: string | null
+          phone: string | null
           primary_level: string
           role: string | null
           scoring_breakdown: Json | null
@@ -338,6 +348,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_level: string
           role?: string | null
           scoring_breakdown?: Json | null
@@ -372,6 +383,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_level?: string
           role?: string | null
           scoring_breakdown?: Json | null
@@ -404,6 +416,7 @@ export type Database = {
           name: string | null
           next_action: string | null
           organisation: string | null
+          phone: string | null
           primary_development: string
           primary_strength: string
           role: string | null
@@ -436,6 +449,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_development: string
           primary_strength: string
           role?: string | null
@@ -468,6 +482,7 @@ export type Database = {
           name?: string | null
           next_action?: string | null
           organisation?: string | null
+          phone?: string | null
           primary_development?: string
           primary_strength?: string
           role?: string | null

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 const leadCaptureSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().max(30, "Phone must be less than 30 characters").optional(),
   organisation: z.string().trim().max(200, "Organisation must be less than 200 characters").optional(),
   role: z.string().trim().max(100, "Role must be less than 100 characters").optional(),
 });
@@ -52,6 +53,7 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     organisation: "",
     role: "",
   });
@@ -155,6 +157,21 @@ export default function LeadCaptureGate({ onSubmit, isSubmitting = false, varian
                   <p className="text-xs text-destructive">{errors.email}</p>
                 )}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium">
+                Phone <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+27 82 123 4567"
+                value={formData.phone}
+                onChange={handleChange("phone")}
+                className={errors.phone ? "border-destructive" : ""}
+                disabled={isSubmitting}
+              />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
