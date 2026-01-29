@@ -102,19 +102,19 @@ export default function TestimonialSlider() {
   };
 
   return (
-    <section className="py-24 px-6 lg:px-8 bg-secondary/30">
+    <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-secondary/30">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4 sm:mb-6">
             What Our Clients Say
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto" />
+          <div className="w-16 sm:w-24 h-1 bg-primary mx-auto" />
         </motion.div>
 
         <div className="relative">
