@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 
@@ -16,6 +16,7 @@ interface AdminDashboardContentProps {
 
 export default function AdminDashboardContent({ onLogout }: AdminDashboardContentProps) {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showWaitingListOnly, setShowWaitingListOnly] = useState(false);
 
   const { data: leadershipSubmissions, isLoading: loadingLeadership } = useQuery({
     queryKey: ['leadership-submissions'],
@@ -197,27 +198,72 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
         </TabsContent>
 
         <TabsContent value="leadership" className="mt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Button
+              variant={showWaitingListOnly ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowWaitingListOnly(!showWaitingListOnly)}
+            >
+              <Clock className="w-4 h-4 mr-2" />
+              {showWaitingListOnly ? "Showing Waiting List Only" : "Show Waiting List"}
+              {leadershipWaitingList > 0 && (
+                <Badge variant="secondary" className="ml-2">{leadershipWaitingList}</Badge>
+              )}
+            </Button>
+          </div>
           <SubmissionsTable
-            title="Leadership Diagnostic Submissions"
-            submissions={leadershipSubmissions || []}
+            title={showWaitingListOnly ? "Leadership - Waiting List" : "Leadership Diagnostic Submissions"}
+            submissions={showWaitingListOnly 
+              ? (leadershipSubmissions || []).filter(s => s.waiting_list) 
+              : (leadershipSubmissions || [])}
             type="leadership"
             isLoading={loadingLeadership}
           />
         </TabsContent>
 
         <TabsContent value="team" className="mt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Button
+              variant={showWaitingListOnly ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowWaitingListOnly(!showWaitingListOnly)}
+            >
+              <Clock className="w-4 h-4 mr-2" />
+              {showWaitingListOnly ? "Showing Waiting List Only" : "Show Waiting List"}
+              {teamWaitingList > 0 && (
+                <Badge variant="secondary" className="ml-2">{teamWaitingList}</Badge>
+              )}
+            </Button>
+          </div>
           <SubmissionsTable
-            title="Team Diagnostic Submissions"
-            submissions={teamSubmissions || []}
+            title={showWaitingListOnly ? "Team - Waiting List" : "Team Diagnostic Submissions"}
+            submissions={showWaitingListOnly 
+              ? (teamSubmissions || []).filter(s => s.waiting_list) 
+              : (teamSubmissions || [])}
             type="team"
             isLoading={loadingTeam}
           />
         </TabsContent>
 
         <TabsContent value="shift" className="mt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Button
+              variant={showWaitingListOnly ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowWaitingListOnly(!showWaitingListOnly)}
+            >
+              <Clock className="w-4 h-4 mr-2" />
+              {showWaitingListOnly ? "Showing Waiting List Only" : "Show Waiting List"}
+              {shiftWaitingList > 0 && (
+                <Badge variant="secondary" className="ml-2">{shiftWaitingList}</Badge>
+              )}
+            </Button>
+          </div>
           <SubmissionsTable
-            title="SHIFT Team Diagnostic Submissions"
-            submissions={shiftSubmissions || []}
+            title={showWaitingListOnly ? "SHIFT - Waiting List" : "SHIFT Team Diagnostic Submissions"}
+            submissions={showWaitingListOnly 
+              ? (shiftSubmissions || []).filter(s => s.waiting_list) 
+              : (shiftSubmissions || [])}
             type="shift"
             isLoading={loadingShift}
           />
