@@ -398,6 +398,111 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_campaigns: {
+        Row: {
+          campaign_type: string
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          name: string
+          starts_at: string | null
+          status: string
+          target_audience: string | null
+          updated_at: string
+        }
+        Insert: {
+          campaign_type: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          name: string
+          starts_at?: string | null
+          status?: string
+          target_audience?: string | null
+          updated_at?: string
+        }
+        Update: {
+          campaign_type?: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          name?: string
+          starts_at?: string | null
+          status?: string
+          target_audience?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      marketing_content: {
+        Row: {
+          clicks: number | null
+          content: string
+          content_type: string
+          created_at: string
+          engagements: number | null
+          hashtags: string[] | null
+          id: string
+          impressions: number | null
+          platform_post_id: string | null
+          platform_url: string | null
+          published_at: string | null
+          review_notes: string | null
+          reviewed_at: string | null
+          scheduled_for: string | null
+          source_reference: string | null
+          source_type: string | null
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          clicks?: number | null
+          content: string
+          content_type: string
+          created_at?: string
+          engagements?: number | null
+          hashtags?: string[] | null
+          id?: string
+          impressions?: number | null
+          platform_post_id?: string | null
+          platform_url?: string | null
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          scheduled_for?: string | null
+          source_reference?: string | null
+          source_type?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          clicks?: number | null
+          content?: string
+          content_type?: string
+          created_at?: string
+          engagements?: number | null
+          hashtags?: string[] | null
+          id?: string
+          impressions?: number | null
+          platform_post_id?: string | null
+          platform_url?: string | null
+          published_at?: string | null
+          review_notes?: string | null
+          reviewed_at?: string | null
+          scheduled_for?: string | null
+          source_reference?: string | null
+          source_type?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       shift_diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
