@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SEO from "@/components/SEO";
+import { WebApplicationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LeadershipDiagnosticForm from "@/components/leadership-diagnostic/LeadershipDiagnosticForm";
@@ -152,6 +153,18 @@ export default function LeadershipDiagnostic() {
         description="Discover your leadership operating level with our free 20-question diagnostic. Get instant clarity on your strengths and growth opportunities."
         canonicalUrl="/leadership-diagnostic"
         keywords="leadership diagnostic, leadership assessment, leadership development, leadership test, leadership profile"
+      />
+      <WebApplicationSchema
+        name="Leadership Diagnostic"
+        description="Discover your leadership operating level with our free 20-question diagnostic. Get instant clarity on your strengths and growth opportunities."
+        url="/leadership-diagnostic"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Assessments", url: "/programmes" },
+          { name: "Leadership Diagnostic", url: "/leadership-diagnostic" },
+        ]}
       />
       
       <div className="min-h-screen bg-background">

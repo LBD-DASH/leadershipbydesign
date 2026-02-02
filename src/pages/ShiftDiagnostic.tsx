@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingSocial from '@/components/FloatingSocial';
 import SEO from '@/components/SEO';
+import { WebApplicationSchema, BreadcrumbSchema } from '@/components/StructuredData';
 import ShiftDiagnosticForm from '@/components/shift-diagnostic/ShiftDiagnosticForm';
 import ShiftResultsPage from '@/components/shift-diagnostic/ShiftResultsPage';
 import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptureGate';
@@ -143,6 +144,18 @@ export default function ShiftDiagnostic() {
         description="Take the free SHIFT Team Diagnostic to discover your team's strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
         canonicalUrl="/shift-diagnostic"
         keywords="SHIFT skills, team diagnostic, self-management, human intelligence, innovation, focus, thinking, team development"
+      />
+      <WebApplicationSchema
+        name="SHIFT Team Diagnostic"
+        description="Discover your team's strengths and development areas across the five SHIFT skills: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        url="/shift-diagnostic"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Assessments", url: "/programmes" },
+          { name: "SHIFT Diagnostic", url: "/shift-diagnostic" },
+        ]}
       />
       
       <div className="min-h-screen bg-background">

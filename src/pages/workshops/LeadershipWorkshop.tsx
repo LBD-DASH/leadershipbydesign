@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { EventSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { motion } from "framer-motion";
@@ -71,6 +72,19 @@ export default function LeadershipWorkshop() {
         title="SHIFT Team Ownership Workshop | Leadership by Design"
         description="A morning workshop for capable teams where ownership is inconsistent. Address delayed decisions, avoided conversations, and dependency on authority using the SHIFT Methodology™."
         canonicalUrl="/workshops/leadership"
+      />
+      <EventSchema
+        name="SHIFT Team Ownership Workshop"
+        description="A morning workshop for capable teams where ownership is inconsistent and decisions get stuck. Build accountability and leadership behaviour."
+        url="/workshops/leadership"
+        duration="PT4H"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Workshops", url: "/programmes" },
+          { name: "Team Ownership", url: "/workshops/leadership" },
+        ]}
       />
       <Header />
       <main className="min-h-screen bg-background">

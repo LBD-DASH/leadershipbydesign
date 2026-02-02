@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { EventSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { motion } from "framer-motion";
@@ -70,6 +71,19 @@ export default function AlignmentWorkshop() {
         title="SHIFT Team Alignment Workshop | Leadership by Design"
         description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working using the SHIFT Methodology™."
         canonicalUrl="/workshops/alignment"
+      />
+      <EventSchema
+        name="SHIFT Team Alignment Workshop"
+        description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities and create unified direction."
+        url="/workshops/alignment"
+        duration="PT4H"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Workshops", url: "/programmes" },
+          { name: "Team Alignment", url: "/workshops/alignment" },
+        ]}
       />
       <Header />
       <main className="min-h-screen bg-background">
