@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { EventSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import WorkshopDownloadForm from "@/components/diagnostic/WorkshopDownloadForm";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { motion } from "framer-motion";
@@ -71,6 +72,19 @@ export default function MotivationWorkshop() {
         title="SHIFT Team Energy Workshop | Leadership by Design"
         description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Address fatigue, compliance without commitment, and unmet human needs using the SHIFT Methodology™."
         canonicalUrl="/workshops/motivation"
+      />
+      <EventSchema
+        name="SHIFT Team Energy Workshop"
+        description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Reignite motivation and create sustainable practices."
+        url="/workshops/motivation"
+        duration="PT4H"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Workshops", url: "/programmes" },
+          { name: "Team Energy", url: "/workshops/motivation" },
+        ]}
       />
       <Header />
       <main className="min-h-screen bg-background">

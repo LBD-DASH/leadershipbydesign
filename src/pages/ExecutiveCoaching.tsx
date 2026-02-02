@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { ServiceSchema, BreadcrumbSchema, FAQSchema } from '@/components/StructuredData';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ArrowLeft, CheckCircle2, Target, Brain, Users, Compass, Sparkles, Lightbulb, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -47,6 +48,12 @@ const outcomes = [
   '40% faster decision-making on complex strategic issues'
 ];
 
+const coachingFAQs = [
+  { question: "How long is a typical executive coaching engagement?", answer: "Executive coaching engagements typically run for 3-6 months, with bi-weekly sessions. This allows for meaningful skill development and sustainable behavioural change." },
+  { question: "What assessments are included in executive coaching?", answer: "Our coaching includes the 6 Human Needs Profile, Purpose & Values Mapping, and Leadership Assessment (Enneagram) to provide a complete picture of your leadership profile." },
+  { question: "Is executive coaching confidential?", answer: "Absolutely. All coaching conversations and assessment results are completely confidential between you and your coach." },
+];
+
 export default function ExecutiveCoaching() {
   return (
     <>
@@ -56,6 +63,19 @@ export default function ExecutiveCoaching() {
         canonicalUrl="/executive-coaching"
         keywords="executive coaching, leadership coaching, SHIFT framework, CFO coaching, senior leader development, executive presence"
       />
+      <ServiceSchema
+        name="Executive Coaching"
+        description="Personalised executive coaching built on the SHIFT methodology. Develop leadership presence, strategic communication, and influence at the highest levels."
+        url="/executive-coaching"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Programmes", url: "/programmes" },
+          { name: "Executive Coaching", url: "/executive-coaching" },
+        ]}
+      />
+      <FAQSchema faqs={coachingFAQs} />
       <Header />
       
       <main className="min-h-screen bg-gradient-to-b from-background to-secondary/20">

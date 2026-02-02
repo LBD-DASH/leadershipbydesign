@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { Calendar, User, ArrowLeft, Share2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import SEO from "@/components/SEO";
+import { ArticleSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -54,11 +55,31 @@ const BlogPost = () => {
   return (
     <>
       <SEO
-        title={`${post.title} | Leadership by Design`}
+        title={post.title}
         description={post.excerpt}
         canonicalUrl={`/blog/${post.slug}`}
+        ogType="article"
+        ogImage={post.featured_image || undefined}
         keywords={post.tags?.join(", ")}
         author={post.author}
+        publishedTime={post.created_at}
+        modifiedTime={post.updated_at}
+      />
+      <ArticleSchema
+        title={post.title}
+        description={post.excerpt}
+        image={post.featured_image || undefined}
+        authorName={post.author}
+        publishedTime={post.created_at}
+        modifiedTime={post.updated_at}
+        url={`/blog/${post.slug}`}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Blog", url: "/blog" },
+          { name: post.title, url: `/blog/${post.slug}` },
+        ]}
       />
       <div className="min-h-screen flex flex-col">
         <Header />

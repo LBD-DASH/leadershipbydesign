@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { CourseSchema, BreadcrumbSchema } from '@/components/StructuredData';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ArrowLeft, CheckCircle2, Compass, Target, TrendingUp, Sparkles, Users, Lightbulb } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -35,6 +36,18 @@ export default function ShiftLeadershipDevelopment() {
         description="Discover your leadership operating level and develop with our internationally recognised SHIFT Leadership Development programmes. Bespoke solutions tailored to your needs."
         canonicalUrl="/shift-leadership-development"
         keywords="SHIFT leadership, leadership development, leadership programmes, executive coaching, bespoke leadership, leadership operating level"
+      />
+      <CourseSchema
+        name="SHIFT Leadership Development"
+        description="Internationally recognised leadership development programmes. Discover your operating level and design a development path tailored to your unique needs."
+        url="/shift-leadership-development"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Programmes", url: "/programmes" },
+          { name: "SHIFT Leadership Development", url: "/shift-leadership-development" },
+        ]}
       />
       <Header />
       
