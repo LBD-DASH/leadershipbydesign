@@ -65,6 +65,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'How Enthusiasm Affects Performance',
           'Building and Maintaining Enthusiasm',
           'Transferring Enthusiasm to Others'
+        ],
+        practicals: [
+          'Action Steps',
+          'Enthusiasm Self-Assessment',
+          'Daily Enthusiasm Log',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -74,6 +80,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Eliminating Productivity Barriers',
           'Building Productive Habits',
           'Measuring and Improving Output'
+        ],
+        practicals: [
+          'Action Steps',
+          'Productivity Audit',
+          'Time-Energy Matrix',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -83,6 +95,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Active and Creative Listening Skills',
           'Building Rapport Through Communication',
           'Overcoming Communication Barriers'
+        ],
+        practicals: [
+          'Action Steps',
+          'Listening Skills Assessment',
+          'Communication Style Inventory',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -92,6 +110,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Developing Executive Presence',
           'Professional Excellence Standards',
           'Building Your Professional Brand'
+        ],
+        practicals: [
+          'Action Steps',
+          'Executive Qualities Self-Rating',
+          'Professional Development Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -101,6 +125,13 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Prioritisation Frameworks',
           'Aligning Goals with Values',
           'Tracking and Adjusting Goals'
+        ],
+        practicals: [
+          'Action Steps',
+          'Goal Setting Worksheet',
+          'Priority Matrix Exercise',
+          'Goal Tracking Template',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -110,6 +141,14 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Building an Accountability Mindset',
           'Overcoming Victim Mentality',
           'Creating Accountability Systems'
+        ],
+        practicals: [
+          'Action Steps',
+          'Accountability Assessment',
+          'Personal Accountability Plan',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
@@ -161,6 +200,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Clear and Compelling Messaging',
           'Communicating Vision and Expectations',
           'Two-Way Communication Practices'
+        ],
+        practicals: [
+          'Action Steps',
+          'Communication Style Assessment',
+          'Message Clarity Exercise',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -170,6 +215,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Managing Multiple Demands',
           'Delegation vs. Personal Tasks',
           'Creating Time for Development'
+        ],
+        practicals: [
+          'Action Steps',
+          'Weekly Time Audit',
+          'Priority Quadrant Analysis',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -179,6 +230,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Root Cause Analysis',
           'Collaborative Solution Finding',
           'Implementing and Tracking Solutions'
+        ],
+        practicals: [
+          'Action Steps',
+          'Problem Analysis Worksheet',
+          'Solution Implementation Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -188,6 +245,13 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Selecting the Right People',
           'Clear Delegation Communication',
           'Following Up Without Micromanaging'
+        ],
+        practicals: [
+          'Action Steps',
+          'Delegation Assessment',
+          'Task-Person Match Matrix',
+          'Delegation Tracking Template',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -197,6 +261,13 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Creating Development Opportunities',
           'Coaching for Growth',
           'Building a Development Culture'
+        ],
+        practicals: [
+          'Action Steps',
+          'Team Potential Assessment',
+          'Development Planning Worksheet',
+          'Coaching Conversation Guide',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -206,6 +277,15 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Creating a Feedback Culture',
           'Receiving Feedback Gracefully',
           'Turning Feedback into Action'
+        ],
+        practicals: [
+          'Action Steps',
+          'Feedback Style Self-Assessment',
+          'Feedback Practice Scenarios',
+          'Action Board Presentation',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
@@ -519,7 +599,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'The Psychology of Motivation',
           'Intrinsic vs Extrinsic Motivation',
           'Individual Motivation Drivers',
-          'Creating Motivational Conditions'
+          'Creating Motivational Conditions',
+          'The Six Human Needs Framework',
+          'Motivation Assessment Tools'
+        ],
+        practicals: [
+          'Action Steps',
+          '6 Human Needs Assessment',
+          'Motivation Drivers Inventory',
+          'Team Motivation Analysis',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -528,7 +617,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'The Leader as Developer',
           'Creating Growth Opportunities',
           'Empowerment Strategies',
-          'Building Capability and Confidence'
+          'Building Capability and Confidence',
+          'Coaching for Performance',
+          'Mentoring Relationships'
+        ],
+        practicals: [
+          'Action Steps',
+          'Empowerment Assessment',
+          'Development Conversation Guide',
+          'Talent Development Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -537,7 +635,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Understanding Change Dynamics',
           'Communicating Change Vision',
           'Managing Resistance to Change',
-          'Sustaining Momentum Through Change'
+          'Sustaining Momentum Through Change',
+          'The Emotional Journey of Change',
+          'Building Change Resilience'
+        ],
+        practicals: [
+          'Action Steps',
+          'Change Readiness Assessment',
+          'Stakeholder Impact Analysis',
+          'Change Communication Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -546,16 +653,34 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Creating Compelling Vision',
           'Communicating Vision Effectively',
           'Connecting Daily Work to Vision',
-          'Inspiring Through Storytelling'
+          'Inspiring Through Storytelling',
+          'The Power of Purpose Communication',
+          'Building Shared Understanding'
+        ],
+        practicals: [
+          'Action Steps',
+          'Vision Crafting Workshop',
+          'Storytelling Practice',
+          'Vision Communication Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
-        title: 'Lesson Five: Personal Leadership Potential',
+        title: 'Lesson Five: Recognition and Engagement',
         topics: [
-          'Maximizing Your Leadership Impact',
-          'Developing Your Leadership Brand',
-          'Building Influence and Credibility',
-          'Leading with Authenticity'
+          'The Science of Recognition',
+          'Building Recognition Systems',
+          'Personalized Appreciation Strategies',
+          'Creating Engagement Rituals',
+          'Measuring Engagement Impact',
+          'Sustaining High Engagement'
+        ],
+        practicals: [
+          'Action Steps',
+          'Recognition Preferences Survey',
+          'Engagement Action Plan',
+          'Team Recognition Calendar',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -564,7 +689,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Breaking Down Silos',
           'Building Cross-Functional Relationships',
           'Collaborative Decision-Making',
-          'Creating Shared Accountability'
+          'Creating Shared Accountability',
+          'Managing Competing Priorities',
+          'Building Trust Across Teams'
+        ],
+        practicals: [
+          'Action Steps',
+          'Stakeholder Mapping Exercise',
+          'Collaboration Assessment',
+          'Cross-Functional Project Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -573,7 +707,18 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Elements of High-Performance Culture',
           'Setting and Reinforcing Standards',
           'Recognition and Celebration',
-          'Sustaining Performance Excellence'
+          'Sustaining Performance Excellence',
+          'Culture Shaping Behaviours',
+          'Leading Cultural Change'
+        ],
+        practicals: [
+          'Action Steps',
+          'Culture Assessment Tool',
+          'Performance Standards Framework',
+          'Motivation Leadership Action Plan',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
@@ -624,7 +769,15 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Defining Strategic Leadership',
           'The Strategic Mindset',
           'Balancing Today and Tomorrow',
-          'Strategic Decision-Making'
+          'Strategic Decision-Making',
+          'Strategic vs Operational Thinking',
+          'The Strategic Leader\'s Role'
+        ],
+        practicals: [
+          'Action Steps',
+          'Strategic Thinking Assessment',
+          'Strategic Leadership Self-Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -633,7 +786,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Creating Organisational Purpose',
           'Defining Strategic Direction',
           'Aligning Purpose with Strategy',
-          'Communicating Strategic Intent'
+          'Communicating Strategic Intent',
+          'Building Shared Purpose',
+          'Purpose-Driven Leadership'
+        ],
+        practicals: [
+          'Action Steps',
+          'Organisational Purpose Statement',
+          'Strategic Direction Framework',
+          'Purpose Alignment Audit',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -642,7 +804,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Environmental Scanning',
           'Competitive Analysis',
           'Internal Capability Assessment',
-          'Identifying Strategic Opportunities'
+          'Identifying Strategic Opportunities',
+          'SWOT and PESTLE Analysis',
+          'Scenario Planning'
+        ],
+        practicals: [
+          'Action Steps',
+          'Environmental Scan Template',
+          'Competitive Analysis Matrix',
+          'Capability Assessment Tool',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -651,7 +822,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'From Strategy to Execution',
           'Building Strategic Alignment',
           'Resource Allocation',
-          'Measuring Strategic Progress'
+          'Measuring Strategic Progress',
+          'Cascading Strategy Through the Organisation',
+          'Strategic Performance Indicators'
+        ],
+        practicals: [
+          'Action Steps',
+          'Strategy Execution Plan',
+          'Strategic Alignment Audit',
+          'KPI Framework Development',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -660,7 +840,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Identifying Key Stakeholders',
           'Building Stakeholder Relationships',
           'Managing Stakeholder Expectations',
-          'Board and Investor Relations'
+          'Board and Investor Relations',
+          'Executive Influence Strategies',
+          'Strategic Communication'
+        ],
+        practicals: [
+          'Action Steps',
+          'Stakeholder Mapping Exercise',
+          'Influence Strategy Plan',
+          'Board Presentation Framework',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -669,7 +858,19 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Leading Large-Scale Change',
           'Cultural Transformation',
           'Building Change Capability',
-          'Legacy and Succession'
+          'Legacy and Succession',
+          'Sustainable Transformation',
+          'The Strategic Leader\'s Legacy'
+        ],
+        practicals: [
+          'Action Steps',
+          'Transformation Roadmap',
+          'Culture Change Assessment',
+          'Succession Planning Framework',
+          'Strategic Leadership Action Plan',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
@@ -723,6 +924,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Leading with Passion',
           'Positive Expectancy in Challenging Environments',
           'Persistence Through Obstacles'
+        ],
+        practicals: [
+          'Action Steps',
+          'Leadership Essentials Self-Assessment',
+          'Personal Leadership Inventory',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -731,7 +938,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Work-Life Integration Strategies',
           'Managing Multiple Priorities',
           'Self-Care as Leadership',
-          'Building Support Systems'
+          'Building Support Systems',
+          'Energy Management for Leaders',
+          'Setting Healthy Boundaries'
+        ],
+        practicals: [
+          'Action Steps',
+          'Wheel of Life Assessment',
+          'Work-Life Integration Plan',
+          'Support System Mapping',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -740,7 +956,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Defining Your Leadership Purpose',
           'Aligning Values and Career',
           'Creating Impact Through Purpose',
-          'Purpose-Driven Decision Making'
+          'Purpose-Driven Decision Making',
+          'Overcoming Purpose Blockers',
+          'Living Your Purpose Daily'
+        ],
+        practicals: [
+          'Action Steps',
+          'Purpose Discovery Questionnaire',
+          'Values Alignment Exercise',
+          'Personal Mission Statement',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -749,7 +974,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Finding Your Authentic Voice',
           'Communicating with Confidence',
           'Navigating Difficult Conversations',
-          'Building Executive Presence'
+          'Building Executive Presence',
+          'Influence Without Authority',
+          'Strategic Visibility'
+        ],
+        practicals: [
+          'Action Steps',
+          'Communication Style Inventory',
+          'Difficult Conversation Planner',
+          'Visibility Strategy Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -758,7 +992,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Trends Shaping Leadership',
           'Developing Future-Ready Skills',
           'Innovation and Adaptability',
-          'Creating Your Leadership Legacy'
+          'Creating Your Leadership Legacy',
+          'Building Resilience',
+          'Leading Through Uncertainty'
+        ],
+        practicals: [
+          'Action Steps',
+          'Future Skills Assessment',
+          'Innovation Action Plan',
+          'Legacy Statement',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -767,7 +1010,18 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Understanding Executive Presence',
           'Developing Gravitas',
           'Strategic Networking',
-          'Influencing at Senior Levels'
+          'Influencing at Senior Levels',
+          'Sponsorship and Mentoring',
+          'Career Advancement Strategies'
+        ],
+        practicals: [
+          'Action Steps',
+          'Executive Presence Self-Rating',
+          'Strategic Network Map',
+          'Career Advancement Plan',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
@@ -818,7 +1072,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Developing a Positive Mindset',
           'Overcoming Self-Limiting Beliefs',
           'Building Confidence Through Action',
-          'The Power of Positive Self-Talk'
+          'The Power of Positive Self-Talk',
+          'Attitude as a Choice',
+          'The Success Mindset'
+        ],
+        practicals: [
+          'Action Steps',
+          'Mindset Self-Assessment',
+          'Limiting Beliefs Inventory',
+          'Positive Affirmations Exercise',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -827,7 +1090,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Understanding Time Value',
           'Time Management Fundamentals',
           'Prioritisation Techniques',
-          'Eliminating Time Wasters'
+          'Eliminating Time Wasters',
+          'Creating Productive Routines',
+          'Energy and Time Alignment'
+        ],
+        practicals: [
+          'Action Steps',
+          'Time Audit Worksheet',
+          'Priority Matrix Exercise',
+          'Weekly Planning Template',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -836,7 +1108,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Taking Ownership of Results',
           'Moving Beyond Blame',
           'Creating Accountability Habits',
-          'The Freedom of Responsibility'
+          'The Freedom of Responsibility',
+          'Accountability Partners',
+          'Tracking and Measuring Progress'
+        ],
+        practicals: [
+          'Action Steps',
+          'Accountability Self-Assessment',
+          'Responsibility Inventory',
+          'Accountability Action Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -845,7 +1126,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'The Science of Goal Setting',
           'Writing Effective Goals',
           'Creating Action Plans',
-          'Measuring Progress'
+          'Measuring Progress',
+          'Overcoming Goal Obstacles',
+          'Celebrating Achievement'
+        ],
+        practicals: [
+          'Action Steps',
+          'Goal Setting Worksheet',
+          'SMART Goals Template',
+          'Goal Tracking System',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -854,7 +1144,16 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Understanding Habit Formation',
           'Replacing Negative Habits',
           'Creating Success Rituals',
-          'Maintaining Consistency'
+          'Maintaining Consistency',
+          'The 21-Day Habit Challenge',
+          'Building Habit Stacks'
+        ],
+        practicals: [
+          'Action Steps',
+          'Habit Audit',
+          'Habit Change Plan',
+          '21-Day Habit Tracker',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -863,7 +1162,18 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Fixed vs Growth Mindset',
           'Embracing Challenges',
           'Learning from Failure',
-          'Continuous Improvement'
+          'Continuous Improvement',
+          'Developing Resilience',
+          'The Journey to Mastery'
+        ],
+        practicals: [
+          'Action Steps',
+          'Growth Mindset Assessment',
+          'Learning Journal',
+          'Personal Development Plan',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],
