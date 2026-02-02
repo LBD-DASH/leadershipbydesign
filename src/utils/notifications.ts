@@ -67,11 +67,7 @@ export async function sendLeadNotification(
   aiAnalysis: string,
   diagnosticContext?: string
 ): Promise<SendNotificationResult> {
-  // Skip notifications for cool leads
-  if (leadScore.temperature === 'cool') {
-    console.log(`Cool lead (${leadScore.score}/100) - skipping notification`);
-    return { success: true, emailsSent: [] };
-  }
+  // Send notifications for ALL leads (hot, warm, and cool)
 
   try {
     const { data, error } = await supabase.functions.invoke('send-lead-notification', {
@@ -136,12 +132,9 @@ export async function processLead(
   const leadScore = calculateLeadScore(leadData);
   console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
 
-  // Step 2: Get AI analysis for hot/warm leads
-  let aiAnalysis = '';
-  if (leadScore.temperature !== 'cool') {
-    aiAnalysis = await getAIAnalysis(leadData, leadScore, diagnosticContext);
-    console.log('🤖 AI analysis completed');
-  }
+  // Step 2: Get AI analysis for all leads
+  const aiAnalysis = await getAIAnalysis(leadData, leadScore, diagnosticContext);
+  console.log('🤖 AI analysis completed');
 
   // Step 3: Send notifications
   const notificationResult = await sendLeadNotification(

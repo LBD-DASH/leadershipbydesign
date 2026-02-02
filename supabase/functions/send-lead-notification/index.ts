@@ -248,23 +248,117 @@ function generateWarmLeadEmail(data: LeadNotificationRequest): string {
 
 function generateLaurenNotificationEmail(data: LeadNotificationRequest): string {
   const { leadData, leadScore } = data;
+  const tempEmoji = leadScore.temperature === 'hot' ? '🔥' : leadScore.temperature === 'warm' ? '💼' : '❄️';
+  const tempLabel = leadScore.temperature.charAt(0).toUpperCase() + leadScore.temperature.slice(1);
   
   return `
 <!DOCTYPE html>
 <html>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px;">
-  <h2 style="color: #dc2626;">🔥 Hot Lead Alert</h2>
+  <h2 style="color: ${leadScore.temperature === 'hot' ? '#dc2626' : leadScore.temperature === 'warm' ? '#2563eb' : '#6b7280'};">${tempEmoji} ${tempLabel} Lead Alert</h2>
   <p>Hi Lauren,</p>
-  <p>A hot lead just came in that needs immediate attention:</p>
+  <p>A new lead just came in:</p>
   <ul style="line-height: 1.8;">
     <li><strong>Name:</strong> ${leadData.name}</li>
     <li><strong>Email:</strong> ${leadData.email}</li>
     ${leadData.phone ? `<li><strong>Phone:</strong> <a href="tel:${leadData.phone}">${leadData.phone}</a></li>` : ''}
-    <li><strong>Score:</strong> ${leadScore.score}/100</li>
+    <li><strong>Score:</strong> ${leadScore.score}/100 (${tempLabel})</li>
     <li><strong>Source:</strong> ${leadData.source}</li>
   </ul>
-  <p>Please ensure Kevin has seen this and follows up within 2 hours.</p>
+  ${leadScore.temperature === 'hot' ? '<p>Please ensure Kevin has seen this and follows up within 2 hours.</p>' : ''}
   <p>Thanks!<br>Lead Scoring System</p>
+</body>
+</html>`;
+}
+
+function generateCoolLeadEmail(data: LeadNotificationRequest): string {
+  const { leadData, leadScore, aiAnalysis, diagnosticContext } = data;
+  const companyName = leadData.organisation || leadData.company || 'Unknown Company';
+  const timestamp = new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' });
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8f9fa;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%); border-radius: 16px 16px 0 0; padding: 24px; text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 8px;">❄️</div>
+      <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">New Lead</h1>
+      <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0 0; font-size: 14px;">For nurturing</p>
+    </div>
+    
+    <!-- Main Content -->
+    <div style="background: white; padding: 28px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      
+      <!-- Lead Info -->
+      <h2 style="margin: 0 0 16px 0; color: #1f2937; font-size: 22px;">${leadData.name}</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Email:</td>
+          <td style="padding: 6px 0; color: #1f2937; font-size: 14px;"><a href="mailto:${leadData.email}" style="color: #2563eb;">${leadData.email}</a></td>
+        </tr>
+        ${leadData.phone ? `
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Phone:</td>
+          <td style="padding: 6px 0; color: #1f2937; font-size: 14px;"><a href="tel:${leadData.phone}" style="color: #2563eb;">${leadData.phone}</a></td>
+        </tr>
+        ` : ''}
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Role:</td>
+          <td style="padding: 6px 0; color: #1f2937; font-size: 14px;">${leadData.role || 'Not provided'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Company:</td>
+          <td style="padding: 6px 0; color: #1f2937; font-size: 14px;">${companyName}</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">Score:</td>
+          <td style="padding: 6px 0; color: #6b7280; font-size: 14px;">${leadScore.score}/100</td>
+        </tr>
+      </table>
+
+      ${leadData.message ? `
+      <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+        <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">Message:</p>
+        <p style="color: #1f2937; font-size: 14px; margin: 0; line-height: 1.5;">${leadData.message}</p>
+      </div>
+      ` : ''}
+
+      ${diagnosticContext ? `
+      <div style="background: #f3f4f6; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+        <p style="margin: 0; color: #4b5563; font-size: 13px;">📊 ${diagnosticContext}</p>
+      </div>
+      ` : ''}
+
+      ${aiAnalysis && aiAnalysis !== 'AI analysis unavailable' ? `
+      <div style="border-left: 3px solid #9ca3af; padding-left: 16px; margin-bottom: 20px;">
+        <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 14px;">🤖 AI Analysis:</h3>
+        <div style="color: #4b5563; font-size: 13px; line-height: 1.6; white-space: pre-wrap;">${aiAnalysis}</div>
+      </div>
+      ` : ''}
+
+      <!-- Next Action -->
+      <div style="background: #f3f4f6; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+        <p style="margin: 0; color: #4b5563; font-size: 13px;"><strong>📋 Suggested:</strong> ${leadScore.nextAction || 'Add to nurturing sequence'}</p>
+      </div>
+
+      <!-- Action Button -->
+      <div style="text-align: center;">
+        <a href="mailto:${leadData.email}" style="display: inline-block; background: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Send Email</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: 16px; color: #6b7280; font-size: 11px;">
+      <p style="margin: 0;">Lead captured: ${timestamp} | Source: ${leadData.source}</p>
+    </div>
+  </div>
 </body>
 </html>`;
 }
@@ -277,14 +371,6 @@ serve(async (req: Request): Promise<Response> => {
   try {
     const data: LeadNotificationRequest = await req.json();
     const { leadData, leadScore } = data;
-
-    // Only send emails for hot and warm leads
-    if (leadScore.temperature === 'cool') {
-      return new Response(
-        JSON.stringify({ message: "Cool lead - no email sent, logged to database only" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
 
     const companyName = leadData.organisation || leadData.company || 'Unknown Company';
     const emailsSent: string[] = [];
@@ -316,6 +402,7 @@ serve(async (req: Request): Promise<Response> => {
       return response.json();
     };
 
+    // Send emails for ALL leads to both Kevin and Lauren
     if (leadScore.temperature === 'hot') {
       // Send detailed email to Kevin
       await sendEmail(
@@ -334,13 +421,37 @@ serve(async (req: Request): Promise<Response> => {
       emailsSent.push("lauren@kevinbritz.com");
 
     } else if (leadScore.temperature === 'warm') {
-      // Send email to Kevin only
+      // Send email to Kevin
       await sendEmail(
         "kevin@kevinbritz.com",
         `💼 Warm Lead: ${leadData.name}`,
         generateWarmLeadEmail(data)
       );
       emailsSent.push("kevin@kevinbritz.com");
+
+      // Send notification to Lauren
+      await sendEmail(
+        "lauren@kevinbritz.com",
+        `💼 Warm Lead Alert - ${leadData.name}`,
+        generateLaurenNotificationEmail(data)
+      );
+      emailsSent.push("lauren@kevinbritz.com");
+
+    } else {
+      // Cool leads - send to both Kevin and Lauren
+      await sendEmail(
+        "kevin@kevinbritz.com",
+        `❄️ New Lead: ${leadData.name}`,
+        generateCoolLeadEmail(data)
+      );
+      emailsSent.push("kevin@kevinbritz.com");
+
+      await sendEmail(
+        "lauren@kevinbritz.com",
+        `❄️ New Lead Alert - ${leadData.name}`,
+        generateLaurenNotificationEmail(data)
+      );
+      emailsSent.push("lauren@kevinbritz.com");
     }
 
     console.log(`Lead notification sent for ${leadData.name} (${leadScore.temperature}) to: ${emailsSent.join(', ')}`);
