@@ -56,7 +56,16 @@ export default function AdminLoginForm({ onAuthenticate }: AdminLoginFormProps) 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="token">Access Token</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="token">Access Token</Label>
+                <button
+                  type="button"
+                  onClick={() => toast.info('Contact your system administrator to reset your access token.')}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot token?
+                </button>
+              </div>
               <Input
                 id="token"
                 type="password"
