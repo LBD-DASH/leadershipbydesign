@@ -178,18 +178,18 @@ export default function ProgrammeDetailView() {
               </div>
             )}
 
-            {/* Lessons Grid */}
+            {/* Lessons Grid - 2 column layout */}
             {hasDetailedContent && (
-              <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
                 {programme.lessons?.map((lesson, index) => (
                   <div key={index} className="border-l-4 border-primary/30 pl-4">
-                    <h3 className="text-base font-bold text-foreground mb-3 uppercase tracking-wide">
+                    <h3 className="text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
                       {lesson.title}
                     </h3>
-                    <ul className="grid md:grid-cols-2 gap-x-6 gap-y-1.5">
+                    <ul className="space-y-1">
                       {lesson.topics.map((topic, topicIndex) => (
-                        <li key={topicIndex} className="flex items-start gap-2 text-sm">
-                          <span className="text-primary mt-1">•</span>
+                        <li key={topicIndex} className="flex items-start gap-2 text-xs">
+                          <span className="text-primary mt-0.5">•</span>
                           <span className="text-muted-foreground">{topic}</span>
                         </li>
                       ))}
