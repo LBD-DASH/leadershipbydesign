@@ -108,17 +108,6 @@ export default function ProgrammeDetailView() {
                 </div>
               )}
 
-              {/* Authors */}
-              {programme.authors && programme.authors.length > 0 && (
-                <div className="mt-8">
-                  <p className="text-muted-foreground text-sm uppercase tracking-wider mb-2">
-                    Programme Authors
-                  </p>
-                  <div className="text-lg font-medium text-foreground">
-                    {programme.authors.join(' and ')}
-                  </div>
-                </div>
-              )}
 
               {/* Programme Quick Stats */}
               <div className="grid grid-cols-3 gap-8 mt-12 text-center">
