@@ -225,7 +225,7 @@ export const adminProgrammesData: ProgrammeData[] = [
       'Developing team members'
     ],
     targetAudience: 'Supervisors, team leaders, and first-time managers responsible for small teams',
-    duration: '13 weeks',
+    duration: '6 weeks',
     format: 'Online LMS Portal | Hard Copy | Online Coaching | Workshop | Action Board Presentation'
   },
   {
