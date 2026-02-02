@@ -45,6 +45,7 @@ import NotFound from "./pages/NotFound";
 import LeadershipMistakes from "./pages/LeadershipMistakes";
 import LeadershipMistakesChecklist from "./pages/LeadershipMistakesChecklist";
 import TeamDevelopmentFramework from "./pages/TeamDevelopmentFramework";
+import MarketingDashboard from "./pages/MarketingDashboard";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,7 @@ const App = () => (
           <Route path="/admin/overview/leadership-levels" element={<LeadershipLevelsOverview />} />
           <Route path="/admin/programmes" element={<AdminAllProgrammes />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
+          <Route path="/marketing" element={<MarketingDashboard />} />
           <Route
             path="/blog-admin"
             element={
