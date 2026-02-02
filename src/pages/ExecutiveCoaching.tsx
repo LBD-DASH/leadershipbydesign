@@ -58,7 +58,7 @@ export default function ExecutiveCoaching() {
   return (
     <>
       <SEO 
-        title="Executive Coaching | SHIFT Framework | Leadership by Design"
+        title="Executive Coaching | SHIFT Framework"
         description="Personalised executive coaching built on the SHIFT methodology. Develop leadership presence, strategic communication, and influence at the highest levels."
         canonicalUrl="/executive-coaching"
         keywords="executive coaching, leadership coaching, SHIFT framework, CFO coaching, senior leader development, executive presence"
