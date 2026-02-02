@@ -13,6 +13,7 @@ import workshopLeadership from '@/assets/workshop-leadership.jpg';
 export interface LessonContent {
   title: string;
   topics: string[];
+  practicals?: string[];
 }
 
 export interface ProgrammeData {
@@ -261,6 +262,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Focusing on Your Strengths',
           'The Rewards of Leadership',
           'The Internal Nature of Personal Leadership'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'The Leader I Want to Be',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -273,6 +280,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Developing a Strong Self-Image',
           'True Leaders Are Authentic Leaders',
           'Committing to Authentic Leadership'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Emotional Intelligence Self-Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -284,6 +297,13 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Success Essential #4: Passion',
           'Success Essential #5: Positive Expectancy',
           'Success Essential #6: Persistence'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Do You Have the Essentials for Personal Leadership?',
+          'Essentials for My Success',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -293,8 +313,14 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Personal Responsibility and Self-Motivation',
           'Recognizing Our Basic Human Needs',
           'The Disadvantages of Motivation through Fear',
-          'The Limits of Motivation through Incentive',
-          'The Power of Motivation through Attitudes'
+          'The Limits of Motivation through Incentives',
+          'The Power of Motivation through Attitude'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'My Self-Motivation Plan',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -307,6 +333,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Creating a Personal Mission Statement',
           'The Fundamentals of Goal Setting',
           'Avoiding Distractions on Your Path'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Purpose Questionnaire',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -319,6 +351,13 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Obstacles to Goals Achievement',
           'The Power of Target Dates',
           'Is it Worth it to Me?'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Personal Leadership Evaluation',
+          'Mid-Course Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -330,6 +369,12 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Controlling the Emotional Climate',
           'How to Build Enthusiasm',
           'The Benefits of Enthusiasm'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Developing Enthusiasm',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -338,8 +383,18 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Positive Expectancy Requires Belief',
           'How Positive Expectancy Works',
           'Positive Expectancy Starts with Affirmation',
-          'The Power of Positive Thinking',
-          'Creating a Positive Environment'
+          'Positive Expectancy Is Made with Visualization',
+          'Developing an Attitude of Positive Expectancy',
+          'How Our Attitudes and Habits Are Formed',
+          'Changing Current Attitudes and Habits',
+          'The Self-Fulfilling Prophecy'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Attitudes and Statements',
+          'Daily Record',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -350,6 +405,14 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Turning Adversity into Opportunity',
           'Making Good Decisions Requires Persistence',
           'Persistence Pays Off!'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Persistence for My Success',
+          'Decision Analyzer',
+          'Problem Solver',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -360,6 +423,15 @@ export const adminProgrammesData: ProgrammeData[] = [
           'Time Is Your Most Valuable Asset',
           'Taking Responsibility for the Time You Use',
           'Becoming a Total Person®'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Wheel of Life',
+          'Daily Time Use Analysis',
+          'Weekly Time Summary',
+          'My Ideal Week',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -369,8 +441,14 @@ export const adminProgrammesData: ProgrammeData[] = [
           'The Critical Role of Empathy in Communication',
           'Learning to Listen with Empathy',
           'Developing Empathy',
-          'Setting an Example by Relationship Management',
+          'Setting an Example by Relational Leadership',
           'Leadership through Communication'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Attitudes for Effective Communication',
+          'Participant\'s Feedback Sheet'
         ]
       },
       {
@@ -383,6 +461,14 @@ export const adminProgrammesData: ProgrammeData[] = [
           'The Rewards of Empowering Others',
           'Living a Life Filled with Potential',
           'The Leadership Challenge'
+        ],
+        practicals: [
+          'Action Steps',
+          'Application and Action',
+          'Personal Leadership Evaluation',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
         ]
       }
     ],

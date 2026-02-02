@@ -186,7 +186,7 @@ export default function ProgrammeDetailView() {
                     <h3 className="text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
                       {lesson.title}
                     </h3>
-                    <ul className="space-y-1">
+                    <ul className="space-y-1 mb-2">
                       {lesson.topics.map((topic, topicIndex) => (
                         <li key={topicIndex} className="flex items-start gap-2 text-xs">
                           <span className="text-primary mt-0.5">•</span>
@@ -194,6 +194,19 @@ export default function ProgrammeDetailView() {
                         </li>
                       ))}
                     </ul>
+                    {lesson.practicals && lesson.practicals.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-dashed border-muted">
+                        <p className="text-xs font-semibold text-primary/80 mb-1">Practicals:</p>
+                        <ul className="space-y-0.5">
+                          {lesson.practicals.map((practical, pIndex) => (
+                            <li key={pIndex} className="flex items-start gap-2 text-xs">
+                              <span className="text-primary/60 mt-0.5">○</span>
+                              <span className="text-muted-foreground/80 italic">{practical}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
