@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
+import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 
 interface AdminDashboardContentProps {
   onLogout: () => void;
@@ -170,11 +171,15 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
 
       {/* Tabs for different views */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="overview">UTM Analytics</TabsTrigger>
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
+          <TabsTrigger value="google-ads" className="flex items-center gap-2">
+            <Megaphone className="w-4 h-4" />
+            Google Ads
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -267,6 +272,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             type="shift"
             isLoading={loadingShift}
           />
+        </TabsContent>
+
+        <TabsContent value="google-ads" className="mt-6">
+          <GoogleAdsGenerator />
         </TabsContent>
       </Tabs>
     </div>
