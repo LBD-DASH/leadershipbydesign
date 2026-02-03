@@ -2,7 +2,7 @@ import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, FileText, Video, Download, ExternalLink } from "lucide-react";
+import { BookOpen, FileText, Video, Download, ExternalLink, Bot } from "lucide-react";
 import { Link } from "react-router-dom";
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
@@ -304,6 +304,81 @@ export default function Resources() {
                     </CardContent>
                   </Card>
                 </a>
+              </div>
+            </section>
+
+            {/* AI & Workplace Integration */}
+            <section className="mb-20">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
+                  <Bot className="w-4 h-4" />
+                  <span>New</span>
+                </div>
+                <h2 className="text-3xl font-bold mb-4 text-foreground">
+                  AI & Workplace Integration
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Resources to help leaders navigate AI adoption while strengthening the human skills that matter most.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <Link to="/ai-readiness">
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full group">
+                    <CardContent className="p-6">
+                      <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4">
+                        <Bot className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                        AI Leadership Readiness Diagnostic
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Assess your readiness to lead in an AI-augmented workplace across 5 critical dimensions.
+                      </p>
+                      <div className="flex items-center gap-2 text-primary font-medium text-sm">
+                        Take Assessment
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to="/shift-methodology">
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full group">
+                    <CardContent className="p-6">
+                      <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4">
+                        <FileText className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                        The 5 Human Skills AI Cannot Replace
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Discover how SHIFT skills give leaders their competitive edge in an AI-transformed workplace.
+                      </p>
+                      <div className="flex items-center gap-2 text-primary font-medium text-sm">
+                        Learn More
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                  <CardContent className="p-6">
+                    <div className="p-3 rounded-xl bg-muted w-fit mb-4">
+                      <Download className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">
+                      POPI Act Compliance in AI Adoption
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      SA-specific guidance on data protection requirements when implementing AI solutions.
+                    </p>
+                    <div className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
+                      Coming Soon
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </section>
 

@@ -11,13 +11,14 @@ export interface LeadData {
   teamSize?: string;
   message?: string;
   followUpPreference?: 'yes' | 'maybe' | 'no';
-  source: 'leadership-diagnostic' | 'team-diagnostic' | 'shift-diagnostic' | 'contact-form' | 'lead-magnet' | 'expert-consultation' | 'interest-modal';
+  source: 'leadership-diagnostic' | 'team-diagnostic' | 'shift-diagnostic' | 'ai-readiness-diagnostic' | 'contact-form' | 'lead-magnet' | 'expert-consultation' | 'interest-modal';
   diagnosticResult?: {
-    type: 'leadership' | 'team' | 'shift';
+    type: 'leadership' | 'team' | 'shift' | 'ai-readiness';
     primaryLevel?: string;
     primaryRecommendation?: string;
     primaryDevelopment?: string;
     primaryStrength?: string;
+    readinessLevel?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     scores?: any;
   };
@@ -105,6 +106,7 @@ function getSourceMultiplier(source: LeadData['source']): number {
     case 'leadership-diagnostic': return 1.2;
     case 'team-diagnostic': return 1.2;
     case 'shift-diagnostic': return 1.2;
+    case 'ai-readiness-diagnostic': return 1.25; // Slightly higher - AI topic is hot
     case 'lead-magnet': return 1.1;         // Lower intent - just downloading content
     default: return 1.0;
   }
@@ -220,7 +222,7 @@ export function calculateLeadScore(data: LeadData): LeadScore {
 export function formatDiagnosticContext(data: LeadData): string {
   if (!data.diagnosticResult) return '';
   
-  const { type, primaryLevel, primaryRecommendation, primaryDevelopment, primaryStrength } = data.diagnosticResult;
+  const { type, primaryLevel, primaryRecommendation, primaryDevelopment, primaryStrength, readinessLevel } = data.diagnosticResult;
   
   switch (type) {
     case 'leadership':
@@ -229,6 +231,8 @@ export function formatDiagnosticContext(data: LeadData): string {
       return `Team Diagnostic Result: Primary recommendation is ${primaryRecommendation}`;
     case 'shift':
       return `SHIFT Diagnostic Result: Primary strength is ${primaryStrength}, Primary development area is ${primaryDevelopment}`;
+    case 'ai-readiness':
+      return `AI Readiness Diagnostic Result: Readiness level is ${readinessLevel}, Primary strength is ${primaryStrength}, Primary development area is ${primaryDevelopment}`;
     default:
       return '';
   }

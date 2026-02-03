@@ -46,6 +46,8 @@ import LeadershipMistakes from "./pages/LeadershipMistakes";
 import LeadershipMistakesChecklist from "./pages/LeadershipMistakesChecklist";
 import TeamDevelopmentFramework from "./pages/TeamDevelopmentFramework";
 import MarketingDashboard from "./pages/MarketingDashboard";
+import AIReadinessDiagnosticLanding from "./pages/AIReadinessDiagnosticLanding";
+import AIReadinessDiagnostic from "./pages/AIReadinessDiagnostic";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +84,8 @@ const App = () => (
           <Route path="/leadership-mistakes" element={<LeadershipMistakes />} />
           <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
           <Route path="/team-development-framework" element={<TeamDevelopmentFramework />} />
+          <Route path="/ai-readiness" element={<AIReadinessDiagnosticLanding />} />
+          <Route path="/ai-readiness-diagnostic" element={<AIReadinessDiagnostic />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />

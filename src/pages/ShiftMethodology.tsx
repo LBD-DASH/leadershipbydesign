@@ -296,6 +296,82 @@ export default function ShiftMethodology() {
           </div>
         </section>
 
+        {/* SHIFT Skills: Your Edge in an AI World */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-primary/10 via-background to-background">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
+                <span>Your Human Edge</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+                SHIFT Skills: Your Edge in an AI World
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                As AI transforms the workplace, the SHIFT skills become more valuable—not less. 
+                These are the human capabilities that AI cannot replicate.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+              {[
+                {
+                  letter: "S",
+                  skill: "Self-Management",
+                  aiContext: "Regulating anxiety about AI disruption; maintaining composure during technological change; staying grounded when uncertainty rises."
+                },
+                {
+                  letter: "H",
+                  skill: "Human Intelligence",
+                  aiContext: "The skill AI cannot replicate—empathy, trust-building, reading the room. Understanding human needs and motivations that no algorithm can parse."
+                },
+                {
+                  letter: "I",
+                  skill: "Innovation",
+                  aiContext: "Using AI as a creative tool, not replacement. Questioning AI outputs, maintaining creative ownership, driving improvement beyond what AI suggests."
+                },
+                {
+                  letter: "F",
+                  skill: "Focus",
+                  aiContext: "Cutting through AI-generated noise. Staying aligned to human outcomes when AI offers endless options. Prioritising what truly matters."
+                },
+                {
+                  letter: "T",
+                  skill: "Thinking",
+                  aiContext: "Critical evaluation of AI recommendations. Maintaining human judgment. Taking ownership of decisions regardless of AI input."
+                }
+              ].map((item) => (
+                <div 
+                  key={item.letter}
+                  className="bg-background rounded-2xl p-6 border border-primary/20 hover:border-primary/40 transition-colors"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
+                      <span className="text-xl font-bold text-primary-foreground">{item.letter}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground">{item.skill}</h3>
+                  </div>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    <strong className="text-foreground">AI Edge:</strong> {item.aiContext}
+                  </p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="text-center">
+              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                Want to assess your AI leadership readiness? Take our diagnostic to discover 
+                how prepared you are to lead in an AI-augmented world.
+              </p>
+              <Button size="lg" asChild>
+                <Link to="/ai-readiness">
+                  Take the AI Readiness Diagnostic
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         {/* How SHIFT Supports the 3 Workshops */}
         <section className="py-16 sm:py-24">
           <div className="container mx-auto px-4 sm:px-6">
