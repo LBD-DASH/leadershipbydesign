@@ -1,212 +1,234 @@
 
 
-# SEO Visibility Improvement Plan
+# AI/Workplace Integration Implementation Plan
 
-## Current State Analysis
+## Overview
 
-Your website already has a solid SEO foundation:
-- SEO component with Open Graph, Twitter cards, and meta tags
-- Structured data (JSON-LD) for business, FAQ, and website schema
-- Sitemap.xml with 24 URLs
-- Robots.txt properly configured
-- Canonical URLs on most pages
-
-However, there are several opportunities to significantly improve search engine visibility.
+This plan integrates AI/Workplace Integration guidance into Leadership by Design's existing platform, leveraging the SHIFT Methodology as the foundation for "Human Skills in the AI Age" while maintaining the core focus of helping humans gain an edge in an AI-augmented world.
 
 ---
 
-## Recommended Improvements
+## Phase 1: Content Enhancement
 
-### 1. Add Missing Canonical URLs
+### 1.1 New Programme: "Leading in the AI Era"
 
-Several pages are missing canonical URLs, which can cause duplicate content issues:
+**File:** `src/data/adminProgrammesData.ts`
 
-**Pages missing canonicalUrl:**
-- `/shift-leadership-development` (partial route)
-- `/workshops/alignment`, `/workshops/motivation`, `/workshops/leadership`
-- `/hellocoach`
-- `/book`
-- `/resources`
-- `/contact`
-- `/leadership-diagnostic`
-- `/shift-diagnostic`
-- `/leadership-mistakes`
+Add a new programme entry with 6 lessons aligned to AI-readiness:
 
-**Action:** Add canonicalUrl prop to all page SEO components.
+| Lesson | Focus | Practicals |
+|--------|-------|------------|
+| 1. Understanding AI in the Workplace | AI capabilities/limitations, human-AI collaboration spectrum | AI Impact Assessment, Team Readiness Survey |
+| 2. The Human Edge | Tasks humans do better than AI, irreplaceable value areas | Task Mapping Exercise, Value Analysis |
+| 3. SHIFT Skills for the AI Era | Self-Management for AI anxiety, Human Intelligence AI cannot replicate | SHIFT Skills AI Audit, Personal Development Plan |
+| 4. Ethical AI Leadership (POPI Act) | Compliance, bias recognition, responsible decision-making | Ethics Checklist, Policy Review Template |
+| 5. Building AI-Augmented Workflows | Practical integration, maintaining oversight | Workflow Mapping, Pilot Project Design |
+| 6. Leading AI-Driven Change | Communication strategies, managing resistance | Change Communication Plan, Action Board Presentation |
+
+**Programme Metadata:**
+- Level: Executive/Cross-functional
+- Duration: 6 weeks
+- Format: Online LMS Portal | Hard Copy | Online Coaching
 
 ---
 
-### 2. Enhance Blog Post SEO for Article Schema
+### 1.2 Enhance SHIFT Methodology Page
 
-Blog posts currently lack article-specific structured data.
+**File:** `src/pages/ShiftMethodology.tsx`
 
-**Add to BlogPost.tsx:**
-- `publishedTime` and `modifiedTime` props (already supported by SEO component)
-- `ogType="article"` to trigger article meta tags
-- Add Article JSON-LD structured data
+Add an "AI Edge" subsection that positions SHIFT skills as the human capabilities that give leaders an edge in an AI world (while preserving the core SHIFT methodology focus):
 
-**New structured data for blog posts:**
+| SHIFT Skill | AI Edge Context |
+|-------------|-----------------|
+| Self-Management | Regulating anxiety about AI disruption; maintaining composure during technological change |
+| Human Intelligence | The skill AI cannot replicate—empathy, trust-building, reading the room |
+| Innovation | Using AI as a creative tool, not replacement; questioning AI outputs |
+| Focus | Cutting through AI-generated noise; staying aligned to human outcomes |
+| Thinking | Critical evaluation of AI recommendations; maintaining human judgment |
+
+**Implementation:**
+- Add a new section titled "SHIFT Skills: Your Edge in an AI World"
+- Position below the existing Five SHIFT Skills section
+- Include a call-to-action for the new AI-Ready Diagnostic
+
+---
+
+## Phase 2: Leadership Capability Diagnostic (AI-Ready)
+
+### 2.1 New Diagnostic Questions
+
+**New File:** `src/data/aiReadinessQuestions.ts`
+
+Create a diagnostic with 5 categories (4 questions each = 20 questions total):
+
+| Category | Focus | Sample Questions |
+|----------|-------|------------------|
+| AI Awareness | Understanding AI capabilities | "I understand which tasks AI can and cannot do effectively" |
+| Human-AI Collaboration | Working WITH AI effectively | "My team effectively uses AI tools without over-relying on them" |
+| Change Readiness | Preparing for AI adoption | "I proactively prepare my team for technological changes" |
+| Ethical AI Leadership | POPI Act, bias, compliance | "I ensure AI use in my team complies with data protection requirements" |
+| Human Skills Investment | SHIFT skills development | "I invest in developing my team's uniquely human skills" |
+
+**Scoring Logic:**
+- Higher scores = More AI-ready leadership
+- Lower scores = Recommend "Leading in the AI Era" programme
+- Scoring thresholds:
+  - 75+ = AI-Ready Leader (affirm strengths, suggest advanced topics)
+  - 50-74 = Developing (recommend specific modules)
+  - Below 50 = Foundation Building (recommend full programme)
+
+---
+
+### 2.2 AI-Readiness Scoring System
+
+**New File:** `src/lib/aiReadinessScoring.ts`
+
 ```text
-Article Schema:
-- @type: Article
-- headline
-- author (Person)
-- datePublished
-- dateModified
-- publisher (Organization)
-- image
-- articleSection
+Categories scored:
+- AI Awareness (Q1-4)
+- Human-AI Collaboration (Q5-8)
+- Change Readiness (Q9-12)
+- Ethical AI Leadership (Q13-16)
+- Human Skills Investment (Q17-20)
+
+Results Logic:
+- primaryRecommendation: "ai-leadership" programme
+- secondaryRecommendation: Weakest SHIFT skill module
+- Overall Score determines intensity of recommendation
 ```
 
 ---
 
-### 3. Add Service-Specific Structured Data
+### 2.3 Diagnostic Page & Components
 
-Each service page should have its own structured data.
+**New Files:**
+- `src/pages/AIReadinessDiagnostic.tsx` - Main diagnostic page
+- `src/pages/AIReadinessDiagnosticLanding.tsx` - Landing page (following ScoreApp-style funnel)
+- `src/components/ai-diagnostic/AIReadinessForm.tsx` - Question form component
+- `src/components/ai-diagnostic/AIReadinessQuestionRating.tsx` - Rating component
+- `src/components/ai-diagnostic/AIReadinessResults.tsx` - Results display
 
-**Pages to enhance:**
-- Executive Coaching: Add Service schema
-- SHIFT Leadership Development: Add Course schema
-- Workshops: Add Event or Course schema
-- Diagnostics: Add WebApplication schema
+**Funnel Flow:**
+1. Landing Page with 3 strategic reasons to take the diagnostic
+2. Questionnaire (20 questions, 5 categories)
+3. Lead Capture Gate (Name/Email required; Company/Role optional)
+4. Results Page with:
+   - Overall AI-Readiness Score
+   - Category breakdown radar chart
+   - Primary recommendation: "Leading in the AI Era" programme
+   - Secondary: Specific SHIFT skill development
 
 ---
 
-### 4. Add BreadcrumbList Structured Data
+### 2.4 Database Schema Update
 
-Breadcrumbs help search engines understand site hierarchy and can appear in search results.
+**Migration:**
 
-**Add to:**
-- All programme pages
-- Workshop pages
-- Blog posts
-- Diagnostic pages
-
-**Example structure:**
-```text
-Home > Programmes > Executive Coaching
-Home > Blog > [Post Title]
+```sql
+CREATE TABLE IF NOT EXISTS ai_readiness_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  answers JSONB NOT NULL,
+  ai_awareness_score INTEGER,
+  human_ai_collab_score INTEGER,
+  change_readiness_score INTEGER,
+  ethical_ai_score INTEGER,
+  human_skills_score INTEGER,
+  overall_score INTEGER,
+  readiness_level TEXT,
+  primary_recommendation TEXT,
+  name TEXT,
+  email TEXT,
+  organisation TEXT,
+  role TEXT,
+  follow_up_preference TEXT,
+  waiting_list BOOLEAN DEFAULT FALSE,
+  -- UTM tracking
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  utm_content TEXT,
+  utm_term TEXT,
+  -- Lead scoring (unified schema)
+  lead_score INTEGER,
+  lead_temperature TEXT,
+  buyer_persona TEXT,
+  company_size TEXT,
+  urgency TEXT,
+  ai_analysis TEXT,
+  next_action TEXT,
+  scoring_breakdown JSONB
+);
 ```
 
 ---
 
-### 5. Update Sitemap with Dynamic Blog Posts
+### 2.5 Route Registration
 
-Current sitemap is static and doesn't include individual blog posts.
+**File:** `src/App.tsx`
 
-**Options:**
-1. Generate sitemap dynamically via edge function
-2. Create a sitemap index with static pages + blog posts sitemap
-
-**Sitemap improvements:**
-- Add all blog post URLs dynamically
-- Include hreflang tags for international targeting
-- Add image sitemaps for pages with key images
+Add routes:
+- `/ai-readiness` - Landing page
+- `/ai-readiness-diagnostic` - Diagnostic questionnaire
 
 ---
 
-### 6. Add FAQ Schema to Service Pages
+## Phase 3: Resources Section Enhancement
 
-FAQs help capture featured snippets in search results.
+### 3.1 Add AI & Workplace Integration Category
 
-**Pages to add FAQ schema:**
-- Executive Coaching (coaching FAQs)
-- Programmes page (programme selection FAQs)
-- Workshop pages (format, duration FAQs)
-- Diagnostic landing pages (assessment FAQs)
+**File:** `src/pages/Resources.tsx`
 
----
+Add a new section titled "AI & Workplace Integration" with:
 
-### 7. Improve Page Load Performance
-
-Core Web Vitals affect search rankings.
-
-**Quick wins:**
-- Add `loading="lazy"` to all below-fold images (partially done)
-- Preload critical fonts (already implemented)
-- Consider image optimisation with WebP format
-- Add `fetchpriority="high"` to hero images
+| Resource | Type | Description |
+|----------|------|-------------|
+| Preparing Your Team for AI Integration | Guide | Lead magnet linking to AI-Readiness Diagnostic |
+| The 5 Human Skills AI Cannot Replace | Article | Blog post linking SHIFT skills to AI resilience |
+| POPI Act Compliance in AI Adoption | Guide | SA-specific compliance considerations |
 
 ---
 
-### 8. Add Local Business Schema Enhancements
+## Technical Summary
 
-Improve local SEO for South Africa targeting.
+### Files to Create
 
-**Current:** ProfessionalService schema exists
-**Enhancements:**
-- Add specific service area (cities/regions)
-- Add opening hours (if applicable)
-- Add reviews/aggregateRating when available
-- Add payment methods
-
----
-
-### 9. Create Dedicated Structured Data Component
-
-For maintainability, create a reusable component for JSON-LD.
-
-**New component:** `src/components/StructuredData.tsx`
-- Article schema for blog posts
-- BreadcrumbList schema
-- Service schema for service pages
-- Course schema for programmes
-- FAQPage schema
-
----
-
-### 10. Add Twitter Creator Tag
-
-Improve Twitter card display for shared content.
-
-**Add to SEO component:**
-- `twitter:creator` - Kevin Britz's Twitter handle
-- `twitter:site` - Company Twitter handle (if exists)
-
----
-
-## Implementation Priority
-
-| Priority | Change | Impact |
-|----------|--------|--------|
-| High | Add missing canonical URLs | Prevents duplicate content issues |
-| High | Blog article schema + timestamps | Featured snippets, rich results |
-| High | Breadcrumb schema | Enhanced search appearance |
-| Medium | Service page structured data | Rich results for services |
-| Medium | FAQ schema on key pages | Featured snippets |
-| Medium | Dynamic sitemap | Better blog indexing |
-| Low | Local SEO enhancements | Local search visibility |
-| Low | Twitter creator tags | Social sharing |
-
----
-
-## Technical Details
+| File | Purpose |
+|------|---------|
+| `src/data/aiReadinessQuestions.ts` | Question definitions and categories |
+| `src/lib/aiReadinessScoring.ts` | Scoring logic and recommendations |
+| `src/pages/AIReadinessDiagnostic.tsx` | Main diagnostic page |
+| `src/pages/AIReadinessDiagnosticLanding.tsx` | Landing page |
+| `src/components/ai-diagnostic/AIReadinessForm.tsx` | Form component |
+| `src/components/ai-diagnostic/AIReadinessQuestionRating.tsx` | Rating component |
+| `src/components/ai-diagnostic/AIReadinessResults.tsx` | Results component |
 
 ### Files to Modify
 
-1. **src/components/SEO.tsx**
-   - Ensure all meta tags have fallback values
-   - Add Twitter site/creator tags
+| File | Changes |
+|------|---------|
+| `src/data/adminProgrammesData.ts` | Add "Leading in the AI Era" programme with 6 lessons |
+| `src/pages/ShiftMethodology.tsx` | Add "SHIFT Skills: Your Edge in an AI World" section |
+| `src/pages/Resources.tsx` | Add "AI & Workplace Integration" resources section |
+| `src/App.tsx` | Add diagnostic routes |
+| `src/utils/leadScoring.ts` | Add AI-readiness diagnostic support |
+| `src/utils/notifications.ts` | Add AI-readiness lead processing |
 
-2. **Create: src/components/StructuredData.tsx**
-   - Reusable JSON-LD components for different schema types
+### Database Migration
 
-3. **All page files missing canonicalUrl:**
-   - Add canonicalUrl prop to SEO component
+- Create `ai_readiness_submissions` table following the unified lead schema
 
-4. **src/pages/BlogPost.tsx**
-   - Add publishedTime, modifiedTime, ogType="article"
-   - Add Article structured data
+---
 
-5. **Create: supabase/functions/generate-sitemap/index.ts**
-   - Dynamic sitemap generation including blog posts
+## Key Design Decisions
 
-6. **Service/Workshop pages:**
-   - Add appropriate structured data for each
+1. **Positioning**: SHIFT skills remain the core methodology—AI integration is positioned as an *application* of SHIFT skills, not a replacement. The messaging focuses on "getting the human edge on AI" rather than replacing SHIFT's purpose.
 
-### Estimated Scope
+2. **Scoring Philosophy**: Lower diagnostic scores indicate gaps in AI-ready leadership, triggering a recommendation for the "Leading in the AI Era" programme. This reverses the typical "problem detection" approach used in Team Diagnostic.
 
-- Small changes across 15-20 files
-- 1 new component (StructuredData)
-- 1 new edge function (optional, for dynamic sitemap)
+3. **Lead Funnel**: Follows the established ScoreApp-style pattern (Landing → Questionnaire → Lead Capture → Results) used by Leadership, Team, and SHIFT diagnostics.
+
+4. **SA Context**: POPI Act compliance is explicitly included in ethical AI content, addressing the South African market specifically.
+
+5. **Programme Placement**: The new AI programme is positioned as cross-functional (not tied to a specific L1-L5 level), accessible to leaders at any stage.
 
