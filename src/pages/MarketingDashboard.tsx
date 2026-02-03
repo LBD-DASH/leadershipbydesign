@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -11,10 +11,12 @@ import ContentGenerator from '@/components/marketing/ContentGenerator';
 import ContentQueue from '@/components/marketing/ContentQueue';
 import MarketingStats from '@/components/marketing/MarketingStats';
 import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
+import ProspectingTool from '@/components/marketing/ProspectingTool';
+import ProspectList from '@/components/marketing/ProspectList';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
-  const [activeTab, setActiveTab] = useState('generate');
+  const [activeTab, setActiveTab] = useState('prospects');
 
   if (loading) {
     return (
@@ -90,7 +92,11 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-4 w-full max-w-lg">
+              <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+                <TabsTrigger value="prospects" className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span className="hidden sm:inline">Prospects</span>
+                </TabsTrigger>
                 <TabsTrigger value="generate" className="flex items-center gap-2">
                   <PenTool className="w-4 h-4" />
                   <span className="hidden sm:inline">Social</span>
@@ -108,6 +114,21 @@ export default function MarketingDashboard() {
                   <span className="hidden sm:inline">Analytics</span>
                 </TabsTrigger>
               </TabsList>
+
+              <TabsContent value="prospects" className="mt-6">
+                <Tabs defaultValue="research" className="w-full">
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="research">Research Company</TabsTrigger>
+                    <TabsTrigger value="list">Prospect List</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="research">
+                    <ProspectingTool />
+                  </TabsContent>
+                  <TabsContent value="list">
+                    <ProspectList />
+                  </TabsContent>
+                </Tabs>
+              </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
                 <ContentGenerator />
