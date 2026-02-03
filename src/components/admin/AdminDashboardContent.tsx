@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
-
+import ProspectingTool from '@/components/marketing/ProspectingTool';
+import ProspectList from '@/components/marketing/ProspectList';
 interface AdminDashboardContentProps {
   onLogout: () => void;
 }
@@ -176,6 +177,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
+          <TabsTrigger value="prospects" className="flex items-center gap-2">
+            <Search className="w-4 h-4" />
+            Prospects
+          </TabsTrigger>
           <TabsTrigger value="google-ads" className="flex items-center gap-2">
             <Megaphone className="w-4 h-4" />
             Google Ads
@@ -272,6 +277,21 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             type="shift"
             isLoading={loadingShift}
           />
+        </TabsContent>
+
+        <TabsContent value="prospects" className="mt-6">
+          <Tabs defaultValue="research" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="research">Research Company</TabsTrigger>
+              <TabsTrigger value="list">Prospect List</TabsTrigger>
+            </TabsList>
+            <TabsContent value="research">
+              <ProspectingTool />
+            </TabsContent>
+            <TabsContent value="list">
+              <ProspectList />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
 
         <TabsContent value="google-ads" className="mt-6">

@@ -82,8 +82,8 @@ Deno.serve(async (req) => {
     console.log('Website scraped successfully, content length:', websiteContent.length);
 
     // Step 2: Use AI to analyze the company
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
+    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
+    if (!ANTHROPIC_API_KEY) {
       return new Response(
         JSON.stringify({ success: false, error: 'AI service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -119,18 +119,19 @@ Focus on:
 
 Respond ONLY with valid JSON, no markdown formatting.`;
 
-    const aiResponse = await fetch('https://api.lovable.dev/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-5-mini',
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
         messages: [
           { role: 'user', content: analysisPrompt }
         ],
-        temperature: 0.7,
       }),
     });
 
@@ -144,7 +145,7 @@ Respond ONLY with valid JSON, no markdown formatting.`;
     }
 
     const aiData = await aiResponse.json();
-    const aiContent = aiData.choices?.[0]?.message?.content || '';
+    const aiContent = aiData.content?.[0]?.text || '';
     
     console.log('AI analysis complete');
 
