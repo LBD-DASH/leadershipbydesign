@@ -341,6 +341,54 @@ export type Database = {
         }
         Relationships: []
       }
+      google_ads_content: {
+        Row: {
+          audience_signals: Json | null
+          campaign_brief: string | null
+          campaign_type: string
+          created_at: string
+          descriptions: Json
+          headlines: Json
+          id: string
+          keywords: Json | null
+          negative_keywords: Json | null
+          notes: string | null
+          service_reference: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          audience_signals?: Json | null
+          campaign_brief?: string | null
+          campaign_type: string
+          created_at?: string
+          descriptions: Json
+          headlines: Json
+          id?: string
+          keywords?: Json | null
+          negative_keywords?: Json | null
+          notes?: string | null
+          service_reference?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          audience_signals?: Json | null
+          campaign_brief?: string | null
+          campaign_type?: string
+          created_at?: string
+          descriptions?: Json
+          headlines?: Json
+          id?: string
+          keywords?: Json | null
+          negative_keywords?: Json | null
+          notes?: string | null
+          service_reference?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lead_magnet_downloads: {
         Row: {
           ai_analysis: string | null

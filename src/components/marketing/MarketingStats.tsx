@@ -1,37 +1,41 @@
 import { useQuery } from '@tanstack/react-query';
-import { FileText, CheckCircle, Clock, Send } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Send, Target } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function MarketingStats() {
   const { data: stats } = useQuery({
     queryKey: ['marketing-stats'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('marketing_content')
-        .select('status');
+      const [contentResult, adsResult] = await Promise.all([
+        supabase.from('marketing_content').select('status'),
+        supabase.from('google_ads_content').select('status'),
+      ]);
       
-      if (error) throw error;
+      if (contentResult.error) throw contentResult.error;
 
-      const counts = {
-        total: data?.length || 0,
-        pending: data?.filter(d => d.status === 'pending_review').length || 0,
-        approved: data?.filter(d => d.status === 'approved').length || 0,
-        published: data?.filter(d => d.status === 'published').length || 0,
+      const contentData = contentResult.data || [];
+      const adsData = adsResult.data || [];
+
+      return {
+        total: contentData.length,
+        pending: contentData.filter(d => d.status === 'pending_review').length,
+        approved: contentData.filter(d => d.status === 'approved').length,
+        published: contentData.filter(d => d.status === 'published').length,
+        adDrafts: adsData.length,
       };
-
-      return counts;
     },
   });
 
   const statCards = [
-    { label: 'Total Content', value: stats?.total || 0, icon: FileText, color: 'text-blue-500' },
+    { label: 'Social Content', value: stats?.total || 0, icon: FileText, color: 'text-blue-500' },
     { label: 'Pending Review', value: stats?.pending || 0, icon: Clock, color: 'text-yellow-500' },
     { label: 'Approved', value: stats?.approved || 0, icon: CheckCircle, color: 'text-green-500' },
     { label: 'Published', value: stats?.published || 0, icon: Send, color: 'text-primary' },
+    { label: 'Ad Drafts', value: stats?.adDrafts || 0, icon: Target, color: 'text-orange-500' },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
       {statCards.map((stat) => (
         <div key={stat.label} className="bg-card rounded-xl border border-border p-4">
           <div className="flex items-center gap-3">
