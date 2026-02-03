@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader2, Wand2, Copy, Check, Save, AlertCircle } from 'lucide-react';
+import { Loader2, Wand2, Save, AlertCircle, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import AdPreviewCard from './AdPreviewCard';
 import CampaignBriefModal from './CampaignBriefModal';
+import { generateGoogleAdsCSV, generateCSVFilename, downloadCSV } from '@/lib/googleAdsExport';
 
 const AD_TYPES = [
   { value: 'search', label: 'Responsive Search Ads', description: '15 headlines + 4 descriptions' },
@@ -169,9 +170,27 @@ export default function GoogleAdsGenerator() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Generated Content</h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={() => setShowBriefModal(true)}>
                 View Campaign Brief
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => {
+                  const csv = generateGoogleAdsCSV(
+                    generatedContent.adType,
+                    generatedContent.content.headlines || [],
+                    generatedContent.content.descriptions || [],
+                    generatedContent.service
+                  );
+                  const filename = generateCSVFilename(generatedContent.adType, generatedContent.service);
+                  downloadCSV(csv, filename);
+                  toast.success('CSV downloaded! Import it into Google Ads Editor.');
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export for Google Ads Editor
               </Button>
               <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving}>
                 {isSaving ? (
