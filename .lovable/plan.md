@@ -1,234 +1,268 @@
 
 
-# AI/Workplace Integration Implementation Plan
+# Google Ads AI Integration for Marketing Engine
 
 ## Overview
 
-This plan integrates AI/Workplace Integration guidance into Leadership by Design's existing platform, leveraging the SHIFT Methodology as the foundation for "Human Skills in the AI Age" while maintaining the core focus of helping humans gain an edge in an AI-augmented world.
+This plan adds a **Google Ads** tab to the existing Marketing Engine (`/marketing`) that leverages AI to generate optimised ad copy, suggest targeting strategies, and manage ad campaigns - positioning Leadership by Design to drive maximum qualified traffic using the buyer psychology principles already established.
 
 ---
 
-## Phase 1: Content Enhancement
+## What You'll Get
 
-### 1.1 New Programme: "Leading in the AI Era"
+### 1. AI-Powered Ad Copy Generator
+Generate Google Ads (Search, Display, Performance Max) optimised for:
+- **Responsive Search Ads**: 15 headlines (30 chars) + 4 descriptions (90 chars)
+- **Display Ads**: Headlines, descriptions, and image suggestions
+- **Performance Max**: Full asset group with multiple variations
 
-**File:** `src/data/adminProgrammesData.ts`
+### 2. Audience Targeting Recommendations
+AI-generated audience suggestions based on:
+- Your services (Executive Coaching, SHIFT, Workshops)
+- South African market context
+- Buyer personas (Move Toward / Move Away psychology)
+- High-intent keywords for leadership development
 
-Add a new programme entry with 6 lessons aligned to AI-readiness:
-
-| Lesson | Focus | Practicals |
-|--------|-------|------------|
-| 1. Understanding AI in the Workplace | AI capabilities/limitations, human-AI collaboration spectrum | AI Impact Assessment, Team Readiness Survey |
-| 2. The Human Edge | Tasks humans do better than AI, irreplaceable value areas | Task Mapping Exercise, Value Analysis |
-| 3. SHIFT Skills for the AI Era | Self-Management for AI anxiety, Human Intelligence AI cannot replicate | SHIFT Skills AI Audit, Personal Development Plan |
-| 4. Ethical AI Leadership (POPI Act) | Compliance, bias recognition, responsible decision-making | Ethics Checklist, Policy Review Template |
-| 5. Building AI-Augmented Workflows | Practical integration, maintaining oversight | Workflow Mapping, Pilot Project Design |
-| 6. Leading AI-Driven Change | Communication strategies, managing resistance | Change Communication Plan, Action Board Presentation |
-
-**Programme Metadata:**
-- Level: Executive/Cross-functional
-- Duration: 6 weeks
-- Format: Online LMS Portal | Hard Copy | Online Coaching
-
----
-
-### 1.2 Enhance SHIFT Methodology Page
-
-**File:** `src/pages/ShiftMethodology.tsx`
-
-Add an "AI Edge" subsection that positions SHIFT skills as the human capabilities that give leaders an edge in an AI world (while preserving the core SHIFT methodology focus):
-
-| SHIFT Skill | AI Edge Context |
-|-------------|-----------------|
-| Self-Management | Regulating anxiety about AI disruption; maintaining composure during technological change |
-| Human Intelligence | The skill AI cannot replicate—empathy, trust-building, reading the room |
-| Innovation | Using AI as a creative tool, not replacement; questioning AI outputs |
-| Focus | Cutting through AI-generated noise; staying aligned to human outcomes |
-| Thinking | Critical evaluation of AI recommendations; maintaining human judgment |
-
-**Implementation:**
-- Add a new section titled "SHIFT Skills: Your Edge in an AI World"
-- Position below the existing Five SHIFT Skills section
-- Include a call-to-action for the new AI-Ready Diagnostic
+### 3. Campaign Brief Generator
+Create structured campaign briefs ready for Google Ads, including:
+- Campaign objectives
+- Suggested keywords
+- Negative keywords
+- Audience signals
+- Budget recommendations
 
 ---
 
-## Phase 2: Leadership Capability Diagnostic (AI-Ready)
+## Implementation Architecture
 
-### 2.1 New Diagnostic Questions
-
-**New File:** `src/data/aiReadinessQuestions.ts`
-
-Create a diagnostic with 5 categories (4 questions each = 20 questions total):
-
-| Category | Focus | Sample Questions |
-|----------|-------|------------------|
-| AI Awareness | Understanding AI capabilities | "I understand which tasks AI can and cannot do effectively" |
-| Human-AI Collaboration | Working WITH AI effectively | "My team effectively uses AI tools without over-relying on them" |
-| Change Readiness | Preparing for AI adoption | "I proactively prepare my team for technological changes" |
-| Ethical AI Leadership | POPI Act, bias, compliance | "I ensure AI use in my team complies with data protection requirements" |
-| Human Skills Investment | SHIFT skills development | "I invest in developing my team's uniquely human skills" |
-
-**Scoring Logic:**
-- Higher scores = More AI-ready leadership
-- Lower scores = Recommend "Leading in the AI Era" programme
-- Scoring thresholds:
-  - 75+ = AI-Ready Leader (affirm strengths, suggest advanced topics)
-  - 50-74 = Developing (recommend specific modules)
-  - Below 50 = Foundation Building (recommend full programme)
-
----
-
-### 2.2 AI-Readiness Scoring System
-
-**New File:** `src/lib/aiReadinessScoring.ts`
-
-```text
-Categories scored:
-- AI Awareness (Q1-4)
-- Human-AI Collaboration (Q5-8)
-- Change Readiness (Q9-12)
-- Ethical AI Leadership (Q13-16)
-- Human Skills Investment (Q17-20)
-
-Results Logic:
-- primaryRecommendation: "ai-leadership" programme
-- secondaryRecommendation: Weakest SHIFT skill module
-- Overall Score determines intensity of recommendation
+```
+Marketing Dashboard
+├── Generate Tab (existing)
+├── Queue Tab (existing)
+├── Google Ads Tab (NEW)
+│   ├── Ad Copy Generator
+│   │   ├── Responsive Search Ads
+│   │   ├── Display Ads
+│   │   └── Performance Max Assets
+│   ├── Audience Suggestions
+│   └── Campaign Briefs
+└── Analytics Tab (existing)
 ```
 
 ---
 
-### 2.3 Diagnostic Page & Components
+## Important: Google Ads API Limitations
 
-**New Files:**
-- `src/pages/AIReadinessDiagnostic.tsx` - Main diagnostic page
-- `src/pages/AIReadinessDiagnosticLanding.tsx` - Landing page (following ScoreApp-style funnel)
-- `src/components/ai-diagnostic/AIReadinessForm.tsx` - Question form component
-- `src/components/ai-diagnostic/AIReadinessQuestionRating.tsx` - Rating component
-- `src/components/ai-diagnostic/AIReadinessResults.tsx` - Results display
+### Why Direct API Integration Is Complex
 
-**Funnel Flow:**
-1. Landing Page with 3 strategic reasons to take the diagnostic
-2. Questionnaire (20 questions, 5 categories)
-3. Lead Capture Gate (Name/Email required; Company/Role optional)
-4. Results Page with:
-   - Overall AI-Readiness Score
-   - Category breakdown radar chart
-   - Primary recommendation: "Leading in the AI Era" programme
-   - Secondary: Specific SHIFT skill development
+| Requirement | Complexity |
+|-------------|------------|
+| **Developer Token** | Requires Google Ads Manager account, application process, and approval (can take weeks) |
+| **OAuth2 Flow** | Full OAuth consent screen, refresh tokens, user authentication flow |
+| **Customer ID** | Requires linking to your actual Google Ads account |
+| **API Access Levels** | Test → Basic → Standard progression with usage limits |
+
+### Recommended Approach: Manual Workflow + AI Generation
+
+Rather than direct API integration, we'll build:
+
+1. **AI generates optimised ad copy** using the buyer psychology framework
+2. **You copy/paste into Google Ads** (same workflow as social content)
+3. **Track campaign performance** manually or via future integration
+
+This approach:
+- Works immediately without waiting for API approval
+- Follows the same proven pattern as your social content workflow
+- Can be upgraded to direct API integration later if needed
 
 ---
 
-### 2.4 Database Schema Update
+## Phase 1: Ad Content Generator
 
-**Migration:**
+### New UI Component: GoogleAdsGenerator
 
-```sql
-CREATE TABLE IF NOT EXISTS ai_readiness_submissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  answers JSONB NOT NULL,
-  ai_awareness_score INTEGER,
-  human_ai_collab_score INTEGER,
-  change_readiness_score INTEGER,
-  ethical_ai_score INTEGER,
-  human_skills_score INTEGER,
-  overall_score INTEGER,
-  readiness_level TEXT,
-  primary_recommendation TEXT,
-  name TEXT,
-  email TEXT,
-  organisation TEXT,
-  role TEXT,
-  follow_up_preference TEXT,
-  waiting_list BOOLEAN DEFAULT FALSE,
-  -- UTM tracking
-  utm_source TEXT,
-  utm_medium TEXT,
-  utm_campaign TEXT,
-  utm_content TEXT,
-  utm_term TEXT,
-  -- Lead scoring (unified schema)
-  lead_score INTEGER,
-  lead_temperature TEXT,
-  buyer_persona TEXT,
-  company_size TEXT,
-  urgency TEXT,
-  ai_analysis TEXT,
-  next_action TEXT,
-  scoring_breakdown JSONB
-);
+Adds to the Marketing Dashboard as a fourth tab:
+
+| Ad Type | What It Generates |
+|---------|-------------------|
+| **Responsive Search Ads** | 15 headlines (30 chars each) + 4 descriptions (90 chars each) |
+| **Display Ads** | Headlines, descriptions, call-to-action suggestions |
+| **Performance Max** | Full asset group: headlines, descriptions, images, audience signals |
+
+### AI Prompt Strategy
+
+The generator will use the buyer psychology framework:
+
+- **Move Toward**: "Become the leader your team needs", "Get clarity in 6 weeks"
+- **Move Away**: "Stop making costly leadership mistakes", "Eliminate AI adoption anxiety"
+- **Specificity**: Include measurable outcomes (35%, 6 weeks, 90 days)
+- **SA Context**: South African market targeting
+
+---
+
+## Phase 2: Audience & Keyword Suggestions
+
+### AI-Generated Targeting Recommendations
+
+| Category | Examples |
+|----------|----------|
+| **In-Market Audiences** | Business consulting, Executive coaching, Leadership training |
+| **Affinity Audiences** | Business professionals, Management decision-makers |
+| **Keywords** | "leadership development South Africa", "executive coaching", "team workshops" |
+| **Negative Keywords** | "free leadership courses", "leadership quotes", "management books PDF" |
+
+---
+
+## Phase 3: Campaign Brief Generator
+
+### Structured Output for Each Service
+
+When you select "Executive Coaching" as the source:
+
+```
+CAMPAIGN BRIEF: Executive Coaching
+=====================================
+Objective: Lead generation for diagnostic completions
+Target CPA: R500-R1000 per qualified lead
+
+HEADLINES (15):
+1. "Transform Your Leadership in 90 Days"
+2. "Strategic Clarity for Executives"
+3. "One-on-One Executive Coaching SA"
+... (12 more)
+
+DESCRIPTIONS (4):
+1. "Book your free strategy call. Get 2x clarity..."
+2. "Most leaders struggle alone. Kevin Britz has..."
+... (2 more)
+
+KEYWORDS:
+• executive coaching south africa
+• leadership development johannesburg
+• one on one leadership coaching
+...
+
+NEGATIVE KEYWORDS:
+• free executive coaching
+• leadership courses online free
+...
+
+AUDIENCE SIGNALS:
+• Job titles: CEO, MD, Director, VP, C-Suite
+• Industries: Finance, Professional Services, Tech
+• Behaviours: Business consulting, Executive education
 ```
 
 ---
 
-### 2.5 Route Registration
-
-**File:** `src/App.tsx`
-
-Add routes:
-- `/ai-readiness` - Landing page
-- `/ai-readiness-diagnostic` - Diagnostic questionnaire
-
----
-
-## Phase 3: Resources Section Enhancement
-
-### 3.1 Add AI & Workplace Integration Category
-
-**File:** `src/pages/Resources.tsx`
-
-Add a new section titled "AI & Workplace Integration" with:
-
-| Resource | Type | Description |
-|----------|------|-------------|
-| Preparing Your Team for AI Integration | Guide | Lead magnet linking to AI-Readiness Diagnostic |
-| The 5 Human Skills AI Cannot Replace | Article | Blog post linking SHIFT skills to AI resilience |
-| POPI Act Compliance in AI Adoption | Guide | SA-specific compliance considerations |
-
----
-
-## Technical Summary
+## Technical Implementation
 
 ### Files to Create
 
 | File | Purpose |
 |------|---------|
-| `src/data/aiReadinessQuestions.ts` | Question definitions and categories |
-| `src/lib/aiReadinessScoring.ts` | Scoring logic and recommendations |
-| `src/pages/AIReadinessDiagnostic.tsx` | Main diagnostic page |
-| `src/pages/AIReadinessDiagnosticLanding.tsx` | Landing page |
-| `src/components/ai-diagnostic/AIReadinessForm.tsx` | Form component |
-| `src/components/ai-diagnostic/AIReadinessQuestionRating.tsx` | Rating component |
-| `src/components/ai-diagnostic/AIReadinessResults.tsx` | Results component |
+| `src/components/marketing/GoogleAdsGenerator.tsx` | Main ad generator UI component |
+| `src/components/marketing/AdPreviewCard.tsx` | Display generated ad previews |
+| `src/components/marketing/CampaignBriefModal.tsx` | Campaign brief output display |
+| `supabase/functions/generate-google-ads/index.ts` | Edge function for AI generation |
 
 ### Files to Modify
 
 | File | Changes |
 |------|---------|
-| `src/data/adminProgrammesData.ts` | Add "Leading in the AI Era" programme with 6 lessons |
-| `src/pages/ShiftMethodology.tsx` | Add "SHIFT Skills: Your Edge in an AI World" section |
-| `src/pages/Resources.tsx` | Add "AI & Workplace Integration" resources section |
-| `src/App.tsx` | Add diagnostic routes |
-| `src/utils/leadScoring.ts` | Add AI-readiness diagnostic support |
-| `src/utils/notifications.ts` | Add AI-readiness lead processing |
+| `src/pages/MarketingDashboard.tsx` | Add fourth "Google Ads" tab |
+| `src/components/marketing/MarketingStats.tsx` | Add Google Ads stats (ad drafts count) |
 
-### Database Migration
+### Database Schema Update
 
-- Create `ai_readiness_submissions` table following the unified lead schema
+Add table to store generated Google Ads content:
+
+```sql
+CREATE TABLE google_ads_content (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  campaign_type TEXT NOT NULL, -- search, display, pmax
+  service_reference TEXT,
+  headlines JSONB NOT NULL,
+  descriptions JSONB NOT NULL,
+  keywords JSONB,
+  negative_keywords JSONB,
+  audience_signals JSONB,
+  status TEXT DEFAULT 'draft',
+  campaign_brief TEXT,
+  notes TEXT
+);
+```
 
 ---
 
-## Key Design Decisions
+## Edge Function: generate-google-ads
 
-1. **Positioning**: SHIFT skills remain the core methodology—AI integration is positioned as an *application* of SHIFT skills, not a replacement. The messaging focuses on "getting the human edge on AI" rather than replacing SHIFT's purpose.
+### AI Prompt Structure
 
-2. **Scoring Philosophy**: Lower diagnostic scores indicate gaps in AI-ready leadership, triggering a recommendation for the "Leading in the AI Era" programme. This reverses the typical "problem detection" approach used in Team Diagnostic.
+The edge function will use Lovable AI (no API key required) with specialised prompts:
 
-3. **Lead Funnel**: Follows the established ScoreApp-style pattern (Landing → Questionnaire → Lead Capture → Results) used by Leadership, Team, and SHIFT diagnostics.
+**For Responsive Search Ads:**
+- Generate exactly 15 headlines (≤30 characters each)
+- Generate exactly 4 descriptions (≤90 characters each)
+- Apply buyer psychology: Move Toward + Move Away
+- Include specific outcomes and SA context
 
-4. **SA Context**: POPI Act compliance is explicitly included in ethical AI content, addressing the South African market specifically.
+**For Display Ads:**
+- Short headline (25 chars)
+- Long headline (90 chars)
+- Description (90 chars)
+- Business name suggestion
+- CTA options
 
-5. **Programme Placement**: The new AI programme is positioned as cross-functional (not tied to a specific L1-L5 level), accessible to leaders at any stage.
+**For Performance Max:**
+- All headline variations
+- All description variations
+- Audience signal suggestions
+- Image concept descriptions
+
+---
+
+## User Workflow
+
+1. **Select Ad Type**: Responsive Search / Display / Performance Max
+2. **Choose Service**: Executive Coaching, SHIFT, Workshop, etc.
+3. **Generate**: AI creates optimised ad copy
+4. **Review & Edit**: Adjust headlines/descriptions as needed
+5. **Copy to Clipboard**: One-click copy formatted for Google Ads
+6. **Save Campaign Brief**: Store for reference
+
+---
+
+## Future Enhancement: Direct API Integration
+
+If you decide to pursue direct Google Ads API integration later:
+
+### Requirements
+1. **Google Ads Manager Account** with API access
+2. **Developer Token** (apply via API Center)
+3. **OAuth2 Credentials** (client ID, client secret)
+4. **Refresh Token** for ongoing access
+
+### Secrets Needed
+- `GOOGLE_ADS_DEVELOPER_TOKEN`
+- `GOOGLE_ADS_CLIENT_ID`
+- `GOOGLE_ADS_CLIENT_SECRET`
+- `GOOGLE_ADS_REFRESH_TOKEN`
+- `GOOGLE_ADS_CUSTOMER_ID`
+
+This can be added as a Phase 2 enhancement once the manual workflow is proven.
+
+---
+
+## Summary
+
+| Phase | Deliverable | Effort |
+|-------|-------------|--------|
+| 1 | Google Ads tab + AI generator | Core implementation |
+| 2 | Audience/keyword suggestions | Enhances targeting |
+| 3 | Campaign brief generator | Ready-to-use output |
+| Future | Direct API integration | Optional upgrade |
+
+This approach gives you immediate AI-powered ad generation following the same proven workflow as your social content, with the option to add direct Google Ads API integration later.
 
