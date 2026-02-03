@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Megaphone, PenTool, Calendar, BarChart3, Plus, Loader2 } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { useAdminAuth } from '@/hooks/useAdminAuth';
 import ContentGenerator from '@/components/marketing/ContentGenerator';
 import ContentQueue from '@/components/marketing/ContentQueue';
 import MarketingStats from '@/components/marketing/MarketingStats';
+import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -89,10 +90,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-3 w-full max-w-md">
+              <TabsList className="grid grid-cols-4 w-full max-w-lg">
                 <TabsTrigger value="generate" className="flex items-center gap-2">
                   <PenTool className="w-4 h-4" />
-                  <span className="hidden sm:inline">Generate</span>
+                  <span className="hidden sm:inline">Social</span>
+                </TabsTrigger>
+                <TabsTrigger value="google-ads" className="flex items-center gap-2">
+                  <Target className="w-4 h-4" />
+                  <span className="hidden sm:inline">Google Ads</span>
                 </TabsTrigger>
                 <TabsTrigger value="queue" className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
@@ -106,6 +111,10 @@ export default function MarketingDashboard() {
 
               <TabsContent value="generate" className="mt-6">
                 <ContentGenerator />
+              </TabsContent>
+
+              <TabsContent value="google-ads" className="mt-6">
+                <GoogleAdsGenerator />
               </TabsContent>
 
               <TabsContent value="queue" className="mt-6">
