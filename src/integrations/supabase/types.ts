@@ -656,6 +656,63 @@ export type Database = {
         }
         Relationships: []
       }
+      prospect_companies: {
+        Row: {
+          about_summary: string | null
+          company_name: string
+          company_size: string | null
+          contacted_at: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          leadership_team: Json | null
+          notes: string | null
+          opportunity_signals: Json | null
+          pain_points: Json | null
+          personalised_pitch: string | null
+          status: string
+          suggested_approach: string | null
+          updated_at: string
+          website_url: string
+        }
+        Insert: {
+          about_summary?: string | null
+          company_name: string
+          company_size?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          leadership_team?: Json | null
+          notes?: string | null
+          opportunity_signals?: Json | null
+          pain_points?: Json | null
+          personalised_pitch?: string | null
+          status?: string
+          suggested_approach?: string | null
+          updated_at?: string
+          website_url: string
+        }
+        Update: {
+          about_summary?: string | null
+          company_name?: string
+          company_size?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          leadership_team?: Json | null
+          notes?: string | null
+          opportunity_signals?: Json | null
+          pain_points?: Json | null
+          personalised_pitch?: string | null
+          status?: string
+          suggested_approach?: string | null
+          updated_at?: string
+          website_url?: string
+        }
+        Relationships: []
+      }
       shift_diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
