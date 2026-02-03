@@ -1,187 +1,60 @@
 
-# Lead Prospecting & Research System
+# Add Google Ads Editor CSV Export Feature
 
-## The Strategic Question
+## Overview
+Add a "Download for Google Ads Editor" button to the Google Ads generator that exports the generated content in the official Google Ads Editor CSV format. This will allow you to bulk upload ads with just a few clicks.
 
-You're asking the right question: **How do we proactively find leads rather than just waiting for them to find us?**
+## What Will Be Built
 
-Currently, your machine is **inbound-focused** - people find you through:
-- Google Ads → Diagnostics → Lead capture
-- Lead magnets → Email nurture
-- Organic content → Contact form
+### 1. CSV Export Utility Function
+Create a new utility file that generates properly formatted CSV files for Google Ads Editor import:
+- **Responsive Search Ads CSV**: Includes Campaign, Ad Group, Headlines 1-15, Descriptions 1-4, Final URL, and Path fields
+- **Display Ads CSV**: Headlines, descriptions, business name, final URLs
+- **Performance Max CSV**: All asset types with proper column headers
 
-To "make the machine work hard," we need to add **outbound prospecting** capabilities.
+### 2. Updated GoogleAdsGenerator Component
+Add a new "Export for Google Ads Editor" button alongside the existing "Save to Drafts" button that:
+- Downloads a properly formatted .csv file
+- Names the file descriptively (e.g., `google-ads-search-executive-coaching-2026-02-03.csv`)
+- Shows a success toast notification
 
----
+### 3. Export Format Details
+The CSV will follow Google Ads Editor's required format:
 
-## Important: Legal & Ethical Boundaries
-
-### What We CAN Do (Ethical)
-| Approach | Description |
-|----------|-------------|
-| **Company Research** | Scrape company websites to understand their needs, culture, challenges |
-| **Industry Intelligence** | Monitor news, trends, company announcements that signal leadership needs |
-| **LinkedIn Company Pages** | Research company info (public data) |
-| **Job Posting Analysis** | Companies hiring leadership roles = signal they need development |
-| **Event Attendee Research** | Research companies attending HR/leadership conferences |
-
-### What We SHOULDN'T Do (Problematic)
-| Approach | Why It's Risky |
-|----------|----------------|
-| **Scraping Personal Emails** | Violates POPIA (SA privacy law), GDPR |
-| **LinkedIn Profile Scraping** | Violates LinkedIn ToS, can get banned |
-| **Cold Email Lists** | Poor deliverability, reputation damage |
-| **Contact Database Purchases** | Often outdated, consent issues |
-
----
-
-## Recommended: Company Intelligence System
-
-Instead of scraping for individual contacts, we build a **Company Intelligence Engine** that:
-
-1. **Identifies target companies** through signals
-2. **Researches their needs** automatically
-3. **Generates personalised outreach** for you to send
-
-### How It Works
-
-```
-[Company Signal Detected]
-        ↓
-[Firecrawl: Research Company Website]
-        ↓
-[AI: Analyze Leadership Challenges]
-        ↓
-[Generate Personalized Pitch]
-        ↓
-[Kevin/Lauren: Review & Send]
+```text
+Campaign, Ad Group, Headline 1, Headline 2, ... Headline 15, Description 1, Description 2, Description 3, Description 4, Final URL, Path 1, Path 2
+Leadership by Design - Executive Coaching, Executive Coaching, "Headline 1 text", "Headline 2 text", ... , "Description text", https://leadershipbydesign.lovable.app/executive-coaching, Leadership, Coaching
 ```
 
----
+## Files to Create/Modify
 
-## Implementation Plan
+| File | Action | Purpose |
+|------|--------|---------|
+| `src/lib/googleAdsExport.ts` | Create | CSV generation utility with format handlers for each ad type |
+| `src/components/marketing/GoogleAdsGenerator.tsx` | Modify | Add export button and import the utility |
 
-### Phase 1: Company Research Tool
-
-**New Tab: "Prospects" in Marketing Dashboard**
-
-| Feature | Description |
-|---------|-------------|
-| **Company Lookup** | Enter company URL → AI researches & profiles them |
-| **Leadership Signal Detection** | Identifies pain points from About pages, careers, news |
-| **Personalised Pitch Generator** | Creates custom outreach based on their specific situation |
-
-**Technical Requirements:**
-- Connect Firecrawl (already available in workspace)
-- Create `prospect_companies` table
-- Build `firecrawl-company-research` edge function
-- Build `ProspectingTool.tsx` component
-
-### Phase 2: Job Posting Monitor
-
-**Automated Signal Detection:**
-
-| Signal | Interpretation |
-|--------|----------------|
-| "Hiring Head of People/HR" | Company scaling, needs leadership alignment |
-| "Hiring multiple managers" | Growth phase, leadership development needed |
-| "Looking for L&D Manager" | Active investment in development |
-| "Senior leadership restructure" | Transition period, coaching opportunity |
-
-**How:**
-- Daily search via Firecrawl: "site:linkedin.com/jobs leadership development south africa"
-- AI analyses job posts for signals
-- Queue for review
-
-### Phase 3: News & Event Monitor
-
-| Source | Signals |
-|--------|---------|
-| **Company News** | Mergers, new CEOs, restructures = coaching needs |
-| **Conference Attendees** | HR Summit, Leadership events = engaged buyers |
-| **Industry Reports** | Companies mentioned in "Top Employers" etc |
+## User Workflow After Implementation
+1. Go to Admin Dashboard > Google Ads tab
+2. Generate ad copy
+3. Click "Export for Google Ads Editor"
+4. Open Google Ads Editor on your computer
+5. Go to Account > Import > From CSV
+6. Select the downloaded file
+7. Review and post changes
 
 ---
 
-## Database Schema
+## Technical Details
 
-```sql
-CREATE TABLE prospect_companies (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  company_name TEXT NOT NULL,
-  website_url TEXT NOT NULL,
-  industry TEXT,
-  company_size TEXT,
-  
-  -- Scraped intelligence
-  about_summary TEXT,
-  leadership_team JSONB,
-  pain_points JSONB,
-  opportunity_signals JSONB,
-  
-  -- AI-generated outreach
-  personalised_pitch TEXT,
-  suggested_approach TEXT,
-  
-  -- Workflow
-  status TEXT DEFAULT 'researched', -- researched, contacted, responded, converted
-  contacted_at TIMESTAMPTZ,
-  notes TEXT
-);
-```
+### CSV Generation Logic
+The utility will:
+- Escape commas and quotes properly for CSV format
+- Handle variable-length arrays (e.g., if AI generates fewer than 15 headlines)
+- Pre-fill campaign and ad group names based on the service
+- Include the correct Final URL for each service
 
----
-
-## New Components
-
-### ProspectingTool.tsx
-- Company URL input
-- One-click "Research Company" button
-- Displays: Company profile, pain points, pitch
-
-### ProspectList.tsx
-- Table of researched companies
-- Status tracking (Research → Contact → Response → Conversion)
-- Bulk actions
-
-### Edge Function: firecrawl-company-research
-- Scrapes company website via Firecrawl
-- Sends to AI for analysis
-- Returns structured intelligence
-
----
-
-## Workflow for Kevin
-
-1. **Daily (5 mins):** Check "Prospects" tab for new signals
-2. **Research (1 click):** Enter company URL → Get instant intelligence
-3. **Review pitch:** AI generates personalised outreach
-4. **Send via LinkedIn/Email:** Copy pitch, personalise, send
-5. **Track:** Mark as contacted, note responses
-
----
-
-## What You'll Need
-
-| Requirement | Status |
-|-------------|--------|
-| **Firecrawl Connector** | Available (needs linking) |
-| **AI (Lovable AI)** | Ready (no API key needed) |
-| **Database table** | Will create |
-| **UI Components** | Will build |
-
----
-
-## Summary
-
-This transforms your marketing machine from **passive** (waiting for leads) to **active** (finding and researching prospects):
-
-| Current State | Future State |
-|---------------|--------------|
-| Wait for diagnostic completions | Proactively identify target companies |
-| React to contact form submissions | Research companies before reaching out |
-| Generic cold outreach | AI-personalised pitches based on research |
-| Manual prospecting | Automated signal detection |
-
-All while staying ethical - researching companies, not scraping personal data.
+### Default Values in CSV
+- **Campaign Name**: "Leadership by Design - [Service Name]"
+- **Ad Group**: Service name
+- **Final URL**: Your published site + relevant page path
+- **Path 1/2**: Short descriptive paths like "Leadership" / "Coaching"
