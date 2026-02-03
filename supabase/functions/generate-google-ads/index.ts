@@ -14,40 +14,37 @@ interface GenerateRequest {
 
 const SERVICE_CONTEXTS: Record<string, string> = {
   'executive-coaching': `
-    Executive Coaching - One-on-one leadership development for senior executives.
-    Key outcomes: Strategic clarity, confident decision-making, 2x leadership impact.
-    Target: CEOs, MDs, Directors, VPs, C-Suite executives in South Africa.
-    USP: Kevin Britz's proven methodology, 90-day transformation framework.
+    Executive Coaching - High-ticket 1:1 leadership development for C-Suite executives.
+    Duration: 90 days intensive programme.
+    Key outcomes: 2x strategic clarity, confident decision-making, measurable leadership impact.
+    Target: CEOs, MDs, Directors, CFOs, VPs, C-Suite executives in South Africa.
+    Price positioning: Premium investment (R50,000+), results-guaranteed.
+    USP: Kevin Britz's proven SHIFT methodology, Enneagram integration, weekly accountability.
+    Pain points: Lonely at the top, decision fatigue, team alignment struggles, strategic uncertainty.
+    Transformation: From overwhelmed executive to confident strategic leader in 90 days.
+  `,
+  'team-workshops': `
+    Team Workshops - Half-day to full-day intensive sessions for leadership teams.
+    Three workshop types available:
+    1. Team Alignment Workshop - Get everyone rowing in the same direction. End silos and miscommunication.
+    2. Team Motivation Workshop - Understand what drives your people. Move Toward/Move Away psychology.
+    3. Team Leadership Workshop - Develop leadership capability across your team.
+    Target: HR Directors, L&D Managers, CEOs wanting team transformation, companies with 20-500 employees.
+    Key outcomes: 50% reduction in conflict, 40% improvement in meeting effectiveness.
+    Price positioning: R15,000-R35,000 per workshop.
+    Pain points: Team dysfunction, low engagement, high turnover, meetings that waste time.
+    Transformation: From surviving to performing teams in one intensive session.
   `,
   'shift-programme': `
-    SHIFT Leadership Development - 5-skill transformation programme for individuals and teams.
-    Skills: Self-Management, Human Intelligence, Innovation, Focus, Thinking.
-    Target: Emerging leaders, team leads, managers seeking personal development.
-    USP: Measurable skill development, practical implementation, team workshops.
-  `,
-  'leadership-workshop': `
-    Leadership Excellence Workshop - Half-day intensive for leadership teams.
-    Focus: Strategic alignment, team motivation, leadership effectiveness.
-    Target: Leadership teams, HR directors, L&D managers.
-    USP: Practical frameworks, immediate implementation, team transformation.
-  `,
-  'motivation-workshop': `
-    Team Motivation Workshop - Understanding what drives your people.
-    Focus: Intrinsic vs extrinsic motivation, team engagement, retention.
-    Target: Team leaders, managers, HR professionals.
-    USP: Move Toward/Move Away psychology, practical application.
-  `,
-  'alignment-workshop': `
-    Strategic Alignment Workshop - Getting everyone rowing in the same direction.
-    Focus: Vision clarity, goal alignment, team cohesion.
-    Target: Executive teams, department heads, project leaders.
-    USP: Clarity framework, measurable outcomes.
-  `,
-  'ai-leadership': `
-    Leading in the AI Era - Preparing leaders for AI-driven transformation.
-    Focus: AI adoption, human-AI collaboration, future-proofing leadership.
-    Target: Forward-thinking executives, innovation leaders, digital transformation leads.
-    USP: Practical AI readiness, human edge emphasis.
+    SHIFT Leadership Development - Comprehensive 5-skill transformation programme.
+    Duration: 6-12 weeks depending on level (L1-L5 progression available).
+    Five core skills: Self-Management, Human Intelligence, Innovation, Focus, Thinking.
+    Target: Emerging leaders, middle managers, leadership teams, high-potential employees.
+    Key outcomes: Leaders report 35% faster decision-making within 60 days.
+    Delivery: Hybrid - Online LMS Portal | Hard Copy Materials | Online Coaching.
+    Price positioning: R8,000-R25,000 per participant.
+    Pain points: Leadership skills gap, no development pathway, reactive management style.
+    Transformation: From reactive manager to proactive leader with measurable skill growth.
   `,
 };
 

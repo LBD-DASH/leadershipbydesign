@@ -23,11 +23,8 @@ interface CampaignBriefModalProps {
 
 const SERVICE_LABELS: Record<string, string> = {
   'executive-coaching': 'Executive Coaching',
-  'shift-programme': 'SHIFT Programme',
-  'leadership-workshop': 'Leadership Workshop',
-  'motivation-workshop': 'Motivation Workshop',
-  'alignment-workshop': 'Alignment Workshop',
-  'ai-leadership': 'AI Leadership Programme',
+  'team-workshops': 'Team Workshops',
+  'shift-programme': 'SHIFT Leadership Development',
 };
 
 const AD_TYPE_LABELS: Record<string, string> = {

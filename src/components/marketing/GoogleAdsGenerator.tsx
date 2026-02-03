@@ -17,12 +17,9 @@ const AD_TYPES = [
 ];
 
 const SERVICES = [
-  { value: 'executive-coaching', label: 'Executive Coaching' },
-  { value: 'shift-programme', label: 'SHIFT Programme' },
-  { value: 'leadership-workshop', label: 'Leadership Workshop' },
-  { value: 'motivation-workshop', label: 'Motivation Workshop' },
-  { value: 'alignment-workshop', label: 'Alignment Workshop' },
-  { value: 'ai-leadership', label: 'AI Leadership Programme' },
+  { value: 'executive-coaching', label: 'Executive Coaching', description: 'High-ticket 1:1 coaching for C-Suite' },
+  { value: 'team-workshops', label: 'Team Workshops', description: 'Alignment, Motivation & Leadership workshops' },
+  { value: 'shift-programme', label: 'SHIFT Leadership Development', description: '5-skill transformation programme' },
 ];
 
 interface GeneratedContent {
