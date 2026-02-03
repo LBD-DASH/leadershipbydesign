@@ -1,4 +1,4 @@
-import { BarChart3, Target, Users, Zap, Star, Award, Sparkles, Compass, Heart, Crown } from 'lucide-react';
+import { BarChart3, Target, Users, Zap, Star, Award, Sparkles, Compass, Heart, Crown, Bot } from 'lucide-react';
 import leadershipL1 from '@/assets/leadership-l1-productivity.jpg';
 import leadershipL2 from '@/assets/leadership-l2-development.jpg';
 import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
@@ -1286,6 +1286,145 @@ export const adminProgrammesData: ProgrammeData[] = [
     targetAudience: 'Teams wanting to build leadership depth and shared accountability',
     duration: '1-2 days',
     format: 'In-person Workshop | Virtual Facilitation'
+  },
+  {
+    id: 'ai-leadership',
+    title: 'Leading in the AI Era',
+    subtitle: 'AI Leadership Development',
+    level: 'Cross-functional',
+    levelBadge: 'AI Leadership',
+    description: 'Navigate AI adoption while strengthening your human edge. This programme develops the leadership capabilities required to lead effectively in an AI-augmented workplace, building on SHIFT skills that AI cannot replicate.',
+    tagline: 'Your Human Edge in an AI World',
+    icon: Bot,
+    topics: [
+      'Understanding AI capabilities and limitations',
+      'Identifying human vs AI-augmentable tasks',
+      'Managing AI-anxious teams',
+      'Ethical AI use and POPI Act compliance',
+      'Building AI-augmented workflows',
+      'Maintaining human connection in automated environments'
+    ],
+    outcomes: [
+      'Accurate assessment of AI opportunities and limitations',
+      'Clear strategy for human-AI collaboration',
+      'Confident team leadership through AI adoption',
+      'POPI Act compliant AI implementation',
+      'Strengthened SHIFT skills for the AI era',
+      'Sustainable human connection practices'
+    ],
+    targetAudience: 'Leaders at all levels navigating AI adoption and seeking to strengthen their human leadership capabilities',
+    duration: '6 weeks',
+    format: 'Online LMS Portal | Hard Copy | Online Coaching',
+    introduction: {
+      title: 'Introduction / Kickoff',
+      topics: [
+        'The AI Transformation Context',
+        'Why Human Skills Matter More in an AI World',
+        'The SHIFT Framework as Your AI Edge',
+        'Setting Your AI Leadership Development Goals'
+      ]
+    },
+    lessons: [
+      {
+        title: 'Lesson One: Understanding AI in the Workplace',
+        topics: [
+          'AI Capabilities and Current Limitations',
+          'The Human-AI Collaboration Spectrum',
+          'Common AI Myths vs Reality',
+          'Industry-Specific AI Applications'
+        ],
+        practicals: [
+          'Action Steps',
+          'AI Impact Assessment',
+          'Team Readiness Survey',
+          'AI Opportunity Mapping',
+          'Participant\'s Feedback Sheet'
+        ]
+      },
+      {
+        title: 'Lesson Two: The Human Edge',
+        topics: [
+          'Tasks Humans Do Better Than AI',
+          'Irreplaceable Human Value Areas',
+          'Building Your Human Competitive Advantage',
+          'Future-Proofing Your Team\'s Skills'
+        ],
+        practicals: [
+          'Action Steps',
+          'Task Mapping Exercise',
+          'Human Value Analysis',
+          'Skills Gap Assessment',
+          'Participant\'s Feedback Sheet'
+        ]
+      },
+      {
+        title: 'Lesson Three: SHIFT Skills for the AI Era',
+        topics: [
+          'Self-Management: Regulating AI Anxiety',
+          'Human Intelligence: What AI Cannot Replicate',
+          'Innovation: Using AI as a Creative Tool',
+          'Focus: Cutting Through AI-Generated Noise',
+          'Thinking: Critical Evaluation of AI Outputs'
+        ],
+        practicals: [
+          'Action Steps',
+          'SHIFT Skills AI Audit',
+          'Personal Development Plan',
+          'Team Skills Assessment',
+          'Participant\'s Feedback Sheet'
+        ]
+      },
+      {
+        title: 'Lesson Four: Ethical AI Leadership (POPI Act)',
+        topics: [
+          'POPI Act Compliance Fundamentals',
+          'Recognising AI Bias and Limitations',
+          'Responsible AI Decision-Making',
+          'Building Ethical AI Guidelines'
+        ],
+        practicals: [
+          'Action Steps',
+          'Ethics Checklist',
+          'Policy Review Template',
+          'Bias Recognition Exercise',
+          'Participant\'s Feedback Sheet'
+        ]
+      },
+      {
+        title: 'Lesson Five: Building AI-Augmented Workflows',
+        topics: [
+          'Practical AI Tool Integration',
+          'Maintaining Human Oversight',
+          'Measuring AI Effectiveness',
+          'Continuous Improvement Cycles'
+        ],
+        practicals: [
+          'Action Steps',
+          'Workflow Mapping',
+          'Pilot Project Design',
+          'Success Metrics Template',
+          'Participant\'s Feedback Sheet'
+        ]
+      },
+      {
+        title: 'Lesson Six: Leading AI-Driven Change',
+        topics: [
+          'Communication Strategies for AI Initiatives',
+          'Managing Resistance and Anxiety',
+          'Sustaining Human Connection',
+          'Building an AI-Ready Culture'
+        ],
+        practicals: [
+          'Action Steps',
+          'Change Communication Plan',
+          'Resistance Management Toolkit',
+          'Action Board Presentation',
+          'Program Review',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
+        ]
+      }
+    ]
   }
 ];
 

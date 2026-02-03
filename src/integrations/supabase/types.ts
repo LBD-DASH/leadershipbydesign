@@ -14,6 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_readiness_submissions: {
+        Row: {
+          ai_analysis: string | null
+          ai_awareness_score: number
+          answers: Json
+          buyer_persona: string | null
+          change_readiness_score: number
+          company_size: string | null
+          created_at: string
+          email: string | null
+          ethical_ai_score: number
+          follow_up_preference: string | null
+          human_ai_collab_score: number
+          human_skills_score: number
+          id: string
+          lead_score: number | null
+          lead_temperature: string | null
+          name: string | null
+          next_action: string | null
+          organisation: string | null
+          overall_score: number
+          phone: string | null
+          primary_recommendation: string
+          readiness_level: string
+          role: string | null
+          scoring_breakdown: Json | null
+          secondary_recommendation: string | null
+          urgency: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          waiting_list: boolean | null
+        }
+        Insert: {
+          ai_analysis?: string | null
+          ai_awareness_score: number
+          answers: Json
+          buyer_persona?: string | null
+          change_readiness_score: number
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          ethical_ai_score: number
+          follow_up_preference?: string | null
+          human_ai_collab_score: number
+          human_skills_score: number
+          id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
+          name?: string | null
+          next_action?: string | null
+          organisation?: string | null
+          overall_score: number
+          phone?: string | null
+          primary_recommendation: string
+          readiness_level: string
+          role?: string | null
+          scoring_breakdown?: Json | null
+          secondary_recommendation?: string | null
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          waiting_list?: boolean | null
+        }
+        Update: {
+          ai_analysis?: string | null
+          ai_awareness_score?: number
+          answers?: Json
+          buyer_persona?: string | null
+          change_readiness_score?: number
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          ethical_ai_score?: number
+          follow_up_preference?: string | null
+          human_ai_collab_score?: number
+          human_skills_score?: number
+          id?: string
+          lead_score?: number | null
+          lead_temperature?: string | null
+          name?: string | null
+          next_action?: string | null
+          organisation?: string | null
+          overall_score?: number
+          phone?: string | null
+          primary_recommendation?: string
+          readiness_level?: string
+          role?: string | null
+          scoring_breakdown?: Json | null
+          secondary_recommendation?: string | null
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          waiting_list?: boolean | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string
