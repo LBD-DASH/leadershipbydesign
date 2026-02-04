@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.firecrawl-company-research]
 verify_jwt = false
+
+[functions.find-companies]
+verify_jwt = false
+
+[functions.send-prospect-outreach]
+verify_jwt = false
