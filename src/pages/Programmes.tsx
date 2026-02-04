@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle } from "lucide-react";
+import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle, Bot } from "lucide-react";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -376,6 +376,75 @@ export default function Programmes() {
                     </div>
                     <div className="flex flex-wrap gap-2 mb-6">
                       {['Trust Building', 'Conflict Management', 'Neuroscience', 'Bias Awareness', 'Wellbeing'].map((tag) => (
+                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link to="/contact">
+                      <Button className="rounded-full group">
+                        Enquire About Programme
+                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.section>
+
+            {/* Leading in the AI Era Section */}
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-16">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Bot className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                    Leading in the AI Era
+                  </h2>
+                  <p className="text-muted-foreground">6-week programme • Level-agnostic • Future-proof your leadership</p>
+                </div>
+              </div>
+
+              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
+                    <img 
+                      src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80" 
+                      alt="Leading in the AI Era Programme" 
+                      className="w-full h-full object-cover object-center" 
+                      loading="lazy" 
+                    />
+                  </div>
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
+                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
+                      From AI Uncertainty to Confident Integration
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Move from AI overwhelm to confident integration in 6 weeks. This cross-functional programme helps leaders at any level understand AI capabilities, protect their 'Human Edge', and build augmented workflows that enhance rather than replace human judgment.
+                    </p>
+                    <div className="flex flex-wrap gap-4 mb-6 text-sm">
+                      <div>
+                        <span className="font-semibold text-foreground">Duration:</span>{" "}
+                        <span className="text-muted-foreground">6 weeks</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-foreground">Format:</span>{" "}
+                        <span className="text-muted-foreground">Online + Coaching</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {['AI Capabilities', 'Human Edge', 'POPI Act', 'Augmented Workflows', 'Change Management'].map((tag) => (
                         <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
                           {tag}
                         </span>
