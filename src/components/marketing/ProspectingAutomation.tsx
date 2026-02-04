@@ -18,7 +18,16 @@ import {
   ChevronDown,
   ChevronRight,
   ExternalLink,
-  Globe
+  Globe,
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Users,
+  Target,
+  Lightbulb,
+  MessageSquare,
+  User
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -41,7 +50,18 @@ interface ProspectCompany {
   status: string;
   created_at: string;
   contact_email: string | null;
+  contact_phone: string | null;
+  contact_name: string | null;
+  contact_role: string | null;
   about_summary: string | null;
+  personalised_pitch: string | null;
+  suggested_approach: string | null;
+  physical_address: string | null;
+  linkedin_url: string | null;
+  pain_points: unknown[] | null;
+  opportunity_signals: unknown[] | null;
+  leadership_team: unknown[] | null;
+  hr_contacts: unknown[] | null;
 }
 
 interface ProspectingRun {
@@ -88,13 +108,13 @@ export default function ProspectingAutomation() {
     refetchInterval: isRunning ? 5000 : false // Poll while running
   });
 
-  // Fetch all prospect companies
+  // Fetch all prospect companies with full research data
   const { data: companies } = useQuery({
     queryKey: ['prospect-companies-by-industry'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('prospect_companies')
-        .select('id, company_name, website_url, industry, company_size, status, created_at, contact_email, about_summary')
+        .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
       return data as ProspectCompany[];
@@ -345,43 +365,158 @@ export default function ProspectingAutomation() {
                           {industryCompanies.length > 0 ? (
                             <div className="divide-y">
                               {industryCompanies.map((company) => (
-                                <div key={company.id} className="p-3 hover:bg-muted/50 transition-colors">
-                                  <div className="flex items-start justify-between gap-3">
+                                <div key={company.id} className="p-4 hover:bg-muted/50 transition-colors border-b last:border-b-0">
+                                  {/* Header */}
+                                  <div className="flex items-start justify-between gap-3 mb-3">
                                     <div className="flex-1 min-w-0">
-                                      <div className="flex items-center gap-2">
-                                        <span className="font-medium truncate">{company.company_name}</span>
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="font-semibold text-base">{company.company_name}</span>
                                         <Badge variant="outline" className="text-xs">
                                           {company.status}
                                         </Badge>
-                                      </div>
-                                      {company.about_summary && (
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                          {company.about_summary}
-                                        </p>
-                                      )}
-                                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                                         {company.company_size && (
-                                          <span>{company.company_size} employees</span>
+                                          <Badge variant="secondary" className="text-xs">
+                                            {company.company_size}
+                                          </Badge>
                                         )}
-                                        {company.contact_email && (
-                                          <span className="truncate">{company.contact_email}</span>
-                                        )}
-                                        <span>
-                                          Added {formatDistanceToNow(new Date(company.created_at), { addSuffix: true })}
-                                        </span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Added {formatDistanceToNow(new Date(company.created_at), { addSuffix: true })}
+                                      </p>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                      {company.linkedin_url && (
+                                        <a href={company.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80">
+                                          <Linkedin className="w-4 h-4" />
+                                        </a>
+                                      )}
+                                      <a href={company.website_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
+                                        <Globe className="w-4 h-4" />
+                                        <ExternalLink className="w-3 h-3" />
+                                      </a>
+                                    </div>
+                                  </div>
+
+                                  {/* About */}
+                                  {company.about_summary && (
+                                    <p className="text-sm text-muted-foreground mb-3">
+                                      {company.about_summary}
+                                    </p>
+                                  )}
+
+                                  {/* Contact Info Grid */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3 text-xs">
+                                    {company.contact_name && (
+                                      <div className="flex items-center gap-2">
+                                        <User className="w-3 h-3 text-muted-foreground" />
+                                        <span>{company.contact_name}{company.contact_role && ` (${company.contact_role})`}</span>
+                                      </div>
+                                    )}
+                                    {company.contact_email && (
+                                      <div className="flex items-center gap-2">
+                                        <Mail className="w-3 h-3 text-muted-foreground" />
+                                        <a href={`mailto:${company.contact_email}`} className="text-primary hover:underline">{company.contact_email}</a>
+                                      </div>
+                                    )}
+                                    {company.contact_phone && (
+                                      <div className="flex items-center gap-2">
+                                        <Phone className="w-3 h-3 text-muted-foreground" />
+                                        <a href={`tel:${company.contact_phone}`} className="text-primary hover:underline">{company.contact_phone}</a>
+                                      </div>
+                                    )}
+                                    {company.physical_address && (
+                                      <div className="flex items-center gap-2">
+                                        <MapPin className="w-3 h-3 text-muted-foreground" />
+                                        <span className="truncate">{company.physical_address}</span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Pain Points & Opportunities */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                    {company.pain_points && company.pain_points.length > 0 && (
+                                      <div className="bg-destructive/5 rounded-lg p-2">
+                                        <div className="flex items-center gap-1 text-xs font-medium text-destructive mb-1">
+                                          <Target className="w-3 h-3" />
+                                          Pain Points
+                                        </div>
+                                        <ul className="text-xs space-y-0.5">
+                                          {(company.pain_points as string[]).slice(0, 3).map((point, i) => (
+                                            <li key={i} className="text-muted-foreground">• {String(point)}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    {company.opportunity_signals && company.opportunity_signals.length > 0 && (
+                                      <div className="bg-primary/5 rounded-lg p-2">
+                                        <div className="flex items-center gap-1 text-xs font-medium text-primary mb-1">
+                                          <Lightbulb className="w-3 h-3" />
+                                          Opportunities
+                                        </div>
+                                        <ul className="text-xs space-y-0.5">
+                                          {(company.opportunity_signals as string[]).slice(0, 3).map((signal, i) => (
+                                            <li key={i} className="text-muted-foreground">• {String(signal)}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Leadership Team */}
+                                  {company.leadership_team && company.leadership_team.length > 0 && (
+                                    <div className="mb-3">
+                                      <div className="flex items-center gap-1 text-xs font-medium mb-1">
+                                        <Users className="w-3 h-3" />
+                                        Leadership Team
+                                      </div>
+                                      <div className="flex flex-wrap gap-2">
+                                        {(company.leadership_team as Array<{ name?: string; role?: string }>).slice(0, 4).map((leader, i) => (
+                                          <div key={i} className="text-xs bg-muted px-2 py-1 rounded">
+                                            <span className="font-medium">{leader.name || 'Unknown'}</span>
+                                            {leader.role && <span className="text-muted-foreground"> - {leader.role}</span>}
+                                          </div>
+                                        ))}
                                       </div>
                                     </div>
-                                    <a 
-                                      href={company.website_url} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      className="flex items-center gap-1 text-xs text-primary hover:underline shrink-0"
-                                    >
-                                      <Globe className="w-3 h-3" />
-                                      Website
-                                      <ExternalLink className="w-3 h-3" />
-                                    </a>
-                                  </div>
+                                  )}
+
+                                  {/* HR Contacts */}
+                                  {company.hr_contacts && company.hr_contacts.length > 0 && (
+                                    <div className="mb-3">
+                                      <div className="flex items-center gap-1 text-xs font-medium mb-1">
+                                        <User className="w-3 h-3" />
+                                        HR Contacts
+                                      </div>
+                                      <div className="flex flex-wrap gap-2">
+                                        {(company.hr_contacts as Array<{ name?: string; role?: string; email?: string }>).slice(0, 3).map((hr, i) => (
+                                          <div key={i} className="text-xs bg-muted px-2 py-1 rounded">
+                                            <span className="font-medium">{hr.name || 'Unknown'}</span>
+                                            {hr.role && <span className="text-muted-foreground"> - {hr.role}</span>}
+                                            {hr.email && <a href={`mailto:${hr.email}`} className="ml-1 text-primary hover:underline">{hr.email}</a>}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Personalized Pitch */}
+                                  {company.personalised_pitch && (
+                                    <div className="bg-accent/30 rounded-lg p-2 mb-2">
+                                      <div className="flex items-center gap-1 text-xs font-medium mb-1">
+                                        <MessageSquare className="w-3 h-3" />
+                                        Personalized Pitch
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">{company.personalised_pitch}</p>
+                                    </div>
+                                  )}
+
+                                  {/* Suggested Approach */}
+                                  {company.suggested_approach && (
+                                    <div className="text-xs">
+                                      <span className="font-medium">Suggested Approach:</span>{' '}
+                                      <span className="text-muted-foreground">{company.suggested_approach}</span>
+                                    </div>
+                                  )}
                                 </div>
                               ))}
                             </div>
