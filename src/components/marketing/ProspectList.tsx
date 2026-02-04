@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Building2, ExternalLink, MessageSquare, Trash2, RefreshCw, CheckCircle, Clock, Send, XCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Building2, ExternalLink, MessageSquare, Trash2, RefreshCw, CheckCircle, Clock, Send, XCircle,
+  ChevronDown, ChevronUp, Mail, Phone, MapPin, Linkedin, Users, Target, Lightbulb, Copy, Sparkles
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { prospectsApi, ProspectCompany } from '@/lib/api/prospects';
 import { format } from 'date-fns';
+import OutreachComposer from './OutreachComposer';
 
 const statusConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   'researched': { label: 'Researched', icon: Clock, color: 'bg-blue-100 text-blue-700' },
@@ -26,6 +31,8 @@ export default function ProspectList() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedProspect, setSelectedProspect] = useState<ProspectCompany | null>(null);
   const [notes, setNotes] = useState('');
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [emailProspect, setEmailProspect] = useState<ProspectCompany | null>(null);
 
   const fetchProspects = async () => {
     setIsLoading(true);
@@ -45,6 +52,18 @@ export default function ProspectList() {
   useEffect(() => {
     fetchProspects();
   }, []);
+
+  const toggleExpanded = (id: string) => {
+    setExpandedIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     const response = await prospectsApi.updateProspectStatus(id, newStatus);
@@ -85,6 +104,24 @@ export default function ProspectList() {
     } else {
       toast({ title: "Error", description: response.error || "Failed to delete prospect", variant: "destructive" });
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copied!", description: "Text copied to clipboard" });
+  };
+
+  const handleEmailSent = (prospectId?: string) => {
+    if (prospectId) {
+      setProspects(prev => 
+        prev.map(p => p.id === prospectId ? { 
+          ...p, 
+          status: 'contacted',
+          contacted_at: new Date().toISOString() 
+        } : p)
+      );
+    }
+    setEmailProspect(null);
   };
 
   const filteredProspects = statusFilter === 'all' 
@@ -157,6 +194,7 @@ export default function ProspectList() {
         <div className="space-y-4">
           {filteredProspects.map((prospect, idx) => {
             const StatusIcon = statusConfig[prospect.status]?.icon || Clock;
+            const isExpanded = expandedIds.has(prospect.id);
             
             return (
               <motion.div
@@ -165,121 +203,320 @@ export default function ProspectList() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold truncate">{prospect.company_name}</h3>
-                          <a 
-                            href={prospect.website_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        </div>
-                        
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          {prospect.industry && <Badge variant="secondary" className="text-xs">{prospect.industry}</Badge>}
-                          {prospect.company_size && <Badge variant="outline" className="text-xs">{prospect.company_size}</Badge>}
-                          {prospect.suggested_approach && (
-                            <Badge variant="outline" className="text-xs text-primary border-primary/30">
-                              {prospect.suggested_approach.replace(/_/g, ' ')}
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        {prospect.about_summary && (
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                            {prospect.about_summary}
-                          </p>
-                        )}
-                        
-                        <p className="text-xs text-muted-foreground">
-                          Added {format(new Date(prospect.created_at), 'MMM d, yyyy')}
-                          {prospect.contacted_at && ` • Contacted ${format(new Date(prospect.contacted_at), 'MMM d, yyyy')}`}
-                        </p>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Select 
-                          value={prospect.status} 
-                          onValueChange={(value) => handleStatusChange(prospect.id, value)}
-                        >
-                          <SelectTrigger className="w-36">
-                            <div className="flex items-center gap-2">
-                              <StatusIcon className="w-4 h-4" />
-                              <span>{statusConfig[prospect.status]?.label || prospect.status}</span>
+                <Collapsible open={isExpanded} onOpenChange={() => toggleExpanded(prospect.id)}>
+                  <Card className="overflow-hidden">
+                    <CollapsibleTrigger asChild>
+                      <CardContent className="p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="font-semibold truncate">{prospect.company_name}</h3>
+                              <a 
+                                href={prospect.website_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-muted-foreground hover:text-primary"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                              {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 text-muted-foreground ml-auto" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
+                              )}
                             </div>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(statusConfig).map(([value, config]) => (
-                              <SelectItem key={value} value={value}>
+                            
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              {prospect.industry && <Badge variant="secondary" className="text-xs">{prospect.industry}</Badge>}
+                              {prospect.company_size && <Badge variant="outline" className="text-xs">{prospect.company_size}</Badge>}
+                              {prospect.suggested_approach && (
+                                <Badge variant="outline" className="text-xs text-primary border-primary/30">
+                                  {prospect.suggested_approach.replace(/_/g, ' ')}
+                                </Badge>
+                              )}
+                            </div>
+                            
+                            {!isExpanded && prospect.about_summary && (
+                              <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                                {prospect.about_summary}
+                              </p>
+                            )}
+                            
+                            <p className="text-xs text-muted-foreground">
+                              Added {format(new Date(prospect.created_at), 'MMM d, yyyy')}
+                              {prospect.contacted_at && ` • Contacted ${format(new Date(prospect.contacted_at), 'MMM d, yyyy')}`}
+                            </p>
+                          </div>
+                          
+                          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                            <Select 
+                              value={prospect.status} 
+                              onValueChange={(value) => handleStatusChange(prospect.id, value)}
+                            >
+                              <SelectTrigger className="w-36">
                                 <div className="flex items-center gap-2">
-                                  <config.icon className="w-4 h-4" />
-                                  {config.label}
+                                  <StatusIcon className="w-4 h-4" />
+                                  <span>{statusConfig[prospect.status]?.label || prospect.status}</span>
                                 </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        
-                        <Dialog>
-                          <DialogTrigger asChild>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Object.entries(statusConfig).map(([value, config]) => (
+                                  <SelectItem key={value} value={value}>
+                                    <div className="flex items-center gap-2">
+                                      <config.icon className="w-4 h-4" />
+                                      {config.label}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  onClick={() => {
+                                    setSelectedProspect(prospect);
+                                    setNotes(prospect.notes || '');
+                                  }}
+                                >
+                                  <MessageSquare className="w-4 h-4" />
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>{prospect.company_name} - Notes</DialogTitle>
+                                  <DialogDescription>
+                                    Add notes about your interactions with this prospect
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <Textarea
+                                  value={notes}
+                                  onChange={(e) => setNotes(e.target.value)}
+                                  placeholder="Meeting notes, follow-up reminders, key contacts..."
+                                  rows={6}
+                                />
+                                <div className="flex justify-end gap-2">
+                                  <Button onClick={handleSaveNotes}>Save Notes</Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            
                             <Button 
                               variant="ghost" 
                               size="icon"
-                              onClick={() => {
-                                setSelectedProspect(prospect);
-                                setNotes(prospect.notes || '');
-                              }}
+                              onClick={() => handleDelete(prospect.id)}
                             >
-                              <MessageSquare className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 text-destructive" />
                             </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>{prospect.company_name} - Notes</DialogTitle>
-                              <DialogDescription>
-                                Add notes about your interactions with this prospect
-                              </DialogDescription>
-                            </DialogHeader>
-                            <Textarea
-                              value={notes}
-                              onChange={(e) => setNotes(e.target.value)}
-                              placeholder="Meeting notes, follow-up reminders, key contacts..."
-                              rows={6}
-                            />
-                            {prospect.personalised_pitch && (
-                              <div className="bg-muted p-3 rounded-md">
-                                <p className="text-xs font-medium mb-1">AI-Generated Pitch:</p>
-                                <p className="text-sm text-muted-foreground">{prospect.personalised_pitch}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </CollapsibleTrigger>
+                    
+                    <CollapsibleContent>
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="border-t"
+                          >
+                            <div className="p-4 bg-muted/30 space-y-4">
+                              {/* About Summary */}
+                              {prospect.about_summary && (
+                                <div className="bg-background p-4 rounded-lg border">
+                                  <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                                    <Building2 className="w-4 h-4 text-primary" />
+                                    About
+                                  </h4>
+                                  <p className="text-sm text-muted-foreground">{prospect.about_summary}</p>
+                                </div>
+                              )}
+
+                              {/* Contact Information */}
+                              {(prospect.contact_email || prospect.contact_phone || prospect.physical_address || prospect.linkedin_url || prospect.contact_name) && (
+                                <div className="bg-background p-4 rounded-lg border">
+                                  <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                                    <Users className="w-4 h-4 text-primary" />
+                                    Contact Information
+                                  </h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {prospect.contact_name && (
+                                      <div className="flex items-center gap-2 text-sm">
+                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                        <span>{prospect.contact_name}</span>
+                                        {prospect.contact_role && (
+                                          <Badge variant="outline" className="text-xs">{prospect.contact_role}</Badge>
+                                        )}
+                                      </div>
+                                    )}
+                                    {prospect.contact_email && (
+                                      <a 
+                                        href={`mailto:${prospect.contact_email}`}
+                                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                                      >
+                                        <Mail className="w-4 h-4" />
+                                        {prospect.contact_email}
+                                      </a>
+                                    )}
+                                    {prospect.contact_phone && (
+                                      <a 
+                                        href={`tel:${prospect.contact_phone}`}
+                                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                                      >
+                                        <Phone className="w-4 h-4" />
+                                        {prospect.contact_phone}
+                                      </a>
+                                    )}
+                                    {prospect.physical_address && (
+                                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                        <MapPin className="w-4 h-4" />
+                                        <span className="truncate">{prospect.physical_address}</span>
+                                      </div>
+                                    )}
+                                    {prospect.linkedin_url && (
+                                      <a 
+                                        href={prospect.linkedin_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                                      >
+                                        <Linkedin className="w-4 h-4" />
+                                        LinkedIn Profile
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Strategic Insights Grid */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Leadership Team */}
+                                {prospect.leadership_team && prospect.leadership_team.length > 0 && (
+                                  <div className="bg-background p-4 rounded-lg border">
+                                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                                      <Users className="w-4 h-4 text-primary" />
+                                      Leadership Team
+                                    </h4>
+                                    <ul className="space-y-1">
+                                      {prospect.leadership_team.map((member, i) => (
+                                        <li key={i} className="text-sm text-muted-foreground">
+                                          <span className="font-medium text-foreground">{member.name}</span>
+                                          {member.role && ` - ${member.role}`}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {/* Pain Points */}
+                                {prospect.pain_points && prospect.pain_points.length > 0 && (
+                                  <div className="bg-background p-4 rounded-lg border">
+                                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                                      <Target className="w-4 h-4 text-destructive" />
+                                      Pain Points
+                                    </h4>
+                                    <ul className="space-y-1">
+                                      {prospect.pain_points.map((point, i) => (
+                                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="text-destructive">•</span>
+                                          {point}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {/* Opportunity Signals */}
+                                {prospect.opportunity_signals && prospect.opportunity_signals.length > 0 && (
+                                  <div className="bg-background p-4 rounded-lg border md:col-span-2">
+                                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                                      <Lightbulb className="w-4 h-4 text-amber-500" />
+                                      Opportunity Signals
+                                    </h4>
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                      {prospect.opportunity_signals.map((signal, i) => (
+                                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                                          <span className="text-amber-500">✓</span>
+                                          {signal}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                            <div className="flex justify-end gap-2">
-                              <Button onClick={handleSaveNotes}>Save Notes</Button>
+
+                              {/* Personalized Pitch */}
+                              {prospect.personalised_pitch && (
+                                <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border border-primary/20">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <h4 className="text-sm font-medium flex items-center gap-2">
+                                      <Sparkles className="w-4 h-4 text-primary" />
+                                      AI-Generated Pitch
+                                    </h4>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => copyToClipboard(prospect.personalised_pitch || '')}
+                                    >
+                                      <Copy className="w-4 h-4 mr-1" />
+                                      Copy
+                                    </Button>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground whitespace-pre-line">
+                                    {prospect.personalised_pitch}
+                                  </p>
+                                </div>
+                              )}
+
+                              {/* Action Buttons */}
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {prospect.contact_email && (
+                                  <Button
+                                    size="sm"
+                                    onClick={() => setEmailProspect(prospect)}
+                                  >
+                                    <Mail className="w-4 h-4 mr-2" />
+                                    Send Cold Email
+                                  </Button>
+                                )}
+                                {prospect.linkedin_url && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    asChild
+                                  >
+                                    <a href={prospect.linkedin_url} target="_blank" rel="noopener noreferrer">
+                                      <Linkedin className="w-4 h-4 mr-2" />
+                                      View on LinkedIn
+                                    </a>
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                          </DialogContent>
-                        </Dialog>
-                        
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={() => handleDelete(prospect.id)}
-                        >
-                          <Trash2 className="w-4 h-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
               </motion.div>
             );
           })}
         </div>
       )}
+
+      {/* Outreach Composer Modal */}
+      <OutreachComposer
+        prospect={emailProspect}
+        isOpen={!!emailProspect}
+        onClose={() => setEmailProspect(null)}
+        onSent={handleEmailSent}
+      />
     </div>
   );
 }
