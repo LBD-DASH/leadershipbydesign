@@ -33,15 +33,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    const firecrawlApiKey = Deno.env.get('FIRECRAWL_API_KEY');
-    if (!firecrawlApiKey) {
-      console.error('FIRECRAWL_API_KEY not configured');
-      return new Response(
-        JSON.stringify({ success: false, error: 'Firecrawl connector not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       console.error('LOVABLE_API_KEY not configured');
@@ -51,83 +42,54 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Build search query for Firecrawl
-    const sizeLabel = companySize === '50-200' ? 'SME' : companySize === '200-500' ? 'mid-market' : 'companies';
-    const searchQuery = `${industry} companies in ${location} South Africa ${sizeLabel} employee size site:.co.za OR site:.com`;
-    
-    console.log('Searching for companies with query:', searchQuery);
+    // Size description for AI
+    const sizeDescription = companySize === '50-200' 
+      ? 'SME companies with 50-200 employees'
+      : companySize === '200-500'
+      ? 'mid-market companies with 200-500 employees'
+      : 'larger companies with 500+ employees';
 
-    // Step 1: Use Firecrawl search to find company websites
-    const searchResponse = await fetch('https://api.firecrawl.dev/v1/search', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${firecrawlApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: searchQuery,
-        limit: 20,
-      }),
-    });
-
-    const searchData = await searchResponse.json();
-
-    if (!searchResponse.ok) {
-      console.error('Firecrawl search error:', searchData);
-      return new Response(
-        JSON.stringify({ success: false, error: searchData.error || 'Search failed' }),
-        { status: searchResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const searchResults = searchData.data || [];
-    console.log('Found', searchResults.length, 'search results');
-
-    if (searchResults.length === 0) {
-      return new Response(
-        JSON.stringify({ success: true, data: [] }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Step 2: Use Lovable AI to analyze and structure the results
+    // Contact focus for AI
     const contactFocus = targetContacts === 'hr' 
       ? 'HR/People contacts (Head of HR, People & Culture Manager, Talent Director)'
       : targetContacts === 'csuite'
       ? 'C-Suite executives (CEO, MD, COO, Founder)'
       : 'Both HR/People contacts AND C-Suite executives';
 
-    const analysisPrompt = `You are a B2B lead generation specialist. Analyze these search results and extract company information for a leadership development consultancy targeting ${industry} companies in ${location}.
+    console.log('Discovering companies:', { industry, location, companySize });
 
-SEARCH RESULTS:
-${JSON.stringify(searchResults.slice(0, 15), null, 2)}
+    // Use Lovable AI to generate a list of real companies
+    const discoveryPrompt = `You are a B2B lead generation specialist for a leadership development consultancy in South Africa.
 
-TARGET CRITERIA:
-- Industry: ${industry}
-- Location: ${location}, South Africa
-- Company Size: ${companySize} employees
-- Contact Focus: ${contactFocus}
+TASK: Generate a list of 8-10 REAL ${industry} companies based in ${location}, South Africa that match these criteria:
+- Company Size: ${sizeDescription}
+- These should be REAL companies that actually exist (not made up)
+- Focus on established local South African companies or regional HQs of international firms
+- These companies should potentially need leadership development services
 
-TASK:
-Filter and structure these results into a list of valid B2B prospects. For each company:
-1. Verify it appears to be a real company in the target industry
-2. Extract the company name and website URL
-3. Provide a brief description of what they do
-4. Estimate their location within Gauteng if possible
+For each company, provide:
+1. Company Name (must be a real company)
+2. Website URL (must be a real, working URL - format: https://example.co.za)
+3. Industry sub-sector
+4. Location within ${location}
+5. Brief description (1-2 sentences about what they do)
 
-Return a JSON array of objects with these fields:
-- company_name: The company name
-- website_url: Their website URL (validated, must start with http)
-- industry: Their specific industry sub-sector
-- location: Their location (city/area in Gauteng)
-- description: 1-2 sentences about what they do
+IMPORTANT:
+- Only include companies you're confident are REAL South African companies
+- Focus on well-established companies in ${industry}
+- Include a mix of well-known and lesser-known companies
+- Website URLs must be real and accurate
 
-RULES:
-- Only include companies that genuinely match the criteria
-- Exclude job boards, directories, or aggregator sites
-- Exclude international companies without local presence
-- Maximum 10 companies in the result
-- Respond ONLY with valid JSON array, no markdown`;
+Respond ONLY with a valid JSON array (no markdown):
+[
+  {
+    "company_name": "Company Name",
+    "website_url": "https://example.co.za",
+    "industry": "Industry Sub-sector",
+    "location": "City/Area",
+    "description": "Brief description"
+  }
+]`;
 
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -138,9 +100,9 @@ RULES:
       body: JSON.stringify({
         model: 'google/gemini-3-flash-preview',
         messages: [
-          { role: 'user', content: analysisPrompt }
+          { role: 'user', content: discoveryPrompt }
         ],
-        max_tokens: 2000,
+        max_tokens: 3000,
       }),
     });
 
@@ -160,7 +122,7 @@ RULES:
       const errorText = await aiResponse.text();
       console.error('AI API error:', errorText);
       return new Response(
-        JSON.stringify({ success: false, error: 'AI analysis failed' }),
+        JSON.stringify({ success: false, error: 'AI discovery failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -168,16 +130,24 @@ RULES:
     const aiData = await aiResponse.json();
     const aiContent = aiData.choices?.[0]?.message?.content || '';
     
-    console.log('AI analysis complete');
+    console.log('AI discovery complete, parsing response');
 
     // Parse the AI response
     let companies: DiscoveredCompany[] = [];
     try {
       const cleanJson = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       companies = JSON.parse(cleanJson);
+      
+      // Validate and clean up the companies
+      companies = companies.filter(c => 
+        c.company_name && 
+        c.website_url && 
+        c.website_url.startsWith('http')
+      ).slice(0, 10); // Limit to 10
+      
     } catch (parseError) {
       console.error('Failed to parse AI response:', parseError);
-      console.log('Raw AI response:', aiContent);
+      console.log('Raw AI response:', aiContent.substring(0, 500));
       return new Response(
         JSON.stringify({ success: false, error: 'Failed to parse discovery results' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
