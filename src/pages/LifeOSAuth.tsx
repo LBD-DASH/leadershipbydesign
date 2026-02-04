@@ -9,11 +9,12 @@ import { toast } from "sonner";
 
 const LifeOSAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, isAuthenticated } = useAuth();
+  const { signIn, signUp, resetPassword, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already authenticated
@@ -27,7 +28,15 @@ const LifeOSAuth = () => {
     setIsLoading(true);
 
     try {
-      if (isLogin) {
+      if (isForgotPassword) {
+        const { error } = await resetPassword(email);
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("Password reset email sent! Check your inbox.");
+          setIsForgotPassword(false);
+        }
+      } else if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
           toast.error(error.message);
@@ -75,7 +84,11 @@ const LifeOSAuth = () => {
               The Sovereign
             </h1>
             <p className="text-[hsl(var(--los-muted-foreground))] mt-2 text-sm">
-              {isLogin ? "Welcome back to your Life-OS" : "Begin your sovereign journey"}
+              {isForgotPassword 
+                ? "Enter your email to reset your password" 
+                : isLogin 
+                  ? "Welcome back to your Life-OS" 
+                  : "Begin your sovereign journey"}
             </p>
           </div>
 
@@ -98,30 +111,43 @@ const LifeOSAuth = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-wider text-[hsl(var(--los-gold))] font-medium">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(var(--los-muted-foreground))]" />
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                  className="pl-11 pr-11 h-12 bg-[hsl(var(--los-muted))] border-[hsl(var(--los-border))] text-[hsl(var(--los-foreground))] placeholder:text-[hsl(var(--los-muted-foreground))] rounded-xl focus:border-[hsl(var(--los-gold))] focus:ring-[hsl(var(--los-gold)/0.2)]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[hsl(var(--los-muted-foreground))] hover:text-[hsl(var(--los-foreground))] transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+            {!isForgotPassword && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs uppercase tracking-wider text-[hsl(var(--los-gold))] font-medium">
+                    Password
+                  </label>
+                  {isLogin && (
+                    <button
+                      type="button"
+                      onClick={() => setIsForgotPassword(true)}
+                      className="text-xs text-[hsl(var(--los-muted-foreground))] hover:text-[hsl(var(--los-gold))] transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(var(--los-muted-foreground))]" />
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    className="pl-11 pr-11 h-12 bg-[hsl(var(--los-muted))] border-[hsl(var(--los-border))] text-[hsl(var(--los-foreground))] placeholder:text-[hsl(var(--los-muted-foreground))] rounded-xl focus:border-[hsl(var(--los-gold))] focus:ring-[hsl(var(--los-gold)/0.2)]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[hsl(var(--los-muted-foreground))] hover:text-[hsl(var(--los-foreground))] transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             <Button
               type="submit"
@@ -136,7 +162,7 @@ const LifeOSAuth = () => {
                 />
               ) : (
                 <>
-                  {isLogin ? "Enter the Realm" : "Create Account"}
+                  {isForgotPassword ? "Send Reset Link" : isLogin ? "Enter the Realm" : "Create Account"}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}
@@ -147,10 +173,20 @@ const LifeOSAuth = () => {
           <div className="mt-6 text-center">
             <button
               type="button"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                if (isForgotPassword) {
+                  setIsForgotPassword(false);
+                } else {
+                  setIsLogin(!isLogin);
+                }
+              }}
               className="text-sm text-[hsl(var(--los-muted-foreground))] hover:text-[hsl(var(--los-gold))] transition-colors"
             >
-              {isLogin ? "New here? Create an account" : "Already have an account? Sign in"}
+              {isForgotPassword 
+                ? "Back to sign in" 
+                : isLogin 
+                  ? "New here? Create an account" 
+                  : "Already have an account? Sign in"}
             </button>
           </div>
         </div>
