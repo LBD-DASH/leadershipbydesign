@@ -50,6 +50,8 @@ import AIReadinessDiagnosticLanding from "./pages/AIReadinessDiagnosticLanding";
 import AIReadinessDiagnostic from "./pages/AIReadinessDiagnostic";
 import LifeOS from "./pages/LifeOS";
 import LifeOSAuth from "./pages/LifeOSAuth";
+import Podcast from "./pages/Podcast";
+import PodcastEpisode from "./pages/PodcastEpisode";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +92,8 @@ const App = () => (
           <Route path="/ai-readiness-diagnostic" element={<AIReadinessDiagnostic />} />
           <Route path="/life-os" element={<LifeOS />} />
           <Route path="/life-os/auth" element={<LifeOSAuth />} />
+          <Route path="/podcast" element={<Podcast />} />
+          <Route path="/podcast/:slug" element={<PodcastEpisode />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />

@@ -2,13 +2,15 @@ import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, FileText, Video, Download, ExternalLink, Bot } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, FileText, Video, Download, ExternalLink, Bot, Headphones, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import partnerLogo1 from "@/assets/partner-logo-1.png";
 import valuesLogo from "@/assets/values-logo.png";
 import shiftLogo from "@/assets/shift-logo.jpg";
 import purposeBlueprintLogo from "@/assets/purpose-blueprint-logo.png";
 import bookCover from "@/assets/future-of-work-book.png";
+import { getRecentEpisodes, PODCAST_COVER_IMAGE } from "@/data/podcastEpisodes";
 
 export default function Resources() {
   const leadershipArticles = [
@@ -562,7 +564,89 @@ export default function Resources() {
               </div>
             </section>
 
-            {/* Resource Categories */}
+            {/* Leadership Podcast Section */}
+            <section className="space-y-6 mb-16">
+              <div className="flex items-center gap-3 mb-4">
+                <Headphones className="w-8 h-8 text-primary" />
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground">Leadership Podcast</h2>
+                  <p className="text-muted-foreground">Conversations on developing leadership capability</p>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {getRecentEpisodes(3).map((episode, idx) => (
+                  <Card key={idx} className="hover:shadow-lg transition-shadow overflow-hidden group h-full">
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5">
+                      <img 
+                        src={PODCAST_COVER_IMAGE}
+                        alt={episode.title}
+                        className="w-full h-full object-cover opacity-20"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-background/90 backdrop-blur-sm rounded-full p-4 shadow-lg">
+                          <Headphones className="w-10 h-10 text-primary" />
+                        </div>
+                      </div>
+                      <div className="absolute top-3 left-3">
+                        <Badge className="bg-[#1DB954] text-white border-0">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {episode.duration}
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg group-hover:text-primary transition-colors line-clamp-2">
+                        {episode.title}
+                      </CardTitle>
+                      {episode.guest && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <User className="w-4 h-4" />
+                          <span>{episode.guest}</span>
+                        </div>
+                      )}
+                      <CardDescription className="line-clamp-2">
+                        {episode.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex gap-2">
+                        <Link to={`/podcast/${episode.id}`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full group/btn">
+                            Listen & Share
+                            <ExternalLink className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                          </Button>
+                        </Link>
+                        <a 
+                          href={`https://open.spotify.com/episode/${episode.spotifyId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button 
+                            size="sm" 
+                            className="bg-[#1DB954] hover:bg-[#1ed760] text-white"
+                          >
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                            </svg>
+                          </Button>
+                        </a>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              <div className="text-center mt-6">
+                <Link to="/podcast">
+                  <Button variant="outline" className="group">
+                    View All Episodes
+                    <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </section>
+
             <section className="space-y-12">
               {resourceCategories.map((category, idx) => (
                 <div key={idx} className="space-y-6">
