@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import MarketingStats from '@/components/marketing/MarketingStats';
 import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 import ProspectingTool from '@/components/marketing/ProspectingTool';
 import ProspectList from '@/components/marketing/ProspectList';
+import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -92,10 +93,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+              <TabsList className="grid grid-cols-6 w-full max-w-3xl">
                 <TabsTrigger value="prospects" className="flex items-center gap-2">
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Prospects</span>
+                </TabsTrigger>
+                <TabsTrigger value="automation" className="flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  <span className="hidden sm:inline">Automation</span>
                 </TabsTrigger>
                 <TabsTrigger value="generate" className="flex items-center gap-2">
                   <PenTool className="w-4 h-4" />
@@ -128,6 +133,10 @@ export default function MarketingDashboard() {
                     <ProspectList />
                   </TabsContent>
                 </Tabs>
+              </TabsContent>
+
+              <TabsContent value="automation" className="mt-6">
+                <ProspectingAutomation />
               </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
