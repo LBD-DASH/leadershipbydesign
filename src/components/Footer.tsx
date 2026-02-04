@@ -63,6 +63,11 @@ const Footer = () => {
                   6 Human Needs
                 </a>
               </li>
+              <li>
+                <Link to="/auth" className="text-xs sm:text-sm text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -90,16 +95,10 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex items-center justify-center">
           <p className="text-xs sm:text-sm text-muted-foreground">
             © {new Date().getFullYear()} Leadership by Design. All rights reserved.
           </p>
-          <Link 
-            to="/auth" 
-            className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
-          >
-            Admin
-          </Link>
         </div>
       </div>
     </footer>
