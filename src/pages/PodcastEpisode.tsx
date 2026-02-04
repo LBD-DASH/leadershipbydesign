@@ -37,7 +37,10 @@ export default function PodcastEpisode() {
         title={`${episode.title} | The Lunchtime Series`}
         description={episode.description}
         canonicalUrl={`/podcast/${episode.id}`}
+        ogImage={PODCAST_COVER_IMAGE}
+        ogType="article"
         keywords={`${episode.tags.join(', ')}, leadership podcast, Kevin Britz`}
+        publishedTime={episode.publishedDate}
       />
 
       <div className="min-h-screen bg-background">
