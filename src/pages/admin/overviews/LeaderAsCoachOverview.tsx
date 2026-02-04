@@ -143,8 +143,8 @@ export default function LeaderAsCoachOverview() {
           </OverviewSection>
 
           <OverviewSection title="6-Month Curriculum Overview">
-            <div className="grid grid-cols-3 gap-3">
-              {months.slice(0, 3).map((month) => (
+            <div className="grid grid-cols-2 gap-3">
+              {months.map((month) => (
                 <div key={month.month} className="bg-muted/30 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
@@ -167,28 +167,6 @@ export default function LeaderAsCoachOverview() {
 
         {/* Page 2 */}
         <OverviewPage>
-          <OverviewSection title="Curriculum Months 4-6">
-            <div className="grid grid-cols-3 gap-3">
-              {months.slice(3).map((month) => (
-                <div key={month.month} className="bg-muted/30 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
-                      {month.month}
-                    </div>
-                    <p className="font-medium text-foreground text-sm">{month.title}</p>
-                  </div>
-                  <ul className="space-y-1">
-                    {month.weeks.map((week) => (
-                      <li key={week.week} className="text-xs text-muted-foreground">
-                        W{week.week}: {week.topic.split(' - ')[0]}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </OverviewSection>
-
           <OverviewSection title="Programme Outcomes">
             <div className="grid grid-cols-2 gap-2">
               {outcomes.map((outcome) => (
