@@ -199,10 +199,10 @@ export default function MotivationWorkshop() {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                What You'll Achieve
+                Leadership Outcomes You'll Achieve
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Reignite your team's energy and create sustainable practices for long-term motivation.
+                Develop the leadership skills to inspire your team, create sustainable energy, and lead with purpose.
               </p>
             </div>
             
@@ -300,10 +300,10 @@ export default function MotivationWorkshop() {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
-                Explore Other Workshops
+                Explore Other Leadership Workshops
               </h2>
               <p className="text-muted-foreground">
-                Discover more ways to transform your team's performance.
+                Discover more ways to develop leadership capability and drive team performance.
               </p>
             </div>
             
