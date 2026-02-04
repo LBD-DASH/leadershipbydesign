@@ -167,13 +167,6 @@ export default function LeaderAsCoachOverview() {
 
         {/* Page 2 */}
         <OverviewPage>
-          <div className="text-center mb-6">
-            <p className="text-primary uppercase tracking-widest text-sm font-medium mb-2">Leadership by Design</p>
-            <h2 className="text-2xl font-bold text-foreground">Leader as Coach - Months 4-6</h2>
-            <p className="text-sm text-muted-foreground mt-2">Advanced Coaching Skills & Integration</p>
-            <div className="w-16 h-1 bg-primary mx-auto mt-4"></div>
-          </div>
-
           <OverviewSection title="Curriculum Months 4-6">
             <div className="grid grid-cols-3 gap-3">
               {months.slice(3).map((month) => (
