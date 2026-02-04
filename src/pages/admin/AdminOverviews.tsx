@@ -9,6 +9,17 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ArrowLeft, ArrowRight, Loader2, User, Users, Zap, Target, Shield, Layers, BarChart3, Sparkles, Award, Bot, MessageCircle, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
+// Import images
+import leaderAsCoachImage from '@/assets/leader-as-coach.jpg';
+import serviceExecutiveCoaching from '@/assets/service-executive-coaching.jpg';
+import leadershipL1Image from '@/assets/leadership-l1-productivity.jpg';
+import leadershipWomenImage from '@/assets/leadership-women.jpg';
+import grandMastersImage from '@/assets/grand-masters-team.jpg';
+import shiftMethodologyImage from '@/assets/shift-methodology-planning.jpg';
+import workshopAlignmentImage from '@/assets/workshop-alignment.jpg';
+import workshopMotivationImage from '@/assets/workshop-motivation.jpg';
+import workshopLeadershipImage from '@/assets/workshop-leadership.jpg';
+
 interface ProgrammeOverview {
   title: string;
   description: string;
@@ -16,6 +27,7 @@ interface ProgrammeOverview {
   pages: number;
   icon: typeof User;
   category: string;
+  image?: string;
 }
 
 const coachingProgrammes: ProgrammeOverview[] = [
@@ -25,7 +37,8 @@ const coachingProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/executive-coaching',
     pages: 2,
     icon: User,
-    category: 'Coaching'
+    category: 'Coaching',
+    image: serviceExecutiveCoaching
   },
   {
     title: 'Leader as Coach',
@@ -33,7 +46,8 @@ const coachingProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/leader-as-coach',
     pages: 2,
     icon: MessageCircle,
-    category: 'Coaching'
+    category: 'Coaching',
+    image: leaderAsCoachImage
   }
 ];
 
@@ -44,7 +58,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/leadership-levels',
     pages: 2,
     icon: BarChart3,
-    category: 'Framework'
+    category: 'Framework',
+    image: leadershipL1Image
   },
   {
     title: 'SHIFT Leadership Development',
@@ -52,7 +67,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/shift-leadership',
     pages: 2,
     icon: Layers,
-    category: 'Development'
+    category: 'Development',
+    image: shiftMethodologyImage
   },
   {
     title: 'SHIFT Methodology',
@@ -60,7 +76,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/shift-methodology',
     pages: 2,
     icon: Zap,
-    category: 'Methodology'
+    category: 'Methodology',
+    image: shiftMethodologyImage
   },
   {
     title: 'Grand Masters of Success',
@@ -68,7 +85,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/grand-masters',
     pages: 1,
     icon: Award,
-    category: 'Foundation'
+    category: 'Foundation',
+    image: grandMastersImage
   },
   {
     title: 'Leadership for Women',
@@ -76,7 +94,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/leadership-women',
     pages: 1,
     icon: Sparkles,
-    category: 'Specialised'
+    category: 'Specialised',
+    image: leadershipWomenImage
   },
   {
     title: 'Leading in the AI Era',
@@ -84,7 +103,8 @@ const leadershipProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/ai-leadership',
     pages: 1,
     icon: Bot,
-    category: 'Specialised'
+    category: 'Specialised',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80'
   }
 ];
 
@@ -95,7 +115,8 @@ const workshopProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/workshop-alignment',
     pages: 1,
     icon: Target,
-    category: 'Workshop'
+    category: 'Workshop',
+    image: workshopAlignmentImage
   },
   {
     title: 'Team Energy Workshop',
@@ -103,7 +124,8 @@ const workshopProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/workshop-motivation',
     pages: 1,
     icon: Zap,
-    category: 'Workshop'
+    category: 'Workshop',
+    image: workshopMotivationImage
   },
   {
     title: 'Team Ownership Workshop',
@@ -111,20 +133,37 @@ const workshopProgrammes: ProgrammeOverview[] = [
     route: '/admin/overview/workshop-leadership',
     pages: 1,
     icon: Shield,
-    category: 'Workshop'
+    category: 'Workshop',
+    image: workshopLeadershipImage
   }
 ];
 
 const ProgrammeCard = ({ programme }: { programme: ProgrammeOverview }) => (
   <Link to={programme.route}>
-    <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between mb-2">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <programme.icon className="w-5 h-5 text-primary" />
+    <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer overflow-hidden">
+      {programme.image && (
+        <div className="relative h-32 overflow-hidden">
+          <img 
+            src={programme.image} 
+            alt={programme.title} 
+            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+          <div className="absolute top-2 right-2">
+            <Badge variant="secondary" className="bg-background/90">{programme.pages} page{programme.pages > 1 ? 's' : ''}</Badge>
           </div>
-          <Badge variant="secondary">{programme.pages} page{programme.pages > 1 ? 's' : ''}</Badge>
         </div>
+      )}
+      <CardHeader className={programme.image ? 'pb-3 pt-3' : 'pb-3'}>
+        {!programme.image && (
+          <div className="flex items-center justify-between mb-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <programme.icon className="w-5 h-5 text-primary" />
+            </div>
+            <Badge variant="secondary">{programme.pages} page{programme.pages > 1 ? 's' : ''}</Badge>
+          </div>
+        )}
         <CardTitle className="text-lg group-hover:text-primary transition-colors">
           {programme.title}
         </CardTitle>
