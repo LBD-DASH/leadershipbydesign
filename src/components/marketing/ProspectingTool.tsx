@@ -20,6 +20,18 @@ export default function ProspectingTool() {
     e.preventDefault();
     if (!url.trim()) return;
 
+    // Lightweight client-side validation (server also validates)
+    const candidate = url.trim();
+    const looksLikeUrl = /\./.test(candidate) && !/\s/.test(candidate);
+    if (!looksLikeUrl) {
+      toast({
+        title: 'Please enter a website URL',
+        description: 'Use a domain like company.co.za (not the company name).',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsResearching(true);
     setResult(null);
     setSaved(false);

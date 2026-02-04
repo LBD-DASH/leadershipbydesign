@@ -35,14 +35,23 @@ export interface CompanyResearchResult {
 export const prospectsApi = {
   // Research a company by URL
   async researchCompany(url: string): Promise<{ success: boolean; data?: CompanyResearchResult; error?: string }> {
-    const { data, error } = await supabase.functions.invoke('firecrawl-company-research', {
-      body: { url },
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('firecrawl-company-research', {
+        body: { url },
+      });
 
-    if (error) {
-      return { success: false, error: error.message };
+      // Non-2xx responses may surface either as `error` or as a thrown exception depending on runtime.
+      if (error) {
+        // Try to preserve the edge function's message when it is embedded in the error string.
+        const message = typeof error.message === 'string' ? error.message : 'Bad Request';
+        return { success: false, error: message };
+      }
+
+      return data;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Bad Request';
+      return { success: false, error: message };
     }
-    return data;
   },
 
   // Save a researched company to the database
