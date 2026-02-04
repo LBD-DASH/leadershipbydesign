@@ -150,7 +150,7 @@ export default function ProspectingAutomation() {
     onSuccess: (data) => {
       setIsRunning(false);
       queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
-      queryClient.invalidateQueries({ queryKey: ['prospect-companies'] });
+      queryClient.invalidateQueries({ queryKey: ['prospect-companies-by-industry'] });
       
       if (data.success) {
         toast.success(`Pipeline completed! Saved ${data.stats.companies_saved} new prospects`);
