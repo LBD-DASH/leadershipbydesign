@@ -1,102 +1,141 @@
 
-# Prospect Quality Indicator (Green/Yellow/Red)
+# Automated Daily Prospecting Pipeline
 
-## Overview
-Add a visual traffic light indicator to show at a glance how promising a prospect is based on the data quality and opportunity signals extracted during research.
+## Why It Doesn't Work Automatically Yet
 
-## Scoring Logic
+The system currently has all the **building blocks** but lacks the **orchestration layer**:
 
-The prospect quality score will be calculated based on **data completeness** and **opportunity signals**:
+| What We Have | What's Missing |
+|--------------|----------------|
+| `find-companies` function (discovers 8-10 companies) | No scheduler to trigger it daily |
+| `firecrawl-company-research` function (deep research) | No automation to chain discovery → research → save |
+| `prospect_companies` database table | No deduplication to avoid re-researching |
+| Quality scoring system | No configuration for which industries to target |
 
-| Factor | Points | Reasoning |
-|--------|--------|-----------|
-| **Contact Email** | +25 | Direct outreach possible |
-| **HR/L&D Contacts** | +20 | Key decision makers identified |
-| **Contact Phone** | +10 | Alternative contact method |
-| **Pain Points Identified** | +15 | Clear problems to solve |
-| **Opportunity Signals** | +15 | Growth/need indicators |
-| **Leadership Team Extracted** | +10 | Organisation structure known |
-| **LinkedIn URL** | +5 | Social connection possible |
+## The Solution: Automated Prospecting Pipeline
 
-**Total possible: 100 points**
-
-### Temperature Thresholds
-- **Green (Hot)**: 60+ points - High-quality prospect, ready to contact
-- **Yellow (Warm)**: 35-59 points - Potential, but needs more research
-- **Red (Cool)**: Below 35 points - Limited data, low priority
-
-## Visual Design
+We'll create a fully automated system that runs daily and populates your prospects with **researched, scored leads**.
 
 ```text
-+-------------------------------------------+
-| Company Name            [🟢 Hot Lead]     |
-| Industry | Size                           |
-+-------------------------------------------+
+┌─────────────────────────────────────────────────────────────────────┐
+│                    DAILY PROSPECTING PIPELINE                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌──────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────┐ │
+│   │ CRON JOB │───▶│   DISCOVER   │───▶│   RESEARCH   │───▶│ SAVE │ │
+│   │ (6am)    │    │ 10 companies │    │ Each company │    │ + DB │ │
+│   └──────────┘    │ per industry │    │ via Firecrawl│    │Score │ │
+│                   └──────────────┘    └──────────────┘    └──────┘ │
+│                                                                     │
+│   Industries: Financial Services, Technology, Manufacturing,       │
+│               Professional Services, Healthcare                     │
+│                                                                     │
+│   = 50 NEW RESEARCHED PROSPECTS PER DAY                            │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-The indicator will appear as:
-- **Green circle** with "Hot Lead" tooltip - prioritize contact
-- **Yellow circle** with "Warm Lead" tooltip - follow up
-- **Red circle** with "Needs Research" tooltip - gather more info first
+## Implementation Plan
 
-## Implementation
+### 1. Create Orchestration Edge Function
+**New file**: `supabase/functions/auto-prospect-pipeline/index.ts`
 
-### 1. Create Prospect Scoring Utility
-New file: `src/utils/prospectScoring.ts`
+This function will:
+- Accept a list of target industries as configuration
+- For each industry: call `find-companies` to discover 10 companies
+- Check database to skip already-researched companies (deduplication)
+- For each new company: call `firecrawl-company-research`
+- Save fully-researched prospects to `prospect_companies` table
+- Log results for monitoring
 
-```text
-- Calculate score based on available prospect data
-- Return score, temperature (hot/warm/cool), and breakdown
-- Export reusable function for both components
+### 2. Create Configuration Table
+**New table**: `prospecting_config`
+
+Stores which industries to target and settings:
+- `id`, `industry`, `location`, `company_size`, `is_active`, `last_run_at`
+- Default industries: Financial Services, Technology, Manufacturing, Professional Services, Healthcare
+
+### 3. Create Run History Table
+**New table**: `prospecting_runs`
+
+Tracks each automated run:
+- `id`, `started_at`, `completed_at`, `status`, `companies_discovered`, `companies_researched`, `companies_saved`, `errors`
+
+### 4. Set Up pg_cron Scheduler
+Schedule the pipeline to run daily at 6am:
+
+```sql
+SELECT cron.schedule(
+  'daily-prospecting-pipeline',
+  '0 6 * * *',  -- 6am every day
+  $$ SELECT net.http_post(...) $$
+);
 ```
 
-### 2. Update LeadDiscoveryForm Component
-Add quality indicator to each researched company card:
-- Show indicator after research completes
-- Display next to company name
-- Include tooltip with score breakdown
-
-### 3. Update ProspectList Component
-Add quality indicator to saved prospect cards:
-- Show indicator in the card header
-- Allow sorting/filtering by quality score (future enhancement)
-- Visual consistency with discovery view
-
-### 4. Create QualityIndicator Component
-Reusable component: `src/components/marketing/QualityIndicator.tsx`
-- Traffic light colored badge/dot
-- Hover tooltip showing score and breakdown
-- Accessible with proper aria labels
+### 5. Add Admin UI for Monitoring
+Update the Marketing Dashboard to show:
+- Last run status and results
+- Enable/disable industries
+- Manual "Run Now" button
+- Error logs if any failures
 
 ## Technical Details
 
-### Scoring Function Signature
-```typescript
-interface ProspectQualityScore {
-  score: number;
-  temperature: 'hot' | 'warm' | 'cool';
-  color: 'green' | 'yellow' | 'red';
-  label: string;
-  breakdown: {
-    contactEmail: number;
-    hrContacts: number;
-    contactPhone: number;
-    painPoints: number;
-    opportunitySignals: number;
-    leadershipTeam: number;
-    linkedIn: number;
-  };
-}
+### Edge Function Logic (Pseudocode)
+
+```text
+1. Fetch active industries from prospecting_config
+2. For each industry:
+   a. Call find-companies API → get 10 companies
+   b. Check prospect_companies for existing URLs (skip duplicates)
+   c. For each new company (with 2-second delay to avoid rate limits):
+      - Call firecrawl-company-research API
+      - Calculate quality score
+      - Insert into prospect_companies with status='new'
+   d. Update prospecting_config.last_run_at
+3. Log summary to prospecting_runs table
+4. Return success/failure report
+```
+
+### Rate Limit Handling
+
+- Add 2-3 second delays between Firecrawl calls
+- Process industries sequentially to spread load
+- If rate limited (429), retry with exponential backoff
+- Maximum 50 companies per run (5 industries × 10 companies)
+
+### Deduplication Strategy
+
+Before researching a company, check if `website_url` already exists in `prospect_companies`:
+
+```sql
+SELECT id FROM prospect_companies 
+WHERE website_url = $1 OR company_name ILIKE $2
 ```
 
 ### Files to Create/Modify
-1. **Create**: `src/utils/prospectScoring.ts` - Scoring logic
-2. **Create**: `src/components/marketing/QualityIndicator.tsx` - Visual component
-3. **Modify**: `src/components/marketing/LeadDiscoveryForm.tsx` - Add indicator to discovered companies
-4. **Modify**: `src/components/marketing/ProspectList.tsx` - Add indicator to saved prospects
 
-## User Experience
-- At-a-glance prioritization of leads
-- Clear visual hierarchy (green = act now, red = needs work)
-- Consistent across discovery and saved prospects
-- Hovering shows why a prospect scored the way it did
+| File | Action | Purpose |
+|------|--------|---------|
+| `supabase/functions/auto-prospect-pipeline/index.ts` | Create | Main orchestration function |
+| `supabase/config.toml` | Modify | Add function config |
+| Database migration | Create | Add `prospecting_config` and `prospecting_runs` tables |
+| `src/components/marketing/ProspectingAutomation.tsx` | Create | Admin UI for monitoring |
+| `src/pages/MarketingDashboard.tsx` | Modify | Add automation tab/section |
+
+## Cost Considerations
+
+Per daily run (50 companies):
+- **Lovable AI (Discovery)**: 5 calls × ~3000 tokens = minimal
+- **Firecrawl (Scraping)**: 50 scrapes × $0.001 = ~$0.05/day
+- **Anthropic (Analysis)**: 50 calls × ~2000 tokens = ~$0.10/day
+
+**Monthly cost**: ~$4.50 for 1,500 fully-researched prospects
+
+## Outcome
+
+After implementation, every morning at 6am you'll wake up to:
+- 50 new companies discovered and researched
+- Each prospect scored with Green/Yellow/Red quality indicator
+- Contact details, pain points, and personalised pitches ready
+- HR/L&D decision makers identified with LinkedIn links
+- Zero manual effort required
