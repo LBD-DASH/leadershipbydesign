@@ -1,4 +1,4 @@
-import { BarChart3, Target, Users, Zap, Star, Award, Sparkles, Compass, Heart, Crown, Bot } from 'lucide-react';
+import { BarChart3, Target, Users, Zap, Star, Award, Sparkles, Compass, Heart, Crown, Bot, MessageCircle } from 'lucide-react';
 import leadershipL1 from '@/assets/leadership-l1-productivity.jpg';
 import leadershipL2 from '@/assets/leadership-l2-development.jpg';
 import leadershipL3 from '@/assets/leadership-l3-purpose.jpg';
@@ -9,6 +9,7 @@ import grandMastersTeam from '@/assets/grand-masters-team.jpg';
 import workshopAlignment from '@/assets/workshop-alignment.jpg';
 import workshopMotivation from '@/assets/workshop-motivation.jpg';
 import workshopLeadership from '@/assets/workshop-leadership.jpg';
+import leaderAsCoach from '@/assets/leader-as-coach.jpg';
 
 export interface LessonContent {
   title: string;
@@ -1425,6 +1426,145 @@ export const adminProgrammesData: ProgrammeData[] = [
         ]
       }
     ]
+  },
+  {
+    id: 'leader-as-coach',
+    title: 'Leader as Coach',
+    subtitle: 'Coaching Skills for Leaders',
+    level: 'Coaching',
+    levelBadge: 'Coaching',
+    description: 'This programme cultivates successful, continuous, and empowered leadership coaches who are motivated by leadership, have an understanding of human behaviour, and are equipped with effective methods that can be implemented to get the most out of their teams and make stronger connections with them as leaders.',
+    tagline: 'Transform leaders into effective coaches',
+    icon: MessageCircle,
+    image: leaderAsCoach,
+    introduction: {
+      title: 'Programme Overview',
+      topics: [
+        'Understanding coaching culture and its impact on business performance',
+        'The role of leaders as coaches in modern organisations',
+        'Building trust-based relationships for improved accountability',
+        'Developing active listening skills for inclusive leadership'
+      ]
+    },
+    lessons: [
+      {
+        title: 'Month 1: Leadership Foundations',
+        topics: [
+          'Week 1: Leadership vs Management - Understanding responsibilities and the importance of both',
+          'Week 2: Modern Leadership - Traditional vs modern leadership styles and relevance today',
+          'Week 3: Effective Leadership Communication - Empowered adult-adult conversations',
+          'Week 4: Building Trust - Tools for trust-based relationships that improve accountability'
+        ],
+        practicals: [
+          'Monthly Assessment',
+          'Reflection Exercises',
+          'Leadership Style Evaluation',
+          'Trust Building Action Plan'
+        ]
+      },
+      {
+        title: 'Month 2: Leading Through Change',
+        topics: [
+          'Week 1: Conflict Management - Managing miscommunication and non-performance',
+          'Week 2: Leading Change - Tools to support teams through change and build resilience',
+          'Week 3: Leading a Diverse Team - Optimising diversity for improved performance and innovation',
+          'Week 4: Round Up & Success Stories - Reflection and sustaining new habits'
+        ],
+        practicals: [
+          'Conflict Resolution Scenarios',
+          'Change Readiness Assessment',
+          'Diversity Optimisation Toolkit',
+          'Habit Sustainability Plan'
+        ]
+      },
+      {
+        title: 'Month 3: Human Behaviour & Personal Branding',
+        topics: [
+          'Week 1: Foundation of Human Behaviour - NLP Communication Model and decision-making',
+          'Week 2: Presentation Skills & Storytelling - Personal branding and audience connection',
+          'Week 3: Building Confidence & Resilience - Self-efficacy and empowering others',
+          'Week 4: Round Up & Success Stories - Planning the way forward'
+        ],
+        practicals: [
+          'NLP Assessment',
+          'Personal Branding Workshop',
+          'Confidence Building Exercises',
+          'Values and Beliefs Analysis'
+        ]
+      },
+      {
+        title: 'Month 4: Mindset & Coaching Mode',
+        topics: [
+          'Week 1: Inward vs Outward Mindset - Transformational process and avoiding collusion',
+          'Week 2: Drama Triangle - Stepping out of Victim/Rescuer/Persecutor into coaching roles',
+          'Week 3: Building Confidence in Self & Cultivating Others - Self-efficacy and empowerment',
+          'Week 4: Round Up & Success Stories - Sustaining new habits'
+        ],
+        practicals: [
+          'Mindset Transformation Exercise',
+          'Drama Triangle Analysis',
+          'Self-Efficacy Assessment',
+          'Team Empowerment Plan'
+        ]
+      },
+      {
+        title: 'Month 5: Advanced Coaching Skills',
+        topics: [
+          'Week 1: 10 Success-Minded Principles - Laws modelled from key performers and systems theory',
+          'Week 2: Conflict to Collaboration - Thomas-Kilmann Conflict Mode Instrument (TKI)',
+          'Week 3: Neuroscience in Leadership - Head, Heart & Gut Brain decision-making',
+          'Week 4: Understanding Bias - Cognizance of 185+ biases and mitigation tools'
+        ],
+        practicals: [
+          'Success Principles Application',
+          'TKI Assessment',
+          'Holistic Decision-Making Framework',
+          'Bias Mitigation Toolkit'
+        ]
+      },
+      {
+        title: 'Month 6: Wellbeing & Leadership Integration',
+        topics: [
+          'Week 1: Wellbeing vs Burnout - Recognising signs and practical mitigation tools',
+          'Week 2: 6 Q\'s of Leadership - SQ, EQ, purpose, values and self-regulation',
+          'Week 3: Influence Pyramid - S.A.M tool for positive impact on your environment',
+          'Week 4: Final Round Up & Success Stories - Planning for sustainable impact'
+        ],
+        practicals: [
+          'Burnout Assessment',
+          'Leadership Q\'s Self-Evaluation',
+          'S.A.M Practical Tool',
+          'Programme Graduation',
+          'Final Evaluation',
+          'Participant\'s Feedback Sheet'
+        ]
+      }
+    ],
+    topics: [
+      'Leadership vs Management',
+      'Modern Leadership & Communication',
+      'Building Trust & Managing Conflict',
+      'Leading Change & Diversity',
+      'Human Behaviour & Personal Branding',
+      'Mindset Transformation & Coaching Mode',
+      'Neuroscience in Leadership',
+      'Understanding & Mitigating Bias',
+      'Wellbeing & Burnout Prevention',
+      'Influence & Leadership Integration'
+    ],
+    outcomes: [
+      'A coaching culture to boost company performance',
+      'Leaders who serve as resources offering assistance, knowledge and guidance',
+      'Improved ability to model leadership and reinforce corporate strategy',
+      'Increased leadership awareness and ability to provide constructive feedback',
+      'Reduced team overwhelm and enhanced job satisfaction and productivity',
+      'Improved decision-making and better relationships and communication',
+      'Skills development for promotion or higher-level functions',
+      'Sustainable habits and continuous leadership development'
+    ],
+    targetAudience: 'Organisational leaders looking to develop coaching capabilities, build cohesive teams, and foster a collaborative mindset that positively impacts organisational culture',
+    duration: '6 months',
+    format: 'Weekly Virtual Sessions | Monthly Assessments | Session Recordings | Coach Moderation'
   }
 ];
 
