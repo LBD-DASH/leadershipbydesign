@@ -18,6 +18,13 @@ interface CompanyIntelligence {
   opportunity_signals: string[] | null;
   personalised_pitch: string | null;
   suggested_approach: string | null;
+  // Enhanced contact extraction
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_name: string | null;
+  contact_role: string | null;
+  physical_address: string | null;
+  linkedin_url: string | null;
 }
 
 Deno.serve(async (req) => {
@@ -131,7 +138,13 @@ Based on this content, provide a JSON response with the following structure:
   "pain_points": ["Likely leadership challenges based on their context", "Another challenge"],
   "opportunity_signals": ["Signals that suggest they need leadership development", "Growth signals"],
   "personalised_pitch": "A 3-4 sentence personalized outreach message that references their specific situation and offers leadership development solutions. Use a consultative, value-first approach. Focus on their 'move away from' pain and 'move toward' aspirations.",
-  "suggested_approach": "One of: 'executive_coaching', 'team_workshop', 'shift_programme', 'leadership_diagnostic', or 'discovery_call' - with brief reasoning"
+  "suggested_approach": "One of: 'executive_coaching', 'team_workshop', 'shift_programme', 'leadership_diagnostic', or 'discovery_call' - with brief reasoning",
+  "contact_email": "Extract any business email address found (info@, hello@, contact@, or personal) or null",
+  "contact_phone": "Extract any phone number found or null",
+  "contact_name": "Name of key decision maker (CEO, MD, HR Director) if found or null",
+  "contact_role": "Role of the key decision maker if found or null",
+  "physical_address": "Physical office address if found or null",
+  "linkedin_url": "LinkedIn profile or company URL if found or null"
 }
 
 Focus on:
@@ -139,6 +152,7 @@ Focus on:
 2. Growth signals (hiring, expansion, new products)
 3. Pain points visible in their messaging
 4. Personalization hooks for outreach
+5. CONTACT DETAILS: Look carefully for email addresses, phone numbers, and physical addresses
 
 Respond ONLY with valid JSON, no markdown formatting.`;
 
@@ -205,6 +219,12 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       opportunity_signals: intelligence.opportunity_signals || null,
       personalised_pitch: intelligence.personalised_pitch || null,
       suggested_approach: intelligence.suggested_approach || null,
+      contact_email: intelligence.contact_email || null,
+      contact_phone: intelligence.contact_phone || null,
+      contact_name: intelligence.contact_name || null,
+      contact_role: intelligence.contact_role || null,
+      physical_address: intelligence.physical_address || null,
+      linkedin_url: intelligence.linkedin_url || null,
     };
 
     console.log('Company research complete:', result.company_name);

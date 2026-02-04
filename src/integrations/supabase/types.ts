@@ -917,15 +917,21 @@ export type Database = {
           about_summary: string | null
           company_name: string
           company_size: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          contact_role: string | null
           contacted_at: string | null
           created_at: string
           id: string
           industry: string | null
           leadership_team: Json | null
+          linkedin_url: string | null
           notes: string | null
           opportunity_signals: Json | null
           pain_points: Json | null
           personalised_pitch: string | null
+          physical_address: string | null
           status: string
           suggested_approach: string | null
           updated_at: string
@@ -935,15 +941,21 @@ export type Database = {
           about_summary?: string | null
           company_name: string
           company_size?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
           id?: string
           industry?: string | null
           leadership_team?: Json | null
+          linkedin_url?: string | null
           notes?: string | null
           opportunity_signals?: Json | null
           pain_points?: Json | null
           personalised_pitch?: string | null
+          physical_address?: string | null
           status?: string
           suggested_approach?: string | null
           updated_at?: string
@@ -953,21 +965,80 @@ export type Database = {
           about_summary?: string | null
           company_name?: string
           company_size?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
           id?: string
           industry?: string | null
           leadership_team?: Json | null
+          linkedin_url?: string | null
           notes?: string | null
           opportunity_signals?: Json | null
           pain_points?: Json | null
           personalised_pitch?: string | null
+          physical_address?: string | null
           status?: string
           suggested_approach?: string | null
           updated_at?: string
           website_url?: string
         }
         Relationships: []
+      }
+      prospect_outreach: {
+        Row: {
+          bounced_at: string | null
+          created_at: string
+          email_body: string
+          email_subject: string
+          id: string
+          opened_at: string | null
+          prospect_id: string | null
+          replied_at: string | null
+          sent_at: string | null
+          status: string
+          unsubscribed_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          bounced_at?: string | null
+          created_at?: string
+          email_body: string
+          email_subject: string
+          id?: string
+          opened_at?: string | null
+          prospect_id?: string | null
+          replied_at?: string | null
+          sent_at?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bounced_at?: string | null
+          created_at?: string
+          email_body?: string
+          email_subject?: string
+          id?: string
+          opened_at?: string | null
+          prospect_id?: string | null
+          replied_at?: string | null
+          sent_at?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospect_outreach_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospect_companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       shift_diagnostic_submissions: {
         Row: {
