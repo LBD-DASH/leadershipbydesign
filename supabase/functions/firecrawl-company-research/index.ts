@@ -44,10 +44,33 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Format URL
+    // Format and validate URL
     let formattedUrl = url.trim();
     if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
       formattedUrl = `https://${formattedUrl}`;
+    }
+
+    // Validate URL format - must have a valid domain (no spaces, must have TLD)
+    try {
+      const urlObj = new URL(formattedUrl);
+      // Check for spaces in hostname (invalid)
+      if (urlObj.hostname.includes(' ') || !urlObj.hostname.includes('.')) {
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'Please enter a valid website URL (e.g., example.com or https://example.com), not a company name.' 
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } catch {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Please enter a valid website URL (e.g., example.com or https://example.com), not a company name.' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log('Researching company:', formattedUrl);
