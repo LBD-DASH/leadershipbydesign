@@ -36,13 +36,15 @@ export interface ProspectCompany {
   status: string;
   contacted_at: string | null;
   notes: string | null;
-  // New contact fields
+  // Contact fields
   contact_email: string | null;
   contact_phone: string | null;
   contact_name: string | null;
   contact_role: string | null;
   physical_address: string | null;
   linkedin_url: string | null;
+  // HR/L&D contacts for LinkedIn outreach
+  hr_contacts: HRContact[] | null;
 }
 
 export interface CompanyResearchResult {
@@ -122,6 +124,7 @@ function transformProspectRow(row: Record<string, unknown>): ProspectCompany {
     contact_role: row.contact_role as string | null,
     physical_address: row.physical_address as string | null,
     linkedin_url: row.linkedin_url as string | null,
+    hr_contacts: parseJsonArray<HRContact>(row.hr_contacts as Json | null),
   };
 }
 
@@ -241,6 +244,7 @@ export const prospectsApi = {
         contact_role: researchData.contact_role || null,
         physical_address: researchData.physical_address || null,
         linkedin_url: researchData.linkedin_url || null,
+        hr_contacts: researchData.hr_contacts || null,
       });
 
       if (!saveResult.success || !saveResult.data) {
