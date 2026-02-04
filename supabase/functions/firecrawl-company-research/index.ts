@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
 
     console.log('Researching company:', formattedUrl);
 
-    // Step 1: Scrape the website using Firecrawl
+    // Step 1: Scrape the website using Firecrawl with extended timeout
     const scrapeResponse = await fetch('https://api.firecrawl.dev/v1/scrape', {
       method: 'POST',
       headers: {
@@ -93,6 +93,8 @@ Deno.serve(async (req) => {
         url: formattedUrl,
         formats: ['markdown'],
         onlyMainContent: true,
+        timeout: 60000, // 60 second timeout for slow sites
+        waitFor: 3000, // Wait 3 seconds for JS to render
       }),
     });
 

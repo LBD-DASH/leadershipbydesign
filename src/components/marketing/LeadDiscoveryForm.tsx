@@ -38,9 +38,11 @@ const COMPANY_SIZES = [
 
 interface LeadDiscoveryFormProps {
   onResearchCompany: (url: string) => void;
+  isResearching?: boolean;
+  researchingUrl?: string;
 }
 
-export default function LeadDiscoveryForm({ onResearchCompany }: LeadDiscoveryFormProps) {
+export default function LeadDiscoveryForm({ onResearchCompany, isResearching = false, researchingUrl }: LeadDiscoveryFormProps) {
   const { toast } = useToast();
   const [industry, setIndustry] = useState('');
   const [location, setLocation] = useState('');
@@ -236,8 +238,16 @@ export default function LeadDiscoveryForm({ onResearchCompany }: LeadDiscoveryFo
                       <Button
                         size="sm"
                         onClick={() => onResearchCompany(company.website_url)}
+                        disabled={isResearching}
                       >
-                        Research
+                        {isResearching && researchingUrl === company.website_url ? (
+                          <>
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                            Researching...
+                          </>
+                        ) : (
+                          'Research'
+                        )}
                       </Button>
                     </div>
                   </div>
