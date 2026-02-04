@@ -144,10 +144,14 @@ export default function ProspectingTool() {
         </TabsList>
 
         <TabsContent value="discovery" className="mt-6">
-          <LeadDiscoveryForm onResearchCompany={(url) => {
-            setUrl(url);
-            handleResearch(url);
-          }} />
+          <LeadDiscoveryForm 
+            onResearchCompany={(researchUrl) => {
+              setUrl(researchUrl);
+              handleResearch(researchUrl);
+            }}
+            isResearching={isResearching}
+            researchingUrl={url}
+          />
         </TabsContent>
 
         <TabsContent value="research" className="mt-6">
