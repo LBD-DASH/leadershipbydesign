@@ -187,6 +187,7 @@ export default function LeadDiscoveryForm() {
         contact_role: result.contact_role || null,
         physical_address: result.physical_address || null,
         linkedin_url: result.linkedin_url || null,
+        hr_contacts: result.hr_contacts || null,
       });
 
       if (response.success) {

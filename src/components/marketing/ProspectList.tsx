@@ -393,6 +393,46 @@ export default function ProspectList() {
                                 </div>
                               )}
 
+                              {/* HR/L&D Decision Makers */}
+                              {prospect.hr_contacts && prospect.hr_contacts.length > 0 && (
+                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                                  <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                                    <Linkedin className="w-4 h-4 text-[#0A66C2]" />
+                                    HR/L&D Decision Makers
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {prospect.hr_contacts.map((contact, i) => (
+                                      <div key={i} className="flex items-center justify-between bg-background/80 p-3 rounded-md border">
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-8 h-8 rounded-full bg-[#0A66C2]/10 flex items-center justify-center">
+                                            <Users className="w-4 h-4 text-[#0A66C2]" />
+                                          </div>
+                                          <div>
+                                            <p className="text-sm font-medium">{contact.name}</p>
+                                            <p className="text-xs text-muted-foreground">{contact.role}</p>
+                                          </div>
+                                        </div>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          asChild
+                                          className="border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2]/10"
+                                        >
+                                          <a 
+                                            href={contact.linkedin_search_url} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                          >
+                                            <Linkedin className="w-4 h-4 mr-1" />
+                                            Find on LinkedIn
+                                          </a>
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
                               {/* Strategic Insights Grid */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {/* Leadership Team */}

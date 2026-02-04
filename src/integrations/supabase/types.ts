@@ -923,6 +923,7 @@ export type Database = {
           contact_role: string | null
           contacted_at: string | null
           created_at: string
+          hr_contacts: Json | null
           id: string
           industry: string | null
           leadership_team: Json | null
@@ -947,6 +948,7 @@ export type Database = {
           contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
+          hr_contacts?: Json | null
           id?: string
           industry?: string | null
           leadership_team?: Json | null
@@ -971,6 +973,7 @@ export type Database = {
           contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
+          hr_contacts?: Json | null
           id?: string
           industry?: string | null
           leadership_team?: Json | null
