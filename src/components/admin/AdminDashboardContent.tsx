@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search, Zap } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 import ProspectingTool from '@/components/marketing/ProspectingTool';
 import ProspectList from '@/components/marketing/ProspectList';
+import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
 interface AdminDashboardContentProps {
   onLogout: () => void;
 }
@@ -181,6 +182,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             <Search className="w-4 h-4" />
             Prospects
           </TabsTrigger>
+          <TabsTrigger value="automation" className="flex items-center gap-2">
+            <Zap className="w-4 h-4" />
+            Automation
+          </TabsTrigger>
           <TabsTrigger value="google-ads" className="flex items-center gap-2">
             <Megaphone className="w-4 h-4" />
             Google Ads
@@ -292,6 +297,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
               <ProspectList />
             </TabsContent>
           </Tabs>
+        </TabsContent>
+
+        <TabsContent value="automation" className="mt-6">
+          <ProspectingAutomation />
         </TabsContent>
 
         <TabsContent value="google-ads" className="mt-6">
