@@ -25,6 +25,8 @@ interface CompanyIntelligence {
   contact_role: string | null;
   physical_address: string | null;
   linkedin_url: string | null;
+  // HR/L&D/People leadership for LinkedIn outreach
+  hr_contacts: { name: string; role: string; linkedin_search_url: string }[] | null;
 }
 
 Deno.serve(async (req) => {
@@ -146,8 +148,20 @@ Based on this content, provide a JSON response with the following structure:
   "contact_name": "Name of key decision maker (CEO, MD, HR Director) if found or null",
   "contact_role": "Role of the key decision maker if found or null",
   "physical_address": "Physical office address if found or null",
-  "linkedin_url": "LinkedIn profile or company URL if found or null"
+  "linkedin_url": "LinkedIn profile or company URL if found or null",
+  "hr_contacts": [{"name": "Full Name", "role": "Exact role title"}] - IMPORTANT: Look specifically for people in HR, People, L&D, or Talent roles
 }
+
+CRITICAL - HR/People/L&D Contact Extraction:
+Look VERY carefully for any names and roles related to:
+- Head of HR / HR Director / HR Manager / Chief People Officer / CHRO
+- Head of Learning & Development / L&D Director / Training Manager
+- Head of People / People Director / People Partner
+- Head of Talent / Talent Director / Talent Acquisition
+- Head of Organisational Development / OD Manager
+- Chief Human Resources Officer
+
+If you find ANY of these roles with names, include them in hr_contacts. Even if found in the leadership_team, duplicate them in hr_contacts for easy access.
 
 Focus on:
 1. Leadership challenges they might face (scaling teams, culture, performance)
@@ -155,6 +169,7 @@ Focus on:
 3. Pain points visible in their messaging
 4. Personalization hooks for outreach
 5. CONTACT DETAILS: Look carefully for email addresses, phone numbers, and physical addresses
+6. HR/PEOPLE/L&D CONTACTS: Extract ALL names with HR, People, L&D, Talent, or Training-related roles
 
 Respond ONLY with valid JSON, no markdown formatting.`;
 
@@ -209,9 +224,17 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       };
     }
 
+    // Build HR contacts with LinkedIn search URLs
+    const companyName = intelligence.company_name || metadata.title || new URL(formattedUrl).hostname;
+    const hrContacts = intelligence.hr_contacts?.map(contact => ({
+      name: contact.name,
+      role: contact.role,
+      linkedin_search_url: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(contact.name + ' ' + companyName)}&origin=GLOBAL_SEARCH_HEADER`
+    })) || null;
+
     // Build final response
     const result: CompanyIntelligence = {
-      company_name: intelligence.company_name || metadata.title || new URL(formattedUrl).hostname,
+      company_name: companyName,
       website_url: formattedUrl,
       industry: intelligence.industry || null,
       company_size: intelligence.company_size || null,
@@ -227,6 +250,7 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       contact_role: intelligence.contact_role || null,
       physical_address: intelligence.physical_address || null,
       linkedin_url: intelligence.linkedin_url || null,
+      hr_contacts: hrContacts,
     };
 
     console.log('Company research complete:', result.company_name);
