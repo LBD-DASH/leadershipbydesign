@@ -163,8 +163,6 @@ export default function LeaderAsCoachOverview() {
               ))}
             </div>
           </OverviewSection>
-
-          <OverviewFooter />
         </OverviewPage>
 
         {/* Page 2 */}
