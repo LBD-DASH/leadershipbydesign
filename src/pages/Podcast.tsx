@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Headphones, ExternalLink, Clock, User } from "lucide-react";
@@ -12,6 +13,9 @@ import { podcastEpisodes, PODCAST_COVER_IMAGE, SPOTIFY_SHOW_URL } from "@/data/p
 export default function Podcast() {
   return (
     <>
+      <Helmet>
+        <link rel="icon" href={PODCAST_COVER_IMAGE} type="image/jpeg" />
+      </Helmet>
       <SEO
         title="The Lunchtime Series | Leadership Podcast"
         description="Tune into The Lunchtime Series with Kevin Britz for inspiring conversations on leadership, coaching, and organizational transformation."
