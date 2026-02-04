@@ -15,6 +15,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { prospectsApi, ProspectCompany } from '@/lib/api/prospects';
 import { format } from 'date-fns';
 import OutreachComposer from './OutreachComposer';
+import QualityIndicator from './QualityIndicator';
+import { scoreFromProspect } from '@/utils/prospectScoring';
 
 const statusConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   'researched': { label: 'Researched', icon: Clock, color: 'bg-blue-100 text-blue-700' },
@@ -209,8 +211,9 @@ export default function ProspectList() {
                       <CardContent className="p-4 cursor-pointer hover:bg-muted/50 transition-colors">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <h3 className="font-semibold truncate">{prospect.company_name}</h3>
+                              <QualityIndicator score={scoreFromProspect(prospect)} size="sm" />
                               <a 
                                 href={prospect.website_url} 
                                 target="_blank" 
