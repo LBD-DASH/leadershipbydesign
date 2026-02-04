@@ -9,6 +9,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { prospectsApi, DiscoveredCompany, DiscoverySearchParams, CompanyResearchResult, ProspectCompany } from '@/lib/api/prospects';
 import OutreachComposer from './OutreachComposer';
+import QualityIndicator from './QualityIndicator';
+import { scoreFromResearchResult } from '@/utils/prospectScoring';
 
 const INDUSTRIES = [
   'Engineering',
@@ -368,11 +370,14 @@ export default function LeadDiscoveryForm() {
                       {/* Company Header Row */}
                       <div className="flex items-start justify-between p-4 hover:bg-muted/50 transition-colors">
                         <div className="space-y-1 flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <Building2 className="w-4 h-4 text-muted-foreground" />
                             <span className="font-medium">{company.company_name}</span>
-                            {hasResearchData(company.website_url) && (
-                              <Badge variant="secondary" className="text-xs">Researched</Badge>
+                            {researchedData[company.website_url] && (
+                              <QualityIndicator 
+                                score={scoreFromResearchResult(researchedData[company.website_url].result)} 
+                                size="sm" 
+                              />
                             )}
                           </div>
                           <p className="text-sm text-muted-foreground">{company.description}</p>
