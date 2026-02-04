@@ -141,13 +141,19 @@ const ZenMode = ({ isActive, onClose, currentTask, onCompleteTask }: ZenModeProp
 
               {/* Action Buttons */}
               <div className="flex items-center justify-center gap-3 pt-4">
-                <Button
-                  onClick={onCompleteTask}
-                  className="h-12 px-6 bg-gradient-to-r from-[hsl(var(--los-gold))] to-[hsl(var(--los-gold-dim))] text-[hsl(var(--los-background))] hover:opacity-90 rounded-xl font-medium"
-                >
-                  <Check className="w-4 h-4 mr-2" />
-                  Complete Intent
-                </Button>
+                {currentTask ? (
+                  <Button
+                    onClick={onCompleteTask}
+                    className="h-12 px-6 bg-gradient-to-r from-[hsl(var(--los-gold))] to-[hsl(var(--los-gold-dim))] text-[hsl(var(--los-background))] hover:opacity-90 rounded-xl font-medium"
+                  >
+                    <Check className="w-4 h-4 mr-2" />
+                    Complete Intent
+                  </Button>
+                ) : (
+                  <p className="text-sm text-[hsl(var(--los-muted-foreground))] italic">
+                    No active intent — add one from your dashboard
+                  </p>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
