@@ -204,9 +204,9 @@ export default function Programmes() {
                 </div>
                 <div>
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    Team Effectiveness Workshops
+                    Team Leadership Workshops
                   </h2>
-                  <p className="text-muted-foreground">50% less conflict • 40% better meetings • Results in 60 days</p>
+                  <p className="text-muted-foreground">Develop leadership at every level • 50% less conflict • Results in 60 days</p>
                 </div>
               </div>
 

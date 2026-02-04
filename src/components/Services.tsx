@@ -11,10 +11,10 @@ const services = [
     metric: "35% faster decisions in 60 days"
   },
   {
-    title: "Team Workshops",
-    description: "Teams see 50% reduction in conflict and 40% improvement in meeting effectiveness. High-impact sessions that rebuild trust and create shared ownership.",
+    title: "Team Leadership Workshops",
+    description: "Develop leadership capability at every level. High-impact sessions that build accountability, create shared ownership, and improve leadership behaviours across your team.",
     image: teamWorkshopsImage,
-    metric: "50% less conflict, 40% better meetings"
+    metric: "Leadership at every level, 50% less conflict"
   },
   {
     title: "Executive Coaching",

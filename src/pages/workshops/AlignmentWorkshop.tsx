@@ -198,10 +198,10 @@ export default function AlignmentWorkshop() {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                What You'll Achieve
+                Leadership Outcomes You'll Achieve
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Walk away with clarity, frameworks, and agreements that transform how your team works together.
+                Develop the leadership capability to create clarity, make better decisions, and lead your team with unified direction.
               </p>
             </div>
             
@@ -298,10 +298,10 @@ export default function AlignmentWorkshop() {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
-                Explore Other Workshops
+                Explore Other Leadership Workshops
               </h2>
               <p className="text-muted-foreground">
-                Discover more ways to transform your team's performance.
+                Discover more ways to develop leadership capability and drive team performance.
               </p>
             </div>
             
