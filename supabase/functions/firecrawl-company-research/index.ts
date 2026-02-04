@@ -141,7 +141,7 @@ Based on this content, provide a JSON response with the following structure:
   "leadership_team": [{"name": "Person Name", "role": "Their Role"}] or null if not found,
   "pain_points": ["Likely leadership challenges based on their context", "Another challenge"],
   "opportunity_signals": ["Signals that suggest they need leadership development", "Growth signals"],
-  "personalised_pitch": "A 3-4 sentence personalized outreach message that references their specific situation and offers leadership development solutions. Use a consultative, value-first approach. Focus on their 'move away from' pain and 'move toward' aspirations.",
+  "personalised_pitch": "MUST be structured in exactly 3 paragraphs separated by \\n\\n:\\n\\nOPENING PARAGRAPH: A personalized hook that references something specific about their company (recent news, their mission, a challenge in their industry). Show you've done your research. 2-3 sentences.\\n\\nMIDDLE PARAGRAPH: Connect their specific situation to how leadership development can help. Reference their likely pain points and aspirations. Introduce your expertise in helping similar organizations. 3-4 sentences.\\n\\nCLOSING PARAGRAPH: Clear, low-pressure call to action. Suggest a brief conversation to explore fit. Sign off professionally. 2-3 sentences.",
   "suggested_approach": "One of: 'executive_coaching', 'team_workshop', 'shift_programme', 'leadership_diagnostic', or 'discovery_call' - with brief reasoning",
   "contact_email": "Extract any business email address found (info@, hello@, contact@, or personal) or null",
   "contact_phone": "Extract any phone number found or null",
@@ -151,6 +151,14 @@ Based on this content, provide a JSON response with the following structure:
   "linkedin_url": "LinkedIn profile or company URL if found or null",
   "hr_contacts": [{"name": "Full Name", "role": "Exact role title"}] - IMPORTANT: Look specifically for people in HR, People, L&D, or Talent roles
 }
+
+CRITICAL - PERSONALISED PITCH FORMAT:
+The personalised_pitch MUST have exactly 3 distinct paragraphs:
+1. OPENING: Personalized hook showing research (mention their company name, industry, or specific detail)
+2. MIDDLE: Value proposition connecting their challenges to leadership development solutions
+3. CLOSING: Low-pressure CTA suggesting a brief call or conversation
+
+Separate each paragraph with \\n\\n (double newline). Do NOT use bullet points or numbered lists.
 
 CRITICAL - HR/People/L&D Contact Extraction:
 Look VERY carefully for any names and roles related to:
