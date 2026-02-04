@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, User, ExternalLink, Headphones } from "lucide-react";
 import SEO from "@/components/SEO";
@@ -29,6 +30,9 @@ export default function PodcastEpisode() {
 
   return (
     <>
+      <Helmet>
+        <link rel="icon" href={PODCAST_COVER_IMAGE} type="image/jpeg" />
+      </Helmet>
       <SEO
         title={`${episode.title} | The Lunchtime Series`}
         description={episode.description}
