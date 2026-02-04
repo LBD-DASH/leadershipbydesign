@@ -5,9 +5,20 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ArrowRight, Loader2, User, Users, Zap, Target, Shield, Layers, BarChart3 } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ArrowLeft, ArrowRight, Loader2, User, Users, Zap, Target, Shield, Layers, BarChart3, Sparkles, Award, Bot, MessageCircle, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
-const programmeOverviews = [
+interface ProgrammeOverview {
+  title: string;
+  description: string;
+  route: string;
+  pages: number;
+  icon: typeof User;
+  category: string;
+}
+
+const coachingProgrammes: ProgrammeOverview[] = [
   {
     title: 'Executive Coaching',
     description: 'One-on-one coaching built on the SHIFT framework for senior leaders',
@@ -15,6 +26,25 @@ const programmeOverviews = [
     pages: 2,
     icon: User,
     category: 'Coaching'
+  },
+  {
+    title: 'Leader as Coach',
+    description: '6-month programme developing coaching capability in leaders',
+    route: '/admin/overview/leader-as-coach',
+    pages: 2,
+    icon: MessageCircle,
+    category: 'Coaching'
+  }
+];
+
+const leadershipProgrammes: ProgrammeOverview[] = [
+  {
+    title: 'Leadership Levels (L1-L5)',
+    description: 'The five leadership operating levels and development paths',
+    route: '/admin/overview/leadership-levels',
+    pages: 2,
+    icon: BarChart3,
+    category: 'Framework'
   },
   {
     title: 'SHIFT Leadership Development',
@@ -32,6 +62,33 @@ const programmeOverviews = [
     icon: Zap,
     category: 'Methodology'
   },
+  {
+    title: 'Grand Masters of Success',
+    description: 'Foundation programme establishing core mindsets and habits',
+    route: '/admin/overview/grand-masters',
+    pages: 1,
+    icon: Award,
+    category: 'Foundation'
+  },
+  {
+    title: 'Leadership for Women',
+    description: 'Empowering women to lead with authenticity and impact',
+    route: '/admin/overview/leadership-women',
+    pages: 1,
+    icon: Sparkles,
+    category: 'Specialised'
+  },
+  {
+    title: 'Leading in the AI Era',
+    description: 'Navigate AI adoption while strengthening your human edge',
+    route: '/admin/overview/ai-leadership',
+    pages: 1,
+    icon: Bot,
+    category: 'Specialised'
+  }
+];
+
+const workshopProgrammes: ProgrammeOverview[] = [
   {
     title: 'Team Alignment Workshop',
     description: 'For teams working hard but not in the same direction',
@@ -55,16 +112,56 @@ const programmeOverviews = [
     pages: 1,
     icon: Shield,
     category: 'Workshop'
-  },
-  {
-    title: 'Leadership Levels (L1-L5)',
-    description: 'The five leadership operating levels and development paths',
-    route: '/admin/overview/leadership-levels',
-    pages: 2,
-    icon: BarChart3,
-    category: 'Framework'
   }
 ];
+
+const ProgrammeCard = ({ programme }: { programme: ProgrammeOverview }) => (
+  <Link to={programme.route}>
+    <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <programme.icon className="w-5 h-5 text-primary" />
+          </div>
+          <Badge variant="secondary">{programme.pages} page{programme.pages > 1 ? 's' : ''}</Badge>
+        </div>
+        <CardTitle className="text-lg group-hover:text-primary transition-colors">
+          {programme.title}
+        </CardTitle>
+        <CardDescription>{programme.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <Badge variant="outline">{programme.category}</Badge>
+          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+        </div>
+      </CardContent>
+    </Card>
+  </Link>
+);
+
+const ProgrammeSection = ({ title, programmes, defaultOpen = false }: { title: string; programmes: ProgrammeOverview[]; defaultOpen?: boolean }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mb-6">
+      <CollapsibleTrigger className="w-full flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+          <Badge variant="secondary">{programmes.length}</Badge>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          {programmes.map((programme) => (
+            <ProgrammeCard key={programme.route} programme={programme} />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
 
 export default function AdminOverviews() {
   const { isAuthenticated, loading } = useAdminAuth();
@@ -105,32 +202,9 @@ export default function AdminOverviews() {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {programmeOverviews.map((programme) => (
-                <Link key={programme.route} to={programme.route}>
-                  <Card className="h-full hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
-                    <CardHeader>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <programme.icon className="w-5 h-5 text-primary" />
-                        </div>
-                        <Badge variant="secondary">{programme.pages} page{programme.pages > 1 ? 's' : ''}</Badge>
-                      </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {programme.title}
-                      </CardTitle>
-                      <CardDescription>{programme.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline">{programme.category}</Badge>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+            <ProgrammeSection title="Coaching Programmes" programmes={coachingProgrammes} defaultOpen />
+            <ProgrammeSection title="Leadership Development" programmes={leadershipProgrammes} defaultOpen />
+            <ProgrammeSection title="Team Workshops" programmes={workshopProgrammes} defaultOpen />
           </div>
         </main>
         <Footer />
