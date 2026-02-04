@@ -67,6 +67,29 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  /* Life-OS Sovereign Dashboard Theme */
+  .life-os {
+    --los-background: 240 20% 4%;
+    --los-background-elevated: 240 18% 7%;
+    --los-foreground: 45 15% 95%;
+    --los-muted: 240 15% 15%;
+    --los-muted-foreground: 45 10% 65%;
+    --los-gold: 43 74% 53%;
+    --los-gold-dim: 43 50% 35%;
+    --los-border: 43 30% 20%;
+    --los-glass: 240 18% 10%;
+    
+    /* Pillar Colors */
+    --los-vitality: 152 69% 45%;
+    --los-sovereignty: 43 74% 53%;
+    --los-connection: 350 80% 65%;
+    --los-wisdom: 270 60% 60%;
+    
+    /* Gradients */
+    --los-gradient-gold: linear-gradient(135deg, hsl(43 74% 53%) 0%, hsl(35 80% 45%) 100%);
+    --los-gradient-glass: linear-gradient(180deg, hsl(240 18% 12% / 0.8) 0%, hsl(240 18% 8% / 0.9) 100%);
+  }
 }
 
 @layer base {

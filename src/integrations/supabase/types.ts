@@ -551,6 +551,262 @@ export type Database = {
         }
         Relationships: []
       }
+      life_os_focus_tasks: {
+        Row: {
+          category: string
+          completed_at: string | null
+          created_at: string
+          date: string
+          id: string
+          is_completed: boolean
+          is_current: boolean
+          target_minutes: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          completed_at?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_completed?: boolean
+          is_current?: boolean
+          target_minutes?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          completed_at?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_completed?: boolean
+          is_current?: boolean
+          target_minutes?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      life_os_garden_slots: {
+        Row: {
+          growth_level: number
+          id: string
+          is_active: boolean
+          last_updated: string
+          slot_name: string
+          user_id: string
+        }
+        Insert: {
+          growth_level?: number
+          id?: string
+          is_active?: boolean
+          last_updated?: string
+          slot_name: string
+          user_id: string
+        }
+        Update: {
+          growth_level?: number
+          id?: string
+          is_active?: boolean
+          last_updated?: string
+          slot_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      life_os_habit_logs: {
+        Row: {
+          completed_at: string
+          habit_id: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          habit_id: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          habit_id?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "life_os_habit_logs_habit_id_fkey"
+            columns: ["habit_id"]
+            isOneToOne: false
+            referencedRelation: "life_os_habits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      life_os_habits: {
+        Row: {
+          created_at: string
+          frequency: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          last_completed_at: string | null
+          name: string
+          pillar_id: string
+          streak_count: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          frequency?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          last_completed_at?: string | null
+          name: string
+          pillar_id: string
+          streak_count?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          frequency?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          last_completed_at?: string | null
+          name?: string
+          pillar_id?: string
+          streak_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "life_os_habits_pillar_id_fkey"
+            columns: ["pillar_id"]
+            isOneToOne: false
+            referencedRelation: "life_os_pillars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      life_os_mood_logs: {
+        Row: {
+          energy_level: number
+          flow_state: string | null
+          id: string
+          logged_at: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          energy_level: number
+          flow_state?: string | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          energy_level?: number
+          flow_state?: string | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      life_os_pillars: {
+        Row: {
+          current_score: number
+          id: string
+          pillar_name: string
+          target_score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_score?: number
+          id?: string
+          pillar_name: string
+          target_score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_score?: number
+          id?: string
+          pillar_name?: string
+          target_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      life_os_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          id: string
+          north_star_vision: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          north_star_vision?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          north_star_vision?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      life_os_vision_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          position: number
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          position?: number
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          position?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       marketing_campaigns: {
         Row: {
           campaign_type: string

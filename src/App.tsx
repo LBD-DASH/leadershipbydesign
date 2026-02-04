@@ -48,6 +48,8 @@ import TeamDevelopmentFramework from "./pages/TeamDevelopmentFramework";
 import MarketingDashboard from "./pages/MarketingDashboard";
 import AIReadinessDiagnosticLanding from "./pages/AIReadinessDiagnosticLanding";
 import AIReadinessDiagnostic from "./pages/AIReadinessDiagnostic";
+import LifeOS from "./pages/LifeOS";
+import LifeOSAuth from "./pages/LifeOSAuth";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +88,8 @@ const App = () => (
           <Route path="/team-development-framework" element={<TeamDevelopmentFramework />} />
           <Route path="/ai-readiness" element={<AIReadinessDiagnosticLanding />} />
           <Route path="/ai-readiness-diagnostic" element={<AIReadinessDiagnostic />} />
+          <Route path="/life-os" element={<LifeOS />} />
+          <Route path="/life-os/auth" element={<LifeOSAuth />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
