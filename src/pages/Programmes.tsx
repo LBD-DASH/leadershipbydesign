@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil } from "lucide-react";
+import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle } from "lucide-react";
+import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring";
@@ -327,7 +328,69 @@ export default function Programmes() {
               </div>
             </motion.section>
 
-            {/* Social Share Section */}
+            {/* Leader as Coach Section */}
+            <motion.section initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-16">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                    Leader as Coach
+                  </h2>
+                  <p className="text-muted-foreground">6-month programme • Weekly sessions • Build coaching culture</p>
+                </div>
+              </div>
+
+              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
+                    <img src={leaderAsCoachImage} alt="Leader as Coach Programme" className="w-full h-full object-cover object-top" loading="lazy" />
+                  </div>
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
+                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
+                      Transform Leaders into Effective Coaches
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Cultivate successful, empowered leadership coaches who understand human behaviour and are equipped with effective methods to get the most out of their teams. Build a coaching culture that boosts company performance and reduces team overwhelm.
+                    </p>
+                    <div className="flex flex-wrap gap-4 mb-6 text-sm">
+                      <div>
+                        <span className="font-semibold text-foreground">Duration:</span>{" "}
+                        <span className="text-muted-foreground">6 months</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-foreground">Format:</span>{" "}
+                        <span className="text-muted-foreground">Weekly Virtual Sessions</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {['Trust Building', 'Conflict Management', 'Neuroscience', 'Bias Awareness', 'Wellbeing'].map((tag) => (
+                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link to="/contact">
+                      <Button className="rounded-full group">
+                        Enquire About Programme
+                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.section>
             <motion.section initial={{
             opacity: 0,
             y: 20
