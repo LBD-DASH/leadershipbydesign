@@ -5,16 +5,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   Play, 
-  Pause, 
   RefreshCw, 
   CheckCircle2, 
   XCircle, 
   Clock, 
   Building2,
   AlertCircle,
-  Loader2
+  Loader2,
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  Globe
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -26,6 +30,18 @@ interface ProspectingConfig {
   company_size: string;
   is_active: boolean;
   last_run_at: string | null;
+}
+
+interface ProspectCompany {
+  id: string;
+  company_name: string;
+  website_url: string;
+  industry: string | null;
+  company_size: string | null;
+  status: string;
+  created_at: string;
+  contact_email: string | null;
+  about_summary: string | null;
 }
 
 interface ProspectingRun {
@@ -42,6 +58,7 @@ interface ProspectingRun {
 export default function ProspectingAutomation() {
   const queryClient = useQueryClient();
   const [isRunning, setIsRunning] = useState(false);
+  const [expandedIndustries, setExpandedIndustries] = useState<Set<string>>(new Set());
 
   // Fetch industry configs
   const { data: configs, isLoading: configsLoading } = useQuery({
@@ -70,6 +87,39 @@ export default function ProspectingAutomation() {
     },
     refetchInterval: isRunning ? 5000 : false // Poll while running
   });
+
+  // Fetch all prospect companies
+  const { data: companies } = useQuery({
+    queryKey: ['prospect-companies-by-industry'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('prospect_companies')
+        .select('id, company_name, website_url, industry, company_size, status, created_at, contact_email, about_summary')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data as ProspectCompany[];
+    }
+  });
+
+  // Group companies by industry
+  const companiesByIndustry = companies?.reduce((acc, company) => {
+    const industry = company.industry || 'Unknown';
+    if (!acc[industry]) acc[industry] = [];
+    acc[industry].push(company);
+    return acc;
+  }, {} as Record<string, ProspectCompany[]>) || {};
+
+  const toggleIndustryExpanded = (industry: string) => {
+    setExpandedIndustries(prev => {
+      const next = new Set(prev);
+      if (next.has(industry)) {
+        next.delete(industry);
+      } else {
+        next.add(industry);
+      }
+      return next;
+    });
+  };
 
   // Toggle industry active status
   const toggleIndustry = useMutation({
@@ -242,37 +292,110 @@ export default function ProspectingAutomation() {
             </div>
           ) : (
             <div className="space-y-4">
-              {configs?.map((config) => (
-                <div 
-                  key={config.id} 
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium">{config.industry}</h4>
-                      {config.is_active ? (
-                        <Badge variant="default">Active</Badge>
-                      ) : (
-                        <Badge variant="secondary">Paused</Badge>
-                      )}
+              {configs?.map((config) => {
+                const industryCompanies = companiesByIndustry[config.industry] || [];
+                const isExpanded = expandedIndustries.has(config.industry);
+                
+                return (
+                  <Collapsible key={config.id} open={isExpanded} onOpenChange={() => toggleIndustryExpanded(config.industry)}>
+                    <div className="border rounded-lg overflow-hidden">
+                      <div className="flex items-center justify-between p-4 bg-background">
+                        <div className="flex items-center gap-3 flex-1">
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" size="sm" className="p-0 h-auto hover:bg-transparent">
+                              {isExpanded ? (
+                                <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                              ) : (
+                                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                              )}
+                            </Button>
+                          </CollapsibleTrigger>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-medium">{config.industry}</h4>
+                              {config.is_active ? (
+                                <Badge variant="default">Active</Badge>
+                              ) : (
+                                <Badge variant="secondary">Paused</Badge>
+                              )}
+                              <Badge variant="outline" className="ml-1">
+                                {industryCompanies.length} companies
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {config.location} • {config.company_size} employees
+                            </p>
+                            {config.last_run_at && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Last run: {formatDistanceToNow(new Date(config.last_run_at), { addSuffix: true })}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <Switch
+                          checked={config.is_active}
+                          onCheckedChange={(checked) => 
+                            toggleIndustry.mutate({ id: config.id, is_active: checked })
+                          }
+                        />
+                      </div>
+                      
+                      <CollapsibleContent>
+                        <div className="border-t bg-muted/30">
+                          {industryCompanies.length > 0 ? (
+                            <div className="divide-y">
+                              {industryCompanies.map((company) => (
+                                <div key={company.id} className="p-3 hover:bg-muted/50 transition-colors">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-medium truncate">{company.company_name}</span>
+                                        <Badge variant="outline" className="text-xs">
+                                          {company.status}
+                                        </Badge>
+                                      </div>
+                                      {company.about_summary && (
+                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                          {company.about_summary}
+                                        </p>
+                                      )}
+                                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                                        {company.company_size && (
+                                          <span>{company.company_size} employees</span>
+                                        )}
+                                        {company.contact_email && (
+                                          <span className="truncate">{company.contact_email}</span>
+                                        )}
+                                        <span>
+                                          Added {formatDistanceToNow(new Date(company.created_at), { addSuffix: true })}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <a 
+                                      href={company.website_url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="flex items-center gap-1 text-xs text-primary hover:underline shrink-0"
+                                    >
+                                      <Globe className="w-3 h-3" />
+                                      Website
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                              No companies discovered yet for this industry
+                            </div>
+                          )}
+                        </div>
+                      </CollapsibleContent>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {config.location} • {config.company_size} employees
-                    </p>
-                    {config.last_run_at && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Last run: {formatDistanceToNow(new Date(config.last_run_at), { addSuffix: true })}
-                      </p>
-                    )}
-                  </div>
-                  <Switch
-                    checked={config.is_active}
-                    onCheckedChange={(checked) => 
-                      toggleIndustry.mutate({ id: config.id, is_active: checked })
-                    }
-                  />
-                </div>
-              ))}
+                  </Collapsible>
+                );
+              })}
             </div>
           )}
         </CardContent>
