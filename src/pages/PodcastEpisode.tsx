@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, User, ExternalLink, Headphones } from "lucide-react";
 import SEO from "@/components/SEO";
@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { getEpisodeBySlug, getRelatedEpisodes, PODCAST_COVER_IMAGE } from "@/data/podcastEpisodes";
+import NotFound from "./NotFound";
 
 export default function PodcastEpisode() {
   const { slug } = useParams<{ slug: string }>();
@@ -16,7 +17,7 @@ export default function PodcastEpisode() {
   const relatedEpisodes = slug ? getRelatedEpisodes(slug, 3) : [];
 
   if (!episode) {
-    return <Navigate to="/podcast" replace />;
+    return <NotFound />;
   }
 
   const spotifyEpisodeUrl = `https://open.spotify.com/episode/${episode.spotifyId}`;
@@ -63,8 +64,23 @@ export default function PodcastEpisode() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  {/* Episode Header */}
+                  {/* Episode Artwork Header */}
                   <div className="mb-8">
+                    <div className="relative rounded-2xl overflow-hidden mb-6 aspect-video bg-gradient-to-br from-primary/20 to-primary/5">
+                      <img 
+                        src={PODCAST_COVER_IMAGE}
+                        alt={episode.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <Badge className="bg-[#1DB954] text-white border-0 mb-2">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {episode.duration}
+                        </Badge>
+                      </div>
+                    </div>
+
                     <div className="flex flex-wrap gap-2 mb-4">
                       {episode.tags.map(tag => (
                         <Badge key={tag} variant="secondary">
