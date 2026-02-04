@@ -20,6 +20,7 @@ export default function Podcast() {
         title="The Lunchtime Series | Leadership Podcast"
         description="Tune into The Lunchtime Series with Kevin Britz for inspiring conversations on leadership, coaching, and organizational transformation."
         canonicalUrl="/podcast"
+        ogImage={PODCAST_COVER_IMAGE}
         keywords="leadership podcast, executive coaching, leadership development, Kevin Britz, leadership conversations"
       />
 
