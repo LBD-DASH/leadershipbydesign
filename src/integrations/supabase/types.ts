@@ -1043,6 +1043,78 @@ export type Database = {
           },
         ]
       }
+      prospecting_config: {
+        Row: {
+          company_size: string
+          created_at: string
+          id: string
+          industry: string
+          is_active: boolean
+          last_run_at: string | null
+          location: string
+          updated_at: string
+        }
+        Insert: {
+          company_size?: string
+          created_at?: string
+          id?: string
+          industry: string
+          is_active?: boolean
+          last_run_at?: string | null
+          location?: string
+          updated_at?: string
+        }
+        Update: {
+          company_size?: string
+          created_at?: string
+          id?: string
+          industry?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          location?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prospecting_runs: {
+        Row: {
+          companies_discovered: number
+          companies_researched: number
+          companies_saved: number
+          completed_at: string | null
+          created_at: string
+          errors: Json | null
+          id: string
+          run_details: Json | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          companies_discovered?: number
+          companies_researched?: number
+          companies_saved?: number
+          completed_at?: string | null
+          created_at?: string
+          errors?: Json | null
+          id?: string
+          run_details?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          companies_discovered?: number
+          companies_researched?: number
+          companies_saved?: number
+          completed_at?: string | null
+          created_at?: string
+          errors?: Json | null
+          id?: string
+          run_details?: Json | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
       shift_diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
