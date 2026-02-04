@@ -13,6 +13,12 @@ export interface LeadershipTeamMember {
   role: string;
 }
 
+export interface HRContact {
+  name: string;
+  role: string;
+  linkedin_search_url: string;
+}
+
 export interface ProspectCompany {
   id: string;
   created_at: string;
@@ -50,13 +56,15 @@ export interface CompanyResearchResult {
   opportunity_signals: string[] | null;
   personalised_pitch: string | null;
   suggested_approach: string | null;
-  // New contact fields from enhanced extraction
+  // Contact fields from enhanced extraction
   contact_email?: string | null;
   contact_phone?: string | null;
   contact_name?: string | null;
   contact_role?: string | null;
   physical_address?: string | null;
   linkedin_url?: string | null;
+  // HR/L&D contacts for LinkedIn outreach
+  hr_contacts?: HRContact[] | null;
 }
 
 export interface ProspectOutreach {
@@ -199,6 +207,54 @@ export const prospectsApi = {
       }
 
       return data;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to send email';
+      return { success: false, error: message };
+    }
+  },
+
+  // Send direct email (without saved prospect - saves and sends in one go)
+  async sendDirectEmail(
+    researchData: CompanyResearchResult,
+    subject: string,
+    body: string
+  ): Promise<{ success: boolean; prospectId?: string; error?: string }> {
+    try {
+      // First save the prospect
+      const saveResult = await this.saveProspect({
+        company_name: researchData.company_name,
+        website_url: researchData.website_url,
+        industry: researchData.industry,
+        company_size: researchData.company_size,
+        about_summary: researchData.about_summary,
+        leadership_team: researchData.leadership_team,
+        pain_points: researchData.pain_points,
+        opportunity_signals: researchData.opportunity_signals,
+        personalised_pitch: researchData.personalised_pitch,
+        suggested_approach: researchData.suggested_approach,
+        status: 'researched',
+        contacted_at: null,
+        notes: null,
+        contact_email: researchData.contact_email || null,
+        contact_phone: researchData.contact_phone || null,
+        contact_name: researchData.contact_name || null,
+        contact_role: researchData.contact_role || null,
+        physical_address: researchData.physical_address || null,
+        linkedin_url: researchData.linkedin_url || null,
+      });
+
+      if (!saveResult.success || !saveResult.data) {
+        return { success: false, error: saveResult.error || 'Failed to save prospect' };
+      }
+
+      // Then send the email
+      const emailResult = await this.sendOutreach(saveResult.data.id, subject, body);
+      
+      if (!emailResult.success) {
+        return { success: false, prospectId: saveResult.data.id, error: emailResult.error };
+      }
+
+      return { success: true, prospectId: saveResult.data.id };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to send email';
       return { success: false, error: message };

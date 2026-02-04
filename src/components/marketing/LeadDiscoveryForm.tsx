@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Loader2, Building2, MapPin, ExternalLink, ChevronDown, ChevronUp, Mail, Phone, Linkedin, Users, AlertCircle, Lightbulb, Target, MessageSquare, Save, CheckCircle, Send } from 'lucide-react';
+import { Search, Loader2, Building2, MapPin, ExternalLink, ChevronDown, ChevronUp, Mail, Phone, Linkedin, Users, AlertCircle, Lightbulb, Target, MessageSquare, Save, CheckCircle, Send, UserSearch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { prospectsApi, DiscoveredCompany, DiscoverySearchParams, CompanyResearchResult, ProspectCompany } from '@/lib/api/prospects';
 import OutreachComposer from './OutreachComposer';
 
@@ -58,8 +58,9 @@ export default function LeadDiscoveryForm() {
   const [expandedUrls, setExpandedUrls] = useState<Set<string>>(new Set());
   const [savingUrls, setSavingUrls] = useState<Set<string>>(new Set());
   
-  // Outreach state
+  // Outreach state - can be for saved prospect OR direct from research
   const [outreachProspect, setOutreachProspect] = useState<ProspectCompany | null>(null);
+  const [outreachResearchData, setOutreachResearchData] = useState<CompanyResearchResult | null>(null);
   const [showOutreach, setShowOutreach] = useState(false);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -555,6 +556,35 @@ export default function LeadDiscoveryForm() {
                                       </div>
                                     </div>
 
+                                    {/* HR/L&D Contacts for LinkedIn */}
+                                    {result.hr_contacts && result.hr_contacts.length > 0 && (
+                                      <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                                        <h4 className="text-sm font-medium flex items-center gap-2 mb-2">
+                                          <UserSearch className="w-4 h-4 text-blue-600" />
+                                          HR / L&D Contacts (for LinkedIn)
+                                        </h4>
+                                        <div className="space-y-2">
+                                          {result.hr_contacts.map((contact, idx) => (
+                                            <div key={idx} className="flex items-center justify-between">
+                                              <div className="text-sm">
+                                                <span className="font-medium">{contact.name}</span>
+                                                <span className="text-muted-foreground"> — {contact.role}</span>
+                                              </div>
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="ml-2"
+                                                onClick={() => window.open(contact.linkedin_search_url, '_blank')}
+                                              >
+                                                <Linkedin className="w-3 h-3 mr-1" />
+                                                Find on LinkedIn
+                                              </Button>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
                                     {/* Personalized Pitch */}
                                     {result.personalised_pitch && (
                                       <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
@@ -580,8 +610,25 @@ export default function LeadDiscoveryForm() {
                                       >
                                         Copy Pitch
                                       </Button>
+                                      
+                                      {/* Direct Email Button - available even before saving */}
+                                      {result.contact_email && (
+                                        <Button
+                                          size="sm"
+                                          onClick={() => {
+                                            setOutreachProspect(null);
+                                            setOutreachResearchData(result);
+                                            setShowOutreach(true);
+                                          }}
+                                        >
+                                          <Send className="w-4 h-4 mr-2" />
+                                          Send Cold Email
+                                        </Button>
+                                      )}
+                                      
                                       <Button
                                         size="sm"
+                                        variant="secondary"
                                         onClick={() => handleSave(company.website_url)}
                                         disabled={isSaving(company.website_url) || data.saved}
                                       >
@@ -602,19 +649,6 @@ export default function LeadDiscoveryForm() {
                                           </>
                                         )}
                                       </Button>
-                                      {data.saved && result.contact_email && (
-                                        <Button
-                                          size="sm"
-                                          variant="secondary"
-                                          onClick={() => {
-                                            setOutreachProspect(data.savedProspect);
-                                            setShowOutreach(true);
-                                          }}
-                                        >
-                                          <Send className="w-4 h-4 mr-2" />
-                                          Send Email
-                                        </Button>
-                                      )}
                                     </div>
                                   </>
                                 );
@@ -635,10 +669,23 @@ export default function LeadDiscoveryForm() {
       {/* Outreach Composer Modal */}
       <OutreachComposer
         prospect={outreachProspect}
+        researchData={outreachResearchData}
         isOpen={showOutreach}
-        onClose={() => setShowOutreach(false)}
-        onSent={() => {
-          toast({ title: "Email sent!", description: "Prospect marked as contacted" });
+        onClose={() => {
+          setShowOutreach(false);
+          setOutreachProspect(null);
+          setOutreachResearchData(null);
+        }}
+        onSent={(prospectId) => {
+          toast({ title: "Email sent!", description: "Prospect saved and marked as contacted" });
+          // If we sent from research data, mark it as saved
+          if (outreachResearchData && prospectId) {
+            const url = outreachResearchData.website_url;
+            setResearchedData(prev => ({
+              ...prev,
+              [url]: { ...prev[url], saved: true }
+            }));
+          }
         }}
       />
     </div>

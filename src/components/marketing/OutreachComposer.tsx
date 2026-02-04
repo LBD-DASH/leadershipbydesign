@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2, Send, X, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,48 +6,51 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/components/ui/use-toast';
-import { prospectsApi, ProspectCompany } from '@/lib/api/prospects';
+import { prospectsApi, ProspectCompany, CompanyResearchResult } from '@/lib/api/prospects';
 
 interface OutreachComposerProps {
-  prospect: ProspectCompany | null;
+  // Either provide a saved prospect OR research data for direct email
+  prospect?: ProspectCompany | null;
+  researchData?: CompanyResearchResult | null;
   isOpen: boolean;
   onClose: () => void;
-  onSent: () => void;
+  onSent: (prospectId?: string) => void;
 }
 
-export default function OutreachComposer({ prospect, isOpen, onClose, onSent }: OutreachComposerProps) {
+export default function OutreachComposer({ prospect, researchData, isOpen, onClose, onSent }: OutreachComposerProps) {
   const { toast } = useToast();
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
 
-  // Pre-fill with AI-generated pitch when prospect changes
-  const handleOpen = () => {
-    if (prospect) {
-      const contactName = prospect.contact_name || 'there';
-      setSubject(`Leadership Development for ${prospect.company_name}`);
-      setBody(
-        prospect.personalised_pitch || 
-        `Hi ${contactName},\n\nI came across ${prospect.company_name} and was impressed by your work in the ${prospect.industry || 'industry'}.\n\nWe help companies like yours develop stronger leaders through executive coaching and team development programmes.\n\nWould you be open to a brief conversation about how we could support your leadership development goals?\n\nBest regards,\nLeadership by Design`
-      );
-    }
-  };
+  // Get the data source (either saved prospect or research data)
+  const data = prospect || researchData;
+  const recipientEmail = prospect?.contact_email || researchData?.contact_email;
+  const companyName = prospect?.company_name || researchData?.company_name || 'Unknown';
+  const contactName = prospect?.contact_name || researchData?.contact_name || 'there';
+  const industry = prospect?.industry || researchData?.industry || 'industry';
+  const pitch = prospect?.personalised_pitch || researchData?.personalised_pitch;
 
-  // Call handleOpen when dialog opens
-  useState(() => {
-    if (isOpen && prospect) {
-      handleOpen();
+  // Pre-fill with AI-generated pitch when dialog opens
+  useEffect(() => {
+    if (isOpen && data) {
+      setSubject(`Leadership Development for ${companyName}`);
+      setBody(
+        pitch || 
+        `Hi ${contactName},\n\nI came across ${companyName} and was impressed by your work in the ${industry}.\n\nWe help companies like yours develop stronger leaders through executive coaching and team development programmes.\n\nWould you be open to a brief conversation about how we could support your leadership development goals?\n\nBest regards,\nLeadership by Design`
+      );
+      setConsentChecked(false);
     }
-  });
+  }, [isOpen, data, companyName, contactName, industry, pitch]);
 
   const handleSend = async () => {
-    if (!prospect) return;
+    if (!data) return;
     
-    if (!prospect.contact_email) {
+    if (!recipientEmail) {
       toast({
         title: 'No email address',
-        description: 'This prospect does not have a contact email. Research the company first to extract contact details.',
+        description: 'This company does not have a contact email. Research the company first to extract contact details.',
         variant: 'destructive',
       });
       return;
@@ -65,19 +68,32 @@ export default function OutreachComposer({ prospect, isOpen, onClose, onSent }: 
     setIsSending(true);
 
     try {
-      const response = await prospectsApi.sendOutreach(prospect.id, subject, body);
+      let response;
+      
+      if (prospect) {
+        // Send to existing saved prospect
+        response = await prospectsApi.sendOutreach(prospect.id, subject, body);
+        if (response.success) {
+          onSent(prospect.id);
+        }
+      } else if (researchData) {
+        // Save and send in one go (direct email)
+        response = await prospectsApi.sendDirectEmail(researchData, subject, body);
+        if (response.success) {
+          onSent(response.prospectId);
+        }
+      }
 
-      if (response.success) {
+      if (response?.success) {
         toast({
           title: 'Email Sent',
-          description: `Successfully sent email to ${prospect.contact_email}`,
+          description: `Successfully sent email to ${recipientEmail}`,
         });
-        onSent();
         onClose();
       } else {
         toast({
           title: 'Send Failed',
-          description: response.error || 'Could not send email',
+          description: response?.error || 'Could not send email',
           variant: 'destructive',
         });
       }
@@ -93,7 +109,7 @@ export default function OutreachComposer({ prospect, isOpen, onClose, onSent }: 
     }
   };
 
-  if (!prospect) return null;
+  if (!data) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -104,7 +120,7 @@ export default function OutreachComposer({ prospect, isOpen, onClose, onSent }: 
             Send Outreach Email
           </DialogTitle>
           <DialogDescription>
-            Sending to: {prospect.contact_email || 'No email found'} ({prospect.company_name})
+            Sending to: {recipientEmail || 'No email found'} ({companyName})
           </DialogDescription>
         </DialogHeader>
 
@@ -150,7 +166,7 @@ export default function OutreachComposer({ prospect, isOpen, onClose, onSent }: 
           </Button>
           <Button 
             onClick={handleSend} 
-            disabled={isSending || !prospect.contact_email || !subject || !body}
+            disabled={isSending || !recipientEmail || !subject || !body}
           >
             {isSending ? (
               <>
