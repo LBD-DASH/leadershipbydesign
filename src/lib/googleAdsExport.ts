@@ -7,11 +7,15 @@
  * - "Ad group" not "Ad Group" 
  * - "Ad type" is required
  * - "Headline 1", "Headline 2" pattern (with space)
+ * - "Campaign status" and "Ad group status" prevent validation warnings
+ * - "Networks" required for Search campaigns
  */
 
 const PUBLISHED_URL = 'https://leadershipbydesign.lovable.app';
 const DEFAULT_BUDGET = '150';
 const DEFAULT_BUDGET_TYPE = 'Daily';
+const DEFAULT_STATUS = 'Enabled';
+const DEFAULT_NETWORK = 'Google search';
 
 interface ServiceConfig {
   label: string;
@@ -60,7 +64,7 @@ function padArray(arr: string[], length: number): string[] {
 
 /**
  * Generates CSV for Responsive Search Ads
- * Required columns: Campaign, Campaign type, Budget, Budget type, Ad group, Ad type, Headline 1-15, Description 1-4, Final URL
+ * Required columns: Campaign, Campaign status, Campaign type, Budget, Budget type, Networks, Ad group, Ad group status, Ad type, Headline 1-15, Description 1-4, Final URL
  */
 export function generateSearchAdsCSV(
   headlines: string[],
@@ -75,10 +79,13 @@ export function generateSearchAdsCSV(
   // Build header row with exact Google Ads Editor column names
   const headerParts = [
     'Campaign',
+    'Campaign status',
     'Campaign type',
     'Budget',
     'Budget type',
+    'Networks',
     'Ad group',
+    'Ad group status',
     'Ad type',
     ...Array.from({ length: 15 }, (_, i) => `Headline ${i + 1}`),
     ...Array.from({ length: 4 }, (_, i) => `Description ${i + 1}`),
@@ -95,10 +102,13 @@ export function generateSearchAdsCSV(
   // Build data row
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue(DEFAULT_STATUS),
     escapeCSVValue('Search'),
     escapeCSVValue(DEFAULT_BUDGET),
     escapeCSVValue(DEFAULT_BUDGET_TYPE),
+    escapeCSVValue(DEFAULT_NETWORK),
     escapeCSVValue(adGroup),
+    escapeCSVValue(DEFAULT_STATUS),
     escapeCSVValue('Responsive search ad'),
     ...paddedHeadlines.map(escapeCSVValue),
     ...paddedDescriptions.map(escapeCSVValue),
@@ -113,7 +123,7 @@ export function generateSearchAdsCSV(
 
 /**
  * Generates CSV for Responsive Display Ads
- * Required columns: Campaign, Campaign type, Budget, Budget type, Ad group, Ad type, Short headline, Long headline, Description, Final URL, Business name
+ * Required columns: Campaign, Campaign status, Campaign type, Budget, Budget type, Ad group, Ad group status, Ad type, Short headline, Long headline, Description, Final URL, Business name
  */
 export function generateDisplayAdsCSV(
   headlines: string[],
@@ -134,10 +144,12 @@ export function generateDisplayAdsCSV(
 
   const headerParts = [
     'Campaign',
+    'Campaign status',
     'Campaign type',
     'Budget',
     'Budget type',
     'Ad group',
+    'Ad group status',
     'Ad type',
     ...Array.from({ length: 5 }, (_, i) => `Short headline ${i + 1}`),
     ...Array.from({ length: 5 }, (_, i) => `Long headline ${i + 1}`),
@@ -149,10 +161,12 @@ export function generateDisplayAdsCSV(
 
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue(DEFAULT_STATUS),
     escapeCSVValue('Display'),
     escapeCSVValue(DEFAULT_BUDGET),
     escapeCSVValue(DEFAULT_BUDGET_TYPE),
     escapeCSVValue(adGroup),
+    escapeCSVValue(DEFAULT_STATUS),
     escapeCSVValue('Responsive display ad'),
     ...shortHeadlines.map(escapeCSVValue),
     ...longHeadlines.map(escapeCSVValue),
@@ -167,7 +181,7 @@ export function generateDisplayAdsCSV(
 
 /**
  * Generates CSV for Performance Max campaigns
- * Required columns: Campaign, Campaign type, Budget, Budget type, Asset group, Headlines, Long headlines, Descriptions, Business name, Final URL
+ * Required columns: Campaign, Campaign status, Campaign type, Budget, Budget type, Asset group, Headlines, Long headlines, Descriptions, Business name, Final URL
  */
 export function generatePMaxCSV(
   headlines: string[],
@@ -182,6 +196,7 @@ export function generatePMaxCSV(
 
   const headerParts = [
     'Campaign',
+    'Campaign status',
     'Campaign type',
     'Budget',
     'Budget type',
@@ -203,6 +218,7 @@ export function generatePMaxCSV(
 
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue(DEFAULT_STATUS),
     escapeCSVValue('Performance Max'),
     escapeCSVValue(DEFAULT_BUDGET),
     escapeCSVValue(DEFAULT_BUDGET_TYPE),
@@ -251,10 +267,12 @@ export function generateCSVFilename(adType: string, service: string): string {
 }
 
 /**
- * Triggers a CSV download in the browser
+ * Triggers a CSV download in the browser with UTF-8 BOM for proper encoding
  */
 export function downloadCSV(csvContent: string, filename: string): void {
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Add UTF-8 BOM (Byte Order Mark) for proper encoding in Google Ads Editor
+  const BOM = '\uFEFF';
+  const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -263,4 +281,20 @@ export function downloadCSV(csvContent: string, filename: string): void {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+/**
+ * Generates a preview of the CSV content for verification before download
+ */
+export function generateCSVPreview(
+  adType: string,
+  headlines: string[],
+  descriptions: string[],
+  service: string
+): { headers: string[]; sampleRow: string[] } {
+  const csv = generateGoogleAdsCSV(adType, headlines, descriptions, service);
+  const lines = csv.split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+  const sampleRow = lines[1] ? lines[1].split(',').map(v => v.replace(/"/g, '')) : [];
+  return { headers, sampleRow };
 }
