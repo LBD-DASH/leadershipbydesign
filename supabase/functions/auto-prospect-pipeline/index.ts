@@ -46,8 +46,32 @@ async function fetchWithTimeout(
   }
 }
 
+// Save incremental stats to database so progress is visible even if run doesn't complete
+async function updateRunStats(
+  supabase: any,
+  runId: string,
+  stats: RunStats
+): Promise<void> {
+  try {
+    await supabase
+      .from('prospecting_runs')
+      .update({
+        companies_discovered: stats.companies_discovered,
+        companies_researched: stats.companies_researched,
+        companies_saved: stats.companies_saved,
+        errors: stats.errors,
+      })
+      .eq('id', runId);
+  } catch (err) {
+    console.error('Failed to update run stats:', err);
+  }
+}
+
 interface PipelineRequestBody {
   run_id?: string;
+  // Track which industry/company index to resume from
+  resume_industry_index?: number;
+  resume_company_index?: number;
   // Safety valve: cap work per invocation so the platform doesn't kill us mid-run.
   // If we hit the cap, we self-invoke to continue the same run.
   max_ms?: number;
@@ -72,7 +96,12 @@ Deno.serve(async (req) => {
   } catch {
     body = {};
   }
-  const maxMs = typeof body.max_ms === 'number' && body.max_ms > 30_000 ? body.max_ms : 7 * 60_000; // default: 7 minutes
+  // CRITICAL: Use a conservative 2-minute budget to ensure we can self-invoke before platform kills us
+  const maxMs = typeof body.max_ms === 'number' && body.max_ms > 30_000 ? body.max_ms : 2 * 60_000; // default: 2 minutes
+
+  // Resume indices for continuation
+  let resumeIndustryIndex = body.resume_industry_index ?? 0;
+  let resumeCompanyIndex = body.resume_company_index ?? 0;
 
   // Create (or resume) a run record
   let runRecord: any = null;
@@ -132,7 +161,43 @@ Deno.serve(async (req) => {
   try {
     console.log('Starting automated prospecting pipeline, run ID:', runId);
 
-    const shouldStopSoon = () => Date.now() - startedAtMs > maxMs;
+    // Check if we're running low on time - use 30 second buffer for safety
+    const shouldStopSoon = () => Date.now() - startedAtMs > maxMs - 30_000;
+
+    // Helper to self-invoke and continue the run
+    const selfInvokeContinuation = async (industryIdx: number, companyIdx: number) => {
+      console.log(`Time budget reached; scheduling continuation for run: ${runId}, industry: ${industryIdx}, company: ${companyIdx}`);
+      
+      // Update stats before continuing
+      await updateRunStats(supabase, runId, stats);
+      
+      try {
+        // Use fire-and-forget pattern - don't await the full response
+        fetch(`${supabaseUrl}/functions/v1/auto-prospect-pipeline`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${supabaseServiceKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            run_id: runId, 
+            max_ms: maxMs,
+            resume_industry_index: industryIdx,
+            resume_company_index: companyIdx,
+          }),
+        }).catch(err => console.log('Fire-and-forget invoke sent:', err));
+        
+        // Small delay to ensure the request is sent
+        await delay(100);
+      } catch (invokeErr) {
+        console.error('Continuation invoke failed:', invokeErr);
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, run_id: runId, continuation: true, stats }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    };
 
     // Fetch active industries
     const { data: configs, error: configError } = await supabase
@@ -147,37 +212,20 @@ Deno.serve(async (req) => {
     console.log(`Found ${configs.length} active industries to process`);
 
     // Process each industry sequentially
-    for (const config of configs as ProspectingConfig[]) {
+    const allConfigs = configs as ProspectingConfig[];
+    for (let industryIdx = resumeIndustryIndex; industryIdx < allConfigs.length; industryIdx++) {
+      const config = allConfigs[industryIdx];
+      
+      // Check time budget BEFORE starting industry
       if (shouldStopSoon()) {
-        console.log('Time budget reached; scheduling continuation for run:', runId);
-        // self-invoke to continue same run id
-        try {
-          await fetchWithTimeout(
-            `${supabaseUrl}/functions/v1/auto-prospect-pipeline`,
-            {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${supabaseServiceKey}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ run_id: runId, max_ms: maxMs }),
-            },
-            5000,
-          );
-        } catch (invokeErr) {
-          console.error('Continuation invoke failed (will remain running):', invokeErr);
-        }
-
-        return new Response(
-          JSON.stringify({ success: true, run_id: runId, continuation: true, stats }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-        );
+        return await selfInvokeContinuation(industryIdx, 0);
       }
 
       console.log(`Processing industry: ${config.industry}`);
 
       try {
         // Step 1: Discover companies using find-companies function
+        // Use shorter timeout for discovery
         const discoverResponse = await fetchWithTimeout(`${supabaseUrl}/functions/v1/find-companies`, {
           method: 'POST',
           headers: {
@@ -190,7 +238,7 @@ Deno.serve(async (req) => {
             companySize: config.company_size,
             targetContacts: 'both'
           }),
-        }, 60_000);
+        }, 30_000); // 30 second timeout
 
         if (!discoverResponse.ok) {
           const errorText = await discoverResponse.text();
@@ -208,30 +256,15 @@ Deno.serve(async (req) => {
         console.log(`Discovered ${discoveredCompanies.length} companies in ${config.industry}`);
 
         // Step 2: Check for duplicates and research each new company
-        for (const company of discoveredCompanies) {
+        // If resuming, start from the resume index for this industry
+        const startCompanyIdx = industryIdx === resumeIndustryIndex ? resumeCompanyIndex : 0;
+        
+        for (let companyIdx = startCompanyIdx; companyIdx < discoveredCompanies.length; companyIdx++) {
+          const company = discoveredCompanies[companyIdx];
+          
+          // Check time budget BEFORE starting research (critical!)
           if (shouldStopSoon()) {
-            console.log('Time budget reached mid-industry; scheduling continuation for run:', runId);
-            try {
-              await fetchWithTimeout(
-                `${supabaseUrl}/functions/v1/auto-prospect-pipeline`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${supabaseServiceKey}`,
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ run_id: runId, max_ms: maxMs }),
-                },
-                5000,
-              );
-            } catch (invokeErr) {
-              console.error('Continuation invoke failed (will remain running):', invokeErr);
-            }
-
-            return new Response(
-              JSON.stringify({ success: true, run_id: runId, continuation: true, stats }),
-              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-            );
+            return await selfInvokeContinuation(industryIdx, companyIdx);
           }
 
           try {
@@ -255,12 +288,13 @@ Deno.serve(async (req) => {
               continue;
             }
 
-            // Add delay to respect rate limits (3 seconds between research calls)
-            await delay(3000);
+            // Add delay to respect rate limits (2 seconds between research calls)
+            await delay(2000);
 
             // Step 3: Research the company using firecrawl-company-research
             console.log(`Researching: ${company.company_name} (${company.website_url})`);
             
+            // Use shorter timeout for research
             const researchResponse = await fetchWithTimeout(`${supabaseUrl}/functions/v1/firecrawl-company-research`, {
               method: 'POST',
               headers: {
@@ -270,15 +304,15 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 url: company.website_url
               }),
-            }, 90_000);
+            }, 45_000); // 45 second timeout
 
             stats.companies_researched++;
 
             if (!researchResponse.ok) {
               // Handle rate limiting with exponential backoff
               if (researchResponse.status === 429) {
-                console.log('Rate limited, waiting 10 seconds...');
-                await delay(10000);
+                console.log('Rate limited, waiting 5 seconds...');
+                await delay(5000);
                 continue;
               }
               const errorText = await researchResponse.text();
@@ -326,6 +360,11 @@ Deno.serve(async (req) => {
             } else {
               stats.companies_saved++;
               console.log(`Saved prospect: ${company.company_name}`);
+              
+              // Update stats every few saves so progress is visible
+              if (stats.companies_saved % 3 === 0) {
+                await updateRunStats(supabase, runId, stats);
+              }
             }
 
           } catch (companyError) {
@@ -338,6 +377,9 @@ Deno.serve(async (req) => {
             });
           }
         }
+
+        // Reset company index after completing an industry
+        resumeCompanyIndex = 0;
 
         // Update last_run_at for this industry config
         await supabase
@@ -354,8 +396,8 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Add delay between industries
-      await delay(2000);
+      // Add delay between industries (shorter)
+      await delay(1000);
     }
 
     // Update run record with final stats
@@ -408,28 +450,5 @@ Deno.serve(async (req) => {
       JSON.stringify({ success: false, error: errorMsg, run_id: runId }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-  } finally {
-    // Safety: if the platform kills the function before our catch runs, the status can be stuck as 'running'.
-    // In normal exits, ensure we don't leave a phantom running state older than this invocation.
-    try {
-      const { data: latestRun } = await supabase
-        .from('prospecting_runs')
-        .select('status')
-        .eq('id', runId)
-        .maybeSingle();
-
-      if (latestRun?.status === 'running' && Date.now() - startedAtMs > maxMs + 10_000) {
-        await supabase
-          .from('prospecting_runs')
-          .update({
-            status: 'failed',
-            completed_at: new Date().toISOString(),
-            errors: [...stats.errors, { industry: 'pipeline', error: 'Invocation exceeded time budget and likely terminated.' }],
-          })
-          .eq('id', runId);
-      }
-    } catch (finalizeErr) {
-      console.error('Failed to finalize run state:', finalizeErr);
-    }
   }
 });
