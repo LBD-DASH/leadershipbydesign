@@ -77,7 +77,6 @@ interface ProspectingRun {
 
 export default function ProspectingAutomation() {
   const queryClient = useQueryClient();
-  const [isRunning, setIsRunning] = useState(false);
   const [expandedIndustries, setExpandedIndustries] = useState<Set<string>>(new Set());
 
   // Fetch industry configs
@@ -105,8 +104,11 @@ export default function ProspectingAutomation() {
       if (error) throw error;
       return data as unknown as ProspectingRun[];
     },
-    refetchInterval: isRunning ? 5000 : false // Poll while running
+    refetchInterval: 5000 // Poll every 5 seconds to check for running jobs
   });
+
+  // Check if there's a running job (computed from runs data)
+  const hasRunningJob = runs?.some(r => r.status === 'running') ?? false;
 
   // Fetch all prospect companies with full research data
   const { data: companies } = useQuery({
@@ -162,25 +164,26 @@ export default function ProspectingAutomation() {
   // Run pipeline manually
   const runPipeline = useMutation({
     mutationFn: async () => {
-      setIsRunning(true);
-      const { data, error } = await supabase.functions.invoke('auto-prospect-pipeline');
-      if (error) throw error;
-      return data;
+      // Fire and forget - don't wait for the response as it takes several minutes
+      supabase.functions.invoke('auto-prospect-pipeline').catch(err => {
+        console.log('Pipeline invoked (may timeout, but runs in background):', err);
+      });
+      // Return immediately - the pipeline runs in the background
+      return { success: true, message: 'Pipeline started' };
     },
     onSuccess: (data) => {
-      setIsRunning(false);
-      queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
-      queryClient.invalidateQueries({ queryKey: ['prospect-companies-by-industry'] });
-      
-      if (data.success) {
-        toast.success(`Pipeline completed! Saved ${data.stats.companies_saved} new prospects`);
-      } else {
-        toast.error('Pipeline failed: ' + data.error);
-      }
+      toast.success('Pipeline started! Processing companies in the background. Refresh to see new prospects.');
+      // Keep polling the runs table to track progress
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
+      }, 5000);
     },
     onError: (error) => {
-      setIsRunning(false);
-      toast.error('Pipeline failed: ' + error.message);
+      // Even if there's an error, the pipeline may still be running
+      toast.info('Pipeline triggered. Check run history for status.');
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
+      }, 5000);
     }
   });
 
@@ -199,7 +202,6 @@ export default function ProspectingAutomation() {
 
   const activeCount = configs?.filter(c => c.is_active).length || 0;
   const latestRun = runs?.[0];
-  const hasRunningJob = runs?.some(r => r.status === 'running');
 
   return (
     <div className="space-y-6">
@@ -270,11 +272,11 @@ export default function ProspectingAutomation() {
         <CardContent>
           <Button 
             onClick={() => runPipeline.mutate()}
-            disabled={isRunning || hasRunningJob || activeCount === 0}
+            disabled={hasRunningJob || activeCount === 0}
             className="w-full md:w-auto"
             size="lg"
           >
-            {isRunning || hasRunningJob ? (
+            {hasRunningJob ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Pipeline Running...
