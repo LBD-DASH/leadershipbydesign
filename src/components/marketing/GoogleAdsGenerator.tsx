@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader2, Wand2, Save, AlertCircle, Download } from 'lucide-react';
+import { Loader2, Wand2, Save, AlertCircle, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import AdPreviewCard from './AdPreviewCard';
 import CampaignBriefModal from './CampaignBriefModal';
-import { generateGoogleAdsCSV, generateCSVFilename, downloadCSV } from '@/lib/googleAdsExport';
+import CSVPreviewModal from './CSVPreviewModal';
 
 const AD_TYPES = [
   { value: 'search', label: 'Responsive Search Ads', description: '15 headlines + 4 descriptions' },
@@ -38,6 +38,7 @@ export default function GoogleAdsGenerator() {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showBriefModal, setShowBriefModal] = useState(false);
+  const [showCSVPreview, setShowCSVPreview] = useState(false);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -177,20 +178,10 @@ export default function GoogleAdsGenerator() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => {
-                  const csv = generateGoogleAdsCSV(
-                    generatedContent.adType,
-                    generatedContent.content.headlines || [],
-                    generatedContent.content.descriptions || [],
-                    generatedContent.service
-                  );
-                  const filename = generateCSVFilename(generatedContent.adType, generatedContent.service);
-                  downloadCSV(csv, filename);
-                  toast.success('CSV downloaded! Import it into Google Ads Editor.');
-                }}
+                onClick={() => setShowCSVPreview(true)}
               >
-                <Download className="w-4 h-4 mr-2" />
-                Export for Google Ads Editor
+                <Eye className="w-4 h-4 mr-2" />
+                Preview & Export CSV
               </Button>
               <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving}>
                 {isSaving ? (
@@ -213,6 +204,15 @@ export default function GoogleAdsGenerator() {
             open={showBriefModal}
             onOpenChange={setShowBriefModal}
             content={generatedContent}
+          />
+
+          <CSVPreviewModal
+            open={showCSVPreview}
+            onOpenChange={setShowCSVPreview}
+            adType={generatedContent.adType}
+            service={generatedContent.service}
+            headlines={generatedContent.content.headlines || []}
+            descriptions={generatedContent.content.descriptions || []}
           />
         </div>
       )}
