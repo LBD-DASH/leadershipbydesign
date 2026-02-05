@@ -38,13 +38,24 @@ export default function ProspectList() {
 
   const fetchProspects = async () => {
     setIsLoading(true);
-    const response = await prospectsApi.getProspects();
-    if (response.success && response.data) {
-      setProspects(response.data);
-    } else {
+    try {
+      const response = await prospectsApi.getProspects();
+      console.log('[ProspectList] Fetched prospects:', response);
+      if (response.success && response.data) {
+        setProspects(response.data);
+      } else {
+        console.error('[ProspectList] Error:', response.error);
+        toast({
+          title: "Error",
+          description: response.error || "Failed to load prospects",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('[ProspectList] Exception:', error);
       toast({
         title: "Error",
-        description: response.error || "Failed to load prospects",
+        description: "Failed to load prospects",
         variant: "destructive",
       });
     }
