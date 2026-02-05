@@ -31,6 +31,28 @@ interface RunStats {
 // Helper to delay between API calls
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Helper: fetch with timeout to avoid hanging runs that never complete (which leaves status='running')
+async function fetchWithTimeout(
+  input: string | URL,
+  init: RequestInit,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+interface PipelineRequestBody {
+  run_id?: string;
+  // Safety valve: cap work per invocation so the platform doesn't kill us mid-run.
+  // If we hit the cap, we self-invoke to continue the same run.
+  max_ms?: number;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -40,25 +62,66 @@ Deno.serve(async (req) => {
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  // Create a run record
-  const { data: runRecord, error: runError } = await supabase
-    .from('prospecting_runs')
-    .insert({
-      status: 'running',
-      run_details: { triggered_at: new Date().toISOString() }
-    })
-    .select()
-    .single();
+  const startedAtMs = Date.now();
+  let body: PipelineRequestBody = {};
+  try {
+    // Request body is optional
+    if (req.method !== 'GET') {
+      body = (await req.json().catch(() => ({}))) as PipelineRequestBody;
+    }
+  } catch {
+    body = {};
+  }
+  const maxMs = typeof body.max_ms === 'number' && body.max_ms > 30_000 ? body.max_ms : 7 * 60_000; // default: 7 minutes
 
-  if (runError) {
-    console.error('Failed to create run record:', runError);
-    return new Response(
-      JSON.stringify({ success: false, error: 'Failed to start pipeline run' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+  // Create (or resume) a run record
+  let runRecord: any = null;
+  if (body.run_id) {
+    const { data: existingRun, error: existingRunError } = await supabase
+      .from('prospecting_runs')
+      .select('*')
+      .eq('id', body.run_id)
+      .maybeSingle();
+
+    if (existingRunError || !existingRun) {
+      console.error('Failed to resume run record:', existingRunError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to resume pipeline run' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    runRecord = existingRun;
+    if (runRecord.status !== 'running') {
+      // Re-open a previous run if it got stuck
+      await supabase
+        .from('prospecting_runs')
+        .update({ status: 'running', completed_at: null })
+        .eq('id', runRecord.id);
+      runRecord.status = 'running';
+    }
+  } else {
+    const { data: createdRun, error: runError } = await supabase
+      .from('prospecting_runs')
+      .insert({
+        status: 'running',
+        run_details: { triggered_at: new Date().toISOString() },
+      })
+      .select()
+      .single();
+
+    if (runError) {
+      console.error('Failed to create run record:', runError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to start pipeline run' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    runRecord = createdRun;
   }
 
-  const runId = runRecord.id;
+  const runId = runRecord.id as string;
   const stats: RunStats = {
     companies_discovered: 0,
     companies_researched: 0,
@@ -68,6 +131,8 @@ Deno.serve(async (req) => {
 
   try {
     console.log('Starting automated prospecting pipeline, run ID:', runId);
+
+    const shouldStopSoon = () => Date.now() - startedAtMs > maxMs;
 
     // Fetch active industries
     const { data: configs, error: configError } = await supabase
@@ -83,11 +148,37 @@ Deno.serve(async (req) => {
 
     // Process each industry sequentially
     for (const config of configs as ProspectingConfig[]) {
+      if (shouldStopSoon()) {
+        console.log('Time budget reached; scheduling continuation for run:', runId);
+        // self-invoke to continue same run id
+        try {
+          await fetchWithTimeout(
+            `${supabaseUrl}/functions/v1/auto-prospect-pipeline`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${supabaseServiceKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ run_id: runId, max_ms: maxMs }),
+            },
+            5000,
+          );
+        } catch (invokeErr) {
+          console.error('Continuation invoke failed (will remain running):', invokeErr);
+        }
+
+        return new Response(
+          JSON.stringify({ success: true, run_id: runId, continuation: true, stats }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        );
+      }
+
       console.log(`Processing industry: ${config.industry}`);
 
       try {
         // Step 1: Discover companies using find-companies function
-        const discoverResponse = await fetch(`${supabaseUrl}/functions/v1/find-companies`, {
+        const discoverResponse = await fetchWithTimeout(`${supabaseUrl}/functions/v1/find-companies`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${supabaseServiceKey}`,
@@ -99,7 +190,7 @@ Deno.serve(async (req) => {
             companySize: config.company_size,
             targetContacts: 'both'
           }),
-        });
+        }, 60_000);
 
         if (!discoverResponse.ok) {
           const errorText = await discoverResponse.text();
@@ -118,6 +209,31 @@ Deno.serve(async (req) => {
 
         // Step 2: Check for duplicates and research each new company
         for (const company of discoveredCompanies) {
+          if (shouldStopSoon()) {
+            console.log('Time budget reached mid-industry; scheduling continuation for run:', runId);
+            try {
+              await fetchWithTimeout(
+                `${supabaseUrl}/functions/v1/auto-prospect-pipeline`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseServiceKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ run_id: runId, max_ms: maxMs }),
+                },
+                5000,
+              );
+            } catch (invokeErr) {
+              console.error('Continuation invoke failed (will remain running):', invokeErr);
+            }
+
+            return new Response(
+              JSON.stringify({ success: true, run_id: runId, continuation: true, stats }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+            );
+          }
+
           try {
             // Normalize URL for comparison
             let normalizedUrl = company.website_url.toLowerCase().trim();
@@ -145,7 +261,7 @@ Deno.serve(async (req) => {
             // Step 3: Research the company using firecrawl-company-research
             console.log(`Researching: ${company.company_name} (${company.website_url})`);
             
-            const researchResponse = await fetch(`${supabaseUrl}/functions/v1/firecrawl-company-research`, {
+            const researchResponse = await fetchWithTimeout(`${supabaseUrl}/functions/v1/firecrawl-company-research`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${supabaseServiceKey}`,
@@ -154,7 +270,7 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 url: company.website_url
               }),
-            });
+            }, 90_000);
 
             stats.companies_researched++;
 
@@ -292,5 +408,28 @@ Deno.serve(async (req) => {
       JSON.stringify({ success: false, error: errorMsg, run_id: runId }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
+  } finally {
+    // Safety: if the platform kills the function before our catch runs, the status can be stuck as 'running'.
+    // In normal exits, ensure we don't leave a phantom running state older than this invocation.
+    try {
+      const { data: latestRun } = await supabase
+        .from('prospecting_runs')
+        .select('status')
+        .eq('id', runId)
+        .maybeSingle();
+
+      if (latestRun?.status === 'running' && Date.now() - startedAtMs > maxMs + 10_000) {
+        await supabase
+          .from('prospecting_runs')
+          .update({
+            status: 'failed',
+            completed_at: new Date().toISOString(),
+            errors: [...stats.errors, { industry: 'pipeline', error: 'Invocation exceeded time budget and likely terminated.' }],
+          })
+          .eq('id', runId);
+      }
+    } catch (finalizeErr) {
+      console.error('Failed to finalize run state:', finalizeErr);
+    }
   }
 });
