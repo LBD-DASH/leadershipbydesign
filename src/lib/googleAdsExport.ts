@@ -1,9 +1,17 @@
 /**
  * Google Ads Editor CSV Export Utility
  * Generates properly formatted CSV files for bulk import into Google Ads Editor
+ * 
+ * Column names MUST match Google Ads Editor exactly:
+ * - "Campaign" not "Campaign Name"
+ * - "Ad group" not "Ad Group" 
+ * - "Ad type" is required
+ * - "Headline 1", "Headline 2" pattern (with space)
  */
 
 const PUBLISHED_URL = 'https://leadershipbydesign.lovable.app';
+const DEFAULT_BUDGET = '150';
+const DEFAULT_BUDGET_TYPE = 'Daily';
 
 interface ServiceConfig {
   label: string;
@@ -52,6 +60,7 @@ function padArray(arr: string[], length: number): string[] {
 
 /**
  * Generates CSV for Responsive Search Ads
+ * Required columns: Campaign, Campaign type, Budget, Budget type, Ad group, Ad type, Headline 1-15, Description 1-4, Final URL
  */
 export function generateSearchAdsCSV(
   headlines: string[],
@@ -59,14 +68,18 @@ export function generateSearchAdsCSV(
   service: string
 ): string {
   const config = SERVICE_CONFIGS[service] || SERVICE_CONFIGS['executive-coaching'];
-  const campaignName = `Leadership by Design - ${config.label}`;
+  const campaignName = `LBD - ${config.label} - Search`;
   const adGroup = config.label;
   const finalUrl = `${PUBLISHED_URL}${config.path}`;
 
-  // Build header row
+  // Build header row with exact Google Ads Editor column names
   const headerParts = [
     'Campaign',
-    'Ad Group',
+    'Campaign type',
+    'Budget',
+    'Budget type',
+    'Ad group',
+    'Ad type',
     ...Array.from({ length: 15 }, (_, i) => `Headline ${i + 1}`),
     ...Array.from({ length: 4 }, (_, i) => `Description ${i + 1}`),
     'Final URL',
@@ -75,14 +88,18 @@ export function generateSearchAdsCSV(
   ];
   const header = headerParts.join(',');
 
-  // Pad headlines and descriptions
+  // Pad headlines (min 3 required) and descriptions (min 2 required)
   const paddedHeadlines = padArray(headlines, 15);
   const paddedDescriptions = padArray(descriptions, 4);
 
   // Build data row
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue('Search'),
+    escapeCSVValue(DEFAULT_BUDGET),
+    escapeCSVValue(DEFAULT_BUDGET_TYPE),
     escapeCSVValue(adGroup),
+    escapeCSVValue('Responsive search ad'),
     ...paddedHeadlines.map(escapeCSVValue),
     ...paddedDescriptions.map(escapeCSVValue),
     escapeCSVValue(finalUrl),
@@ -95,7 +112,8 @@ export function generateSearchAdsCSV(
 }
 
 /**
- * Generates CSV for Display Ads
+ * Generates CSV for Responsive Display Ads
+ * Required columns: Campaign, Campaign type, Budget, Budget type, Ad group, Ad type, Short headline, Long headline, Description, Final URL, Business name
  */
 export function generateDisplayAdsCSV(
   headlines: string[],
@@ -103,33 +121,42 @@ export function generateDisplayAdsCSV(
   service: string
 ): string {
   const config = SERVICE_CONFIGS[service] || SERVICE_CONFIGS['executive-coaching'];
-  const campaignName = `Leadership by Design - ${config.label}`;
+  const campaignName = `LBD - ${config.label} - Display`;
   const adGroup = config.label;
   const finalUrl = `${PUBLISHED_URL}${config.path}`;
   const businessName = 'Leadership by Design';
 
+  // Short headlines ≤25 chars, Long headlines ≤90 chars
+  // Use first 5 headlines as short, rest as long
+  const shortHeadlines = padArray(headlines.slice(0, 5), 5);
+  const longHeadlines = padArray(headlines.slice(5, 10).length > 0 ? headlines.slice(5, 10) : [headlines[0] || ''], 5);
+  const paddedDescriptions = padArray(descriptions, 5);
+
   const headerParts = [
     'Campaign',
-    'Ad Group',
-    'Short Headline',
-    'Long Headline',
-    'Description',
-    'Business Name',
+    'Campaign type',
+    'Budget',
+    'Budget type',
+    'Ad group',
+    'Ad type',
+    ...Array.from({ length: 5 }, (_, i) => `Short headline ${i + 1}`),
+    ...Array.from({ length: 5 }, (_, i) => `Long headline ${i + 1}`),
+    ...Array.from({ length: 5 }, (_, i) => `Description ${i + 1}`),
+    'Business name',
     'Final URL',
   ];
   const header = headerParts.join(',');
 
-  // For display ads, use first headline as short, second as long
-  const shortHeadline = headlines[0] || '';
-  const longHeadline = headlines[1] || headlines[0] || '';
-  const description = descriptions[0] || '';
-
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue('Display'),
+    escapeCSVValue(DEFAULT_BUDGET),
+    escapeCSVValue(DEFAULT_BUDGET_TYPE),
     escapeCSVValue(adGroup),
-    escapeCSVValue(shortHeadline),
-    escapeCSVValue(longHeadline),
-    escapeCSVValue(description),
+    escapeCSVValue('Responsive display ad'),
+    ...shortHeadlines.map(escapeCSVValue),
+    ...longHeadlines.map(escapeCSVValue),
+    ...paddedDescriptions.map(escapeCSVValue),
     escapeCSVValue(businessName),
     escapeCSVValue(finalUrl),
   ];
@@ -140,6 +167,7 @@ export function generateDisplayAdsCSV(
 
 /**
  * Generates CSV for Performance Max campaigns
+ * Required columns: Campaign, Campaign type, Budget, Budget type, Asset group, Headlines, Long headlines, Descriptions, Business name, Final URL
  */
 export function generatePMaxCSV(
   headlines: string[],
@@ -147,18 +175,21 @@ export function generatePMaxCSV(
   service: string
 ): string {
   const config = SERVICE_CONFIGS[service] || SERVICE_CONFIGS['executive-coaching'];
-  const campaignName = `Leadership by Design - ${config.label}`;
+  const campaignName = `LBD - ${config.label} - PMax`;
   const assetGroup = config.label;
   const finalUrl = `${PUBLISHED_URL}${config.path}`;
   const businessName = 'Leadership by Design';
 
   const headerParts = [
     'Campaign',
-    'Asset Group',
+    'Campaign type',
+    'Budget',
+    'Budget type',
+    'Asset group',
     ...Array.from({ length: 5 }, (_, i) => `Headline ${i + 1}`),
-    ...Array.from({ length: 5 }, (_, i) => `Long Headline ${i + 1}`),
+    ...Array.from({ length: 5 }, (_, i) => `Long headline ${i + 1}`),
     ...Array.from({ length: 5 }, (_, i) => `Description ${i + 1}`),
-    'Business Name',
+    'Business name',
     'Final URL',
     'Path 1',
     'Path 2',
@@ -172,6 +203,9 @@ export function generatePMaxCSV(
 
   const dataParts = [
     escapeCSVValue(campaignName),
+    escapeCSVValue('Performance Max'),
+    escapeCSVValue(DEFAULT_BUDGET),
+    escapeCSVValue(DEFAULT_BUDGET_TYPE),
     escapeCSVValue(assetGroup),
     ...shortHeadlines.map(escapeCSVValue),
     ...longHeadlines.map(escapeCSVValue),
