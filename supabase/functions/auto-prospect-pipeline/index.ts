@@ -114,20 +114,34 @@ Deno.serve(async (req) => {
 
     if (existingRunError || !existingRun) {
       console.error('Failed to resume run record:', existingRunError);
-      return new Response(
-        JSON.stringify({ success: false, error: 'Failed to resume pipeline run' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    runRecord = existingRun;
-    if (runRecord.status !== 'running') {
-      // Re-open a previous run if it got stuck
-      await supabase
+      // If we can't find the run, create a new one instead
+      const { data: newRun, error: newRunError } = await supabase
         .from('prospecting_runs')
-        .update({ status: 'running', completed_at: null })
-        .eq('id', runRecord.id);
-      runRecord.status = 'running';
+        .insert({
+          status: 'running',
+          run_details: { triggered_at: new Date().toISOString() },
+        })
+        .select()
+        .single();
+
+      if (newRunError) {
+        console.error('Failed to create fallback run record:', newRunError);
+        return new Response(
+          JSON.stringify({ success: false, error: 'Failed to start pipeline run' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      runRecord = newRun;
+    } else {
+      runRecord = existingRun;
+      if (runRecord.status !== 'running') {
+        // Re-open a previous run if it got stuck
+        await supabase
+          .from('prospecting_runs')
+          .update({ status: 'running', completed_at: null })
+          .eq('id', runRecord.id);
+        runRecord.status = 'running';
+      }
     }
   } else {
     const { data: createdRun, error: runError } = await supabase
