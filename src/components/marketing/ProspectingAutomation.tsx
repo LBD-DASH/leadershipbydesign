@@ -164,34 +164,24 @@ export default function ProspectingAutomation() {
   // Run pipeline manually
   const runPipeline = useMutation({
     mutationFn: async () => {
-      // First, create a run record so we can immediately show status
-      const { data: runRecord, error: insertError } = await supabase
-        .from('prospecting_runs')
-        .insert({
-          status: 'running',
-          run_details: { triggered_at: new Date().toISOString(), source: 'manual' },
-        })
-        .select()
-        .single();
-
-      if (insertError) {
-        throw new Error('Failed to create run record: ' + insertError.message);
-      }
-
-      // Now invoke the function with the run_id so it continues this run
-      // Fire and forget - don't wait for the response as it takes several minutes
-      supabase.functions.invoke('auto-prospect-pipeline', {
-        body: { run_id: runRecord.id },
-      }).catch(err => {
-        console.log('Pipeline invoked (may timeout, but runs in background):', err);
+      // Trigger the backend pipeline directly.
+      // (Avoids client-side DB writes that can fail with RLS when not signed into backend auth.)
+      const { data, error } = await supabase.functions.invoke('auto-prospect-pipeline', {
+        body: { source: 'manual' },
       });
 
-      return { success: true, message: 'Pipeline started', run_id: runRecord.id };
+      if (error) {
+        throw new Error(error.message || 'Failed to trigger pipeline');
+      }
+
+      return (data as { success?: boolean; message?: string; run_id?: string }) || { success: true };
     },
     onSuccess: (data) => {
       toast.success('Pipeline started! Processing companies in the background.');
-      // Immediately invalidate to show the new running status
-      queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
+      // Refresh run history shortly after triggering
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
+      }, 1500);
     },
     onError: (error) => {
       toast.error('Failed to start pipeline: ' + (error instanceof Error ? error.message : 'Unknown error'));
