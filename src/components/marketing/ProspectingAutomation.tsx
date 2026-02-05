@@ -164,26 +164,37 @@ export default function ProspectingAutomation() {
   // Run pipeline manually
   const runPipeline = useMutation({
     mutationFn: async () => {
+      // First, create a run record so we can immediately show status
+      const { data: runRecord, error: insertError } = await supabase
+        .from('prospecting_runs')
+        .insert({
+          status: 'running',
+          run_details: { triggered_at: new Date().toISOString(), source: 'manual' },
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        throw new Error('Failed to create run record: ' + insertError.message);
+      }
+
+      // Now invoke the function with the run_id so it continues this run
       // Fire and forget - don't wait for the response as it takes several minutes
-      supabase.functions.invoke('auto-prospect-pipeline').catch(err => {
+      supabase.functions.invoke('auto-prospect-pipeline', {
+        body: { run_id: runRecord.id },
+      }).catch(err => {
         console.log('Pipeline invoked (may timeout, but runs in background):', err);
       });
-      // Return immediately - the pipeline runs in the background
-      return { success: true, message: 'Pipeline started' };
+
+      return { success: true, message: 'Pipeline started', run_id: runRecord.id };
     },
     onSuccess: (data) => {
-      toast.success('Pipeline started! Processing companies in the background. Refresh to see new prospects.');
-      // Keep polling the runs table to track progress
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
-      }, 5000);
+      toast.success('Pipeline started! Processing companies in the background.');
+      // Immediately invalidate to show the new running status
+      queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
     },
     onError: (error) => {
-      // Even if there's an error, the pipeline may still be running
-      toast.info('Pipeline triggered. Check run history for status.');
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['prospecting-runs'] });
-      }, 5000);
+      toast.error('Failed to start pipeline: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   });
 
