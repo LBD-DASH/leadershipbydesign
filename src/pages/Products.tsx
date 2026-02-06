@@ -78,6 +78,16 @@ const Products = () => {
     isBuilt: true,
     features: ["30-60-90 Day Roadmap", "Team Assessment Tools", "Weekly Reflection Templates", "Quick-Win Strategies"]
   }, {
+    id: "contagious-identity-workbook",
+    title: "Contagious Identity Workbook",
+    shortDesc: "Build your leadership identity",
+    price: "R697",
+    link: "/contagious-identity-workbook",
+    image: productHandshake,
+    isExternal: false,
+    isBuilt: true,
+    features: ["Identity Discovery Process", "50% Discount Codes for Tools", "Self-Coaching Prompts", "Executive Coaching Preview"]
+  }, {
     id: "one-on-one-mastery",
     title: "1-on-1 Mastery System",
     shortDesc: "Run meetings that transform performance",
