@@ -40,9 +40,90 @@ const teamWorkshops = [{
   link: "/workshops/leadership"
 }];
 
+import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring";
+
+const levelOrder: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
+
 export default function Programmes() {
   return <>
       <SEO title="Programmes & Workshops" description="Explore leadership development programmes including Contagious Identity coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" ogImage="https://leadershipbydesign.co/og-programmes.jpg" keywords="leadership programmes, contagious identity coaching, executive coaching, team workshops, leadership development, SHIFT leadership development" />
+      
+      {/* Course Structured Data for AI Discovery */}
+      <CourseSchema
+        name="Leading in the AI Era"
+        description="Move from AI uncertainty to confident integration in 6 weeks. Learn AI capabilities, protect your Human Edge, and build augmented workflows."
+        duration="P6W"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Leader as Coach Programme"
+        description="Transform leaders into effective coaches over 6 months with weekly virtual sessions covering trust building, conflict management, neuroscience, and wellbeing."
+        duration="P6M"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Effective Personal Productivity (L1)"
+        description="Master personal output and task completion. 8-week programme focusing on productivity systems and self-management."
+        duration="P8W"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Effective Leadership Development (L2)"
+        description="Learn to invest in growing others. 6-week programme on developing team members and coaching skills."
+        duration="P6W"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Effective Personal Leadership (L3)"
+        description="Connect work to meaning and vision. 12-week programme on purpose-driven leadership."
+        duration="P12W"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Effective Motivational Leadership (L4)"
+        description="Inspire and energize teams. 8-week programme on motivational leadership and team engagement."
+        duration="P8W"
+        url="/programmes"
+      />
+      <CourseSchema
+        name="Effective Strategic Leadership (L5)"
+        description="Drive long-term organizational success. 4-week intensive on strategic thinking and decision-making."
+        duration="P4W"
+        url="/programmes"
+      />
+      <ServiceSchema
+        name="Team Alignment Workshop"
+        description="Build strategic clarity and get everyone rowing in the same direction. 1-2 day in-person workshop achieving 50% reduction in team conflict."
+        url="/workshops/alignment"
+      />
+      <ServiceSchema
+        name="Team Motivation Workshop"
+        description="Reignite team energy and create sustainable motivation through purpose-driven engagement strategies. 1-2 day workshop."
+        url="/workshops/motivation"
+      />
+      <ServiceSchema
+        name="Team Leadership Workshop"
+        description="Develop leadership capabilities at every level and create a culture of accountability and ownership. 1-2 day workshop."
+        url="/workshops/leadership"
+      />
+      <ServiceSchema
+        name="Executive Coaching"
+        description="One-on-one coaching for senior leaders achieving 2x strategic clarity in 90 days. Bespoke executive development."
+        url="/executive-coaching"
+      />
+      <HowToSchema
+        name="How to Develop Leadership Skills with the L1-L5 Framework"
+        description="Progress through 5 leadership levels from personal productivity to strategic leadership. 35% faster decision-making within 60 days."
+        totalTime="P12M"
+        steps={[
+          { name: "L1: Master Personal Productivity", text: "Focus on personal output, task completion, and self-management systems." },
+          { name: "L2: Develop Others", text: "Invest in growing team members through coaching, feedback, and development conversations." },
+          { name: "L3: Lead with Purpose", text: "Connect work to meaning and vision. Inspire through purpose-driven leadership." },
+          { name: "L4: Motivate Teams", text: "Energize and inspire teams through motivational leadership and engagement." },
+          { name: "L5: Think Strategically", text: "Drive long-term organizational success through strategic thinking and decision-making." }
+        ]}
+      />
+      
       <div className="min-h-screen bg-background">
         <Header />
       
