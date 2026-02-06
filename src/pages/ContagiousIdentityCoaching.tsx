@@ -1,0 +1,659 @@
+import { motion } from "framer-motion";
+import { 
+  ArrowDown, 
+  CheckCircle, 
+  Users, 
+  Target, 
+  Brain, 
+  Lightbulb,
+  ChevronDown,
+  Clock,
+  Shield,
+  MessageSquare
+} from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import ContagiousIdentityForm from "@/components/contagious-identity/ContagiousIdentityForm";
+import InterestForm from "@/components/contagious-identity/InterestForm";
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6 },
+};
+
+const staggerContainer = {
+  initial: {},
+  whileInView: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  viewport: { once: true },
+};
+
+const painPoints = [
+  {
+    title: "Values-Behaviour Disconnect",
+    description: "You know what you stand for, but your team isn't reflecting it consistently.",
+  },
+  {
+    title: "Identity Confusion",
+    description: "Different stakeholders see different versions of your leadership.",
+  },
+  {
+    title: "Cultural Drift",
+    description: "The culture you built is slowly changing—and not in the direction you intended.",
+  },
+  {
+    title: "Succession Anxiety",
+    description: "You're not sure your leadership identity will survive your exit.",
+  },
+  {
+    title: "Influence Plateau",
+    description: "Your positional authority is strong, but your personal influence has stalled.",
+  },
+  {
+    title: "Legacy Uncertainty",
+    description: "You've built success, but you're not sure what you'll leave behind.",
+  },
+];
+
+const coachingPhases = [
+  {
+    phase: "01",
+    title: "Discovery",
+    duration: "Weeks 1-2",
+    description: "Mapping your current identity landscape—how you see yourself vs. how others experience you.",
+    activities: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
+  },
+  {
+    phase: "02",
+    title: "Foundation",
+    duration: "Weeks 3-6",
+    description: "Defining the identity you want to transmit and identifying the gaps.",
+    activities: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
+  },
+  {
+    phase: "03",
+    title: "Application",
+    duration: "Weeks 7-10",
+    description: "Practising identity-congruent leadership in real situations.",
+    activities: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
+  },
+  {
+    phase: "04",
+    title: "Integration",
+    duration: "Weeks 11-12",
+    description: "Embedding your contagious identity into systems and succession.",
+    activities: ["System Integration", "Succession Planning", "Legacy Mapping"],
+  },
+];
+
+const pricingTiers = [
+  {
+    name: "Foundation",
+    price: "R45,000",
+    description: "For leaders ready to define their identity",
+    duration: "8 sessions over 3 months",
+    features: [
+      "8 × 90-minute coaching sessions",
+      "360° Identity Assessment",
+      "Personal Identity Blueprint",
+      "Email support between sessions",
+      "Workbook & resource materials",
+    ],
+    highlight: false,
+  },
+  {
+    name: "Executive",
+    price: "R65,000",
+    description: "For leaders ready to embed their identity",
+    duration: "12 sessions over 4 months",
+    features: [
+      "12 × 90-minute coaching sessions",
+      "360° Identity Assessment",
+      "Stakeholder interviews (5 people)",
+      "Personal Identity Blueprint",
+      "Implementation support",
+      "Priority access & support",
+    ],
+    highlight: true,
+  },
+  {
+    name: "Strategic",
+    price: "R75,000",
+    description: "For leaders building lasting legacy",
+    duration: "16 sessions over 6 months",
+    features: [
+      "16 × 90-minute coaching sessions",
+      "Comprehensive 360° Assessment",
+      "Stakeholder interviews (10 people)",
+      "Team identity workshops (2)",
+      "Succession identity planning",
+      "6-month follow-up session",
+    ],
+    highlight: false,
+  },
+];
+
+const faqs = [
+  {
+    question: "How is this different from traditional executive coaching?",
+    answer: "Traditional coaching often focuses on skills, behaviours, or performance metrics. Contagious Identity Coaching goes deeper—it focuses on who you are as a leader and how that identity spreads through your organisation. We're not fixing problems; we're shaping influence.",
+  },
+  {
+    question: "What format are the coaching sessions?",
+    answer: "Sessions are 90 minutes, conducted via video call (Zoom or Teams) or in-person if you're in the Gauteng area. We find 90 minutes allows for both strategic conversation and practical application.",
+  },
+  {
+    question: "How do you ensure confidentiality?",
+    answer: "Complete confidentiality is non-negotiable. Nothing discussed in our sessions is shared with anyone—including your board, investors, or HR. This is a safe space for honest leadership reflection.",
+  },
+  {
+    question: "What's the 360° Identity Assessment?",
+    answer: "This involves structured interviews with 5-10 people in your ecosystem—direct reports, peers, board members, even family if relevant. We map how your identity is currently being perceived and experienced by others.",
+  },
+  {
+    question: "Can I include my leadership team?",
+    answer: "Yes. The Strategic tier includes two team identity workshops. For a fully integrated approach across your leadership team, we can design a custom engagement.",
+  },
+  {
+    question: "What's the time commitment?",
+    answer: "Beyond the coaching sessions themselves, expect 2-3 hours per week for reflection exercises, application practice, and workbook completion. The real work happens between sessions.",
+  },
+  {
+    question: "How do I know if I'm the right fit?",
+    answer: "If you're a senior leader who cares about legacy, influence, and the culture you're creating—and you're willing to do honest self-examination—you're likely a good fit. We'll have a brief conversation before committing to ensure mutual alignment.",
+  },
+];
+
+export default function ContagiousIdentityCoaching() {
+  const scrollToProcess = () => {
+    document.getElementById("coaching-process")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToInterest = () => {
+    document.getElementById("interest-form")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <>
+      <SEO
+        title="Executive Coaching for Contagious Identity"
+        description="Shape the leadership identity that spreads through your organisation. Premium executive coaching for CEOs, founders, and senior leaders who want their identity to become their legacy."
+        canonicalUrl="/contagious-identity"
+        keywords="executive coaching, leadership identity, CEO coaching, leadership development, leadership legacy, identity coaching"
+      />
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-[hsl(210,35%,12%)] via-[hsl(200,30%,15%)] to-[hsl(210,35%,12%)] text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,hsl(200,70%,40%,0.15),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,hsl(200,70%,40%,0.1),transparent_50%)]" />
+        </div>
+
+        <div className="container mx-auto px-4 py-24 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl"
+          >
+            <p className="text-primary font-medium tracking-wider uppercase mb-4">
+              Executive Coaching
+            </p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              Contagious Identity
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
+              Your leadership identity is spreading through your organisation right now. 
+              The question is: is it the identity you intended?
+            </p>
+
+            <div className="space-y-4 mb-10">
+              {[
+                "Shape the identity others catch from you",
+                "Build influence that transcends your position",
+                "Create a legacy that survives your exit",
+              ].map((point, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  className="flex items-center gap-3"
+                >
+                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-lg text-gray-200">{point}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Button
+                size="lg"
+                onClick={scrollToProcess}
+                className="text-lg px-8 py-6"
+              >
+                Explore the Coaching Process
+                <ArrowDown className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={scrollToInterest}
+                className="text-lg px-8 py-6 border-gray-400 text-gray-200 hover:bg-white/10"
+              >
+                Start the Conversation
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Overview Section */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              What This Coaching Actually Does
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Leadership identity isn't about personal branding or impression management. 
+              It's about the unconscious transmission of who you are—your values, standards, 
+              and ways of being—to everyone who experiences your leadership.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <motion.div {...fadeInUp} className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Target className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">This IS:</h3>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>• Deep identity work with strategic application</li>
+                    <li>• Shaping how your leadership "lands" with others</li>
+                    <li>• Building influence that transcends your title</li>
+                    <li>• Creating a leadership legacy by design</li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div {...fadeInUp} className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-destructive" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">This is NOT:</h3>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>• Therapy or counselling</li>
+                    <li>• Generic executive coaching</li>
+                    <li>• Personal branding or image consulting</li>
+                    <li>• Quick-fix performance coaching</li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why This Matters Now */}
+      <section className="py-20 md:py-28 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Why This Matters Now
+              </h2>
+            </div>
+
+            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
+              <div className="prose prose-lg max-w-none text-muted-foreground">
+                <p className="text-lg leading-relaxed mb-6">
+                  Most leaders believe they're defined by their achievements, decisions, and strategic 
+                  choices. But your team isn't experiencing your strategy—they're experiencing <em>you</em>.
+                </p>
+                <p className="text-lg leading-relaxed mb-6">
+                  Every interaction transmits something. Every decision reveals something. Every 
+                  response under pressure teaches something. Your people are learning from you 
+                  constantly—whether you're conscious of the lesson or not.
+                </p>
+                <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 text-xl font-medium text-foreground italic">
+                  "Leaders are always teaching. The only question is: what?"
+                </blockquote>
+                <p className="text-lg leading-relaxed">
+                  Contagious Identity Coaching helps you become intentional about the identity 
+                  you're transmitting—so that the culture, values, and standards you want become 
+                  the ones that actually spread.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Pain Points Section */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              This Coaching Addresses
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Common challenges faced by senior leaders who care about their influence and legacy.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          >
+            {painPoints.map((point, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className="bg-card p-6 rounded-xl border border-border hover:border-primary/30 transition-colors"
+              >
+                <h3 className="text-lg font-semibold mb-2">{point.title}</h3>
+                <p className="text-muted-foreground">{point.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Who This Is For */}
+      <section className="py-20 md:py-28 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Who This Is For
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-card p-8 rounded-xl border border-border">
+                <Users className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-xl font-semibold mb-4">Ideal Clients</h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>CEOs and Founders building enduring organisations</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Senior executives responsible for large teams</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Leaders preparing for succession or transition</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Family business principals shaping generational culture</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-card p-8 rounded-xl border border-border">
+                <Brain className="w-10 h-10 text-primary mb-4" />
+                <h3 className="text-xl font-semibold mb-4">Right Mindset</h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Committed to honest self-examination</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Willing to receive feedback from stakeholders</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Focused on long-term impact, not quick fixes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Ready to invest time between sessions</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Workbook Download Section */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-[hsl(210,35%,12%)] via-[hsl(200,30%,15%)] to-[hsl(210,35%,12%)] text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <motion.div {...fadeInUp}>
+                <p className="text-primary font-medium tracking-wider uppercase mb-4">
+                  Free Resource
+                </p>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                  The Contagious Identity Workbook
+                </h2>
+                <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                  Begin exploring your leadership identity with this self-guided workbook. 
+                  Includes reflection exercises and the Identity Transmission Framework.
+                </p>
+                <ul className="space-y-3 text-gray-300 mb-8">
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    <span>Identity excavation exercises</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    <span>Values-behaviour alignment audit</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    <span>Transmission mapping template</span>
+                  </li>
+                </ul>
+              </motion.div>
+
+              <motion.div
+                {...fadeInUp}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+              >
+                <ContagiousIdentityForm />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Coaching Process Section */}
+      <section id="coaching-process" className="py-20 md:py-28 bg-background scroll-mt-20">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              The Coaching Process
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              A structured journey from identity discovery to organisational integration.
+            </p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto">
+            {coachingPhases.map((phase, index) => (
+              <motion.div
+                key={index}
+                {...fadeInUp}
+                className="relative pl-8 pb-12 last:pb-0"
+              >
+                {index < coachingPhases.length - 1 && (
+                  <div className="absolute left-[15px] top-12 bottom-0 w-[2px] bg-border" />
+                )}
+                <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                  {phase.phase}
+                </div>
+                <div className="ml-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                    <h3 className="text-xl font-semibold">{phase.title}</h3>
+                    <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full w-fit">
+                      {phase.duration}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground mb-4">{phase.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {phase.activities.map((activity, actIndex) => (
+                      <span
+                        key={actIndex}
+                        className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full"
+                      >
+                        {activity}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 md:py-28 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Investment
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Three engagement options designed for different stages of your leadership journey.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          >
+            {pricingTiers.map((tier, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className={`relative rounded-2xl p-8 ${
+                  tier.highlight
+                    ? "bg-card border-2 border-primary shadow-xl"
+                    : "bg-card border border-border"
+                }`}
+              >
+                {tier.highlight && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+                    Most Popular
+                  </div>
+                )}
+                <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+                <p className="text-muted-foreground mb-4">{tier.description}</p>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold">{tier.price}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mb-6">{tier.duration}</p>
+                <ul className="space-y-3 mb-8">
+                  {tier.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  onClick={scrollToInterest}
+                  className="w-full"
+                  variant={tier.highlight ? "default" : "outline"}
+                >
+                  Express Interest
+                </Button>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Frequently Asked Questions
+            </h2>
+          </motion.div>
+
+          <motion.div {...fadeInUp} className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index}`}
+                  className="bg-card rounded-lg border border-border px-6"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-6">
+                    <span className="font-medium">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section id="interest-form" className="py-20 md:py-28 bg-muted/30 scroll-mt-20">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Start the Conversation
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Tell us about your leadership situation. We'll respond within 24 hours to discuss 
+                whether this coaching is the right fit for your goals.
+              </p>
+            </div>
+
+            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
+              <InterestForm />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
