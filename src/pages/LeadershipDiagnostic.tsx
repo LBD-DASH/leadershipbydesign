@@ -152,6 +152,7 @@ export default function LeadershipDiagnostic() {
         title="Leadership Diagnostic | Leadership by Design"
         description="Discover your leadership operating level with our free 20-question diagnostic. Get instant clarity on your strengths and growth opportunities."
         canonicalUrl="/leadership-diagnostic"
+        ogImage="https://leadershipbydesign.co/og-leadership-diagnostic.jpg"
         keywords="leadership diagnostic, leadership assessment, leadership development, leadership test, leadership profile"
       />
       <WebApplicationSchema

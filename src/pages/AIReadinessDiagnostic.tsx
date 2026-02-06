@@ -129,6 +129,7 @@ export default function AIReadinessDiagnostic() {
         title="AI Leadership Readiness Diagnostic | Leadership by Design"
         description="Assess your AI leadership capabilities across 5 dimensions. Get personalised recommendations for leading effectively in an AI-augmented workplace."
         canonicalUrl="/ai-readiness-diagnostic"
+        ogImage="https://leadershipbydesign.co/og-ai-diagnostic.jpg"
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">

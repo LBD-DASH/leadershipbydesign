@@ -319,7 +319,7 @@ const Products = () => {
       </div>
     </motion.div>;
   return <div className="min-h-screen bg-background">
-      <SEO title="Leadership Tools & Resources | Leadership by Design" description="Practical leadership tools and frameworks for managers. From survival kits to conversation scripts—everything you need to lead with confidence." />
+      <SEO title="Leadership Tools & Resources | Leadership by Design" description="Practical leadership tools and frameworks for managers. From survival kits to conversation scripts—everything you need to lead with confidence." canonicalUrl="/products" ogImage="https://leadershipbydesign.co/og-products.jpg" />
       <Header />
 
       <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
