@@ -443,11 +443,45 @@ export default function ContagiousIdentityCoaching() {
       {/* Who This Is For */}
       <section className="py-20 md:py-28 bg-muted/30">
         <div className="container mx-auto px-4">
-          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Who This Is For
               </h2>
+            </div>
+
+            {/* Top Image Banner */}
+            <div className="grid md:grid-cols-2 gap-6 mb-12">
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-lg"
+              >
+                <img 
+                  src={influenceImage} 
+                  alt="Executive leader presenting to team" 
+                  className="w-full aspect-video object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <p className="font-semibold text-lg">Build Lasting Influence</p>
+                  <p className="text-sm text-white/80">Lead with presence that shapes culture</p>
+                </div>
+              </motion.div>
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-lg"
+              >
+                <img 
+                  src={legacyImage} 
+                  alt="Leadership legacy and succession" 
+                  className="w-full aspect-video object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <p className="font-semibold text-lg">Create Enduring Legacy</p>
+                  <p className="text-sm text-white/80">Your identity survives your exit</p>
+                </div>
+              </motion.div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
