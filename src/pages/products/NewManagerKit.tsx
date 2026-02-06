@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { X, Gift, CheckCircle, ArrowLeft, TrendingUp } from "lucide-react";
+import { X, Gift, CheckCircle, ArrowLeft, TrendingUp, Zap, Clock, Download } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
+import { motion } from "framer-motion";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
 import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
 import newManagerSuccess from "@/assets/new-manager-success.jpg";
@@ -82,26 +83,70 @@ const personas = [
 // Pricing CTA component used in hero and final section
 const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
   <div className="text-center px-4">
+    {/* Speed indicators for TikTok audience */}
+    <div className="flex flex-wrap justify-center gap-3 mb-4">
+      <motion.span 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
+      >
+        <Zap className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        Instant Download
+      </motion.span>
+      <motion.span 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
+      >
+        <Clock className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        30 sec to access
+      </motion.span>
+      <motion.span 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
+      >
+        <Download className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        PDF Ready
+      </motion.span>
+    </div>
+
     <div className="mb-4">
       <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">R1,497</span>
-      <span className="text-4xl md:text-5xl lg:text-6xl font-bold" style={{ color: colors.gold }}>R497</span>
+      <motion.span 
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+        className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block"
+        style={{ color: colors.gold }}
+      >
+        R497
+      </motion.span>
     </div>
     <p className="text-white/70 text-xs md:text-sm mb-4 md:mb-6">
-      Introductory price • Instant PDF download • 21 pages
+      🔥 67% OFF • Limited time offer
     </p>
-    <Button
-      onClick={onCheckout}
-      size="lg"
-      className="text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto"
-      style={{ 
-        backgroundColor: colors.gold, 
-        color: colors.navy,
-      }}
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      GET INSTANT ACCESS →
-    </Button>
+      <Button
+        onClick={onCheckout}
+        size="lg"
+        className="text-base md:text-lg px-6 md:px-8 py-6 md:py-7 font-bold transition-all duration-300 hover:shadow-lg w-full sm:w-auto min-h-[56px]"
+        style={{ 
+          backgroundColor: colors.gold, 
+          color: colors.navy,
+        }}
+      >
+        GET INSTANT ACCESS →
+      </Button>
+    </motion.div>
     <p className="text-white/50 text-xs mt-4">
-      Secure checkout • Download in 30 seconds • Works on any device
+      ✓ Secure checkout • ✓ Works on any device
     </p>
   </div>
 );
@@ -145,16 +190,23 @@ export default function NewManagerKit() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/80 via-[#1B2A4A]/90 to-[#1B2A4A]" />
         </div>
 
-        {/* Top Seller Badge */}
-        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
-          <div 
+        {/* Top Seller Badge - Animated */}
+        <motion.div 
+          className="absolute top-4 left-4 md:top-8 md:left-8 z-20"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <motion.div 
             className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg"
             style={{ backgroundColor: colors.gold, color: colors.navy }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
           >
             <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
-            <span>TOP SELLER</span>
-          </div>
-        </div>
+            <span>🔥 TOP SELLER</span>
+          </motion.div>
+        </motion.div>
 
         {/* Decorative elements */}
         <div 
@@ -186,18 +238,22 @@ export default function NewManagerKit() {
             </span>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-center mb-4">
-            <span className="block text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-2">
-              The New Manager Survival Kit
+          {/* Headline with gradient text */}
+          <motion.h1 
+            className="text-center mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <span className="block text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-2">
+              The New Manager
             </span>
             <span 
-              className="block text-2xl md:text-3xl lg:text-4xl font-serif"
-              style={{ color: colors.gold }}
+              className="block text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-[#C8A864] via-[#E8D5A3] to-[#C8A864] bg-clip-text text-transparent"
             >
-              Your First 90 Days
+              Survival Kit 🚀
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Subheading */}
           <p className="text-center text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10">
