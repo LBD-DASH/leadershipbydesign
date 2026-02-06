@@ -5,6 +5,7 @@ import { Package, Award, Users, Download, ArrowRight, ChevronDown, ExternalLink,
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { ProductSchema, AggregateRatingSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
