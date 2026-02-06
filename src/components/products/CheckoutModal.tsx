@@ -14,6 +14,7 @@ interface CheckoutModalProps {
   productName: string;
   price: number; // Price in ZAR
   priceDisplay: string;
+  successPath?: string; // Custom success page path
 }
 
 const colors = {
