@@ -77,7 +77,7 @@ export function CheckoutModal({
     if (finalPrice === 0) {
       toast.success("Discount applied! Redirecting to your download...");
       onOpenChange(false);
-      navigate("/new-manager-kit/success?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT");
+      navigate(`${successPath}?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT`);
       return;
     }
 
