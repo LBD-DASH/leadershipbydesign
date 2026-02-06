@@ -371,7 +371,7 @@ const Products = () => {
               <div className="grid lg:grid-cols-2 gap-0">
                 {/* Image Side */}
                 <div className="relative aspect-[16/9] md:aspect-[4/3] lg:aspect-auto overflow-hidden">
-                  <img alt="The New Manager Bundle" className="w-full h-full object-cover object-center" loading="lazy" src="/lovable-uploads/3fe48d34-7904-4861-b2d4-d4b8cfeea2cb.png" />
+                  <img alt="The New Manager Bundle" className="w-full h-full object-cover object-center" loading="lazy" src={newManagerHero} />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#1B2A4A]/50 lg:block hidden" />
                 </div>
 
