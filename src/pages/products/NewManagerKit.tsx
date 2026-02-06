@@ -3,6 +3,9 @@ import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { X, Gift, CheckCircle } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
+import newManagerHero from "@/assets/new-manager-hero.jpg";
+import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
+import newManagerSuccess from "@/assets/new-manager-success.jpg";
 
 // Custom colors for this page
 const colors = {
@@ -131,6 +134,16 @@ export default function NewManagerKit() {
         className="relative py-16 md:py-24 px-4 overflow-hidden"
         style={{ backgroundColor: colors.navy }}
       >
+        {/* Background image with overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src={newManagerHero} 
+            alt="Professional coaching session" 
+            className="w-full h-full object-cover object-top opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/80 via-[#1B2A4A]/90 to-[#1B2A4A]" />
+        </div>
+
         {/* Decorative elements */}
         <div 
           className="absolute top-20 left-10 w-32 h-32 rounded-full opacity-10"
@@ -139,10 +152,6 @@ export default function NewManagerKit() {
         <div 
           className="absolute bottom-20 right-10 w-48 h-48 rounded-full opacity-5"
           style={{ border: `2px solid ${colors.gold}` }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/4 w-px h-32 opacity-20"
-          style={{ backgroundColor: colors.gold }}
         />
 
         <div className="container mx-auto max-w-4xl relative z-10">
@@ -204,39 +213,53 @@ export default function NewManagerKit() {
         className="py-16 md:py-24 px-4"
         style={{ backgroundColor: colors.cream }}
       >
-        <div className="container mx-auto max-w-3xl">
-          {/* Section label */}
-          <p 
-            className="text-sm font-semibold tracking-widest uppercase mb-4 text-center"
-            style={{ color: colors.gold }}
-          >
-            The Problem
-          </p>
+        <div className="container mx-auto max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Image */}
+            <div className="order-2 md:order-1">
+              <img 
+                src={newManagerStruggle} 
+                alt="New manager facing challenges" 
+                className="w-full rounded-lg shadow-xl object-cover aspect-[4/3]"
+              />
+            </div>
 
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-6" style={{ color: colors.navy }}>
-            The skills that got you promoted are not the skills that will make you succeed
-          </h2>
+            {/* Content */}
+            <div className="order-1 md:order-2">
+              {/* Section label */}
+              <p 
+                className="text-sm font-semibold tracking-widest uppercase mb-4"
+                style={{ color: colors.gold }}
+              >
+                The Problem
+              </p>
 
-          {/* Body */}
-          <p className="text-center text-gray-700 text-lg mb-10 max-w-2xl mx-auto">
-            You were promoted because you were great at your job. But nobody taught you how to manage people. And the first 90 days are when your team decides whether to trust you, test you, or tune you out.
-          </p>
+              {/* Heading */}
+              <h2 className="text-3xl md:text-4xl font-serif mb-6" style={{ color: colors.navy }}>
+                The skills that got you promoted are not the skills that will make you succeed
+              </h2>
 
-          {/* Pain points */}
-          <div className="space-y-4 mb-10">
-            {painPoints.map((point) => (
-              <div key={point} className="flex items-start gap-3">
-                <X className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700">{point}</span>
+              {/* Body */}
+              <p className="text-gray-700 text-lg mb-8">
+                You were promoted because you were great at your job. But nobody taught you how to manage people. And the first 90 days are when your team decides whether to trust you, test you, or tune you out.
+              </p>
+
+              {/* Pain points */}
+              <div className="space-y-3">
+                {painPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <X className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-700 text-sm">{point}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Closing statement */}
-          <p className="text-center font-semibold text-lg" style={{ color: colors.navy }}>
-            This kit gives you the exact words, frameworks, and plan to handle every one of these situations — starting today.
-          </p>
+              {/* Closing statement */}
+              <p className="font-semibold text-lg mt-8" style={{ color: colors.navy }}>
+                This kit gives you the exact words, frameworks, and plan to handle every one of these situations — starting today.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -379,6 +402,16 @@ export default function NewManagerKit() {
         className="py-16 md:py-24 px-4 relative overflow-hidden"
         style={{ backgroundColor: colors.navy }}
       >
+        {/* Background image with overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src={newManagerSuccess} 
+            alt="Confident leader presenting to team" 
+            className="w-full h-full object-cover object-center opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1B2A4A] via-[#1B2A4A]/95 to-[#1B2A4A]/80" />
+        </div>
+
         {/* Decorative elements */}
         <div 
           className="absolute bottom-10 left-20 w-40 h-40 rounded-full opacity-5"
