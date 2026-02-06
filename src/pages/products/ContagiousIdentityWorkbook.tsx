@@ -48,6 +48,7 @@ export default function ContagiousIdentityWorkbook() {
         title="Contagious Identity Workbook | Leadership by Design"
         description="Build your leadership identity with the Contagious Identity Workbook. Discover who you are as a leader and how that identity spreads through your organisation."
         canonicalUrl="/contagious-identity-workbook"
+        ogImage="https://leadershipbydesign.co/og-contagious-identity.jpg"
         keywords="leadership identity, executive workbook, leadership development, identity coaching, leadership legacy"
       />
       <Header />

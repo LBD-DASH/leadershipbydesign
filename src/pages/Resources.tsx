@@ -129,6 +129,7 @@ export default function Resources() {
         title="Resources"
         description="Access leadership development resources including articles, downloadable guides, videos, and case studies. Free tools and frameworks for emerging and executive leaders."
         canonicalUrl="/resources"
+        ogImage="https://leadershipbydesign.co/og-blog.jpg"
         keywords="leadership resources, leadership articles, leadership guides, leadership videos, case studies, free leadership tools"
       />
 

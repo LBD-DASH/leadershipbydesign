@@ -151,6 +151,7 @@ export default function NewManagerKit() {
         title="The New Manager Survival Kit: Your First 90 Days"
         description="Your complete 90-day roadmap to go from 'just promoted' to trusted leader — with the exact scripts, frameworks, and templates used by 3,000+ organizations."
         canonicalUrl="/new-manager-kit"
+        ogImage="https://leadershipbydesign.co/og-products.jpg"
         keywords="new manager, leadership, first 90 days, management training, team leadership, 1-on-1 meetings, leadership scripts"
       />
 
