@@ -23,6 +23,12 @@ import {
 } from "@/components/ui/accordion";
 import InterestForm from "@/components/contagious-identity/InterestForm";
 
+// Images
+import heroImage from "@/assets/contagious-identity-coaching-hero.jpg";
+import reflectionImage from "@/assets/contagious-identity-reflection.jpg";
+import influenceImage from "@/assets/contagious-identity-influence.jpg";
+import legacyImage from "@/assets/contagious-identity-legacy.jpg";
+
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -198,10 +204,15 @@ export default function ContagiousIdentityCoaching() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-[hsl(210,35%,12%)] via-[hsl(200,30%,15%)] to-[hsl(210,35%,12%)] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,hsl(200,70%,40%,0.15),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,hsl(200,70%,40%,0.1),transparent_50%)]" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src={heroImage} 
+            alt="Executive coaching session" 
+            className="w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(210,35%,12%,0.95)] via-[hsl(210,35%,12%,0.85)] to-[hsl(210,35%,12%,0.6)]" />
         </div>
 
         <div className="container mx-auto px-4 py-24 relative z-10">
@@ -209,7 +220,7 @@ export default function ContagiousIdentityCoaching() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-4xl"
+            className="max-w-4xl text-white"
           >
             <p className="text-primary font-medium tracking-wider uppercase mb-4">
               Executive Coaching
@@ -323,32 +334,48 @@ export default function ContagiousIdentityCoaching() {
       {/* Why This Matters Now */}
       <section className="py-20 md:py-28 bg-muted/30">
         <div className="container mx-auto px-4">
-          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Why This Matters Now
               </h2>
             </div>
 
-            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
-              <div className="prose prose-lg max-w-none text-muted-foreground">
-                <p className="text-lg leading-relaxed mb-6">
-                  Most leaders believe they're defined by their achievements, decisions, and strategic 
-                  choices. But your team isn't experiencing your strategy—they're experiencing <em>you</em>.
-                </p>
-                <p className="text-lg leading-relaxed mb-6">
-                  Every interaction transmits something. Every decision reveals something. Every 
-                  response under pressure teaches something. Your people are learning from you 
-                  constantly—whether you're conscious of the lesson or not.
-                </p>
-                <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 text-xl font-medium text-foreground italic">
-                  "Leaders are always teaching. The only question is: what?"
-                </blockquote>
-                <p className="text-lg leading-relaxed">
-                  Contagious Identity Coaching helps you become intentional about the identity 
-                  you're transmitting—so that the culture, values, and standards you want become 
-                  the ones that actually spread.
-                </p>
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Image */}
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-xl"
+              >
+                <img 
+                  src={reflectionImage} 
+                  alt="Executive leader in contemplation" 
+                  className="w-full aspect-video object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+              </motion.div>
+
+              {/* Content */}
+              <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
+                <div className="prose prose-lg max-w-none text-muted-foreground">
+                  <p className="text-lg leading-relaxed mb-6">
+                    Most leaders believe they're defined by their achievements, decisions, and strategic 
+                    choices. But your team isn't experiencing your strategy—they're experiencing <em>you</em>.
+                  </p>
+                  <p className="text-lg leading-relaxed mb-6">
+                    Every interaction transmits something. Every decision reveals something. Every 
+                    response under pressure teaches something. Your people are learning from you 
+                    constantly—whether you're conscious of the lesson or not.
+                  </p>
+                  <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 text-xl font-medium text-foreground italic">
+                    "Leaders are always teaching. The only question is: what?"
+                  </blockquote>
+                  <p className="text-lg leading-relaxed">
+                    Contagious Identity Coaching helps you become intentional about the identity 
+                    you're transmitting—so that the culture, values, and standards you want become 
+                    the ones that actually spread.
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -416,11 +443,45 @@ export default function ContagiousIdentityCoaching() {
       {/* Who This Is For */}
       <section className="py-20 md:py-28 bg-muted/30">
         <div className="container mx-auto px-4">
-          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Who This Is For
               </h2>
+            </div>
+
+            {/* Top Image Banner */}
+            <div className="grid md:grid-cols-2 gap-6 mb-12">
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-lg"
+              >
+                <img 
+                  src={influenceImage} 
+                  alt="Executive leader presenting to team" 
+                  className="w-full aspect-video object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <p className="font-semibold text-lg">Build Lasting Influence</p>
+                  <p className="text-sm text-white/80">Lead with presence that shapes culture</p>
+                </div>
+              </motion.div>
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-lg"
+              >
+                <img 
+                  src={legacyImage} 
+                  alt="Leadership legacy and succession" 
+                  className="w-full aspect-video object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <p className="font-semibold text-lg">Create Enduring Legacy</p>
+                  <p className="text-sm text-white/80">Your identity survives your exit</p>
+                </div>
+              </motion.div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
