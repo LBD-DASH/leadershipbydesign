@@ -57,6 +57,7 @@ import LifeOSAuth from "./pages/LifeOSAuth";
 import Podcast from "./pages/Podcast";
 import PodcastEpisode from "./pages/PodcastEpisode";
 import ChatWidget from "./components/chat/ChatWidget";
+import NewManagerKit from "./pages/products/NewManagerKit";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => (
           <Route path="/podcast" element={<Podcast />} />
           <Route path="/podcast/:slug" element={<PodcastEpisode />} />
           <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/new-manager-kit" element={<NewManagerKit />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
