@@ -148,6 +148,7 @@ export default function TeamDiagnostic() {
         title="Team Diagnostic | Leadership by Design"
         description="Discover what your team really needs with our free 15-question diagnostic. Get a clear recommendation in under 5 minutes."
         canonicalUrl="/team-diagnostic"
+        ogImage="https://leadershipbydesign.co/og-team-diagnostic.jpg"
         keywords="team diagnostic, leadership assessment, team alignment, team motivation, leadership accountability"
       />
       

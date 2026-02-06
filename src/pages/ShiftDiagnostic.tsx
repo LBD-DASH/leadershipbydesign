@@ -143,6 +143,7 @@ export default function ShiftDiagnostic() {
         title="SHIFT Team Diagnostic | Discover Your Team's Skills Profile"
         description="Take the free SHIFT Team Diagnostic to discover your team's strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
         canonicalUrl="/shift-diagnostic"
+        ogImage="https://leadershipbydesign.co/og-shift-diagnostic.jpg"
         keywords="SHIFT skills, team diagnostic, self-management, human intelligence, innovation, focus, thinking, team development"
       />
       <WebApplicationSchema
