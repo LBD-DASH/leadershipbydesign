@@ -59,7 +59,7 @@ import PodcastEpisode from "./pages/PodcastEpisode";
 import ChatWidget from "./components/chat/ChatWidget";
 import NewManagerKit from "./pages/products/NewManagerKit";
 import NewManagerKitSuccess from "./pages/products/NewManagerKitSuccess";
-
+import Products from "./pages/Products";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -71,6 +71,7 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/team-diagnostic" element={<TeamDiagnostic />} />
           <Route path="/team-assessment" element={<TeamDiagnosticLanding />} />
           <Route path="/leadership-diagnostic" element={<LeadershipDiagnostic />} />

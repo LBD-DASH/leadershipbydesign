@@ -36,6 +36,14 @@ const Header = () => {
             Home
           </NavLink>
 
+          <NavLink 
+            to="/products" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground"
+          >
+            Products
+          </NavLink>
+
           {/* Programmes Dropdown */}
           <div 
             className="relative"
@@ -194,6 +202,14 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
+            </Link>
+
+            <Link 
+              to="/products" 
+              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Products
             </Link>
             
             <div className="space-y-2">
