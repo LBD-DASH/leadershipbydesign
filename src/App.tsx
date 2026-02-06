@@ -64,6 +64,8 @@ import DifficultConversationsSuccess from "./pages/products/DifficultConversatio
 import BundleSuccess from "./pages/products/BundleSuccess";
 import Products from "./pages/Products";
 import ContagiousIdentityCoaching from "./pages/ContagiousIdentityCoaching";
+import ContagiousIdentityWorkbook from "./pages/products/ContagiousIdentityWorkbook";
+import ContagiousIdentityWorkbookSuccess from "./pages/products/ContagiousIdentityWorkbookSuccess";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -113,6 +115,8 @@ const App = () => (
           <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
           <Route path="/bundle/success" element={<BundleSuccess />} />
           <Route path="/contagious-identity" element={<ContagiousIdentityCoaching />} />
+          <Route path="/contagious-identity-workbook" element={<ContagiousIdentityWorkbook />} />
+          <Route path="/contagious-identity-workbook/success" element={<ContagiousIdentityWorkbookSuccess />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />

@@ -21,7 +21,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import ContagiousIdentityForm from "@/components/contagious-identity/ContagiousIdentityForm";
 import InterestForm from "@/components/contagious-identity/InterestForm";
 
 const fadeInUp = {
@@ -473,34 +472,34 @@ export default function ContagiousIdentityCoaching() {
         </div>
       </section>
 
-      {/* Workbook Download Section */}
+      {/* Workbook Section - Now promoting paid product + included with coaching */}
       <section className="py-20 md:py-28 bg-gradient-to-br from-[hsl(210,35%,12%)] via-[hsl(200,30%,15%)] to-[hsl(210,35%,12%)] text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <motion.div {...fadeInUp}>
                 <p className="text-primary font-medium tracking-wider uppercase mb-4">
-                  Free Resource
+                  The Companion Workbook
                 </p>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   The Contagious Identity Workbook
                 </h2>
                 <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                  Begin exploring your leadership identity with this self-guided workbook. 
-                  Includes reflection exercises and the Identity Transmission Framework.
+                  The comprehensive self-coaching workbook used throughout our coaching engagements. 
+                  Available standalone or included free with any coaching package.
                 </p>
                 <ul className="space-y-3 text-gray-300 mb-8">
                   <li className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-primary" />
-                    <span>Identity excavation exercises</span>
+                    <span>Complete identity discovery process</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-primary" />
-                    <span>Values-behaviour alignment audit</span>
+                    <span>50% discount codes for 3 premium tools</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-primary" />
-                    <span>Transmission mapping template</span>
+                    <span>"Ask Your Coach" prompts throughout</span>
                   </li>
                 </ul>
               </motion.div>
@@ -509,7 +508,39 @@ export default function ContagiousIdentityCoaching() {
                 {...fadeInUp}
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
               >
-                <ContagiousIdentityForm />
+                <div className="space-y-6">
+                  {/* Option 1: Buy Standalone */}
+                  <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-lg">Buy Standalone</h3>
+                      <span className="text-2xl font-bold text-primary">R697</span>
+                    </div>
+                    <p className="text-sm text-gray-400 mb-4">
+                      Work through the material at your own pace. Upgrade to coaching within 90 days and get the R697 credited.
+                    </p>
+                    <Button asChild className="w-full">
+                      <a href="/contagious-identity-workbook">
+                        Get the Workbook
+                      </a>
+                    </Button>
+                  </div>
+
+                  {/* Option 2: With Coaching */}
+                  <div className="rounded-xl p-6 border-2" style={{ borderColor: "#C8A864", backgroundColor: "rgba(200, 168, 100, 0.1)" }}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-lg">With Coaching</h3>
+                      <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}>
+                        INCLUDED FREE
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400 mb-4">
+                      Get the workbook included at no extra cost as part of any coaching package. Your coach walks you through it session by session.
+                    </p>
+                    <Button variant="outline" onClick={scrollToInterest} className="w-full border-gray-400 text-gray-200 hover:bg-white/10">
+                      Explore Coaching Packages
+                    </Button>
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
