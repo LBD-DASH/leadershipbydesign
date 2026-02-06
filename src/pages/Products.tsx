@@ -389,74 +389,141 @@ const Products = () => {
             </p>
           </motion.div>
 
-          {/* Featured Bundle Section */}
+          {/* Featured Bundle Section - HERO DEAL */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-12"
+            className="mb-16"
           >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Package className="w-5 h-5 text-primary" />
+            <div 
+              className="relative rounded-2xl overflow-hidden border-2 shadow-2xl"
+              style={{ borderColor: "#C8A864", background: "linear-gradient(135deg, #1B2A4A 0%, #2a3f6a 100%)" }}
+            >
+              {/* Floating Badge */}
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 z-10">
+                <motion.div 
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: [0.9, 1.05, 1] }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2"
+                  style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  BEST VALUE — SAVE R147
+                  <Sparkles className="w-4 h-4" />
+                </motion.div>
               </div>
-              <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">
-                  The New Manager Bundle
-                </h2>
-                <p className="text-sm text-muted-foreground">Best value • Save R147</p>
-              </div>
-            </div>
 
-            <div className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
-              <div className="grid md:grid-cols-3 gap-0">
-                <div className="relative aspect-video md:aspect-auto overflow-hidden">
+              <div className="grid lg:grid-cols-2 gap-0">
+                {/* Image Side */}
+                <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden">
                   <img 
                     src={newManagerHero}
                     alt="The New Manager Bundle" 
                     className="w-full h-full object-cover object-center" 
                     loading="lazy" 
                   />
-                  <div className="absolute top-3 left-3">
-                    <span 
-                      className="px-2 py-1 rounded-full text-xs font-semibold"
-                      style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
-                    >
-                      Best Value
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#1B2A4A]/50 lg:block hidden" />
+                </div>
+
+                {/* Content Side */}
+                <div className="p-8 lg:p-10 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Package className="w-6 h-6" style={{ color: "#C8A864" }} />
+                    <span className="text-sm font-medium uppercase tracking-wider" style={{ color: "#C8A864" }}>
+                      Complete Leadership Toolkit
                     </span>
                   </div>
-                </div>
-                <div className="md:col-span-2 p-5 flex flex-col justify-center">
-                  <h3 className="font-serif text-lg font-bold text-foreground mb-2">
-                    Everything You Need to Lead with Confidence
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Get the New Manager Survival Kit + Difficult Conversations Playbook together.
-                  </p>
+
+                  <h2 className="font-serif text-3xl lg:text-4xl font-bold text-white mb-4">
+                    The New Manager Bundle
+                  </h2>
                   
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {['90-Day Framework', '20 Scripts', 'Templates', 'Instant Access'].map((tag) => (
-                      <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">
+                  <p className="text-white/80 text-lg mb-6">
+                    Everything you need to lead with confidence from day one. Get both flagship products together at an unbeatable price.
+                  </p>
+
+                  {/* What's Included */}
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-start gap-3 bg-white/10 rounded-lg p-4">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
+                        <span className="text-sm font-bold" style={{ color: "#1B2A4A" }}>1</span>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-white">New Manager Survival Kit</h4>
+                        <p className="text-white/70 text-sm">30-60-90 day roadmap, team assessments, weekly templates</p>
+                        <span className="text-xs" style={{ color: "#C8A864" }}>Value: R497</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3 bg-white/10 rounded-lg p-4">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
+                        <span className="text-sm font-bold" style={{ color: "#1B2A4A" }}>2</span>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-white">Difficult Conversations Playbook</h4>
+                        <p className="text-white/70 text-sm">20 word-for-word scripts, HEARD framework, preparation guides</p>
+                        <span className="text-xs" style={{ color: "#C8A864" }}>Value: R397</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {['90-Day Framework', '20 Scripts', 'Team Tools', 'Templates', 'HEARD Framework', 'Instant PDF Access'].map((tag) => (
+                      <span 
+                        key={tag} 
+                        className="text-xs px-3 py-1 rounded-full border"
+                        style={{ borderColor: "#C8A864", color: "#C8A864" }}
+                      >
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted-foreground line-through text-sm">R894</span>
-                      <span className="text-xl font-bold" style={{ color: "#C8A864" }}>R747</span>
+                  {/* Pricing Block */}
+                  <div className="bg-white/10 rounded-xl p-6 mb-6">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
+                      <div>
+                        <div className="flex items-baseline gap-3">
+                          <span className="text-white/50 line-through text-xl">R894</span>
+                          <span className="text-4xl lg:text-5xl font-bold" style={{ color: "#C8A864" }}>R747</span>
+                        </div>
+                        <p className="text-white/60 text-sm mt-1">One-time payment • Instant download • Lifetime access</p>
+                      </div>
+                      <div className="text-center">
+                        <div className="w-16 h-16 rounded-full border-2 flex items-center justify-center" style={{ borderColor: "#C8A864" }}>
+                          <span className="text-lg font-bold" style={{ color: "#C8A864" }}>16%</span>
+                        </div>
+                        <span className="text-xs text-white/60">OFF</span>
+                      </div>
                     </div>
-                    <Button 
-                      onClick={() => setBundleCheckoutOpen(true)}
-                      size="sm"
-                      className="rounded-full group"
-                      style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
-                    >
-                      Get Bundle
-                      <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button 
+                    onClick={() => setBundleCheckoutOpen(true)}
+                    size="lg"
+                    className="w-full rounded-full text-lg py-6 group shadow-xl hover:shadow-2xl transition-all duration-300"
+                    style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
+                  >
+                    Get The Complete Bundle — R747
+                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+
+                  {/* Trust indicators */}
+                  <div className="flex items-center justify-center gap-4 mt-4 text-white/60 text-xs">
+                    <span className="flex items-center gap-1">
+                      <Download className="w-3 h-3" /> Instant Download
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Award className="w-3 h-3" /> 11 Years Experience
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" /> 3,000+ Organizations
+                    </span>
                   </div>
                 </div>
               </div>
