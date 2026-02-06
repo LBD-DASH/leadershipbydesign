@@ -12,7 +12,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology", "/executive-coaching"].some(
+  const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology", "/contagious-identity"].some(
     path => location.pathname.startsWith(path)
   );
 
