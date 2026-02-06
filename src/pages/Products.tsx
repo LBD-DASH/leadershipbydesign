@@ -141,13 +141,14 @@ const Products = () => {
     {
       id: "leadership-diagnostic",
       title: "Leadership Diagnostic",
-      shortDesc: "Scored assessment with action plan",
-      price: "R497–R997",
-      link: "/leadership-diagnostic",
+      shortDesc: "Discover your leadership level",
+      price: "Free",
+      link: "/leader-assessment",
       image: leadershipFeedback,
       isExternal: false,
       isBuilt: true,
-      features: ["Self-Guided Assessment", "Scored Report", "Personalized Action Plan", "Development Roadmap"],
+      isFree: true,
+      features: ["5-Minute Assessment", "Instant Results", "Personalized Insights", "Development Roadmap"],
     },
     {
       id: "90-day-intensive",
@@ -248,6 +249,7 @@ const Products = () => {
     isExternal?: boolean;
     isBuilt?: boolean;
     comingSoon?: boolean;
+    isFree?: boolean;
     features: string[];
   };
 
@@ -273,14 +275,14 @@ const Products = () => {
               </span>
             </div>
           )}
-          {product.isBuilt && (
+          {product.isBuilt && !product.isFree && (
             <div className="absolute top-2 right-2">
               <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
                 Available
               </span>
             </div>
           )}
-          {product.isExternal && (
+          {(product.isExternal || product.isFree) && (
             <div className="absolute top-2 right-2">
               <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
                 Free
@@ -352,6 +354,17 @@ const Products = () => {
                     Open
                     <ExternalLink className="w-3 h-3 ml-1" />
                   </a>
+                </Button>
+              ) : product.isFree ? (
+                <Button 
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs px-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  <Link to={product.link}>
+                    Start
+                  </Link>
                 </Button>
               ) : (
                 <Button 
