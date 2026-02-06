@@ -31,6 +31,14 @@ import workshopMotivation from "@/assets/workshop-motivation.jpg";
 import workshopAlignment from "@/assets/workshop-alignment.jpg";
 import shiftHeroTeam from "@/assets/shift-hero-team.jpg";
 import grandMastersTeam from "@/assets/grand-masters-team.jpg";
+import productHandshake from "@/assets/product-handshake.jpg";
+import productBusyCrossing from "@/assets/product-busy-crossing.jpg";
+import productTeamHandsAbove from "@/assets/product-team-hands-above.jpg";
+import productTeamHandsBelow from "@/assets/product-team-hands-below.jpg";
+import productKeysHandoff from "@/assets/product-keys-handoff.jpg";
+import productRopesConnecting from "@/assets/product-ropes-connecting.jpg";
+import productRopesFocus from "@/assets/product-ropes-focus.jpg";
+import productLightbulbIdea from "@/assets/product-lightbulb-idea.jpg";
 
 const Products = () => {
   const [bundleCheckoutOpen, setBundleCheckoutOpen] = useState(false);
@@ -42,7 +50,7 @@ const Products = () => {
       shortDesc: "20 scripts for tough talks",
       price: "R397",
       link: "/difficult-conversations",
-      image: leadershipFeedback,
+      image: productHandshake,
       isExternal: false,
       isBuilt: true,
       features: ["20 Word-for-Word Scripts", "HEARD Framework", "Do & Don't Guides", "Preparation Template"],
@@ -53,7 +61,7 @@ const Products = () => {
       shortDesc: "Give feedback people actually hear",
       price: "R297",
       link: "/products",
-      image: workshopLeadership,
+      image: productLightbulbIdea,
       isExternal: false,
       comingSoon: true,
       features: ["10 Feedback Frameworks", "Praise & Correction Scripts", "Development Review Templates", "Real-time Feedback Tools"],
@@ -64,7 +72,7 @@ const Products = () => {
       shortDesc: "Cut 50% of your meetings",
       price: "R197",
       link: "/products",
-      image: workshopAlignment,
+      image: productBusyCrossing,
       isExternal: false,
       comingSoon: true,
       features: ["Should This Be a Meeting? Decision Tree", "Agenda Templates", "Async Communication Frameworks", "Meeting Audit Checklist"],
@@ -75,7 +83,7 @@ const Products = () => {
       shortDesc: "Hand off work without it breaking",
       price: "R297",
       link: "/products",
-      image: leaderAsCoach,
+      image: productKeysHandoff,
       isExternal: false,
       comingSoon: true,
       features: ["5 Levels of Delegation", "Task Handoff Template", "Control Release Scripts", "Accountability Framework"],
@@ -100,7 +108,7 @@ const Products = () => {
       shortDesc: "Run meetings that transform performance",
       price: "R697",
       link: "/products",
-      image: workshopMotivation,
+      image: productRopesFocus,
       isExternal: false,
       comingSoon: true,
       features: ["Question Banks by Scenario", "Meeting Notes System", "Development Tracking", "90-Day Improvement Plan"],
@@ -111,7 +119,7 @@ const Products = () => {
       shortDesc: "Build high-performance culture",
       price: "R597",
       link: "/products",
-      image: shiftHeroTeam,
+      image: productTeamHandsAbove,
       isExternal: false,
       comingSoon: true,
       features: ["Psychological Safety Framework", "Values Creation Workshop", "Trust-Building Rituals", "Team Health Assessments"],
@@ -122,7 +130,7 @@ const Products = () => {
       shortDesc: "Lead distributed teams effectively",
       price: "R497",
       link: "/products",
-      image: grandMastersTeam,
+      image: productRopesConnecting,
       isExternal: false,
       comingSoon: true,
       features: ["Communication Rhythms", "Virtual 1-on-1 Frameworks", "Async Decision-Making", "Culture Across Time Zones"],
@@ -136,7 +144,7 @@ const Products = () => {
       shortDesc: "Scored assessment with action plan",
       price: "R497–R997",
       link: "/leadership-diagnostic",
-      image: workshopLeadership,
+      image: leadershipFeedback,
       isExternal: false,
       isBuilt: true,
       features: ["Self-Guided Assessment", "Scored Report", "Personalized Action Plan", "Development Roadmap"],
@@ -158,7 +166,7 @@ const Products = () => {
       shortDesc: "Months 4-12 after the survival kit",
       price: "R997",
       link: "/products",
-      image: newManagerHero,
+      image: grandMastersTeam,
       isExternal: false,
       comingSoon: true,
       features: ["Leadership Brand Building", "Bench Strength Development", "Annual Review Framework", "Strategic Planning Tools"],
@@ -183,7 +191,7 @@ const Products = () => {
       shortDesc: "Discover your core values",
       price: "Free",
       link: "https://valuesblueprint.online",
-      image: workshopAlignment,
+      image: productTeamHandsBelow,
       isExternal: true,
       comingSoon: false,
       features: ["Personal Values Assessment", "Team Values Alignment", "Decision Framework"],
@@ -205,7 +213,7 @@ const Products = () => {
       shortDesc: "Understand motivation drivers",
       price: "Free",
       link: "https://6humanneeds.online",
-      image: grandMastersTeam,
+      image: workshopAlignment,
       isExternal: true,
       comingSoon: false,
       features: ["Needs Assessment", "Motivation Mapping", "Team Dynamics Insights"],
@@ -216,7 +224,7 @@ const Products = () => {
       shortDesc: "Measure your leadership",
       price: "Free",
       link: "https://leadershipindex.lovable.app",
-      image: leadershipFeedback,
+      image: workshopLeadership,
       isExternal: true,
       comingSoon: false,
       features: ["360° Assessment", "Benchmark Scores", "Development Roadmap"],
