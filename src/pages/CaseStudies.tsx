@@ -98,6 +98,7 @@ export default function CaseStudies() {
         title="Case Studies | Leadership by Design"
         description="Real results from real clients. See how our leadership development programmes have delivered $2M revenue increases, 50% turnover reductions, and measurable business impact."
         canonicalUrl="/case-studies"
+        ogImage="https://leadershipbydesign.co/og-programmes.jpg"
         keywords="leadership case studies, executive coaching results, team workshop ROI, leadership development outcomes, business transformation"
       />
       <div className="min-h-screen bg-background">

@@ -110,6 +110,8 @@ export default function ShiftMethodology() {
         title="SHIFT Methodology™ | Leadership by Design"
         description="The SHIFT Methodology™ develops the five human skills required for performance: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
         canonicalUrl="/shift-methodology"
+        ogImage="https://leadershipbydesign.co/og-shift-diagnostic.jpg"
+        keywords="SHIFT methodology, leadership skills, self-management, human intelligence, innovation, focus, thinking, team performance"
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">

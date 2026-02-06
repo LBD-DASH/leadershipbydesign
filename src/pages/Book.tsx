@@ -36,6 +36,7 @@ export default function Book() {
         title="The Future of Work is Human - Book by Kevin Britz"
         description="Discover 'The Future of Work is Human' by Kevin Britz. A practical guide to developing the leadership skills needed for the rapidly evolving workplace."
         canonicalUrl="/book"
+        ogImage="https://leadershipbydesign.co/og-about.jpg"
         keywords="future of work, leadership book, Kevin Britz, WINGS framework, human-centered leadership, leadership development"
         author="Kevin Britz"
       />

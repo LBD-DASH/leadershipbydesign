@@ -151,6 +151,7 @@ export default function DifficultConversationsPlaybook() {
         title="The Difficult Conversations Playbook | Leadership by Design"
         description="Stop avoiding tough conversations. Get 12 word-for-word scripts and the CLEAR framework to handle any difficult workplace discussion with confidence."
         canonicalUrl="/difficult-conversations"
+        ogImage="https://leadershipbydesign.co/og-products.jpg"
         keywords="difficult conversations, workplace conflict, feedback, performance management, conflict resolution, leadership communication, tough conversations"
       />
 
