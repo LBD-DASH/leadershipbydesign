@@ -42,7 +42,7 @@ const teamWorkshops = [{
 
 export default function Programmes() {
   return <>
-      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including executive coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" keywords="leadership programmes, executive coaching, team workshops, leadership development, SHIFT leadership development" />
+      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including Contagious Identity coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" keywords="leadership programmes, contagious identity coaching, executive coaching, team workshops, leadership development, SHIFT leadership development" />
       <div className="min-h-screen bg-background">
         <Header />
       
@@ -407,7 +407,7 @@ export default function Programmes() {
               </div>
             </motion.section>
 
-            {/* Executive Coaching Section */}
+            {/* Contagious Identity Coaching Section */}
             <motion.section initial={{
             opacity: 0,
             y: 20
@@ -425,23 +425,23 @@ export default function Programmes() {
                 </div>
                 <div>
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    Executive Coaching
+                    Contagious Identity Coaching
                   </h2>
-                  <p className="text-muted-foreground">2x strategic clarity • 35% faster decisions • 90-day results guarantee</p>
+                  <p className="text-muted-foreground">Identity-driven leadership • Culture shaping • Premium 1:1 coaching</p>
                 </div>
               </div>
 
               <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80" alt="Executive Coaching" className="w-full h-full object-cover object-top" loading="lazy" />
+                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80" alt="Contagious Identity Coaching" className="w-full h-full object-cover object-top" loading="lazy" />
                   </div>
                   <div className="p-6 sm:p-8 flex flex-col justify-center">
                     <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
-                      One-on-One Executive Coaching
+                      Executive Coaching for Contagious Identity
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Executives achieve 2x strategic clarity in 90 days. Tailored coaching for leaders seeking to enhance their effectiveness, navigate complex challenges, and accelerate their growth with measurable outcomes.
+                      Your identity as a leader is already spreading—through your decisions, presence, and how you show up under pressure. This premium coaching helps you lead from a clear, contagious identity that shapes culture and drives results.
                     </p>
                     <div className="flex gap-4 mb-6 text-sm">
                       <div>
@@ -453,9 +453,9 @@ export default function Programmes() {
                         <span className="text-muted-foreground">One-on-one Sessions</span>
                       </div>
                     </div>
-                    <Link to="/contact">
+                    <Link to="/contagious-identity">
                       <Button className="rounded-full group">
-                        Enquire About Coaching
+                        Explore Coaching Programme
                         <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>

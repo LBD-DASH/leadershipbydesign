@@ -280,7 +280,7 @@ export default function Contact() {
                     <SelectValue placeholder="Select a service" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Executive Coaching">Executive Coaching</SelectItem>
+                    <SelectItem value="Contagious Identity Coaching">Contagious Identity Coaching</SelectItem>
                     <SelectItem value="Team Workshops">Team Workshops</SelectItem>
                     <SelectItem value="SHIFT Leadership Development">SHIFT Leadership Development</SelectItem>
                     <SelectItem value="Leadership Essentials">Leadership Essentials</SelectItem>

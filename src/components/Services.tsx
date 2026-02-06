@@ -17,10 +17,10 @@ const services = [
     metric: "Leadership at every level, 50% less conflict"
   },
   {
-    title: "Executive Coaching",
-    description: "Executives achieve 2x strategic clarity in 90 days. One-on-one SHIFT-based coaching for senior leaders ready to lead with focus and measurable business impact.",
+    title: "Contagious Identity Coaching",
+    description: "Executives achieve leadership clarity where identity becomes influence. One-on-one coaching for senior leaders ready to lead from a clear, contagious identity that shapes culture and drives results.",
     image: executiveCoachingImage,
-    metric: "2x strategic clarity in 90 days"
+    metric: "Identity-driven leadership transformation"
   }
 ];
 
