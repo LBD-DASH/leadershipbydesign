@@ -72,6 +72,7 @@ export default function MotivationWorkshop() {
         title="SHIFT Team Energy Workshop | Leadership by Design"
         description="A morning workshop for teams that understand the work but lack energy and emotional commitment. Address fatigue, compliance without commitment, and unmet human needs using the SHIFT Methodology™."
         canonicalUrl="/workshops/motivation"
+        ogImage="https://leadershipbydesign.co/og-workshop-motivation.jpg"
       />
       <EventSchema
         name="SHIFT Team Energy Workshop"

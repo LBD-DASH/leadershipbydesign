@@ -17,6 +17,7 @@ const Blog = () => {
         title="Blog | Leadership by Design"
         description="Insights on leadership development, organizational change, and personal growth from Kevin Britz and the Leadership by Design team."
         canonicalUrl="/blog"
+        ogImage="https://leadershipbydesign.co/og-blog.jpg"
         keywords="leadership blog, executive coaching insights, organizational development, personal growth, Kevin Britz"
       />
       <div className="min-h-screen flex flex-col">

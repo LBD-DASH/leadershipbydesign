@@ -72,6 +72,7 @@ export default function LeadershipWorkshop() {
         title="SHIFT Team Ownership Workshop | Leadership by Design"
         description="A morning workshop for capable teams where ownership is inconsistent. Address delayed decisions, avoided conversations, and dependency on authority using the SHIFT Methodology™."
         canonicalUrl="/workshops/leadership"
+        ogImage="https://leadershipbydesign.co/og-workshop-leadership.jpg"
       />
       <EventSchema
         name="SHIFT Team Ownership Workshop"

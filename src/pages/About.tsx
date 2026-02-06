@@ -76,6 +76,7 @@ export default function About() {
         title="About Us"
         description="Learn about Leadership by Design's philosophy, values, and approach to transforming leaders. We design people solutions through leadership design, training design, and coaching design."
         canonicalUrl="/about"
+        ogImage="https://leadershipbydesign.co/og-about.jpg"
         keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching approach, leadership values"
       />
       <div className="min-h-screen bg-background">

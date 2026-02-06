@@ -172,6 +172,7 @@ export default function Contact() {
         title="Contact Us"
         description="Schedule a leadership consultation with Kevin Britz. Get in touch to discuss executive coaching, team workshops, and bespoke leadership development programmes."
         canonicalUrl="/contact"
+        ogImage="https://leadershipbydesign.co/og-contact.jpg"
         keywords="contact leadership by design, schedule consultation, executive coaching inquiry, Kevin Britz contact"
       />
       <div className="min-h-screen">
