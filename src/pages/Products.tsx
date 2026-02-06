@@ -47,13 +47,13 @@ const Products = () => {
     {
       id: "difficult-conversations",
       title: "Difficult Conversations Playbook",
-      shortDesc: "20 scripts for tough talks",
-      price: "R397",
+      shortDesc: "12 scripts for tough talks",
+      price: "R247",
       link: "/difficult-conversations",
       image: productHandshake,
       isExternal: false,
       isBuilt: true,
-      features: ["20 Word-for-Word Scripts", "HEARD Framework", "Do & Don't Guides", "Preparation Template"],
+      features: ["12 Word-for-Word Scripts", "CLEAR Framework", "De-escalation Toolkit", "Follow-up Templates"],
     },
     {
       id: "feedback-formula",
