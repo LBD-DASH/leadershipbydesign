@@ -21,7 +21,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import ContagiousIdentityForm from "@/components/contagious-identity/ContagiousIdentityForm";
 import InterestForm from "@/components/contagious-identity/InterestForm";
 
 const fadeInUp = {
