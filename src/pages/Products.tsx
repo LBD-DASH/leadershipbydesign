@@ -833,8 +833,9 @@ const Products = () => {
         open={bundleCheckoutOpen}
         onOpenChange={setBundleCheckoutOpen}
         productName="The New Manager Bundle"
-        price={747}
-        priceDisplay="R747"
+        price={597}
+        priceDisplay="R597"
+        successPath="/bundle/success"
       />
     </div>
   );

@@ -82,7 +82,7 @@ export function CheckoutModal({
     }
 
     try {
-      const callbackUrl = `${window.location.origin}/new-manager-kit/success`;
+      const callbackUrl = `${window.location.origin}${successPath}`;
       
       const { data, error } = await supabase.functions.invoke('paystack-checkout', {
         body: {

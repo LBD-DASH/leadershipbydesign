@@ -110,6 +110,7 @@ const App = () => (
           <Route path="/new-manager-kit/success" element={<NewManagerKitSuccess />} />
           <Route path="/difficult-conversations" element={<DifficultConversationsPlaybook />} />
           <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
+          <Route path="/bundle/success" element={<BundleSuccess />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
