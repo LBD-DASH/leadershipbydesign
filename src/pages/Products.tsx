@@ -271,48 +271,48 @@ const Products = () => {
             loading="lazy" 
           />
           {product.comingSoon && (
-            <div className="absolute top-2 right-2">
-              <span className="bg-muted text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
-                Coming Soon
+            <div className="absolute top-1 right-1 md:top-2 md:right-2">
+              <span className="bg-muted text-muted-foreground px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-medium">
+                Soon
               </span>
             </div>
           )}
           {product.isBuilt && !product.isFree && (
-            <div className="absolute top-2 right-2">
-              <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-                Available
+            <div className="absolute top-1 right-1 md:top-2 md:right-2">
+              <span className="bg-green-600 text-white px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-medium">
+                Live
               </span>
             </div>
           )}
           {(product.isExternal || product.isFree) && (
-            <div className="absolute top-2 right-2">
-              <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
+            <div className="absolute top-1 right-1 md:top-2 md:right-2">
+              <span className="bg-primary text-primary-foreground px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-medium">
                 Free
               </span>
             </div>
           )}
         </div>
 
-        <div className="p-3 flex flex-col flex-1">
-          <h3 className="font-serif text-sm font-bold text-foreground mb-0.5 line-clamp-1 group-hover:text-primary transition-colors">
+        <div className="p-2 md:p-3 flex flex-col flex-1">
+          <h3 className="font-serif text-xs md:text-sm font-bold text-foreground mb-0.5 line-clamp-2 md:line-clamp-1 group-hover:text-primary transition-colors leading-tight">
             {product.title}
           </h3>
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+          <p className="text-[10px] md:text-xs text-muted-foreground mb-1 md:mb-2 line-clamp-1 hidden md:block">
             {product.shortDesc}
           </p>
           
-          <div className="mt-auto flex items-center justify-between gap-2">
-            <span className="text-sm font-bold text-foreground">{product.price}</span>
+          <div className="mt-auto flex items-center justify-between gap-1 md:gap-2">
+            <span className="text-xs md:text-sm font-bold text-foreground">{product.price}</span>
             
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 md:gap-1">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-7 w-7 p-0 hover:bg-primary/10"
+                    className="h-6 w-6 md:h-7 md:w-7 p-0 hover:bg-primary/10 hidden md:flex"
                   >
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-3 h-3 md:w-4 md:h-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent 
@@ -340,7 +340,7 @@ const Products = () => {
                 <Button 
                   variant="outline"
                   size="sm"
-                  className="h-7 text-xs px-2"
+                  className="h-6 md:h-7 text-[10px] md:text-xs px-1.5 md:px-2"
                   disabled
                 >
                   Soon
@@ -350,11 +350,11 @@ const Products = () => {
                   asChild
                   size="sm"
                   variant="outline"
-                  className="h-7 text-xs px-2"
+                  className="h-6 md:h-7 text-[10px] md:text-xs px-1.5 md:px-2"
                 >
                   <a href={product.link} target="_blank" rel="noopener noreferrer">
                     Open
-                    <ExternalLink className="w-3 h-3 ml-1" />
+                    <ExternalLink className="w-2.5 h-2.5 md:w-3 md:h-3 ml-0.5 md:ml-1" />
                   </a>
                 </Button>
               ) : product.isFree ? (
@@ -362,7 +362,7 @@ const Products = () => {
                   asChild
                   size="sm"
                   variant="outline"
-                  className="h-7 text-xs px-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  className="h-6 md:h-7 text-[10px] md:text-xs px-1.5 md:px-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                 >
                   <Link to={product.link}>
                     Start
@@ -372,7 +372,7 @@ const Products = () => {
                 <Button 
                   asChild
                   size="sm"
-                  className="h-7 text-xs px-2"
+                  className="h-6 md:h-7 text-[10px] md:text-xs px-1.5 md:px-2"
                 >
                   <Link to={product.link}>
                     View
@@ -401,13 +401,13 @@ const Products = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-6 md:mb-12"
           >
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h1 className="font-serif text-2xl md:text-4xl font-bold text-foreground mb-2 md:mb-4">
               Leadership Tools & Products
             </h1>
-            <div className="w-20 h-1 bg-primary mx-auto mb-6" />
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <div className="w-16 md:w-20 h-1 bg-primary mx-auto mb-3 md:mb-6" />
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
               Practical frameworks and templates built from 11 years of coaching 3,000+ organizations.
             </p>
           </motion.div>
@@ -418,7 +418,7 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-16"
+            className="mb-8 md:mb-16"
           >
             <div 
               className="relative rounded-2xl overflow-hidden border-2 shadow-2xl"
@@ -430,18 +430,18 @@ const Products = () => {
                   initial={{ scale: 0.9 }}
                   animate={{ scale: [0.9, 1.05, 1] }}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  className="px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2"
+                  className="px-3 md:px-6 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg flex items-center gap-1 md:gap-2"
                   style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
                 >
-                  <Sparkles className="w-4 h-4" />
-                  BEST VALUE — SAVE R147
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">BEST VALUE — </span>SAVE R147
+                  <Sparkles className="w-3 h-3 md:w-4 md:h-4 hidden sm:block" />
                 </motion.div>
               </div>
 
               <div className="grid lg:grid-cols-2 gap-0">
                 {/* Image Side */}
-                <div className="relative aspect-[4/3] lg:aspect-auto overflow-hidden">
+                <div className="relative aspect-[16/9] md:aspect-[4/3] lg:aspect-auto overflow-hidden">
                   <img 
                     src={newManagerHero}
                     alt="The New Manager Bundle" 
@@ -452,50 +452,50 @@ const Products = () => {
                 </div>
 
                 {/* Content Side */}
-                <div className="p-8 lg:p-10 flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Package className="w-6 h-6" style={{ color: "#C8A864" }} />
-                    <span className="text-sm font-medium uppercase tracking-wider" style={{ color: "#C8A864" }}>
+                <div className="p-5 md:p-8 lg:p-10 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 mb-2 md:mb-4">
+                    <Package className="w-5 h-5 md:w-6 md:h-6" style={{ color: "#C8A864" }} />
+                    <span className="text-xs md:text-sm font-medium uppercase tracking-wider" style={{ color: "#C8A864" }}>
                       Complete Leadership Toolkit
                     </span>
                   </div>
 
-                  <h2 className="font-serif text-3xl lg:text-4xl font-bold text-white mb-4">
+                  <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 md:mb-4">
                     The New Manager Bundle
                   </h2>
                   
-                  <p className="text-white/80 text-lg mb-6">
+                  <p className="text-white/80 text-sm md:text-lg mb-4 md:mb-6">
                     Everything you need to lead with confidence from day one. Get both flagship products together at an unbeatable price.
                   </p>
 
                   {/* What's Included */}
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-start gap-3 bg-white/10 rounded-lg p-4">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
-                        <span className="text-sm font-bold" style={{ color: "#1B2A4A" }}>1</span>
+                  <div className="space-y-2 md:space-y-4 mb-4 md:mb-6">
+                    <div className="flex items-start gap-2 md:gap-3 bg-white/10 rounded-lg p-3 md:p-4">
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
+                        <span className="text-xs md:text-sm font-bold" style={{ color: "#1B2A4A" }}>1</span>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white">New Manager Survival Kit</h4>
-                        <p className="text-white/70 text-sm">30-60-90 day roadmap, team assessments, weekly templates</p>
+                        <h4 className="font-semibold text-white text-sm md:text-base">New Manager Survival Kit</h4>
+                        <p className="text-white/70 text-xs md:text-sm">30-60-90 day roadmap, team assessments, weekly templates</p>
                         <span className="text-xs" style={{ color: "#C8A864" }}>Value: R497</span>
                       </div>
                     </div>
                     
-                    <div className="flex items-start gap-3 bg-white/10 rounded-lg p-4">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
-                        <span className="text-sm font-bold" style={{ color: "#1B2A4A" }}>2</span>
+                    <div className="flex items-start gap-2 md:gap-3 bg-white/10 rounded-lg p-3 md:p-4">
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#C8A864" }}>
+                        <span className="text-xs md:text-sm font-bold" style={{ color: "#1B2A4A" }}>2</span>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white">Difficult Conversations Playbook</h4>
-                        <p className="text-white/70 text-sm">20 word-for-word scripts, HEARD framework, preparation guides</p>
-                        <span className="text-xs" style={{ color: "#C8A864" }}>Value: R397</span>
+                        <h4 className="font-semibold text-white text-sm md:text-base">Difficult Conversations Playbook</h4>
+                        <p className="text-white/70 text-xs md:text-sm">12 word-for-word scripts, CLEAR framework, de-escalation toolkit</p>
+                        <span className="text-xs" style={{ color: "#C8A864" }}>Value: R247</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {['90-Day Framework', '20 Scripts', 'Team Tools', 'Templates', 'HEARD Framework', 'Instant PDF Access'].map((tag) => (
+                  {/* Tags - Hidden on mobile */}
+                  <div className="hidden md:flex flex-wrap gap-2 mb-6">
+                    {['90-Day Framework', '12 Scripts', 'Team Tools', 'Templates', 'CLEAR Framework', 'Instant PDF Access'].map((tag) => (
                       <span 
                         key={tag} 
                         className="text-xs px-3 py-1 rounded-full border"
@@ -507,18 +507,18 @@ const Products = () => {
                   </div>
 
                   {/* Pricing Block */}
-                  <div className="bg-white/10 rounded-xl p-6 mb-6">
-                    <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="bg-white/10 rounded-xl p-4 md:p-6 mb-4 md:mb-6">
+                    <div className="flex items-center justify-between flex-wrap gap-3 md:gap-4">
                       <div>
-                        <div className="flex items-baseline gap-3">
-                          <span className="text-white/50 line-through text-xl">R894</span>
-                          <span className="text-4xl lg:text-5xl font-bold" style={{ color: "#C8A864" }}>R747</span>
+                        <div className="flex items-baseline gap-2 md:gap-3">
+                          <span className="text-white/50 line-through text-base md:text-xl">R744</span>
+                          <span className="text-3xl md:text-4xl lg:text-5xl font-bold" style={{ color: "#C8A864" }}>R597</span>
                         </div>
-                        <p className="text-white/60 text-sm mt-1">One-time payment • Instant download • Lifetime access</p>
+                        <p className="text-white/60 text-xs md:text-sm mt-1">One-time payment • Instant download</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-16 h-16 rounded-full border-2 flex items-center justify-center" style={{ borderColor: "#C8A864" }}>
-                          <span className="text-lg font-bold" style={{ color: "#C8A864" }}>16%</span>
+                        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center" style={{ borderColor: "#C8A864" }}>
+                          <span className="text-sm md:text-lg font-bold" style={{ color: "#C8A864" }}>20%</span>
                         </div>
                         <span className="text-xs text-white/60">OFF</span>
                       </div>
@@ -529,15 +529,15 @@ const Products = () => {
                   <Button 
                     onClick={() => setBundleCheckoutOpen(true)}
                     size="lg"
-                    className="w-full rounded-full text-lg py-6 group shadow-xl hover:shadow-2xl transition-all duration-300"
+                    className="w-full rounded-full text-base md:text-lg py-5 md:py-6 group shadow-xl hover:shadow-2xl transition-all duration-300"
                     style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
                   >
-                    Get The Complete Bundle — R747
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    Get The Complete Bundle — R597
+                    <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
 
-                  {/* Trust indicators */}
-                  <div className="flex items-center justify-center gap-4 mt-4 text-white/60 text-xs">
+                  {/* Trust indicators - Hidden on mobile */}
+                  <div className="hidden md:flex items-center justify-center gap-4 mt-4 text-white/60 text-xs">
                     <span className="flex items-center gap-1">
                       <Download className="w-3 h-3" /> Instant Download
                     </span>
@@ -559,35 +559,35 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-16"
+            className="mb-8 md:mb-16"
           >
             <div 
-              className="relative rounded-2xl overflow-hidden border shadow-xl"
+              className="relative rounded-xl md:rounded-2xl overflow-hidden border shadow-xl"
               style={{ borderColor: "hsl(var(--primary) / 0.3)", background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)" }}
             >
-              {/* Decorative Circles */}
-              <div className="absolute -top-16 -left-16 w-40 h-40 rounded-full border-2 border-white/10" />
-              <div className="absolute -top-8 -left-8 w-24 h-24 rounded-full border border-white/20" />
-              <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full border-2 border-white/5" />
-              <div className="absolute -bottom-10 -right-10 w-28 h-28 rounded-full border border-white/10" />
+              {/* Decorative Circles - Hidden on mobile */}
+              <div className="hidden md:block absolute -top-16 -left-16 w-40 h-40 rounded-full border-2 border-white/10" />
+              <div className="hidden md:block absolute -top-8 -left-8 w-24 h-24 rounded-full border border-white/20" />
+              <div className="hidden md:block absolute -bottom-20 -right-20 w-48 h-48 rounded-full border-2 border-white/5" />
+              <div className="hidden md:block absolute -bottom-10 -right-10 w-28 h-28 rounded-full border border-white/10" />
               
-              <div className="relative z-10 grid md:grid-cols-2 gap-6 p-8 lg:p-10 items-center">
+              <div className="relative z-10 grid md:grid-cols-2 gap-4 md:gap-6 p-5 md:p-8 lg:p-10 items-center">
                 {/* Content */}
                 <div>
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-4 bg-white/20 text-white">
-                    <Target className="w-4 h-4" />
+                  <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-semibold mb-2 md:mb-4 bg-white/20 text-white">
+                    <Target className="w-3 h-3 md:w-4 md:h-4" />
                     Free Assessment
                   </div>
                   
-                  <h2 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-3">
+                  <h2 className="font-serif text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2 md:mb-3">
                     Leadership Diagnostic
                   </h2>
                   
-                  <p className="text-white/80 mb-6">
+                  <p className="text-white/80 text-sm md:text-base mb-3 md:mb-6">
                     Discover your leadership operating level in just 5 minutes. Get personalized insights and a development roadmap — completely free.
                   </p>
                   
-                  <ul className="space-y-2 mb-6">
+                  <ul className="hidden md:block space-y-2 mb-6">
                     {["5-Minute Assessment", "Instant Results", "Personalized Insights", "Development Roadmap"].map((feature) => (
                       <li key={feature} className="flex items-center gap-2 text-white/90 text-sm">
                         <CheckCircle className="w-4 h-4 text-white/70" />
@@ -596,10 +596,19 @@ const Products = () => {
                     ))}
                   </ul>
                   
+                  {/* Mobile: Inline features */}
+                  <div className="flex flex-wrap gap-2 mb-4 md:hidden">
+                    {["5 min", "Free", "Instant"].map((tag) => (
+                      <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-white/20 text-white">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
                   <Link to="/leader-assessment">
                     <Button 
-                      size="lg"
-                      className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg"
+                      size="default"
+                      className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg md:text-base"
                     >
                       Start Free Assessment
                       <ArrowRight className="ml-2 w-4 h-4" />
@@ -660,21 +669,21 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
+            className="mb-6 md:mb-10"
           >
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-green-600" />
+            <div className="flex items-center gap-2 mb-3 md:mb-5">
+              <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-green-600" />
               </div>
               <div>
-                <h2 className="font-serif text-lg font-bold text-foreground">
+                <h2 className="font-serif text-base md:text-lg font-bold text-foreground">
                   Entry Products
                 </h2>
-                <p className="text-xs text-muted-foreground">R197–R397 • Quick wins for immediate impact</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">R197–R397 • Quick wins</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {tier1Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -687,21 +696,21 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
+            className="mb-6 md:mb-10"
           >
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <Star className="w-4 h-4 text-blue-600" />
+            <div className="flex items-center gap-2 mb-3 md:mb-5">
+              <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Star className="w-3 h-3 md:w-4 md:h-4 text-blue-600" />
               </div>
               <div>
-                <h2 className="font-serif text-lg font-bold text-foreground">
+                <h2 className="font-serif text-base md:text-lg font-bold text-foreground">
                   Core Systems
                 </h2>
-                <p className="text-xs text-muted-foreground">R497–R697 • Comprehensive leadership frameworks</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">R497–R697 • Leadership frameworks</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {tier2Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -714,21 +723,21 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
+            className="mb-6 md:mb-10"
           >
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                <Crown className="w-4 h-4 text-amber-600" />
+            <div className="flex items-center gap-2 mb-3 md:mb-5">
+              <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                <Crown className="w-3 h-3 md:w-4 md:h-4 text-amber-600" />
               </div>
               <div>
-                <h2 className="font-serif text-lg font-bold text-foreground">
+                <h2 className="font-serif text-base md:text-lg font-bold text-foreground">
                   Premium Products
                 </h2>
-                <p className="text-xs text-muted-foreground">R697–R1,497 • Deep transformation & coaching alternative</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">R697–R1,497 • Transformation tools</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {tier3Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -741,21 +750,21 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-10"
+            className="mb-6 md:mb-10"
           >
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                <ExternalLink className="w-4 h-4 text-primary" />
+            <div className="flex items-center gap-2 mb-3 md:mb-5">
+              <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <ExternalLink className="w-3 h-3 md:w-4 md:h-4 text-primary" />
               </div>
               <div>
-                <h2 className="font-serif text-lg font-bold text-foreground">
+                <h2 className="font-serif text-base md:text-lg font-bold text-foreground">
                   Free Assessment Tools
                 </h2>
-                <p className="text-xs text-muted-foreground">Start your leadership journey today</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">Start your journey today</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {freeTools.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
