@@ -12,6 +12,8 @@ import {
   Sparkles,
   Star,
   Crown,
+  Target,
+  CheckCircle,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -545,6 +547,107 @@ const Products = () => {
                     <span className="flex items-center gap-1">
                       <Users className="w-3 h-3" /> 3,000+ Organizations
                     </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* Featured: Leadership Diagnostic - Free Assessment */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <div 
+              className="relative rounded-2xl overflow-hidden border shadow-xl"
+              style={{ borderColor: "hsl(var(--primary) / 0.3)", background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)" }}
+            >
+              {/* Decorative Circles */}
+              <div className="absolute -top-16 -left-16 w-40 h-40 rounded-full border-2 border-white/10" />
+              <div className="absolute -top-8 -left-8 w-24 h-24 rounded-full border border-white/20" />
+              <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full border-2 border-white/5" />
+              <div className="absolute -bottom-10 -right-10 w-28 h-28 rounded-full border border-white/10" />
+              
+              <div className="relative z-10 grid md:grid-cols-2 gap-6 p-8 lg:p-10 items-center">
+                {/* Content */}
+                <div>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-4 bg-white/20 text-white">
+                    <Target className="w-4 h-4" />
+                    Free Assessment
+                  </div>
+                  
+                  <h2 className="font-serif text-2xl lg:text-3xl font-bold text-white mb-3">
+                    Leadership Diagnostic
+                  </h2>
+                  
+                  <p className="text-white/80 mb-6">
+                    Discover your leadership operating level in just 5 minutes. Get personalized insights and a development roadmap — completely free.
+                  </p>
+                  
+                  <ul className="space-y-2 mb-6">
+                    {["5-Minute Assessment", "Instant Results", "Personalized Insights", "Development Roadmap"].map((feature) => (
+                      <li key={feature} className="flex items-center gap-2 text-white/90 text-sm">
+                        <CheckCircle className="w-4 h-4 text-white/70" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Link to="/leader-assessment">
+                    <Button 
+                      size="lg"
+                      className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg"
+                    >
+                      Start Free Assessment
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* Visual Side */}
+                <div className="hidden md:flex items-center justify-center">
+                  <div className="relative">
+                    {/* Layered circles */}
+                    <motion.div 
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      className="w-48 h-48 rounded-full border-4 border-white/20 flex items-center justify-center"
+                    >
+                      <motion.div 
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                        className="w-36 h-36 rounded-full border-2 border-white/30 flex items-center justify-center bg-white/10 backdrop-blur-sm"
+                      >
+                        <motion.div 
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          whileInView={{ scale: 1, opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: 0.6 }}
+                          className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center"
+                        >
+                          <Target className="w-10 h-10 text-white" />
+                        </motion.div>
+                      </motion.div>
+                    </motion.div>
+                    
+                    {/* Floating accent circles */}
+                    <motion.div 
+                      animate={{ y: [0, -8, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute -top-4 -right-4 w-8 h-8 rounded-full bg-white/30"
+                    />
+                    <motion.div 
+                      animate={{ y: [0, 8, 0] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                      className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-white/20"
+                    />
                   </div>
                 </div>
               </div>
