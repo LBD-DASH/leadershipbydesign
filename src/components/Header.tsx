@@ -289,11 +289,11 @@ const Header = () => {
                 SHIFT Methodology™
               </Link>
               <Link 
-                to="/executive-coaching" 
+                to="/contagious-identity" 
                 className="block text-sm text-muted-foreground hover:text-foreground pl-3"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Executive Coaching
+                Contagious Identity Coaching
               </Link>
               <Link 
                 to="/programmes" 

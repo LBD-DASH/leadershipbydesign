@@ -42,7 +42,7 @@ const teamWorkshops = [{
 
 export default function Programmes() {
   return <>
-      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including executive coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" keywords="leadership programmes, executive coaching, team workshops, leadership development, SHIFT leadership development" />
+      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including Contagious Identity coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" keywords="leadership programmes, contagious identity coaching, executive coaching, team workshops, leadership development, SHIFT leadership development" />
       <div className="min-h-screen bg-background">
         <Header />
       

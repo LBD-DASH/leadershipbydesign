@@ -89,7 +89,7 @@ const App = () => (
           <Route path="/workshops/leadership" element={<LeadershipWorkshop />} />
           <Route path="/shift-methodology" element={<ShiftMethodology />} />
           <Route path="/shift-diagnostic" element={<ShiftDiagnostic />} />
-          <Route path="/executive-coaching" element={<ExecutiveCoaching />} />
+          <Route path="/executive-coaching" element={<Navigate to="/contagious-identity" replace />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/hellocoach" element={<HelloCoach />} />
