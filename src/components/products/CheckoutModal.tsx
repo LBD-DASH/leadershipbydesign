@@ -32,7 +32,8 @@ export function CheckoutModal({
   onOpenChange, 
   productName, 
   price,
-  priceDisplay 
+  priceDisplay,
+  successPath = "/new-manager-kit/success"
 }: CheckoutModalProps) {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
