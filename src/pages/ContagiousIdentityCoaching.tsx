@@ -204,10 +204,15 @@ export default function ContagiousIdentityCoaching() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-[hsl(210,35%,12%)] via-[hsl(200,30%,15%)] to-[hsl(210,35%,12%)] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,hsl(200,70%,40%,0.15),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,hsl(200,70%,40%,0.1),transparent_50%)]" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src={heroImage} 
+            alt="Executive coaching session" 
+            className="w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(210,35%,12%,0.95)] via-[hsl(210,35%,12%,0.85)] to-[hsl(210,35%,12%,0.6)]" />
         </div>
 
         <div className="container mx-auto px-4 py-24 relative z-10">
@@ -215,7 +220,7 @@ export default function ContagiousIdentityCoaching() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-4xl"
+            className="max-w-4xl text-white"
           >
             <p className="text-primary font-medium tracking-wider uppercase mb-4">
               Executive Coaching
