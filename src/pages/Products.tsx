@@ -5,6 +5,7 @@ import { Package, Award, Users, Download, ArrowRight, ChevronDown, ExternalLink,
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { ProductSchema, AggregateRatingSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -320,6 +321,42 @@ const Products = () => {
     </motion.div>;
   return <div className="min-h-screen bg-background">
       <SEO title="Leadership Tools & Resources | Leadership by Design" description="Practical leadership tools and frameworks for managers. From survival kits to conversation scripts—everything you need to lead with confidence." canonicalUrl="/products" ogImage="https://leadershipbydesign.co/og-products.jpg" />
+      
+      {/* Product Structured Data for AI Discovery */}
+      <ProductSchema
+        name="New Manager Survival Kit"
+        description="Your first 90 days as a manager, solved. Includes 30-60-90 day roadmap, team assessment tools, weekly reflection templates, and quick-win strategies."
+        url="/products/new-manager-kit"
+        price="497"
+        priceCurrency="ZAR"
+        image="https://leadershipbydesign.co/og-products.jpg"
+      />
+      <ProductSchema
+        name="Difficult Conversations Playbook"
+        description="12 word-for-word scripts for tough workplace conversations. Includes the CLEAR Framework, de-escalation toolkit, and follow-up templates."
+        url="/products/difficult-conversations-playbook"
+        price="247"
+        priceCurrency="ZAR"
+        image="https://leadershipbydesign.co/og-products.jpg"
+      />
+      <ProductSchema
+        name="Contagious Identity Workbook"
+        description="Build your leadership identity with the identity discovery process, self-coaching prompts, and executive coaching preview."
+        url="/products/contagious-identity-workbook"
+        price="697"
+        priceCurrency="ZAR"
+        image="https://leadershipbydesign.co/og-contagious-identity.jpg"
+      />
+      <ProductSchema
+        name="The New Manager Bundle"
+        description="Complete leadership toolkit combining the New Manager Survival Kit and Difficult Conversations Playbook. Save R147 with this bundle."
+        url="/products"
+        price="597"
+        priceCurrency="ZAR"
+        image="https://leadershipbydesign.co/og-products.jpg"
+      />
+      <AggregateRatingSchema ratingValue={4.9} reviewCount={47} />
+      
       <Header />
 
       <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
