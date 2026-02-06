@@ -112,6 +112,7 @@ const App = () => (
           <Route path="/difficult-conversations" element={<DifficultConversationsPlaybook />} />
           <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
           <Route path="/bundle/success" element={<BundleSuccess />} />
+          <Route path="/contagious-identity" element={<ContagiousIdentityCoaching />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
