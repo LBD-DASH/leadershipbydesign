@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { X, Gift, CheckCircle } from "lucide-react";
+import { X, Gift, CheckCircle, ArrowLeft } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
 import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
@@ -155,6 +156,15 @@ export default function NewManagerKit() {
         />
 
         <div className="container mx-auto max-w-4xl relative z-10">
+          {/* Back Button */}
+          <Link 
+            to="/products" 
+            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8 group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm font-medium">Back to Products</span>
+          </Link>
+
           {/* Badge */}
           <div className="flex justify-center mb-8">
             <span 
