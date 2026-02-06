@@ -23,6 +23,12 @@ import {
 } from "@/components/ui/accordion";
 import InterestForm from "@/components/contagious-identity/InterestForm";
 
+// Images
+import heroImage from "@/assets/contagious-identity-coaching-hero.jpg";
+import reflectionImage from "@/assets/contagious-identity-reflection.jpg";
+import influenceImage from "@/assets/contagious-identity-influence.jpg";
+import legacyImage from "@/assets/contagious-identity-legacy.jpg";
+
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
