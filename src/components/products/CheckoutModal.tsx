@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2, Lock, Tag, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -20,6 +21,11 @@ const colors = {
   gold: "#C8A864",
 };
 
+// Valid discount codes
+const DISCOUNT_CODES: Record<string, number> = {
+  "LEADERFREE100": 100, // 100% off
+};
+
 export function CheckoutModal({ 
   open, 
   onOpenChange, 
@@ -27,10 +33,26 @@ export function CheckoutModal({
   price,
   priceDisplay 
 }: CheckoutModalProps) {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const finalPrice = appliedDiscount ? price * (1 - appliedDiscount / 100) : price;
+
+  const handleApplyDiscount = () => {
+    const code = discountCode.trim().toUpperCase();
+    if (DISCOUNT_CODES[code]) {
+      setAppliedDiscount(DISCOUNT_CODES[code]);
+      toast.success(`Discount applied: ${DISCOUNT_CODES[code]}% off!`);
+    } else {
+      toast.error("Invalid discount code");
+      setAppliedDiscount(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +71,14 @@ export function CheckoutModal({
 
     setIsLoading(true);
 
+    // If 100% discount, skip payment and go directly to success
+    if (finalPrice === 0) {
+      toast.success("Discount applied! Redirecting to your download...");
+      onOpenChange(false);
+      navigate("/new-manager-kit/success?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT");
+      return;
+    }
+
     try {
       const callbackUrl = `${window.location.origin}/new-manager-kit/success`;
       
@@ -57,7 +87,7 @@ export function CheckoutModal({
           email: email.trim(),
           firstName: firstName.trim(),
           lastName: lastName.trim(),
-          amount: price * 100, // Convert to kobo/cents
+          amount: finalPrice * 100, // Convert to kobo/cents
           productName,
           callbackUrl,
         },
@@ -94,9 +124,16 @@ export function CheckoutModal({
 
         <div className="text-center mb-6">
           <p className="text-gray-600 text-sm">{productName}</p>
-          <p className="text-3xl font-bold mt-2" style={{ color: colors.gold }}>
-            {priceDisplay}
-          </p>
+          {appliedDiscount === 100 ? (
+            <div className="mt-2">
+              <span className="text-gray-400 line-through text-xl mr-2">{priceDisplay}</span>
+              <span className="text-3xl font-bold text-green-600">FREE</span>
+            </div>
+          ) : (
+            <p className="text-3xl font-bold mt-2" style={{ color: colors.gold }}>
+              {priceDisplay}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,6 +178,37 @@ export function CheckoutModal({
             </p>
           </div>
 
+          {/* Discount Code */}
+          <div className="space-y-2">
+            <Label htmlFor="discountCode">Discount Code (optional)</Label>
+            <div className="flex gap-2">
+              <Input
+                id="discountCode"
+                placeholder="Enter code"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+                disabled={isLoading || appliedDiscount !== null}
+                className="flex-1"
+              />
+              {appliedDiscount !== null ? (
+                <div className="flex items-center gap-1 px-3 text-green-600 text-sm font-medium">
+                  <CheckCircle className="w-4 h-4" />
+                  Applied
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleApplyDiscount}
+                  disabled={isLoading || !discountCode.trim()}
+                >
+                  <Tag className="w-4 h-4 mr-1" />
+                  Apply
+                </Button>
+              )}
+            </div>
+          </div>
+
           <Button
             type="submit"
             className="w-full text-lg py-6 font-semibold transition-all duration-300"
@@ -152,10 +220,15 @@ export function CheckoutModal({
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Processing...
               </>
+            ) : finalPrice === 0 ? (
+              <>
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Get Free Access
+              </>
             ) : (
               <>
                 <Lock className="w-4 h-4 mr-2" />
-                Pay {priceDisplay} Securely
+                Pay R{finalPrice} Securely
               </>
             )}
           </Button>
