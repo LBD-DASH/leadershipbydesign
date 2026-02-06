@@ -354,6 +354,31 @@ export default function ContagiousIdentityCoaching() {
         </div>
       </section>
 
+      {/* Video Section */}
+      <section className="py-16 md:py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                Watch: Understanding Contagious Identity
+              </h2>
+              <p className="text-muted-foreground">
+                Learn more about the principles behind identity-driven leadership.
+              </p>
+            </div>
+            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl border border-border">
+              <iframe
+                src="https://www.youtube.com/embed/tASjmuD9Wag"
+                title="Contagious Identity Coaching"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Pain Points Section */}
       <section className="py-20 md:py-28 bg-background">
         <div className="container mx-auto px-4">
