@@ -15,6 +15,7 @@ const staticPages = [
   { loc: "/contact", priority: "0.9", changefreq: "monthly" },
   { loc: "/programmes", priority: "0.9", changefreq: "weekly" },
   { loc: "/executive-coaching", priority: "0.8", changefreq: "monthly" },
+  { loc: "/contagious-identity-coaching", priority: "0.8", changefreq: "monthly" },
   { loc: "/shift-leadership-development", priority: "0.8", changefreq: "monthly" },
   { loc: "/shift-methodology", priority: "0.7", changefreq: "monthly" },
   { loc: "/leadership-levels", priority: "0.7", changefreq: "monthly" },
@@ -27,11 +28,17 @@ const staticPages = [
   { loc: "/leadership-diagnostic", priority: "0.8", changefreq: "monthly" },
   { loc: "/team-diagnostic", priority: "0.8", changefreq: "monthly" },
   { loc: "/shift-diagnostic", priority: "0.7", changefreq: "monthly" },
+  { loc: "/ai-readiness", priority: "0.8", changefreq: "monthly" },
   { loc: "/resources", priority: "0.7", changefreq: "weekly" },
   { loc: "/blog", priority: "0.8", changefreq: "weekly" },
   { loc: "/case-studies", priority: "0.7", changefreq: "monthly" },
   { loc: "/book", priority: "0.6", changefreq: "monthly" },
   { loc: "/leadership-mistakes", priority: "0.7", changefreq: "monthly" },
+  { loc: "/podcast", priority: "0.7", changefreq: "weekly" },
+  { loc: "/products", priority: "0.8", changefreq: "monthly" },
+  { loc: "/products/new-manager-kit", priority: "0.6", changefreq: "monthly" },
+  { loc: "/products/difficult-conversations-playbook", priority: "0.6", changefreq: "monthly" },
+  { loc: "/products/contagious-identity-workbook", priority: "0.6", changefreq: "monthly" },
 ];
 
 Deno.serve(async (req) => {
