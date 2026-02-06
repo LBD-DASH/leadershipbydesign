@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, ExternalLink } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import ldbLogo from "@/assets/ldb-logo.png";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [programmesOpen, setProgrammesOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -14,6 +15,8 @@ const Header = () => {
   const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology", "/executive-coaching"].some(
     path => location.pathname.startsWith(path)
   );
+
+  const isProductsActive = location.pathname.startsWith("/products");
 
   const isResourcesActive = ["/resources", "/blog", "/hellocoach", "/book", "/leadership-mistakes", "/case-studies", "/podcast"].some(
     path => location.pathname.startsWith(path)
@@ -34,14 +37,6 @@ const Header = () => {
             activeClassName="text-foreground"
           >
             Home
-          </NavLink>
-
-          <NavLink 
-            to="/products" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
-          >
-            Products
           </NavLink>
 
           {/* Programmes Dropdown */}
@@ -94,6 +89,72 @@ const Header = () => {
                   >
                     All Programmes
                   </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Products Dropdown */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setProductsOpen(true)}
+            onMouseLeave={() => setProductsOpen(false)}
+          >
+            <button 
+              className={cn(
+                "flex items-center gap-1 text-sm font-medium transition-colors",
+                isProductsActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Products
+              <ChevronDown className={cn("w-4 h-4 transition-transform", productsOpen && "rotate-180")} />
+            </button>
+            
+            {productsOpen && (
+              <div className="absolute top-full left-0 pt-2">
+                <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[180px]">
+                  <Link 
+                    to="/products" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Leadership Tools
+                  </Link>
+                  <a 
+                    href="https://valuesblueprint.online" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Values
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a 
+                    href="https://findmypurpose.me" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Purpose
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a 
+                    href="https://sixhumanneeds.lovable.app" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    6 Human Needs
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a 
+                    href="https://leadershipindex.lovable.app" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Leadership Index
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               </div>
             )}
@@ -203,14 +264,6 @@ const Header = () => {
             >
               Home
             </Link>
-
-            <Link 
-              to="/products" 
-              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Products
-            </Link>
             
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Programmes</p>
@@ -249,6 +302,57 @@ const Header = () => {
               >
                 All Programmes
               </Link>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Products</p>
+              <Link 
+                to="/products" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Leadership Tools
+              </Link>
+              <a 
+                href="https://valuesblueprint.online" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Values
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <a 
+                href="https://findmypurpose.me" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Purpose
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <a 
+                href="https://sixhumanneeds.lovable.app" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                6 Human Needs
+                <ExternalLink className="w-3 h-3" />
+              </a>
+              <a 
+                href="https://leadershipindex.lovable.app" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Leadership Index
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
             <div className="space-y-2">
