@@ -1,137 +1,192 @@
 
 
-# New Manager Survival Kit - Premium Sales Landing Page
+# Products / Shop Page Implementation Plan (Updated for Site Consistency)
 
-## Overview
+## Design System Analysis
 
-Create a high-converting, Stan Store-style sales page for the digital product "The New Manager Survival Kit: Your First 90 Days". This page will be **unlisted** (not accessible from navigation) and only accessible via direct link at `/new-manager-kit`.
+Based on a thorough review of the existing codebase, the Products page will follow these established patterns:
 
-## Technical Approach
+### Color System
+The site uses **CSS custom properties** defined in `src/index.css`:
+- **Primary:** `hsl(var(--primary))` - Teal (hsl 200 70% 40%)
+- **Background:** `hsl(var(--background))` - White
+- **Foreground:** `hsl(var(--foreground))` - Dark gray
+- **Muted:** `hsl(var(--muted))` - Light blue-gray
+- **Card:** `hsl(var(--card))` - White with border
 
-### 1. New Page File
-**File:** `src/pages/products/NewManagerKit.tsx`
+The NewManagerKit page uses a **standalone palette** (Navy #1B2A4A, Gold #C8A864, Cream #F8F6F1) which is intentional for that specific product sales funnel. The Products catalog page should use the **site-wide design system** for consistency.
 
-A single, self-contained landing page with all sections specified, using a custom color palette that differs from the main site:
+### Typography
+- **Headings:** `font-serif` (Playfair Display) - used via `className="font-serif"`
+- **Body:** Default sans-serif (Inter)
+- **Heading patterns:** `text-4xl md:text-5xl font-bold text-primary`
+- **Section dividers:** `<div className="w-24 h-1 bg-primary mx-auto" />` after headings
 
-| Element | Color |
-|---------|-------|
-| Navy (backgrounds) | `#1B2A4A` |
-| Gold (accents) | `#C8A864` |
-| Cream (backgrounds) | `#F8F6F1` |
+### Layout Patterns
+- **Page wrapper:** `min-h-screen bg-background`
+- **Section padding:** `py-24 px-6 lg:px-8`
+- **Container width:** `max-w-6xl mx-auto` or `max-w-7xl mx-auto`
+- **Card styling:** `bg-card rounded-2xl border border-border hover:shadow-lg transition-all duration-300`
 
-### 2. Route Registration
-**File:** `src/App.tsx`
+### Animation Patterns
+- **Page hero animations:** Framer Motion `initial={{ opacity: 0, y: 20 }}` with `animate`
+- **Scroll animations:** `whileInView` with `viewport={{ once: true }}`
+- **Stagger delays:** `transition={{ delay: index * 0.1, duration: 0.6 }}`
 
-Add route `/new-manager-kit` without modifying the Header navigation - keeping it unlisted as requested.
-
-### 3. Page Structure (9 Sections)
-
-```text
-1. HERO (Navy bg)
-   - Gold badge: "Digital Leadership Product"
-   - Headline + subheading
-   - 4 feature pills
-   - Pricing block (R1,497 crossed → R497 gold)
-   - Gold CTA button → #checkout
-
-2. SOCIAL PROOF BAR (White bg)
-   - Single line: "11 years • 3,000+ organizations"
-
-3. PROBLEM SECTION (Cream bg)
-   - Red X pain points list (6 items)
-   - Closing bold statement
-
-4. WHAT'S INSIDE (White bg)
-   - 5 numbered module cards with gold left border
-
-5. BONUS SECTION (Navy gradient bg)
-   - Gold gift badge
-   - Emergency Playbook description
-
-6. WHO IS THIS FOR (Cream bg)
-   - 2x2 grid of persona cards
-
-7. GUARANTEE (Soft gold bg)
-   - Trust/use-immediately messaging
-
-8. FINAL CTA (Navy bg)
-   - Repeat pricing + CTA
-
-9. FOOTER (Navy bg)
-   - Simple © line
-```
-
-### 4. Design Implementation
-
-**Typography:**
-- Headings: `font-serif` (Playfair Display - already loaded)
-- Body: `font-sans` (Inter - already loaded)
-
-**Decorative Elements:**
-- Subtle geometric accents (thin gold lines, circles) on navy sections
-- Generous whitespace between sections
-- Smooth scroll behavior with `scroll-behavior: smooth`
-
-**Hover Effects:**
-- Module cards: lift with shadow on hover
-- CTA buttons: subtle scale/glow effect
-
-**Mobile Responsiveness:**
-- Single column stack on mobile
-- Adjusted padding/font sizes
-
-### 5. Component Structure
-
-```text
-NewManagerKit.tsx
-├── SEO component (meta tags for sharing)
-├── HeroSection (inline)
-├── SocialProofBar (inline)
-├── ProblemSection (inline)
-├── WhatsInsideSection (inline)
-├── BonusSection (inline)
-├── WhoIsThisForSection (inline)
-├── GuaranteeSection (inline)
-├── FinalCTASection (inline)
-└── FooterSection (inline - minimal, no links)
-```
-
-All sections will be inline in a single file since this is a standalone sales page.
-
-## Files to Create/Modify
-
-| File | Action |
-|------|--------|
-| `src/pages/products/NewManagerKit.tsx` | Create - full sales page |
-| `src/App.tsx` | Modify - add route (no nav changes) |
-
-## Implementation Details
-
-### Hero Section Specifics
-- Crossed-out pricing: `<span className="line-through text-white/60">R1,497</span>`
-- Large gold price: `text-5xl font-bold text-[#C8A864]`
-- CTA: `bg-[#C8A864] hover:bg-[#b89954] text-[#1B2A4A]`
-
-### Module Cards
-- Gold left border: `border-l-4 border-[#C8A864]`
-- Number styling: Large gold numeral (01, 02, etc.)
-
-### Pain Points
-- Red X icons using Lucide `X` with destructive color
-- Cream background section
-
-### Mobile Breakpoints
-- Stack all grids on `<md`
-- Reduce heading sizes
-- Full-width buttons
-
-## Future Payment Integration
-
-The CTA currently links to `#checkout`. When ready, this will be replaced with:
-- Gumroad embed/link
-- Or Stripe checkout session
+### Component Reuse
+- Uses `<Header />` and `<Footer />` on all pages
+- Uses `<SEO />` component for meta tags
+- Uses `<Button />` from shadcn/ui with rounded-full style: `className="rounded-full group"`
+- Uses Lucide icons consistently
 
 ---
 
-**Summary:** A premium, editorial-style sales page that matches your exact specifications, kept private from navigation, accessible only via direct link. Uses the project's existing font setup with custom brand colors for this product.
+## Updated Page Structure
+
+```text
++--------------------------------------------------+
+|   HEADER (Site-wide navigation)                  |
++--------------------------------------------------+
+|   1. HERO SECTION                                |
+|   Primary gradient background, centered content  |
++--------------------------------------------------+
+|   2. FEATURED BUNDLE (Highlighted section)       |
+|   Subtle primary/10 background, gold accents     |
++--------------------------------------------------+
+|   3. INDIVIDUAL PRODUCTS                         |
+|   Card grid using site card patterns             |
++--------------------------------------------------+
+|   4. TRUST SECTION                               |
+|   Simple stats bar (muted background)            |
++--------------------------------------------------+
+|   5. WHO ARE THESE FOR                           |
+|   Text section with icon bullets                 |
++--------------------------------------------------+
+|   6. CTA TO COACHING                             |
+|   Primary gradient background (like About hero)  |
++--------------------------------------------------+
+|   FOOTER (Site-wide)                             |
++--------------------------------------------------+
+```
+
+---
+
+## Files to Create/Modify
+
+| File | Action | Description |
+|------|--------|-------------|
+| `src/pages/Products.tsx` | **Create** | Main products catalog page |
+| `src/App.tsx` | **Modify** | Add `/products` route |
+| `src/components/Header.tsx` | **Modify** | Add "Products" navigation link |
+
+---
+
+## Technical Implementation Details
+
+### Section 1: Hero
+```text
+Pattern: Matches About.tsx and Contact.tsx hero sections
+- Background: bg-gradient-to-br from-primary to-primary/80
+- Text: text-primary-foreground (white)
+- Container: max-w-6xl mx-auto text-center
+- Animation: Framer Motion fade-in
+```
+
+### Section 2: Featured Bundle
+```text
+Pattern: Similar to diagnostic CTA blocks in Programmes.tsx
+- Background: bg-primary/5 rounded-2xl border border-primary/20
+- Badge: Gold accent using inline style or accent class
+- Price display: Strikethrough for original, bold for bundle price
+- CTA: Opens CheckoutModal (reuse existing component)
+```
+
+### Section 3: Product Cards
+```text
+Pattern: Matches card styling from About.tsx values section
+- Container: Grid with responsive columns
+- Cards: bg-card rounded-2xl p-6 border border-border hover:shadow-xl
+- Icons: Lucide icons in bg-primary/10 rounded-xl containers
+- CTA: Link to individual product pages or open checkout
+```
+
+### Section 4: Trust Section
+```text
+Pattern: Similar to ClientLogos.tsx or social proof bar
+- Background: bg-secondary/20 or bg-muted/30
+- Layout: Flex row with centered items
+- Content: 3 credibility stats with icons
+```
+
+### Section 5: Who Are These For
+```text
+Pattern: Matches values section from About.tsx
+- Background: bg-background or subtle gradient
+- Layout: Icon + text blocks
+- Animation: Staggered fade-in on scroll
+```
+
+### Section 6: CTA to Coaching
+```text
+Pattern: Matches hero sections across site
+- Background: bg-gradient-to-br from-primary to-primary/80
+- Text: White with primary-foreground styling
+- CTA: Button linking to /contact
+```
+
+---
+
+## Navigation Updates
+
+**Header.tsx Modifications:**
+
+1. Add "Products" link between "Home" and the Programmes dropdown
+2. Desktop: Simple NavLink component
+3. Mobile: Add to the main navigation section
+
+```text
+Desktop order: Home | Products | Programmes ▼ | Resources ▼ | About | Contact
+Mobile order: Home > Products > Programmes section > Resources section > About > Contact
+```
+
+---
+
+## Bundle Checkout Integration
+
+The existing `CheckoutModal` component will be extended to support:
+- Different product names and prices passed as props
+- Bundle configuration with combined product name
+
+Example usage:
+```tsx
+<CheckoutModal
+  open={bundleCheckoutOpen}
+  onOpenChange={setBundleCheckoutOpen}
+  productName="The New Manager Bundle"
+  price={747}
+  priceDisplay="R747"
+/>
+```
+
+---
+
+## Mobile Responsiveness
+
+Following existing patterns:
+- Hero text sizes: `text-4xl sm:text-5xl md:text-6xl`
+- Section padding: `py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8`
+- Grid layouts: `grid-cols-1 md:grid-cols-2` for product cards
+- Button sizes: Consistent with site-wide patterns
+
+---
+
+## Summary of Changes
+
+1. **Create** `src/pages/Products.tsx` - A 7-section products catalog page using the site's established teal/white design system (not the standalone Navy/Gold palette from NewManagerKit)
+
+2. **Modify** `src/App.tsx` - Register the `/products` route
+
+3. **Modify** `src/components/Header.tsx` - Add "Products" link to desktop navigation (between Home and Programmes) and mobile menu
+
+The page will feel integrated with the rest of the site while still highlighting products effectively. The individual product pages (like NewManagerKit) will maintain their standalone branding for focused sales funnels.
 
