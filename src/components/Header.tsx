@@ -77,10 +77,10 @@ const Header = () => {
                     SHIFT Methodology™
                   </Link>
                   <Link 
-                    to="/executive-coaching" 
+                    to="/contagious-identity" 
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
-                    Executive Coaching
+                    Contagious Identity Coaching
                   </Link>
                   <div className="border-t border-border my-1"></div>
                   <Link 
