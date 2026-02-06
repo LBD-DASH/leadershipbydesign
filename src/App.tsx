@@ -59,6 +59,8 @@ import PodcastEpisode from "./pages/PodcastEpisode";
 import ChatWidget from "./components/chat/ChatWidget";
 import NewManagerKit from "./pages/products/NewManagerKit";
 import NewManagerKitSuccess from "./pages/products/NewManagerKitSuccess";
+import DifficultConversationsPlaybook from "./pages/products/DifficultConversationsPlaybook";
+import DifficultConversationsSuccess from "./pages/products/DifficultConversationsSuccess";
 import Products from "./pages/Products";
 const queryClient = new QueryClient();
 
@@ -105,6 +107,8 @@ const App = () => (
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/new-manager-kit" element={<NewManagerKit />} />
           <Route path="/new-manager-kit/success" element={<NewManagerKitSuccess />} />
+          <Route path="/difficult-conversations" element={<DifficultConversationsPlaybook />} />
+          <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
