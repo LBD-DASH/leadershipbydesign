@@ -9,14 +9,6 @@ import newManagerHero from "@/assets/new-manager-hero.jpg";
 import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
 import newManagerSuccess from "@/assets/new-manager-success.jpg";
 
-// Custom colors for this page
-const colors = {
-  navy: "#1B2A4A",
-  gold: "#C8A864",
-  cream: "#F8F6F1",
-  goldLight: "#C8A86420",
-};
-
 const featurePills = [
   "5 Critical Conversation Scripts",
   "1-on-1 Meeting Framework",
@@ -91,7 +83,7 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
         transition={{ delay: 0.2 }}
         className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
       >
-        <Zap className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        <Zap className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
         Instant Download
       </motion.span>
       <motion.span 
@@ -100,7 +92,7 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
         transition={{ delay: 0.3 }}
         className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
       >
-        <Clock className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        <Clock className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
         30 sec to access
       </motion.span>
       <motion.span 
@@ -109,7 +101,7 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
         transition={{ delay: 0.4 }}
         className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
       >
-        <Download className="w-3 h-3 md:w-4 md:h-4" style={{ color: colors.gold }} />
+        <Download className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
         PDF Ready
       </motion.span>
     </div>
@@ -120,8 +112,7 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 10 }}
-        className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block"
-        style={{ color: colors.gold }}
+        className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block text-primary-foreground"
       >
         R497
       </motion.span>
@@ -136,11 +127,7 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
       <Button
         onClick={onCheckout}
         size="lg"
-        className="text-base md:text-lg px-6 md:px-8 py-6 md:py-7 font-bold transition-all duration-300 hover:shadow-lg w-full sm:w-auto min-h-[56px]"
-        style={{ 
-          backgroundColor: colors.gold, 
-          color: colors.navy,
-        }}
+        className="text-base md:text-lg px-6 md:px-8 py-6 md:py-7 font-bold transition-all duration-300 hover:shadow-lg w-full sm:w-auto min-h-[56px] bg-primary-foreground text-primary hover:bg-white"
       >
         GET INSTANT ACCESS →
       </Button>
@@ -176,10 +163,7 @@ export default function NewManagerKit() {
       />
 
       {/* HERO SECTION */}
-      <section 
-        className="relative py-12 md:py-24 px-4 overflow-hidden"
-        style={{ backgroundColor: colors.navy }}
-      >
+      <section className="relative py-12 md:py-24 px-4 overflow-hidden bg-primary">
         {/* Background image with overlay */}
         <div className="absolute inset-0">
           <img 
@@ -187,7 +171,7 @@ export default function NewManagerKit() {
             alt="Professional coaching session" 
             className="w-full h-full object-cover object-top opacity-20"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/80 via-[#1B2A4A]/90 to-[#1B2A4A]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/90 to-primary" />
         </div>
 
         {/* Top Seller Badge - Animated */}
@@ -198,8 +182,7 @@ export default function NewManagerKit() {
           transition={{ delay: 0.5 }}
         >
           <motion.div 
-            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg"
-            style={{ backgroundColor: colors.gold, color: colors.navy }}
+            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg bg-primary-foreground text-primary"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
@@ -209,14 +192,8 @@ export default function NewManagerKit() {
         </motion.div>
 
         {/* Decorative elements */}
-        <div 
-          className="absolute top-20 left-10 w-20 md:w-32 h-20 md:h-32 rounded-full opacity-10 hidden md:block"
-          style={{ border: `1px solid ${colors.gold}` }}
-        />
-        <div 
-          className="absolute bottom-20 right-10 w-32 md:w-48 h-32 md:h-48 rounded-full opacity-5 hidden md:block"
-          style={{ border: `2px solid ${colors.gold}` }}
-        />
+        <div className="absolute top-20 left-10 w-20 md:w-32 h-20 md:h-32 rounded-full opacity-10 hidden md:block border border-primary-foreground" />
+        <div className="absolute bottom-20 right-10 w-32 md:w-48 h-32 md:h-48 rounded-full opacity-5 hidden md:block border-2 border-primary-foreground" />
 
         <div className="container mx-auto max-w-4xl relative z-10">
           {/* Back Button */}
@@ -230,10 +207,7 @@ export default function NewManagerKit() {
 
           {/* Badge */}
           <div className="flex justify-center mb-8">
-            <span 
-              className="px-4 py-2 rounded-full text-sm font-medium"
-              style={{ backgroundColor: `${colors.gold}20`, color: colors.gold }}
-            >
+            <span className="px-4 py-2 rounded-full text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
               Digital Leadership Product
             </span>
           </div>
@@ -248,9 +222,7 @@ export default function NewManagerKit() {
             <span className="block text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-2">
               The New Manager
             </span>
-            <span 
-              className="block text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-[#C8A864] via-[#E8D5A3] to-[#C8A864] bg-clip-text text-transparent"
-            >
+            <span className="block text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-white via-primary-foreground to-white bg-clip-text text-transparent">
               Survival Kit 🚀
             </span>
           </motion.h1>
@@ -265,8 +237,7 @@ export default function NewManagerKit() {
             {featurePills.map((pill) => (
               <span
                 key={pill}
-                className="px-4 py-2 rounded-full text-sm font-medium border"
-                style={{ borderColor: `${colors.gold}40`, color: colors.gold }}
+                className="px-4 py-2 rounded-full text-sm font-medium border border-primary-foreground/40 text-primary-foreground"
               >
                 {pill}
               </span>
@@ -279,17 +250,14 @@ export default function NewManagerKit() {
       </section>
 
       {/* SOCIAL PROOF BAR */}
-      <section className="py-6 px-4 bg-white border-y border-gray-100">
-        <p className="text-center text-gray-600 font-medium">
+      <section className="py-6 px-4 bg-background border-y border-border">
+        <p className="text-center text-muted-foreground font-medium">
           Built on 11 years of executive coaching across 3,000+ organizations in Southern Africa
         </p>
       </section>
 
       {/* PROBLEM SECTION */}
-      <section 
-        className="py-16 md:py-24 px-4"
-        style={{ backgroundColor: colors.cream }}
-      >
+      <section className="py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-5xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Image */}
@@ -304,20 +272,17 @@ export default function NewManagerKit() {
             {/* Content */}
             <div className="order-1 md:order-2">
               {/* Section label */}
-              <p 
-                className="text-sm font-semibold tracking-widest uppercase mb-4"
-                style={{ color: colors.gold }}
-              >
+              <p className="text-sm font-semibold tracking-widest uppercase mb-4 text-primary">
                 The Problem
               </p>
 
               {/* Heading */}
-              <h2 className="text-3xl md:text-4xl font-serif mb-6" style={{ color: colors.navy }}>
+              <h2 className="text-3xl md:text-4xl font-serif mb-6 text-foreground">
                 The skills that got you promoted are not the skills that will make you succeed
               </h2>
 
               {/* Body */}
-              <p className="text-gray-700 text-lg mb-8">
+              <p className="text-muted-foreground text-lg mb-8">
                 You were promoted because you were great at your job. But nobody taught you how to manage people. And the first 90 days are when your team decides whether to trust you, test you, or tune you out.
               </p>
 
@@ -325,14 +290,14 @@ export default function NewManagerKit() {
               <div className="space-y-3">
                 {painPoints.map((point) => (
                   <div key={point} className="flex items-start gap-3">
-                    <X className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700 text-sm">{point}</span>
+                    <X className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground text-sm">{point}</span>
                   </div>
                 ))}
               </div>
 
               {/* Closing statement */}
-              <p className="font-semibold text-lg mt-8" style={{ color: colors.navy }}>
+              <p className="font-semibold text-lg mt-8 text-foreground">
                 This kit gives you the exact words, frameworks, and plan to handle every one of these situations — starting today.
               </p>
             </div>
@@ -341,23 +306,20 @@ export default function NewManagerKit() {
       </section>
 
       {/* WHAT'S INSIDE SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-white">
+      <section className="py-16 md:py-24 px-4 bg-background">
         <div className="container mx-auto max-w-4xl">
           {/* Section label */}
-          <p 
-            className="text-sm font-semibold tracking-widest uppercase mb-4 text-center"
-            style={{ color: colors.gold }}
-          >
+          <p className="text-sm font-semibold tracking-widest uppercase mb-4 text-center text-primary">
             What's Inside
           </p>
 
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-4" style={{ color: colors.navy }}>
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-4 text-foreground">
             Everything you need for your first 90 days
           </h2>
 
           {/* Subheading */}
-          <p className="text-center text-gray-600 text-lg mb-12">
+          <p className="text-center text-muted-foreground text-lg mb-12">
             21 pages of actionable frameworks, word-for-word scripts, and ready-to-use templates
           </p>
 
@@ -366,21 +328,17 @@ export default function NewManagerKit() {
             {modules.map((module) => (
               <div
                 key={module.number}
-                className="p-6 bg-white rounded-lg shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
-                style={{ borderLeftWidth: "4px", borderLeftColor: colors.gold }}
+                className="p-6 bg-card rounded-lg shadow-sm border border-border transition-all duration-300 hover:shadow-md hover:-translate-y-1 border-l-4 border-l-primary"
               >
                 <div className="flex items-start gap-4">
-                  <span 
-                    className="text-3xl font-serif font-bold"
-                    style={{ color: colors.gold }}
-                  >
+                  <span className="text-3xl font-serif font-bold text-primary">
                     {module.number}
                   </span>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2" style={{ color: colors.navy }}>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">
                       {module.title}
                     </h3>
-                    <p className="text-gray-600">{module.description}</p>
+                    <p className="text-muted-foreground">{module.description}</p>
                   </div>
                 </div>
               </div>
@@ -390,25 +348,14 @@ export default function NewManagerKit() {
       </section>
 
       {/* BONUS SECTION */}
-      <section 
-        className="py-16 md:py-24 px-4 relative overflow-hidden"
-        style={{ 
-          background: `linear-gradient(135deg, ${colors.navy} 0%, #0f1a2e 100%)` 
-        }}
-      >
+      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-br from-primary to-primary/80">
         {/* Decorative circles */}
-        <div 
-          className="absolute top-10 right-20 w-24 h-24 rounded-full opacity-10"
-          style={{ border: `1px solid ${colors.gold}` }}
-        />
+        <div className="absolute top-10 right-20 w-24 h-24 rounded-full opacity-10 border border-primary-foreground" />
 
         <div className="container mx-auto max-w-3xl text-center relative z-10">
           {/* Badge */}
           <div className="flex justify-center mb-6">
-            <span 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
-              style={{ backgroundColor: `${colors.gold}20`, color: colors.gold }}
-            >
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
               <Gift className="w-4 h-4" />
               Included Free
             </span>
@@ -427,13 +374,10 @@ export default function NewManagerKit() {
       </section>
 
       {/* WHO IS THIS FOR SECTION */}
-      <section 
-        className="py-16 md:py-24 px-4"
-        style={{ backgroundColor: colors.cream }}
-      >
+      <section className="py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-4xl">
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12" style={{ color: colors.navy }}>
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-foreground">
             This kit is built for you if…
           </h2>
 
@@ -442,15 +386,15 @@ export default function NewManagerKit() {
             {personas.map((persona) => (
               <div
                 key={persona.title}
-                className="p-6 bg-white rounded-lg shadow-sm border border-gray-100"
+                className="p-6 bg-card rounded-lg shadow-sm border border-border"
               >
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" style={{ color: colors.gold }} />
+                  <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0 text-primary" />
                   <div>
-                    <h3 className="text-lg font-semibold mb-2" style={{ color: colors.navy }}>
+                    <h3 className="text-lg font-semibold mb-2 text-foreground">
                       {persona.title}
                     </h3>
-                    <p className="text-gray-600">{persona.description}</p>
+                    <p className="text-muted-foreground">{persona.description}</p>
                   </div>
                 </div>
               </div>
@@ -460,25 +404,19 @@ export default function NewManagerKit() {
       </section>
 
       {/* GUARANTEE SECTION */}
-      <section 
-        className="py-16 md:py-20 px-4"
-        style={{ backgroundColor: `${colors.gold}15` }}
-      >
+      <section className="py-16 md:py-20 px-4 bg-primary/10">
         <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl md:text-3xl font-serif mb-4" style={{ color: colors.navy }}>
+          <h2 className="text-2xl md:text-3xl font-serif mb-4 text-foreground">
             Use it in your very first meeting
           </h2>
-          <p className="text-gray-700 text-lg">
+          <p className="text-muted-foreground text-lg">
             This kit is designed to be used immediately, not studied for weeks. Open it, find the conversation you need, and use the script in your next meeting.
           </p>
         </div>
       </section>
 
       {/* FINAL CTA SECTION */}
-      <section 
-        className="py-16 md:py-24 px-4 relative overflow-hidden"
-        style={{ backgroundColor: colors.navy }}
-      >
+      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-primary">
         {/* Background image with overlay */}
         <div className="absolute inset-0">
           <img 
@@ -486,14 +424,11 @@ export default function NewManagerKit() {
             alt="Confident leader presenting to team" 
             className="w-full h-full object-cover object-center opacity-15"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1B2A4A] via-[#1B2A4A]/95 to-[#1B2A4A]/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/95 to-primary/80" />
         </div>
 
         {/* Decorative elements */}
-        <div 
-          className="absolute bottom-10 left-20 w-40 h-40 rounded-full opacity-5"
-          style={{ border: `2px solid ${colors.gold}` }}
-        />
+        <div className="absolute bottom-10 left-20 w-40 h-40 rounded-full opacity-5 border-2 border-primary-foreground" />
 
         <div className="container mx-auto max-w-3xl text-center relative z-10">
           {/* Heading */}
@@ -512,10 +447,7 @@ export default function NewManagerKit() {
       </section>
 
       {/* FOOTER */}
-      <footer 
-        className="py-8 px-4 border-t"
-        style={{ backgroundColor: colors.navy, borderColor: `${colors.gold}20` }}
-      >
+      <footer className="py-8 px-4 border-t bg-primary border-primary-foreground/20">
         <p className="text-center text-white/60 text-sm">
           © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • Built in South Africa
         </p>
