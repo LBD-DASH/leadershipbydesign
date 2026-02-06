@@ -29,7 +29,6 @@ export default function ContagiousIdentityWorkbookSuccess() {
       <SEO
         title="Download Your Contagious Identity Workbook | Leadership by Design"
         description="Your Contagious Identity Workbook is ready for download."
-        noIndex={true}
       />
       <Header />
 

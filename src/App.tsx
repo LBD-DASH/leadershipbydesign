@@ -64,6 +64,8 @@ import DifficultConversationsSuccess from "./pages/products/DifficultConversatio
 import BundleSuccess from "./pages/products/BundleSuccess";
 import Products from "./pages/Products";
 import ContagiousIdentityCoaching from "./pages/ContagiousIdentityCoaching";
+import ContagiousIdentityWorkbook from "./pages/products/ContagiousIdentityWorkbook";
+import ContagiousIdentityWorkbookSuccess from "./pages/products/ContagiousIdentityWorkbookSuccess";
 const queryClient = new QueryClient();
 
 const App = () => (
