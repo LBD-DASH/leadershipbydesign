@@ -44,6 +44,36 @@ interface BreadcrumbSchemaProps {
   items: BreadcrumbItem[];
 }
 
+interface ReviewItem {
+  author: string;
+  reviewBody: string;
+  ratingValue: number;
+}
+
+interface AggregateRatingSchemaProps {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+  worstRating?: number;
+}
+
+interface HowToStepItem {
+  name: string;
+  text: string;
+  url?: string;
+}
+
+interface PersonSchemaProps {
+  name: string;
+  jobTitle: string;
+  description: string;
+  url: string;
+  image?: string;
+  sameAs?: string[];
+  worksFor?: string;
+  knowsAbout?: string[];
+}
+
 const SITE_URL = "https://leadershipbydesign.co";
 const ORGANIZATION = {
   "@type": "Organization",
@@ -236,6 +266,197 @@ export function EventSchema({
     eventAttendanceMode: `https://schema.org/${eventAttendanceMode}`,
     organizer: ORGANIZATION,
     ...(duration && { duration }),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function PersonSchema({
+  name,
+  jobTitle,
+  description,
+  url,
+  image,
+  sameAs = [],
+  worksFor,
+  knowsAbout = [],
+}: PersonSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    jobTitle,
+    description,
+    url: `${SITE_URL}${url}`,
+    ...(image && { image }),
+    ...(sameAs.length > 0 && { sameAs }),
+    ...(worksFor && {
+      worksFor: {
+        "@type": "Organization",
+        name: worksFor,
+        url: SITE_URL,
+      },
+    }),
+    ...(knowsAbout.length > 0 && { knowsAbout }),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function HowToSchema({
+  name,
+  description,
+  totalTime,
+  steps,
+}: {
+  name: string;
+  description: string;
+  totalTime?: string;
+  steps: HowToStepItem[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    ...(totalTime && { totalTime }),
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      ...(step.url && { url: `${SITE_URL}${step.url}` }),
+    })),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function ReviewSchema({ reviews }: { reviews: ReviewItem[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Leadership by Design",
+    url: SITE_URL,
+    review: reviews.map((review) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.ratingValue.toString(),
+        bestRating: "5",
+      },
+      author: {
+        "@type": "Person",
+        name: review.author,
+      },
+      reviewBody: review.reviewBody,
+    })),
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function AggregateRatingSchema({
+  ratingValue,
+  reviewCount,
+  bestRating = 5,
+  worstRating = 1,
+}: AggregateRatingSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Leadership by Design",
+    url: SITE_URL,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: ratingValue.toString(),
+      reviewCount: reviewCount.toString(),
+      bestRating: bestRating.toString(),
+      worstRating: worstRating.toString(),
+    },
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function SpeakableSchema({
+  name,
+  url,
+  cssSelectors = ["h1", ".hero-text", ".service-description"],
+}: {
+  name: string;
+  url: string;
+  cssSelectors?: string[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: cssSelectors,
+    },
+    url: `${SITE_URL}${url}`,
+  };
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
+
+export function ProductSchema({
+  name,
+  description,
+  image,
+  url,
+  price,
+  priceCurrency = "ZAR",
+  availability = "InStock",
+}: {
+  name: string;
+  description: string;
+  image?: string;
+  url: string;
+  price: string;
+  priceCurrency?: string;
+  availability?: string;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    description,
+    ...(image && { image }),
+    url: `${SITE_URL}${url}`,
+    offers: {
+      "@type": "Offer",
+      price,
+      priceCurrency,
+      availability: `https://schema.org/${availability}`,
+      seller: ORGANIZATION,
+    },
   };
 
   return (
