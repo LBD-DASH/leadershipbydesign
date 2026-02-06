@@ -491,7 +491,7 @@ export default function ContagiousIdentityCoaching() {
                 <ul className="space-y-3 text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span>CEOs and Founders building enduring organisations</span>
+                    <span>New CEOs stepping into senior leadership</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
