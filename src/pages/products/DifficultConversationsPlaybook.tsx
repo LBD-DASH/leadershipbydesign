@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { X, Gift, CheckCircle, ArrowLeft } from "lucide-react";
+import { X, Gift, CheckCircle, ArrowLeft, TrendingUp } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import productHandshake from "@/assets/product-handshake.jpg";
 import productLightbulbIdea from "@/assets/product-lightbulb-idea.jpg";
@@ -81,18 +81,18 @@ const personas = [
 
 // Pricing CTA component used in hero and final section
 const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
-  <div className="text-center">
+  <div className="text-center px-4">
     <div className="mb-4">
-      <span className="text-white/60 line-through text-xl mr-3">R497</span>
-      <span className="text-5xl md:text-6xl font-bold" style={{ color: colors.gold }}>R247</span>
+      <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">R497</span>
+      <span className="text-4xl md:text-5xl lg:text-6xl font-bold" style={{ color: colors.gold }}>R247</span>
     </div>
-    <p className="text-white/70 text-sm mb-6">
+    <p className="text-white/70 text-xs md:text-sm mb-4 md:mb-6">
       Introductory price • Instant PDF download • 18 pages
     </p>
     <Button
       onClick={onCheckout}
       size="lg"
-      className="text-lg px-8 py-6 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+      className="text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg w-full sm:w-auto"
       style={{ 
         backgroundColor: colors.gold, 
         color: colors.navy,
@@ -132,7 +132,7 @@ export default function DifficultConversationsPlaybook() {
 
       {/* HERO SECTION */}
       <section 
-        className="relative py-16 md:py-24 px-4 overflow-hidden"
+        className="relative py-12 md:py-24 px-4 overflow-hidden"
         style={{ backgroundColor: colors.navy }}
       >
         {/* Background image with overlay */}
@@ -145,13 +145,24 @@ export default function DifficultConversationsPlaybook() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#1B2A4A]/80 via-[#1B2A4A]/90 to-[#1B2A4A]" />
         </div>
 
+        {/* Popular Badge */}
+        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
+          <div 
+            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg"
+            style={{ backgroundColor: colors.gold, color: colors.navy }}
+          >
+            <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
+            <span>POPULAR</span>
+          </div>
+        </div>
+
         {/* Decorative elements */}
         <div 
-          className="absolute top-20 left-10 w-32 h-32 rounded-full opacity-10"
+          className="absolute top-20 left-10 w-20 md:w-32 h-20 md:h-32 rounded-full opacity-10 hidden md:block"
           style={{ border: `1px solid ${colors.gold}` }}
         />
         <div 
-          className="absolute bottom-20 right-10 w-48 h-48 rounded-full opacity-5"
+          className="absolute bottom-20 right-10 w-32 md:w-48 h-32 md:h-48 rounded-full opacity-5 hidden md:block"
           style={{ border: `2px solid ${colors.gold}` }}
         />
 
