@@ -334,32 +334,48 @@ export default function ContagiousIdentityCoaching() {
       {/* Why This Matters Now */}
       <section className="py-20 md:py-28 bg-muted/30">
         <div className="container mx-auto px-4">
-          <motion.div {...fadeInUp} className="max-w-4xl mx-auto">
+          <motion.div {...fadeInUp} className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Why This Matters Now
               </h2>
             </div>
 
-            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
-              <div className="prose prose-lg max-w-none text-muted-foreground">
-                <p className="text-lg leading-relaxed mb-6">
-                  Most leaders believe they're defined by their achievements, decisions, and strategic 
-                  choices. But your team isn't experiencing your strategy—they're experiencing <em>you</em>.
-                </p>
-                <p className="text-lg leading-relaxed mb-6">
-                  Every interaction transmits something. Every decision reveals something. Every 
-                  response under pressure teaches something. Your people are learning from you 
-                  constantly—whether you're conscious of the lesson or not.
-                </p>
-                <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 text-xl font-medium text-foreground italic">
-                  "Leaders are always teaching. The only question is: what?"
-                </blockquote>
-                <p className="text-lg leading-relaxed">
-                  Contagious Identity Coaching helps you become intentional about the identity 
-                  you're transmitting—so that the culture, values, and standards you want become 
-                  the ones that actually spread.
-                </p>
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Image */}
+              <motion.div 
+                {...fadeInUp}
+                className="relative rounded-2xl overflow-hidden shadow-xl"
+              >
+                <img 
+                  src={reflectionImage} 
+                  alt="Executive leader in contemplation" 
+                  className="w-full aspect-video object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+              </motion.div>
+
+              {/* Content */}
+              <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
+                <div className="prose prose-lg max-w-none text-muted-foreground">
+                  <p className="text-lg leading-relaxed mb-6">
+                    Most leaders believe they're defined by their achievements, decisions, and strategic 
+                    choices. But your team isn't experiencing your strategy—they're experiencing <em>you</em>.
+                  </p>
+                  <p className="text-lg leading-relaxed mb-6">
+                    Every interaction transmits something. Every decision reveals something. Every 
+                    response under pressure teaches something. Your people are learning from you 
+                    constantly—whether you're conscious of the lesson or not.
+                  </p>
+                  <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 text-xl font-medium text-foreground italic">
+                    "Leaders are always teaching. The only question is: what?"
+                  </blockquote>
+                  <p className="text-lg leading-relaxed">
+                    Contagious Identity Coaching helps you become intentional about the identity 
+                    you're transmitting—so that the culture, values, and standards you want become 
+                    the ones that actually spread.
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
