@@ -9,12 +9,13 @@ import newManagerHero from "@/assets/new-manager-hero.jpg";
 import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
 import newManagerSuccess from "@/assets/new-manager-success.jpg";
 
-// Custom colors for this page
+// Using design system colors for consistency
 const colors = {
-  navy: "#1B2A4A",
-  gold: "#C8A864",
-  cream: "#F8F6F1",
-  goldLight: "#C8A86420",
+  primary: "hsl(200, 70%, 40%)", // teal from design system
+  primaryDark: "hsl(200, 70%, 25%)", // darker teal for gradients
+  accent: "hsl(200, 70%, 50%)", // lighter accent
+  cream: "hsl(210, 40%, 96%)", // matches --muted
+  accentLight: "hsl(200, 70%, 40%, 0.2)",
 };
 
 const featurePills = [
