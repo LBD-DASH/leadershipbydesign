@@ -1,6 +1,8 @@
+import { useState } from "react";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { X, Gift, CheckCircle } from "lucide-react";
+import { CheckoutModal } from "@/components/products/CheckoutModal";
 
 // Custom colors for this page
 const colors = {
@@ -74,7 +76,7 @@ const personas = [
 ];
 
 // Pricing CTA component used in hero and final section
-const PricingCTA = () => (
+const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
   <div className="text-center">
     <div className="mb-4">
       <span className="text-white/60 line-through text-xl mr-3">R1,497</span>
@@ -84,7 +86,7 @@ const PricingCTA = () => (
       Introductory price • Instant PDF download • 21 pages
     </p>
     <Button
-      asChild
+      onClick={onCheckout}
       size="lg"
       className="text-lg px-8 py-6 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
       style={{ 
@@ -92,7 +94,7 @@ const PricingCTA = () => (
         color: colors.navy,
       }}
     >
-      <a href="#checkout">GET INSTANT ACCESS →</a>
+      GET INSTANT ACCESS →
     </Button>
     <p className="text-white/50 text-xs mt-4">
       Secure checkout • Download in 30 seconds • Works on any device
@@ -101,6 +103,12 @@ const PricingCTA = () => (
 );
 
 export default function NewManagerKit() {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  const handleOpenCheckout = () => {
+    setCheckoutOpen(true);
+  };
+
   return (
     <div className="min-h-screen scroll-smooth">
       <SEO
@@ -108,6 +116,14 @@ export default function NewManagerKit() {
         description="Your complete 90-day roadmap to go from 'just promoted' to trusted leader — with the exact scripts, frameworks, and templates used by 3,000+ organizations."
         canonicalUrl="/new-manager-kit"
         keywords="new manager, leadership, first 90 days, management training, team leadership, 1-on-1 meetings, leadership scripts"
+      />
+
+      <CheckoutModal
+        open={checkoutOpen}
+        onOpenChange={setCheckoutOpen}
+        productName="The New Manager Survival Kit"
+        price={497}
+        priceDisplay="R497"
       />
 
       {/* HERO SECTION */}
@@ -172,7 +188,7 @@ export default function NewManagerKit() {
           </div>
 
           {/* Pricing CTA */}
-          <PricingCTA />
+          <PricingCTA onCheckout={handleOpenCheckout} />
         </div>
       </section>
 
@@ -381,7 +397,7 @@ export default function NewManagerKit() {
           </p>
 
           {/* Pricing CTA */}
-          <PricingCTA />
+          <PricingCTA onCheckout={handleOpenCheckout} />
         </div>
       </section>
 

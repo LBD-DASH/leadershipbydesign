@@ -58,6 +58,7 @@ import Podcast from "./pages/Podcast";
 import PodcastEpisode from "./pages/PodcastEpisode";
 import ChatWidget from "./components/chat/ChatWidget";
 import NewManagerKit from "./pages/products/NewManagerKit";
+import NewManagerKitSuccess from "./pages/products/NewManagerKitSuccess";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ const App = () => (
           <Route path="/podcast/:slug" element={<PodcastEpisode />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/new-manager-kit" element={<NewManagerKit />} />
+          <Route path="/new-manager-kit/success" element={<NewManagerKitSuccess />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
