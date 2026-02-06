@@ -435,6 +435,7 @@ export default function Programmes() {
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative aspect-video md:aspect-auto overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80" alt="Contagious Identity Coaching" className="w-full h-full object-cover object-top" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
                   </div>
                   <div className="p-6 sm:p-8 flex flex-col justify-center">
                     <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
@@ -443,18 +444,44 @@ export default function Programmes() {
                     <p className="text-muted-foreground mb-4">
                       Your identity as a leader is already spreading—through your decisions, presence, and how you show up under pressure. This premium coaching helps you lead from a clear, contagious identity that shapes culture and drives results.
                     </p>
-                    <div className="flex gap-4 mb-6 text-sm">
-                      <div>
-                        <span className="font-semibold text-foreground">Duration:</span>{" "}
-                        <span className="text-muted-foreground">3-6 months</span>
+                    
+                    {/* Key Benefits */}
+                    <ul className="space-y-2 mb-6 text-sm">
+                      <li className="flex items-center gap-2 text-muted-foreground">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        Shape the identity others catch from you
+                      </li>
+                      <li className="flex items-center gap-2 text-muted-foreground">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        Build influence that transcends your position
+                      </li>
+                      <li className="flex items-center gap-2 text-muted-foreground">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        Create a legacy that survives your exit
+                      </li>
+                    </ul>
+
+                    {/* Pricing Tiers */}
+                    <div className="grid grid-cols-3 gap-2 mb-6 text-xs">
+                      <div className="bg-muted/50 rounded-lg p-3 text-center">
+                        <p className="font-semibold text-foreground">Foundation</p>
+                        <p className="text-primary font-bold">R15,000</p>
+                        <p className="text-muted-foreground">6 sessions</p>
                       </div>
-                      <div>
-                        <span className="font-semibold text-foreground">Format:</span>{" "}
-                        <span className="text-muted-foreground">One-on-one Sessions</span>
+                      <div className="bg-primary/10 rounded-lg p-3 text-center border border-primary/30">
+                        <p className="font-semibold text-foreground">Executive</p>
+                        <p className="text-primary font-bold">R45,000</p>
+                        <p className="text-muted-foreground">12 sessions</p>
+                      </div>
+                      <div className="bg-muted/50 rounded-lg p-3 text-center">
+                        <p className="font-semibold text-foreground">Strategic</p>
+                        <p className="text-primary font-bold">R75,000</p>
+                        <p className="text-muted-foreground">+ SHIFT</p>
                       </div>
                     </div>
+
                     <Link to="/contagious-identity">
-                      <Button className="rounded-full group">
+                      <Button className="rounded-full group w-full sm:w-auto">
                         Explore Coaching Programme
                         <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </Button>
