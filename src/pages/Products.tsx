@@ -550,7 +550,7 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tier1Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -577,7 +577,7 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tier2Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -604,7 +604,7 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tier3Products.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
@@ -631,7 +631,7 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {freeTools.map((product, index) => (
                 <ProductCard key={product.id} product={product} index={index} />
               ))}
