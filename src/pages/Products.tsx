@@ -9,6 +9,9 @@ import {
   ArrowRight,
   ChevronDown,
   ExternalLink,
+  Sparkles,
+  Star,
+  Crown,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -22,21 +25,17 @@ import {
 } from "@/components/ui/popover";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
 import leadershipFeedback from "@/assets/leadership-feedback.jpg";
+import leaderAsCoach from "@/assets/leader-as-coach.jpg";
+import workshopLeadership from "@/assets/workshop-leadership.jpg";
+import workshopMotivation from "@/assets/workshop-motivation.jpg";
+import workshopAlignment from "@/assets/workshop-alignment.jpg";
+import shiftHeroTeam from "@/assets/shift-hero-team.jpg";
+import grandMastersTeam from "@/assets/grand-masters-team.jpg";
 
 const Products = () => {
   const [bundleCheckoutOpen, setBundleCheckoutOpen] = useState(false);
 
-  const products = [
-    {
-      id: "new-manager-kit",
-      title: "New Manager Survival Kit",
-      shortDesc: "Your first 90 days, solved",
-      price: "R497",
-      link: "/new-manager-kit",
-      image: newManagerHero,
-      isExternal: false,
-      features: ["30-60-90 Day Roadmap", "Team Assessment Tools", "Weekly Reflection Templates", "Quick-Win Strategies"],
-    },
+  const tier1Products = [
     {
       id: "difficult-conversations",
       title: "Difficult Conversations Playbook",
@@ -45,113 +44,182 @@ const Products = () => {
       link: "/difficult-conversations",
       image: leadershipFeedback,
       isExternal: false,
+      isBuilt: true,
       features: ["20 Word-for-Word Scripts", "HEARD Framework", "Do & Don't Guides", "Preparation Template"],
     },
+    {
+      id: "feedback-formula",
+      title: "The Feedback Formula",
+      shortDesc: "Give feedback people actually hear",
+      price: "R297",
+      link: "/products",
+      image: workshopLeadership,
+      isExternal: false,
+      comingSoon: true,
+      features: ["10 Feedback Frameworks", "Praise & Correction Scripts", "Development Review Templates", "Real-time Feedback Tools"],
+    },
+    {
+      id: "meeting-detox",
+      title: "The Meeting Detox Kit",
+      shortDesc: "Cut 50% of your meetings",
+      price: "R197",
+      link: "/products",
+      image: workshopAlignment,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Should This Be a Meeting? Decision Tree", "Agenda Templates", "Async Communication Frameworks", "Meeting Audit Checklist"],
+    },
+    {
+      id: "delegation-playbook",
+      title: "The Delegation Playbook",
+      shortDesc: "Hand off work without it breaking",
+      price: "R297",
+      link: "/products",
+      image: leaderAsCoach,
+      isExternal: false,
+      comingSoon: true,
+      features: ["5 Levels of Delegation", "Task Handoff Template", "Control Release Scripts", "Accountability Framework"],
+    },
+  ];
+
+  const tier2Products = [
+    {
+      id: "new-manager-kit",
+      title: "New Manager Survival Kit",
+      shortDesc: "Your first 90 days, solved",
+      price: "R497",
+      link: "/new-manager-kit",
+      image: newManagerHero,
+      isExternal: false,
+      isBuilt: true,
+      features: ["30-60-90 Day Roadmap", "Team Assessment Tools", "Weekly Reflection Templates", "Quick-Win Strategies"],
+    },
+    {
+      id: "one-on-one-mastery",
+      title: "1-on-1 Mastery System",
+      shortDesc: "Run meetings that transform performance",
+      price: "R697",
+      link: "/products",
+      image: workshopMotivation,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Question Banks by Scenario", "Meeting Notes System", "Development Tracking", "90-Day Improvement Plan"],
+    },
+    {
+      id: "team-culture",
+      title: "Team Culture Blueprint",
+      shortDesc: "Build high-performance culture",
+      price: "R597",
+      link: "/products",
+      image: shiftHeroTeam,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Psychological Safety Framework", "Values Creation Workshop", "Trust-Building Rituals", "Team Health Assessments"],
+    },
+    {
+      id: "remote-leadership",
+      title: "Remote Leadership Toolkit",
+      shortDesc: "Lead distributed teams effectively",
+      price: "R497",
+      link: "/products",
+      image: grandMastersTeam,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Communication Rhythms", "Virtual 1-on-1 Frameworks", "Async Decision-Making", "Culture Across Time Zones"],
+    },
+  ];
+
+  const tier3Products = [
+    {
+      id: "leadership-diagnostic",
+      title: "Leadership Diagnostic",
+      shortDesc: "Scored assessment with action plan",
+      price: "R497–R997",
+      link: "/leadership-diagnostic",
+      image: workshopLeadership,
+      isExternal: false,
+      isBuilt: true,
+      features: ["Self-Guided Assessment", "Scored Report", "Personalized Action Plan", "Development Roadmap"],
+    },
+    {
+      id: "90-day-intensive",
+      title: "90-Day Leadership Intensive",
+      shortDesc: "Self-coaching journal & workbook",
+      price: "R1,497",
+      link: "/products",
+      image: leaderAsCoach,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Daily Leadership Prompts", "Weekly Reflections", "Monthly Assessments", "DIY Coaching Methodology"],
+    },
+    {
+      id: "first-year-playbook",
+      title: "Manager's First Year Playbook",
+      shortDesc: "Months 4-12 after the survival kit",
+      price: "R997",
+      link: "/products",
+      image: newManagerHero,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Leadership Brand Building", "Bench Strength Development", "Annual Review Framework", "Strategic Planning Tools"],
+    },
+    {
+      id: "difficult-decisions",
+      title: "Difficult Decisions Framework",
+      shortDesc: "Make high-stakes calls with confidence",
+      price: "R697",
+      link: "/products",
+      image: shiftHeroTeam,
+      isExternal: false,
+      comingSoon: true,
+      features: ["Decision Matrices", "Stakeholder Mapping", "Trade-off Analysis", "Post-Decision Communication"],
+    },
+  ];
+
+  const freeTools = [
     {
       id: "values-blueprint",
       title: "Values Blueprint",
       shortDesc: "Discover your core values",
-      price: "Free Tool",
+      price: "Free",
       link: "https://valuesblueprint.online",
-      image: newManagerHero,
+      image: workshopAlignment,
       isExternal: true,
-      features: ["Personal Values Assessment", "Team Values Alignment", "Decision Framework", "Values Integration Guide"],
+      comingSoon: false,
+      features: ["Personal Values Assessment", "Team Values Alignment", "Decision Framework"],
     },
     {
       id: "purpose-blueprint",
       title: "Purpose Blueprint",
       shortDesc: "Find your leadership purpose",
-      price: "Free Tool",
+      price: "Free",
       link: "https://purposeblueprint.online",
-      image: leadershipFeedback,
+      image: workshopMotivation,
       isExternal: true,
-      features: ["Purpose Discovery Process", "Mission Statement Builder", "Purpose-Driven Goals", "Legacy Planning"],
+      comingSoon: false,
+      features: ["Purpose Discovery Process", "Mission Statement Builder", "Purpose-Driven Goals"],
     },
     {
       id: "six-human-needs",
       title: "6 Human Needs",
       shortDesc: "Understand motivation drivers",
-      price: "Free Tool",
+      price: "Free",
       link: "https://6humanneeds.online",
-      image: newManagerHero,
+      image: grandMastersTeam,
       isExternal: true,
-      features: ["Needs Assessment", "Motivation Mapping", "Team Dynamics Insights", "Conflict Resolution Guide"],
+      comingSoon: false,
+      features: ["Needs Assessment", "Motivation Mapping", "Team Dynamics Insights"],
     },
     {
       id: "leadership-index",
       title: "Leadership Index",
       shortDesc: "Measure your leadership",
-      price: "Free Tool",
+      price: "Free",
       link: "https://leadershipindex.lovable.app",
       image: leadershipFeedback,
       isExternal: true,
-      features: ["360° Assessment", "Benchmark Scores", "Development Roadmap", "Progress Tracking"],
-    },
-    {
-      id: "team-alignment",
-      title: "Team Alignment Toolkit",
-      shortDesc: "Get your team on the same page",
-      price: "R297",
-      link: "/products",
-      image: newManagerHero,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Alignment Workshop Guide", "Team Charter Template", "Communication Protocols", "Meeting Frameworks"],
-    },
-    {
-      id: "feedback-mastery",
-      title: "Feedback Mastery Guide",
-      shortDesc: "Give feedback that sticks",
-      price: "R247",
-      link: "/products",
-      image: leadershipFeedback,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Feedback Models", "Recognition Scripts", "Coaching Questions", "Follow-up Templates"],
-    },
-    {
-      id: "delegation-playbook",
-      title: "Delegation Playbook",
-      shortDesc: "Delegate without dropping balls",
-      price: "R197",
-      link: "/products",
-      image: newManagerHero,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Delegation Matrix", "Handover Checklists", "Accountability Systems", "Progress Check Templates"],
-    },
-    {
-      id: "one-on-one-toolkit",
-      title: "1-on-1 Meeting Toolkit",
-      shortDesc: "Run meetings that matter",
-      price: "R197",
-      link: "/products",
-      image: leadershipFeedback,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Meeting Agendas", "Coaching Questions", "Career Conversation Guides", "Action Trackers"],
-    },
-    {
-      id: "performance-review",
-      title: "Performance Review Pack",
-      shortDesc: "Reviews that drive results",
-      price: "R247",
-      link: "/products",
-      image: newManagerHero,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Review Templates", "Goal-Setting Framework", "Self-Assessment Tools", "Development Plans"],
-    },
-    {
-      id: "remote-leadership",
-      title: "Remote Leadership Kit",
-      shortDesc: "Lead from anywhere",
-      price: "R297",
-      link: "/products",
-      image: leadershipFeedback,
-      isExternal: false,
-      comingSoon: true,
-      features: ["Virtual Meeting Best Practices", "Async Communication Guide", "Remote Team Building", "Engagement Trackers"],
+      comingSoon: false,
+      features: ["360° Assessment", "Benchmark Scores", "Development Roadmap"],
     },
   ];
 
@@ -160,6 +228,140 @@ const Products = () => {
     { icon: Users, label: "3,000+ Organizations" },
     { icon: Download, label: "Instant Download" },
   ];
+
+  // Define product type explicitly
+  type Product = {
+    id: string;
+    title: string;
+    shortDesc: string;
+    price: string;
+    link: string;
+    image: string;
+    isExternal?: boolean;
+    isBuilt?: boolean;
+    comingSoon?: boolean;
+    features: string[];
+  };
+
+  const ProductCard = ({ product, index }: { product: Product, index: number }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05, duration: 0.4 }}
+    >
+      <div className="bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 h-full group flex flex-col">
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <img 
+            src={product.image} 
+            alt={product.title} 
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" 
+            loading="lazy" 
+          />
+          {product.comingSoon && (
+            <div className="absolute top-2 right-2">
+              <span className="bg-muted text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
+                Coming Soon
+              </span>
+            </div>
+          )}
+          {product.isBuilt && (
+            <div className="absolute top-2 right-2">
+              <span className="bg-green-600 text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
+                Available
+              </span>
+            </div>
+          )}
+          {product.isExternal && (
+            <div className="absolute top-2 right-2">
+              <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
+                Free
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="p-3 flex flex-col flex-1">
+          <h3 className="font-serif text-sm font-bold text-foreground mb-0.5 line-clamp-1 group-hover:text-primary transition-colors">
+            {product.title}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+            {product.shortDesc}
+          </p>
+          
+          <div className="mt-auto flex items-center justify-between gap-2">
+            <span className="text-sm font-bold text-foreground">{product.price}</span>
+            
+            <div className="flex items-center gap-1">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-7 w-7 p-0 hover:bg-primary/10"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent 
+                  className="w-64 p-3 bg-card border border-border shadow-xl z-50" 
+                  align="end"
+                  sideOffset={5}
+                >
+                  <h4 className="font-semibold text-sm text-foreground mb-2">{product.title}</h4>
+                  <p className="text-xs text-muted-foreground mb-3">{product.shortDesc}</p>
+                  <ul className="space-y-1.5 mb-3">
+                    {product.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <span className="text-primary mt-0.5">•</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="pt-2 border-t border-border">
+                    <span className="text-sm font-bold text-foreground">{product.price}</span>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {product.comingSoon ? (
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs px-2"
+                  disabled
+                >
+                  Soon
+                </Button>
+              ) : product.isExternal ? (
+                <Button 
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs px-2"
+                >
+                  <a href={product.link} target="_blank" rel="noopener noreferrer">
+                    Open
+                    <ExternalLink className="w-3 h-3 ml-1" />
+                  </a>
+                </Button>
+              ) : (
+                <Button 
+                  asChild
+                  size="sm"
+                  className="h-7 text-xs px-2"
+                >
+                  <Link to={product.link}>
+                    View
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -261,144 +463,110 @@ const Products = () => {
             </div>
           </motion.section>
 
-          {/* Products Grid */}
+          {/* Tier 1: Entry Products */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-12"
+            className="mb-10"
           >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Download className="w-5 h-5 text-primary" />
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-green-600" />
               </div>
               <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">
-                  All Leadership Tools
+                <h2 className="font-serif text-lg font-bold text-foreground">
+                  Entry Products
                 </h2>
-                <p className="text-sm text-muted-foreground">12 tools to transform your leadership</p>
+                <p className="text-xs text-muted-foreground">R197–R397 • Quick wins for immediate impact</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {products.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05, duration: 0.4 }}
-                >
-                  <div className="bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 h-full group flex flex-col">
-                    {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img 
-                        src={product.image} 
-                        alt={product.title} 
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" 
-                        loading="lazy" 
-                      />
-                      {product.comingSoon && (
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-muted text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
-                            Coming Soon
-                          </span>
-                        </div>
-                      )}
-                      {product.isExternal && (
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-[10px] font-medium">
-                            Free
-                          </span>
-                        </div>
-                      )}
-                    </div>
+              {tier1Products.map((product, index) => (
+                <ProductCard key={product.id} product={product} index={index} />
+              ))}
+            </div>
+          </motion.section>
 
-                    {/* Content */}
-                    <div className="p-3 flex flex-col flex-1">
-                      <h3 className="font-serif text-sm font-bold text-foreground mb-0.5 line-clamp-1 group-hover:text-primary transition-colors">
-                        {product.title}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
-                        {product.shortDesc}
-                      </p>
-                      
-                      {/* Price & Actions */}
-                      <div className="mt-auto flex items-center justify-between gap-2">
-                        <span className="text-sm font-bold text-foreground">{product.price}</span>
-                        
-                        <div className="flex items-center gap-1">
-                          {/* More Info Popover */}
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0 hover:bg-primary/10"
-                              >
-                                <ChevronDown className="w-4 h-4" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent 
-                              className="w-64 p-3 bg-card border border-border shadow-xl z-50" 
-                              align="end"
-                              sideOffset={5}
-                            >
-                              <h4 className="font-semibold text-sm text-foreground mb-2">{product.title}</h4>
-                              <p className="text-xs text-muted-foreground mb-3">{product.shortDesc}</p>
-                              <ul className="space-y-1.5 mb-3">
-                                {product.features.map((feature, idx) => (
-                                  <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                                    <span className="text-primary mt-0.5">•</span>
-                                    {feature}
-                                  </li>
-                                ))}
-                              </ul>
-                              <div className="pt-2 border-t border-border">
-                                <span className="text-sm font-bold text-foreground">{product.price}</span>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
+          {/* Tier 2: Core Systems */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-10"
+          >
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Star className="w-4 h-4 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="font-serif text-lg font-bold text-foreground">
+                  Core Systems
+                </h2>
+                <p className="text-xs text-muted-foreground">R497–R697 • Comprehensive leadership frameworks</p>
+              </div>
+            </div>
 
-                          {/* Action Button */}
-                          {product.comingSoon ? (
-                            <Button 
-                              variant="outline"
-                              size="sm"
-                              className="h-7 text-xs px-2"
-                              disabled
-                            >
-                              Soon
-                            </Button>
-                          ) : product.isExternal ? (
-                            <Button 
-                              asChild
-                              size="sm"
-                              variant="outline"
-                              className="h-7 text-xs px-2"
-                            >
-                              <a href={product.link} target="_blank" rel="noopener noreferrer">
-                                Open
-                                <ExternalLink className="w-3 h-3 ml-1" />
-                              </a>
-                            </Button>
-                          ) : (
-                            <Button 
-                              asChild
-                              size="sm"
-                              className="h-7 text-xs px-2"
-                            >
-                              <Link to={product.link}>
-                                View
-                              </Link>
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {tier2Products.map((product, index) => (
+                <ProductCard key={product.id} product={product} index={index} />
+              ))}
+            </div>
+          </motion.section>
+
+          {/* Tier 3: Premium Products */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-10"
+          >
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                <Crown className="w-4 h-4 text-amber-600" />
+              </div>
+              <div>
+                <h2 className="font-serif text-lg font-bold text-foreground">
+                  Premium Products
+                </h2>
+                <p className="text-xs text-muted-foreground">R697–R1,497 • Deep transformation & coaching alternative</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {tier3Products.map((product, index) => (
+                <ProductCard key={product.id} product={product} index={index} />
+              ))}
+            </div>
+          </motion.section>
+
+          {/* Free Tools */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-10"
+          >
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <ExternalLink className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-serif text-lg font-bold text-foreground">
+                  Free Assessment Tools
+                </h2>
+                <p className="text-xs text-muted-foreground">Start your leadership journey today</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {freeTools.map((product, index) => (
+                <ProductCard key={product.id} product={product} index={index} />
               ))}
             </div>
           </motion.section>
@@ -409,7 +577,7 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-12"
+            className="mb-10"
           >
             <div className="bg-primary/5 rounded-xl p-5 border border-primary/20">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
