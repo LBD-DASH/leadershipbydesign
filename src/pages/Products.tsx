@@ -151,6 +151,17 @@ const Products = () => {
     features: ["Decision Matrices", "Stakeholder Mapping", "Trade-off Analysis", "Post-Decision Communication"]
   }];
   const freeTools = [{
+    id: "contagious-identity-workbook",
+    title: "Contagious Identity Workbook",
+    shortDesc: "Build your leadership identity",
+    price: "Free",
+    link: "/contagious-identity",
+    image: productHandshake,
+    isExternal: false,
+    isFree: true,
+    comingSoon: false,
+    features: ["Identity Discovery Process", "Leadership Presence Framework", "Culture Influence Tools", "Executive Coaching Preview"]
+  }, {
     id: "values-blueprint",
     title: "Values Blueprint",
     shortDesc: "Discover your core values",
