@@ -2,22 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  FileText, 
-  MessageSquare, 
   Package, 
   Award, 
   Users, 
   Download,
   ArrowRight,
   CheckCircle,
-  UserCheck,
-  TrendingUp
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
+import newManagerHero from "@/assets/new-manager-hero.jpg";
+import leadershipFeedback from "@/assets/leadership-feedback.jpg";
 
 const Products = () => {
   const [bundleCheckoutOpen, setBundleCheckoutOpen] = useState(false);
@@ -33,7 +31,7 @@ const Products = () => {
       price: 497,
       priceDisplay: "R497",
       link: "/new-manager-kit",
-      icon: FileText,
+      image: newManagerHero,
     },
     {
       id: "difficult-conversations",
@@ -45,7 +43,7 @@ const Products = () => {
       price: 397,
       priceDisplay: "R397",
       link: "/difficult-conversations",
-      icon: MessageSquare,
+      image: leadershipFeedback,
       comingSoon: true,
     },
   ];
@@ -56,12 +54,6 @@ const Products = () => {
     { icon: Download, label: "Instant Download" },
   ];
 
-  const targetPersonas = [
-    { icon: UserCheck, text: "First-time managers finding their footing" },
-    { icon: TrendingUp, text: "Experienced leaders stepping into bigger roles" },
-    { icon: Users, text: "HR teams building consistent management skills" },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <SEO 
@@ -70,279 +62,278 @@ const Products = () => {
       />
       <Header />
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 sm:pb-20 bg-gradient-to-br from-primary to-primary/80">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+      <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center"
+            className="text-center mb-16"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-primary-foreground mb-6">
-              Leadership Tools That Work
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Leadership Tools & Products
             </h1>
-            <p className="text-lg sm:text-xl text-primary-foreground/90 max-w-2xl mx-auto">
+            <div className="w-24 h-1 bg-primary mx-auto mb-8" />
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Practical frameworks and templates built from 11 years of coaching 3,000+ organizations. 
               No theory—just results.
             </p>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Featured Bundle Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-primary/5">
-        <div className="container mx-auto max-w-5xl">
-          <motion.div
+          {/* Featured Bundle Section */}
+          <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-card rounded-2xl border-2 border-primary/20 p-8 sm:p-12 relative overflow-hidden"
+            className="mb-16"
           >
-            {/* Best Value Badge */}
-            <div 
-              className="absolute top-4 right-4 sm:top-6 sm:right-6 px-4 py-2 rounded-full text-sm font-semibold"
-              style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
-            >
-              Best Value — Save R147
-            </div>
-
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-xl bg-primary/10">
-                <Package className="w-8 h-8 text-primary" />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Package className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Complete Bundle</p>
-                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
                   The New Manager Bundle
                 </h2>
+                <p className="text-muted-foreground">Complete toolkit • Best value • Save R147</p>
               </div>
             </div>
 
-            <p className="text-muted-foreground mb-8 max-w-2xl">
-              Get both the New Manager Survival Kit and the Difficult Conversations Playbook together. 
-              Everything you need to lead with confidence from day one.
-            </p>
-
-            {/* Bundle Contents */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
-              {products.map((product) => (
-                <div 
-                  key={product.id}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-muted/30"
-                >
-                  <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-foreground">{product.title}</p>
-                    <p className="text-sm text-muted-foreground">{product.priceDisplay} value</p>
+            <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
+              <div className="grid md:grid-cols-2 gap-0">
+                <div className="relative aspect-video md:aspect-auto overflow-hidden">
+                  <img 
+                    src={newManagerHero}
+                    alt="The New Manager Bundle" 
+                    className="w-full h-full object-cover object-center" 
+                    loading="lazy" 
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span 
+                      className="px-3 py-1.5 rounded-full text-sm font-semibold"
+                      style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
+                    >
+                      Best Value
+                    </span>
                   </div>
                 </div>
+                <div className="p-6 sm:p-8 flex flex-col justify-center">
+                  <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
+                    Everything You Need to Lead with Confidence
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Get both the New Manager Survival Kit and the Difficult Conversations Playbook together. 
+                    A complete toolkit for navigating your first management role with clarity and confidence.
+                  </p>
+                  
+                  {/* Bundle Contents */}
+                  <div className="space-y-3 mb-6">
+                    {products.map((product) => (
+                      <div 
+                        key={product.id}
+                        className="flex items-center gap-3"
+                      >
+                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                        <div>
+                          <span className="font-medium text-foreground">{product.title}</span>
+                          <span className="text-muted-foreground text-sm ml-2">({product.priceDisplay} value)</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="flex flex-wrap gap-4 mb-6 text-sm">
+                    <div>
+                      <span className="font-semibold text-foreground">Value:</span>{" "}
+                      <span className="text-muted-foreground line-through">R894</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-foreground">Bundle Price:</span>{" "}
+                      <span className="text-2xl font-bold" style={{ color: "#C8A864" }}>R747</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {['90-Day Framework', '20 Scripts', 'Team Tools', 'Templates', 'Instant Access'].map((tag) => (
+                      <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Button 
+                    onClick={() => setBundleCheckoutOpen(true)}
+                    className="rounded-full group"
+                    style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
+                  >
+                    Get the Bundle — R747
+                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* Individual Products Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Download className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                  Individual Products
+                </h2>
+                <p className="text-muted-foreground">Or choose exactly what you need</p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                >
+                  <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full group">
+                    <div className="relative aspect-video overflow-hidden">
+                      <img 
+                        src={product.image} 
+                        alt={product.title} 
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" 
+                        loading="lazy" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
+                          {product.label}
+                        </span>
+                      </div>
+                      {product.comingSoon && (
+                        <div className="absolute top-3 right-3">
+                          <span className="bg-muted text-muted-foreground px-2 py-1 rounded-full text-xs font-medium">
+                            Coming Soon
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-serif text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm text-primary font-medium mb-2">{product.subtitle}</p>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {product.description}
+                      </p>
+                      
+                      {/* Features */}
+                      <ul className="space-y-1.5 mb-4">
+                        {product.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Price & CTA */}
+                      <div className="flex items-center justify-between pt-4 border-t border-border">
+                        <span className="text-2xl font-bold text-foreground">{product.priceDisplay}</span>
+                        {product.comingSoon ? (
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full"
+                            disabled
+                          >
+                            Coming Soon
+                          </Button>
+                        ) : (
+                          <Button 
+                            asChild
+                            size="sm"
+                            className="rounded-full group/btn"
+                          >
+                            <Link to={product.link}>
+                              Learn More
+                              <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
+          </motion.section>
 
-            {/* Pricing & CTA */}
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="text-center sm:text-left">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl text-muted-foreground line-through">R894</span>
-                  <span 
-                    className="text-4xl font-bold"
-                    style={{ color: "#C8A864" }}
+          {/* Trust Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16"
+          >
+            <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 border border-primary/20">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
+                {trustItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3"
                   >
-                    R747
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">One-time payment • Instant access</p>
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <item.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <span className="text-foreground font-medium">{item.label}</span>
+                  </div>
+                ))}
               </div>
-              
+            </div>
+          </motion.section>
+
+          {/* CTA to Coaching Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-8 sm:p-12 text-center">
+              <h2 className="font-serif text-2xl md:text-3xl font-bold text-primary-foreground mb-4">
+                Want Personalized Guidance?
+              </h2>
+              <p className="text-primary-foreground/90 mb-6 max-w-2xl mx-auto">
+                These tools are great for self-guided development. But if you want customized support, 
+                our executive coaching programme delivers transformational results.
+              </p>
               <Button 
+                asChild
                 size="lg"
-                onClick={() => setBundleCheckoutOpen(true)}
-                className="rounded-full px-8 py-6 text-lg font-semibold group transition-all duration-300 hover:scale-105"
-                style={{ backgroundColor: "#C8A864", color: "#1B2A4A" }}
+                variant="secondary"
+                className="rounded-full group"
               >
-                Get the Bundle
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Link to="/contact">
+                  Book a Discovery Session
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </div>
-          </motion.div>
+          </motion.section>
         </div>
-      </section>
-
-      {/* Individual Products Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-foreground mb-4">
-              Or Choose What You Need
-            </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {products.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6 sm:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative"
-              >
-                {product.comingSoon && (
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium">
-                    Coming Soon
-                  </div>
-                )}
-
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <product.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <span className="text-sm font-medium text-primary">{product.label}</span>
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-foreground mb-2">
-                  {product.title}
-                </h3>
-                <p className="text-muted-foreground mb-4">{product.subtitle}</p>
-                <p className="text-muted-foreground text-sm mb-6">{product.description}</p>
-
-                {/* Features */}
-                <ul className="space-y-2 mb-8">
-                  {product.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Price & CTA */}
-                <div className="flex items-center justify-between pt-6 border-t border-border">
-                  <span className="text-2xl font-bold text-foreground">{product.priceDisplay}</span>
-                  {product.comingSoon ? (
-                    <Button 
-                      variant="outline"
-                      className="rounded-full"
-                      disabled
-                    >
-                      Coming Soon
-                    </Button>
-                  ) : (
-                    <Button 
-                      asChild
-                      className="rounded-full bg-primary hover:bg-primary/90 group"
-                    >
-                      <Link to={product.link}>
-                        Learn More
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
-        <div className="container mx-auto max-w-5xl">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
-            {trustItems.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="flex items-center gap-3"
-              >
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <item.icon className="w-5 h-5 text-primary" />
-                </div>
-                <span className="text-foreground font-medium">{item.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Who Are These For Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-foreground mb-4">
-              Built for Managers Who Want to Lead, Not Just Manage
-            </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
-          </motion.div>
-
-          <div className="space-y-4">
-            {targetPersonas.map((persona, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border"
-              >
-                <div className="p-3 rounded-xl bg-primary/10">
-                  <persona.icon className="w-5 h-5 text-primary" />
-                </div>
-                <span className="text-foreground">{persona.text}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA to Coaching Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary to-primary/80">
-        <div className="container mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-primary-foreground mb-6">
-              Want Personalized Guidance?
-            </h2>
-            <p className="text-lg text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-              These tools are great for self-guided development. But if you want customized support, 
-              our executive coaching programme delivers transformational results.
-            </p>
-            <Button 
-              asChild
-              size="lg"
-              variant="secondary"
-              className="rounded-full px-8 py-6 text-lg font-semibold group hover:scale-105 transition-all duration-300"
-            >
-              <Link to="/contact">
-                Book a Discovery Session
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
+      </main>
 
       <Footer />
 
