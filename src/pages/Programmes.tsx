@@ -42,8 +42,6 @@ const teamWorkshops = [{
 
 import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring";
 
-const levelOrder: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
-
 export default function Programmes() {
   return <>
       <SEO title="Programmes & Workshops" description="Explore leadership development programmes including Contagious Identity coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" ogImage="https://leadershipbydesign.co/og-programmes.jpg" keywords="leadership programmes, contagious identity coaching, executive coaching, team workshops, leadership development, SHIFT leadership development" />
