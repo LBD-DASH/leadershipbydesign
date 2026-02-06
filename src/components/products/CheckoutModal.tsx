@@ -14,6 +14,7 @@ interface CheckoutModalProps {
   productName: string;
   price: number; // Price in ZAR
   priceDisplay: string;
+  successPath?: string; // Custom success page path
 }
 
 const colors = {
@@ -31,7 +32,8 @@ export function CheckoutModal({
   onOpenChange, 
   productName, 
   price,
-  priceDisplay 
+  priceDisplay,
+  successPath = "/new-manager-kit/success"
 }: CheckoutModalProps) {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -75,12 +77,12 @@ export function CheckoutModal({
     if (finalPrice === 0) {
       toast.success("Discount applied! Redirecting to your download...");
       onOpenChange(false);
-      navigate("/new-manager-kit/success?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT");
+      navigate(`${successPath}?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT`);
       return;
     }
 
     try {
-      const callbackUrl = `${window.location.origin}/new-manager-kit/success`;
+      const callbackUrl = `${window.location.origin}${successPath}`;
       
       const { data, error } = await supabase.functions.invoke('paystack-checkout', {
         body: {

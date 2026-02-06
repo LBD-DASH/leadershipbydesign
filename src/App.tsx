@@ -61,6 +61,7 @@ import NewManagerKit from "./pages/products/NewManagerKit";
 import NewManagerKitSuccess from "./pages/products/NewManagerKitSuccess";
 import DifficultConversationsPlaybook from "./pages/products/DifficultConversationsPlaybook";
 import DifficultConversationsSuccess from "./pages/products/DifficultConversationsSuccess";
+import BundleSuccess from "./pages/products/BundleSuccess";
 import Products from "./pages/Products";
 const queryClient = new QueryClient();
 
@@ -109,6 +110,7 @@ const App = () => (
           <Route path="/new-manager-kit/success" element={<NewManagerKitSuccess />} />
           <Route path="/difficult-conversations" element={<DifficultConversationsPlaybook />} />
           <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
+          <Route path="/bundle/success" element={<BundleSuccess />} />
           <Route path="/auth" element={<Navigate to="/admin" replace />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
