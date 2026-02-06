@@ -161,8 +161,8 @@ const faqs = [
     answer: "Complete confidentiality is non-negotiable. Nothing discussed in our sessions is shared with anyone—including your board, investors, or HR. This is a safe space for honest leadership reflection.",
   },
   {
-    question: "What's the 360° Identity Assessment?",
-    answer: "This involves structured interviews with 5-10 people in your ecosystem—direct reports, peers, board members, even family if relevant. We map how your identity is currently being perceived and experienced by others.",
+    question: "What is the 360° Identity Assessment?",
+    answer: "The 360° Identity Assessment is a confidential, invitation-only process designed to surface how your leadership identity is experienced across your ecosystem. Through discreet, one-on-one conversations with a carefully selected group (typically 5–10 people such as direct reports, peers, board members, or other key stakeholders), we gather qualitative insights into how your presence, decisions, and behaviours are currently being perceived. All input is anonymised, synthesised, and handled with strict confidentiality. You receive no raw feedback—only a clear, professionally interpreted identity map that reveals patterns, gaps, and leverage points without exposing individual voices.",
   },
   {
     question: "Can I include my leadership team?",
