@@ -128,6 +128,30 @@ export default function ShiftDiagnostic() {
         }
       }).catch(err => console.error('Lead processing error:', err));
 
+      // Check if this came from a prospect outreach email (UTM tracking)
+      if (utmParams.utm_campaign?.startsWith('prospect_') || utmParams.utm_source === 'outreach') {
+        try {
+          await supabase.functions.invoke('check-prospect-engagement', {
+            body: {
+              email: data.email,
+              utmCampaign: utmParams.utm_campaign,
+              diagnosticType: 'shift',
+              diagnosticScores: {
+                'Self-Management': result.scores.S,
+                'Human Intelligence': result.scores.H,
+                'Innovation': result.scores.I,
+                'Focus': result.scores.F,
+                'Thinking': result.scores.T
+              },
+              submissionId: submission?.id
+            }
+          });
+          console.log('🎯 Prospect engagement check triggered');
+        } catch (engagementError) {
+          console.error('Prospect engagement check failed:', engagementError);
+        }
+      }
+
       setStage('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

@@ -132,6 +132,28 @@ export default function TeamDiagnostic() {
             .then(() => console.log('💾 AI analysis saved'));
         }
       }).catch(err => console.error('Lead processing error:', err));
+
+      // Check if this came from a prospect outreach email (UTM tracking)
+      if (utmParams.utm_campaign?.startsWith('prospect_') || utmParams.utm_source === 'outreach') {
+        try {
+          await supabase.functions.invoke('check-prospect-engagement', {
+            body: {
+              email: data.email,
+              utmCampaign: utmParams.utm_campaign,
+              diagnosticType: 'team',
+              diagnosticScores: {
+                'Clarity': result.scores.clarity,
+                'Motivation': result.scores.motivation,
+                'Leadership': result.scores.leadership
+              },
+              submissionId: insertedData?.id
+            }
+          });
+          console.log('🎯 Prospect engagement check triggered');
+        } catch (engagementError) {
+          console.error('Prospect engagement check failed:', engagementError);
+        }
+      }
     } catch (error) {
       console.error('Error saving diagnostic:', error);
     } finally {
