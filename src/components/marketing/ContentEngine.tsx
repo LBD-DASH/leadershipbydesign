@@ -27,6 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { useContentAssets, ContentAsset } from '@/hooks/useContentAssets';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { generateLeadMagnetPdf } from '@/lib/generateLeadMagnetPdf';
 
 export default function ContentEngine() {
   const { assets, loading, processing, processVideo, deleteAsset } = useContentAssets();
@@ -351,14 +352,14 @@ function AssetCard({
                     <>
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold text-lg">{asset.pdf_summary.title}</h4>
-                        {asset.pdf_url && (
-                          <Button onClick={() => {
-                            window.open(asset.pdf_url + '?print=1', '_blank');
-                          }}>
-                            <Download className="w-4 h-4 mr-2" />
-                            Save as PDF
-                          </Button>
-                        )}
+                        <Button onClick={() => {
+                          if (asset.pdf_summary) {
+                            generateLeadMagnetPdf(asset.pdf_summary, asset.video_title);
+                          }
+                        }}>
+                          <Download className="w-4 h-4 mr-2" />
+                          Download PDF
+                        </Button>
                       </div>
 
                       <div>
