@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const MASTER_EMAIL = 'kevin@kevinbritz.com';
-const MASTER_TOKEN = 'Bypass2024';
-const ADMIN_AUTH_KEY = 'admin_authenticated';
+import { ADMIN_AUTH_KEY, MASTER_EMAIL, MASTER_TOKEN } from '@/lib/adminAuth';
 
 export const useAdminAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,6 +14,8 @@ export const useAdminAuth = () => {
   const authenticate = (email: string, token: string): boolean => {
     if (email.toLowerCase() === MASTER_EMAIL.toLowerCase() && token === MASTER_TOKEN) {
       sessionStorage.setItem(ADMIN_AUTH_KEY, 'true');
+      // Store token so admin-only backend functions can verify access
+      sessionStorage.setItem('admin_token', token);
       setIsAuthenticated(true);
       return true;
     }
@@ -25,6 +24,7 @@ export const useAdminAuth = () => {
 
   const logout = () => {
     sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    sessionStorage.removeItem('admin_token');
     setIsAuthenticated(false);
   };
 
