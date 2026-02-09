@@ -1,7 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, User, ExternalLink, Headphones } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, User, ExternalLink, Headphones, Download } from "lucide-react";
+import { useState, useEffect } from "react";
 import SEO from "@/components/SEO";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -10,12 +11,29 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { getEpisodeBySlug, getRelatedEpisodes, PODCAST_COVER_IMAGE } from "@/data/podcastEpisodes";
+import { supabase } from "@/integrations/supabase/client";
+import { generateLeadMagnetPdf } from "@/lib/generateLeadMagnetPdf";
 import NotFound from "./NotFound";
 
 export default function PodcastEpisode() {
   const { slug } = useParams<{ slug: string }>();
   const episode = slug ? getEpisodeBySlug(slug) : undefined;
   const relatedEpisodes = slug ? getRelatedEpisodes(slug, 3) : [];
+  const [pdfSummary, setPdfSummary] = useState<any>(null);
+  const [loadingPdf, setLoadingPdf] = useState(false);
+
+  useEffect(() => {
+    if (episode?.contentAssetId) {
+      supabase
+        .from('content_assets')
+        .select('pdf_summary, video_title')
+        .eq('id', episode.contentAssetId)
+        .single()
+        .then(({ data }) => {
+          if (data?.pdf_summary) setPdfSummary({ summary: data.pdf_summary, title: data.video_title });
+        });
+    }
+  }, [episode?.contentAssetId]);
 
   if (!episode) {
     return <NotFound />;
@@ -155,6 +173,24 @@ export default function PodcastEpisode() {
                           <ExternalLink className="w-4 h-4 ml-2" />
                         </Button>
                       </a>
+                      {pdfSummary && (
+                        <Button
+                          className="flex-1"
+                          variant="outline"
+                          disabled={loadingPdf}
+                          onClick={() => {
+                            setLoadingPdf(true);
+                            try {
+                              generateLeadMagnetPdf(pdfSummary.summary, pdfSummary.title);
+                            } finally {
+                              setLoadingPdf(false);
+                            }
+                          }}
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          {loadingPdf ? 'Generating...' : 'Download Episode PDF'}
+                        </Button>
+                      )}
                     </div>
                   </div>
 
