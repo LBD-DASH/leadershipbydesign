@@ -320,6 +320,10 @@ function generatePdfHtml(pdfSummary: PdfSummary, videoTitle: string, videoThumbn
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
+      
+      .no-print {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -387,7 +391,20 @@ function generatePdfHtml(pdfSummary: PdfSummary, videoTitle: string, videoThumbn
       </div>
       <div class="footer-copyright">© ${new Date().getFullYear()} Leadership by Design. All rights reserved.</div>
     </footer>
+    
+    <div class="no-print" style="position:fixed;top:20px;right:20px;z-index:1000;">
+      <button onclick="window.print()" style="padding:12px 24px;background:#2A7B88;color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+        📄 Save as PDF
+      </button>
+    </div>
   </div>
+  <script>
+    if (window.location.search.includes('print=1')) {
+      window.addEventListener('load', function() {
+        setTimeout(function() { window.print(); }, 800);
+      });
+    }
+  </script>
 </body>
 </html>`;
 }

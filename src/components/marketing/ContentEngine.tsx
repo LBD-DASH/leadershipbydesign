@@ -353,12 +353,7 @@ function AssetCard({
                         <h4 className="font-semibold text-lg">{asset.pdf_summary.title}</h4>
                         {asset.pdf_url && (
                           <Button onClick={() => {
-                            const printWindow = window.open(asset.pdf_url, '_blank');
-                            if (printWindow) {
-                              printWindow.addEventListener('load', () => {
-                                printWindow.print();
-                              });
-                            }
+                            window.open(asset.pdf_url + '?print=1', '_blank');
                           }}>
                             <Download className="w-4 h-4 mr-2" />
                             Save as PDF
