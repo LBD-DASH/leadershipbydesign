@@ -37,8 +37,10 @@ export default function AIReadinessDiagnosticLanding() {
     <>
       <SEO
         title="AI Leadership Readiness Diagnostic | Leadership by Design"
-        description="Assess your AI leadership capabilities. Discover your readiness to lead in an AI-augmented workplace and get personalised development recommendations."
+        description="Assess your AI leadership capabilities. Discover your readiness to lead in an AI-augmented workplace with personalized development recommendations."
         canonicalUrl="/ai-readiness"
+        ogImage="https://leadershipbydesign.co/og-ai-diagnostic.jpg"
+        keywords="AI leadership, AI readiness assessment, AI workplace, human-AI collaboration, AI leadership skills"
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">

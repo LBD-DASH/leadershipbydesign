@@ -44,7 +44,7 @@ import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring
 
 export default function Programmes() {
   return <>
-      <SEO title="Programmes & Workshops" description="Explore leadership development programmes including Contagious Identity coaching, team effectiveness workshops, SHIFT leadership development, and bespoke programme design." canonicalUrl="/programmes" ogImage="https://leadershipbydesign.co/og-programmes.jpg" keywords="leadership programmes, contagious identity coaching, executive coaching, team workshops, leadership development, SHIFT leadership development" />
+      <SEO title="Leadership Programmes & Team Workshops | Leadership by Design" description="Executive coaching, team workshops, and bespoke leadership development programmes. Contagious Identity coaching, SHIFT methodology, and team effectiveness training." canonicalUrl="/programmes" ogImage="https://leadershipbydesign.co/og-programmes.jpg" keywords="leadership programmes, executive coaching, team workshops, SHIFT methodology, contagious identity coaching, leadership development South Africa" />
       
       {/* Course Structured Data for AI Discovery */}
       <CourseSchema

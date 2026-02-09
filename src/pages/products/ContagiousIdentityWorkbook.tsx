@@ -45,11 +45,11 @@ export default function ContagiousIdentityWorkbook() {
   return (
     <>
       <SEO
-        title="Contagious Identity Workbook | Leadership by Design"
-        description="Build your leadership identity with the Contagious Identity Workbook. Discover who you are as a leader and how that identity spreads through your organisation."
+        title="Contagious Identity Workbook — Build Your Leadership Identity | Leadership by Design"
+        description="Build your leadership identity with the Contagious Identity Workbook. Discover who you are as a leader and how your identity spreads through your organisation. R697."
         canonicalUrl="/contagious-identity-workbook"
         ogImage="https://leadershipbydesign.co/og-contagious-identity.jpg"
-        keywords="leadership identity, executive workbook, leadership development, identity coaching, leadership legacy"
+        keywords="leadership identity workbook, contagious identity, leadership development, self-coaching, identity discovery"
       />
       <Header />
 

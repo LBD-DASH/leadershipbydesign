@@ -17,11 +17,11 @@ export default function Podcast() {
         <link rel="icon" href={PODCAST_COVER_IMAGE} type="image/jpeg" />
       </Helmet>
       <SEO
-        title="The Lunchtime Series | Leadership Podcast"
-        description="Tune into The Lunchtime Series with Kevin Britz for inspiring conversations on leadership, coaching, and organizational transformation."
+        title="The Lunchtime Series | Leadership Podcast by Kevin Britz"
+        description="Inspiring conversations on leadership, coaching, and organizational transformation. Listen to The Lunchtime Series with Kevin Britz on Spotify."
         canonicalUrl="/podcast"
         ogImage={PODCAST_COVER_IMAGE}
-        keywords="leadership podcast, executive coaching, leadership development, Kevin Britz, leadership conversations"
+        keywords="leadership podcast, executive coaching podcast, Kevin Britz, leadership development, leadership conversations"
       />
 
       <div className="min-h-screen bg-background">

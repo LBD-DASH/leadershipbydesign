@@ -129,11 +129,11 @@ export default function Contact() {
     return (
       <>
         <SEO
-          title="Contact Us"
-          description="Schedule a leadership consultation with Kevin Britz. Get in touch to discuss executive coaching, team workshops, and bespoke leadership development programmes."
+          title="Book a Consultation | Leadership by Design"
+          description="Book a free discovery session with Leadership by Design. Executive coaching, team workshops, and leadership development for South African organizations."
           canonicalUrl="/contact"
           ogImage="https://leadershipbydesign.co/og-contact.jpg"
-          keywords="contact leadership by design, schedule consultation, executive coaching inquiry, Kevin Britz contact"
+          keywords="contact leadership by design, book consultation, executive coaching inquiry, leadership consultation"
         />
         <div className="min-h-screen">
           <Header />
@@ -169,11 +169,11 @@ export default function Contact() {
   return (
     <>
       <SEO
-        title="Contact Us"
-        description="Schedule a leadership consultation with Kevin Britz. Get in touch to discuss executive coaching, team workshops, and bespoke leadership development programmes."
+        title="Book a Consultation | Leadership by Design"
+        description="Book a free discovery session with Leadership by Design. Executive coaching, team workshops, and leadership development for South African organizations."
         canonicalUrl="/contact"
         ogImage="https://leadershipbydesign.co/og-contact.jpg"
-        keywords="contact leadership by design, schedule consultation, executive coaching inquiry, Kevin Britz contact"
+        keywords="contact leadership by design, book consultation, executive coaching inquiry, leadership consultation"
       />
       <div className="min-h-screen">
       <Header />

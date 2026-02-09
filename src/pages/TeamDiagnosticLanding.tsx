@@ -24,10 +24,11 @@ export default function TeamDiagnosticLanding() {
   return (
     <>
       <SEO
-        title="Free Team Assessment | Find Your Team's #1 Issue in 3 Minutes"
-        description="Take the free team diagnostic used by 1000+ teams. Discover what's really blocking performance and get an instant action plan."
+        title="Free Team Diagnostic — SHIFT Skills Assessment | Leadership by Design"
+        description="Assess your team's performance across 5 critical human skills. Identify gaps in alignment, energy, and ownership. Free diagnostic from Leadership by Design."
         canonicalUrl="/team-assessment"
-        keywords="team assessment, team diagnostic, team performance, team issues, team alignment, team motivation, free team quiz"
+        ogImage="https://leadershipbydesign.co/og-team-diagnostic.jpg"
+        keywords="team assessment, team diagnostic, team performance, SHIFT assessment, team alignment, team motivation, free team quiz"
       />
       
       <div className="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background">

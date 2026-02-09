@@ -107,11 +107,11 @@ export default function ShiftMethodology() {
   return (
     <>
       <SEO
-        title="SHIFT Methodology™ | Leadership by Design"
-        description="The SHIFT Methodology™ develops the five human skills required for performance: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        title="The SHIFT Methodology™ — Human Performance System | Leadership by Design"
+        description="SHIFT develops the 5 core human skills for performance and leadership: Self-Management, Human Intelligence, Innovation, Focus, and Thinking. Workshops and diagnostics available."
         canonicalUrl="/shift-methodology"
         ogImage="https://leadershipbydesign.co/og-shift-diagnostic.jpg"
-        keywords="SHIFT methodology, leadership skills, self-management, human intelligence, innovation, focus, thinking, team performance"
+        keywords="SHIFT methodology, leadership skills, human performance system, self-management, human intelligence, innovation, focus, thinking"
       />
       <Header />
       <main className="min-h-screen bg-background pt-20">

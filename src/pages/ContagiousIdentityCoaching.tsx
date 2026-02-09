@@ -196,11 +196,11 @@ export default function ContagiousIdentityCoaching() {
   return (
     <>
       <SEO
-        title="Contagious Identity Coaching"
-        description="Shape the leadership identity that spreads through your organisation. Premium executive coaching for CEOs, founders, and senior leaders who want their identity to become their legacy."
+        title="Executive Coaching for Contagious Identity | Leadership by Design"
+        description="Identity-driven executive coaching for senior leaders. 6 sessions focused on how you lead under pressure — because that is what becomes contagious. R15,000."
         canonicalUrl="/contagious-identity"
         ogImage="https://leadershipbydesign.co/og-contagious-identity.jpg"
-        keywords="executive coaching, leadership identity, CEO coaching, leadership development, leadership legacy, identity coaching"
+        keywords="executive coaching, leadership identity, CEO coaching, contagious identity, leadership legacy, identity coaching South Africa"
       />
       <Header />
 
