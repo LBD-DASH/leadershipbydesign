@@ -200,13 +200,8 @@ export async function generateLeadMagnetPdf(
   
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  const descLines = wrapText(pdfSummary.product_cta.product_description, contentWidth - 60, 10);
+  const descLines = wrapText(pdfSummary.product_cta.product_description, contentWidth - 16, 10);
   doc.text(descLines[0] || '', margin + 8, y + 23);
-
-  doc.setTextColor(125, 211, 252);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text(pdfSummary.product_cta.product_price, margin + contentWidth - 30, y + 16);
 
   y += 38;
 
