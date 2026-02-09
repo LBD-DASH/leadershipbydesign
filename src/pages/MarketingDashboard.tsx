@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -19,7 +20,24 @@ import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('prospects');
+  const [autoOpenProspectId, setAutoOpenProspectId] = useState<string | null>(null);
+
+  // Handle URL parameters for deep linking from digest email
+  useEffect(() => {
+    if (isAuthenticated) {
+      const action = searchParams.get('action');
+      const prospectId = searchParams.get('prospect');
+      
+      if (action === 'outreach' && prospectId) {
+        setActiveTab('prospects');
+        setAutoOpenProspectId(prospectId);
+        // Clear URL params after processing
+        setSearchParams({});
+      }
+    }
+  }, [isAuthenticated, searchParams, setSearchParams]);
 
   if (loading) {
     return (
@@ -127,7 +145,7 @@ export default function MarketingDashboard() {
               </TabsList>
 
               <TabsContent value="prospects" className="mt-6">
-                <Tabs defaultValue="research" className="w-full">
+                <Tabs defaultValue={autoOpenProspectId ? "list" : "research"} className="w-full">
                   <TabsList className="mb-4">
                     <TabsTrigger value="research">Research Company</TabsTrigger>
                     <TabsTrigger value="list">Prospect List</TabsTrigger>
@@ -136,7 +154,10 @@ export default function MarketingDashboard() {
                     <ProspectingTool />
                   </TabsContent>
                   <TabsContent value="list">
-                    <ProspectList />
+                    <ProspectList 
+                      autoOpenProspectId={autoOpenProspectId} 
+                      onAutoOpenHandled={() => setAutoOpenProspectId(null)} 
+                    />
                   </TabsContent>
                 </Tabs>
               </TabsContent>

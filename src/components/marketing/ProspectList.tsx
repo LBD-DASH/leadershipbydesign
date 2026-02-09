@@ -26,7 +26,12 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; col
   'not_interested': { label: 'Not Interested', icon: XCircle, color: 'bg-gray-100 text-gray-700' },
 };
 
-export default function ProspectList() {
+interface ProspectListProps {
+  autoOpenProspectId?: string | null;
+  onAutoOpenHandled?: () => void;
+}
+
+export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: ProspectListProps) {
   const { toast } = useToast();
   const [prospects, setProspects] = useState<ProspectCompany[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +48,7 @@ export default function ProspectList() {
       console.log('[ProspectList] Fetched prospects:', response);
       if (response.success && response.data) {
         setProspects(response.data);
+        return response.data;
       } else {
         console.error('[ProspectList] Error:', response.error);
         toast({
@@ -60,11 +66,32 @@ export default function ProspectList() {
       });
     }
     setIsLoading(false);
+    return [];
   };
 
   useEffect(() => {
-    fetchProspects();
-  }, []);
+    fetchProspects().then((data) => {
+      // Auto-open outreach composer if prospect ID is provided from digest email
+      if (autoOpenProspectId && data.length > 0) {
+        const prospect = data.find(p => p.id === autoOpenProspectId);
+        if (prospect) {
+          setEmailProspect(prospect);
+          setExpandedIds(new Set([autoOpenProspectId]));
+          toast({
+            title: "Hot Lead from Digest",
+            description: `Opening outreach composer for ${prospect.company_name}`,
+          });
+        } else {
+          toast({
+            title: "Prospect Not Found",
+            description: "The prospect from the email may have been deleted",
+            variant: "destructive",
+          });
+        }
+        onAutoOpenHandled?.();
+      }
+    });
+  }, [autoOpenProspectId]);
 
   const toggleExpanded = (id: string) => {
     setExpandedIds(prev => {
