@@ -27,6 +27,10 @@ interface CompanyIntelligence {
   linkedin_url: string | null;
   // HR/L&D/People leadership for LinkedIn outreach
   hr_contacts: { name: string; role: string; linkedin_search_url: string }[] | null;
+  // NEW: Enhanced AI insights for email personalization
+  industry_insight: string | null;
+  recommended_diagnostic: string | null;
+  recommended_product: string | null;
 }
 
 Deno.serve(async (req) => {
@@ -149,7 +153,10 @@ Based on this content, provide a JSON response with the following structure:
   "contact_role": "Role of the key decision maker if found or null",
   "physical_address": "Physical office address if found or null",
   "linkedin_url": "LinkedIn profile or company URL if found or null",
-  "hr_contacts": [{"name": "Full Name", "role": "Exact role title"}] - IMPORTANT: Look specifically for people in HR, People, L&D, or Talent roles
+  "hr_contacts": [{"name": "Full Name", "role": "Exact role title"}] - IMPORTANT: Look specifically for people in HR, People, L&D, or Talent roles,
+  "industry_insight": "One specific, data-driven insight about leadership challenges in this company's industry. Example: 'Mining companies scaling past 500 employees typically see a 40% drop in frontline supervisor effectiveness.' Make it specific and quotable for cold emails.",
+  "recommended_diagnostic": "Which diagnostic fits this company best: 'shift_diagnostic' (for team performance), 'leadership_diagnostic' (for individual leaders), 'team_diagnostic' (for team alignment), or 'ai_readiness_diagnostic' (for tech-forward companies)",
+  "recommended_product": "Which product/workshop is most relevant: 'executive_coaching', 'team_workshop_alignment', 'team_workshop_motivation', 'team_workshop_leadership', 'shift_programme', or 'contagious_identity'"
 }
 
 CRITICAL - PERSONALISED PITCH FORMAT:
@@ -178,6 +185,8 @@ Focus on:
 4. Personalization hooks for outreach
 5. CONTACT DETAILS: Look carefully for email addresses, phone numbers, and physical addresses
 6. HR/PEOPLE/L&D CONTACTS: Extract ALL names with HR, People, L&D, Talent, or Training-related roles
+7. INDUSTRY INSIGHT: Generate a specific, quotable insight about leadership challenges in their industry
+8. PRODUCT FIT: Determine which diagnostic and product would be most relevant based on their situation
 
 Respond ONLY with valid JSON, no markdown formatting.`;
 
@@ -259,6 +268,10 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       physical_address: intelligence.physical_address || null,
       linkedin_url: intelligence.linkedin_url || null,
       hr_contacts: hrContacts,
+      // NEW: Enhanced AI insights
+      industry_insight: intelligence.industry_insight || null,
+      recommended_diagnostic: intelligence.recommended_diagnostic || null,
+      recommended_product: intelligence.recommended_product || null,
     };
 
     console.log('Company research complete:', result.company_name);

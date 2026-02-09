@@ -1004,16 +1004,24 @@ export type Database = {
           contact_role: string | null
           contacted_at: string | null
           created_at: string
+          engaged_at: string | null
+          engagement_source: string | null
           hr_contacts: Json | null
           id: string
           industry: string | null
+          industry_insight: string | null
           leadership_team: Json | null
           linkedin_url: string | null
+          meeting_date: string | null
+          meeting_notes: string | null
+          meeting_outcome: string | null
           notes: string | null
           opportunity_signals: Json | null
           pain_points: Json | null
           personalised_pitch: string | null
           physical_address: string | null
+          recommended_diagnostic: string | null
+          recommended_product: string | null
           status: string
           suggested_approach: string | null
           updated_at: string
@@ -1029,16 +1037,24 @@ export type Database = {
           contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
+          engaged_at?: string | null
+          engagement_source?: string | null
           hr_contacts?: Json | null
           id?: string
           industry?: string | null
+          industry_insight?: string | null
           leadership_team?: Json | null
           linkedin_url?: string | null
+          meeting_date?: string | null
+          meeting_notes?: string | null
+          meeting_outcome?: string | null
           notes?: string | null
           opportunity_signals?: Json | null
           pain_points?: Json | null
           personalised_pitch?: string | null
           physical_address?: string | null
+          recommended_diagnostic?: string | null
+          recommended_product?: string | null
           status?: string
           suggested_approach?: string | null
           updated_at?: string
@@ -1054,16 +1070,24 @@ export type Database = {
           contact_role?: string | null
           contacted_at?: string | null
           created_at?: string
+          engaged_at?: string | null
+          engagement_source?: string | null
           hr_contacts?: Json | null
           id?: string
           industry?: string | null
+          industry_insight?: string | null
           leadership_team?: Json | null
           linkedin_url?: string | null
+          meeting_date?: string | null
+          meeting_notes?: string | null
+          meeting_outcome?: string | null
           notes?: string | null
           opportunity_signals?: Json | null
           pain_points?: Json | null
           personalised_pitch?: string | null
           physical_address?: string | null
+          recommended_diagnostic?: string | null
+          recommended_product?: string | null
           status?: string
           suggested_approach?: string | null
           updated_at?: string
@@ -1082,7 +1106,9 @@ export type Database = {
           prospect_id: string | null
           replied_at: string | null
           sent_at: string | null
+          sequence_step: number | null
           status: string
+          template_used: string | null
           unsubscribed_at: string | null
           updated_at: string
         }
@@ -1096,7 +1122,9 @@ export type Database = {
           prospect_id?: string | null
           replied_at?: string | null
           sent_at?: string | null
+          sequence_step?: number | null
           status?: string
+          template_used?: string | null
           unsubscribed_at?: string | null
           updated_at?: string
         }
@@ -1110,13 +1138,62 @@ export type Database = {
           prospect_id?: string | null
           replied_at?: string | null
           sent_at?: string | null
+          sequence_step?: number | null
           status?: string
+          template_used?: string | null
           unsubscribed_at?: string | null
           updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "prospect_outreach_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospect_companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prospect_sequences: {
+        Row: {
+          created_at: string | null
+          id: string
+          next_send_at: string | null
+          original_subject: string | null
+          paused_at: string | null
+          prospect_id: string | null
+          sequence_step: number | null
+          status: string | null
+          template_variant: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          next_send_at?: string | null
+          original_subject?: string | null
+          paused_at?: string | null
+          prospect_id?: string | null
+          sequence_step?: number | null
+          status?: string | null
+          template_variant?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          next_send_at?: string | null
+          original_subject?: string | null
+          paused_at?: string | null
+          prospect_id?: string | null
+          sequence_step?: number | null
+          status?: string | null
+          template_variant?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prospect_sequences_prospect_id_fkey"
             columns: ["prospect_id"]
             isOneToOne: false
             referencedRelation: "prospect_companies"

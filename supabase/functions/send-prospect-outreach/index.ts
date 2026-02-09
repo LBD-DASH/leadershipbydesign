@@ -9,6 +9,9 @@ interface OutreachRequest {
   prospectId: string;
   subject: string;
   body: string;
+  sequenceStep?: number;
+  templateUsed?: string;
+  createSequence?: boolean;
 }
 
 Deno.serve(async (req) => {
@@ -17,7 +20,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { prospectId, subject, body } = await req.json() as OutreachRequest;
+    const { prospectId, subject, body, sequenceStep = 1, templateUsed, createSequence = true } = await req.json() as OutreachRequest;
 
     if (!prospectId || !subject || !body) {
       return new Response(
@@ -112,11 +115,59 @@ Deno.serve(async (req) => {
         email_body: body,
         status: 'sent',
         sent_at: new Date().toISOString(),
+        sequence_step: sequenceStep,
+        template_used: templateUsed || `step_${sequenceStep}_manual`
       });
 
     if (outreachError) {
       console.error('Failed to record outreach:', outreachError);
       // Don't fail the request - email was sent successfully
+    }
+
+    // Create sequence record if this is step 1 and createSequence is true
+    if (sequenceStep === 1 && createSequence) {
+      // Calculate prospect score for template variant
+      let templateVariant = 'warm';
+      let score = 0;
+      if (prospect.contact_email) score += 25;
+      if (prospect.hr_contacts && Array.isArray(prospect.hr_contacts) && prospect.hr_contacts.length > 0) score += 20;
+      if (prospect.contact_phone) score += 10;
+      if (prospect.pain_points && Array.isArray(prospect.pain_points) && prospect.pain_points.length > 0) score += 15;
+      if (prospect.opportunity_signals && Array.isArray(prospect.opportunity_signals) && prospect.opportunity_signals.length > 0) score += 15;
+      if (prospect.leadership_team && Array.isArray(prospect.leadership_team) && prospect.leadership_team.length > 0) score += 10;
+      if (prospect.linkedin_url) score += 5;
+      
+      if (score >= 60) templateVariant = 'hot';
+      else if (score < 35) templateVariant = 'cool';
+
+      // Calculate next send date (3 days later, adjusted to Tue-Thu 8AM SAST)
+      const nextSendAt = new Date();
+      nextSendAt.setDate(nextSendAt.getDate() + 3);
+      nextSendAt.setUTCHours(6, 0, 0, 0); // 8 AM SAST
+      
+      // Adjust to next Tue-Thu
+      const day = nextSendAt.getDay();
+      if (day === 0) nextSendAt.setDate(nextSendAt.getDate() + 2); // Sun -> Tue
+      else if (day === 1) nextSendAt.setDate(nextSendAt.getDate() + 1); // Mon -> Tue
+      else if (day === 5) nextSendAt.setDate(nextSendAt.getDate() + 4); // Fri -> Tue
+      else if (day === 6) nextSendAt.setDate(nextSendAt.getDate() + 3); // Sat -> Tue
+
+      const { error: seqError } = await supabase
+        .from('prospect_sequences')
+        .insert({
+          prospect_id: prospectId,
+          sequence_step: 2, // Next step to send
+          next_send_at: nextSendAt.toISOString(),
+          status: 'active',
+          template_variant: templateVariant,
+          original_subject: subject
+        });
+
+      if (seqError) {
+        console.error('Failed to create sequence:', seqError);
+      } else {
+        console.log('Sequence created for prospect, next step at:', nextSendAt.toISOString());
+      }
     }
 
     // Update prospect status to contacted

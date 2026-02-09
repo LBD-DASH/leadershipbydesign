@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,8 @@ import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 import ProspectingTool from '@/components/marketing/ProspectingTool';
 import ProspectList from '@/components/marketing/ProspectList';
 import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
+import PipelineFunnel from '@/components/marketing/PipelineFunnel';
+import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -93,10 +95,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-6 w-full max-w-3xl">
+              <TabsList className="grid grid-cols-7 w-full max-w-4xl">
                 <TabsTrigger value="prospects" className="flex items-center gap-2">
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Prospects</span>
+                </TabsTrigger>
+                <TabsTrigger value="sequences" className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  <span className="hidden sm:inline">Sequences</span>
                 </TabsTrigger>
                 <TabsTrigger value="automation" className="flex items-center gap-2">
                   <Zap className="w-4 h-4" />
@@ -108,15 +114,15 @@ export default function MarketingDashboard() {
                 </TabsTrigger>
                 <TabsTrigger value="google-ads" className="flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  <span className="hidden sm:inline">Google Ads</span>
+                  <span className="hidden sm:inline">Ads</span>
                 </TabsTrigger>
                 <TabsTrigger value="queue" className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span className="hidden sm:inline">Queue</span>
                 </TabsTrigger>
                 <TabsTrigger value="analytics" className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Analytics</span>
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="hidden sm:inline">Pipeline</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -135,12 +141,19 @@ export default function MarketingDashboard() {
                 </Tabs>
               </TabsContent>
 
+              <TabsContent value="sequences" className="mt-6">
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <SequenceStatusView />
+                  <PipelineFunnel />
+                </div>
+              </TabsContent>
+
               <TabsContent value="automation" className="mt-6">
-                <ProspectingAutomation />
               </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
                 <ContentGenerator />
+                <ProspectingAutomation />
               </TabsContent>
 
               <TabsContent value="google-ads" className="mt-6">
@@ -152,12 +165,15 @@ export default function MarketingDashboard() {
               </TabsContent>
 
               <TabsContent value="analytics" className="mt-6">
-                <div className="bg-card rounded-xl border border-border p-8 text-center">
-                  <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Analytics Coming Soon</h3>
-                  <p className="text-muted-foreground">
-                    Track engagement, clicks, and conversions once you connect your social platforms.
-                  </p>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <PipelineFunnel />
+                  <div className="bg-card rounded-xl border border-border p-8 text-center">
+                    <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Advanced Analytics Coming Soon</h3>
+                    <p className="text-muted-foreground">
+                      Track engagement, email open rates, and conversion metrics over time.
+                    </p>
+                  </div>
                 </div>
               </TabsContent>
             </Tabs>
