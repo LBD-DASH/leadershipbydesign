@@ -52,19 +52,22 @@ function getUnsubscribeUrl(prospectId: string): string {
   return `https://leadershipbydesign.lovable.app/unsubscribe?id=${prospectId}`;
 }
 
-// Template generators
+// ========================================
+// HR-FOCUSED EMAIL TEMPLATES
+// ========================================
+
 function getStep1HotTemplate(data: ProspectData): { subject: string; body: string } {
   return {
-    subject: `Quick question about leadership capability at ${data.companyName}`,
+    subject: `Quick question about manager effectiveness at ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I've been working with ${data.industry} companies in ${data.location} on a specific problem: the gap between the leadership skills people were hired for and the skills they actually need now.
+I've been working with ${data.industry} companies in ${data.location} on a specific problem: the gap between the leadership skills managers were hired for and the skills they actually need now.
 
 One question: if you could strengthen one capability across your management team right now, what would it be?
 
-I ask because I've spent 11 years coaching 3,000+ organisations, and the answer usually points to exactly where intervention has the biggest ROI.
+I ask because I've spent 11 years coaching 3,000+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
 
-Happy to share what I've seen in ${data.industry} if you're open to a 15-minute conversation.
+Happy to share what I've seen working for ${data.industry} companies if you're open to a 15-minute conversation.
 
 — Kevin, Leadership by Design`
   };
@@ -73,13 +76,13 @@ Happy to share what I've seen in ${data.industry} if you're open to a 15-minute 
 function getStep1WarmTemplate(data: ProspectData): { subject: string; body: string } {
   const painPointRef = data.painPoints.length > 0 
     ? `especially given the challenges around ${data.painPoints[0].toLowerCase()}`
-    : `especially given the growth signals I noticed`;
+    : `especially given the growth I noticed`;
   
   return {
-    subject: `Free leadership diagnostic for ${data.companyName}`,
+    subject: `Free team diagnostic for ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I put together a team diagnostic that helps companies identify their biggest leadership skill gaps in about 5 minutes.
+I put together a team diagnostic that helps HR and People leaders identify their biggest leadership skill gaps in about 5 minutes.
 
 No sales pitch attached — it's a genuine tool we built based on 11 years of data from 3,000+ organisations.
 
@@ -87,14 +90,14 @@ Thought it might be useful for ${data.companyName}, ${painPointRef}.
 
 Here's the link: ${getDiagnosticUrl(data.prospectId, 1)}
 
-If the results raise any questions, happy to jump on a quick call to walk through what the data typically means for ${data.industry} companies.
+If the results raise any questions, happy to jump on a quick call to walk through what the data typically means for manager effectiveness and team performance.
 
 — Kevin, Leadership by Design`
   };
 }
 
 function getStep1CoolTemplate(data: ProspectData): { subject: string; body: string } {
-  const insight = data.industryInsight || `companies scaling past 200 people often see a sharp drop in middle-management effectiveness`;
+  const insight = data.industryInsight || `${data.industry} companies scaling past 200 people often see a sharp drop in middle-management effectiveness — impacting retention and engagement`;
   
   return {
     subject: `Something I noticed about ${data.industry} companies in ${data.location}`,
@@ -102,7 +105,7 @@ function getStep1CoolTemplate(data: ProspectData): { subject: string; body: stri
 
 I've been researching leadership capability in ${data.industry} companies across ${data.location}, and a pattern keeps showing up: ${insight}.
 
-I work with organisations on exactly this — developing the human skills that don't improve on their own.
+I work with HR and People teams on exactly this — developing the human skills in managers that don't improve on their own.
 
 If this resonates, I'd welcome a conversation. If not, no worries at all.
 
@@ -117,7 +120,7 @@ function getStep2Template(data: ProspectData, originalSubject: string): { subjec
 
 Just following up on my note from earlier this week.
 
-I know inboxes are brutal, so I'll keep this short: I work with ${data.industry} companies on leadership development, and I think there might be a fit with what ${data.companyName} is building.
+I know inboxes are brutal, so I'll keep this short: I work with ${data.industry} companies on leadership development — specifically helping HR and People teams improve manager effectiveness across the organisation.
 
 If you have 15 minutes this week or next, I'd love to explore whether there's value in a conversation.
 
@@ -129,18 +132,18 @@ If the timing isn't right, just let me know and I'll check back in a few months.
 
 function getStep3Template(data: ProspectData): { subject: string; body: string } {
   return {
-    subject: `A resource for ${data.companyName}'s leadership team`,
+    subject: `A resource for ${data.companyName}'s people team`,
     body: `Hi ${data.contactFirstName},
 
 I wanted to share something genuinely useful rather than just follow up again.
 
-We recently published a diagnostic tool that helps teams identify which of 5 critical human skills need strengthening — self-management, human intelligence, innovation, focus, and thinking.
+We recently published a diagnostic tool that helps HR and People teams identify which of 5 critical human skills need strengthening across their management team — self-management, human intelligence, innovation, focus, and thinking.
 
-It takes about 5 minutes and gives you a clear picture of where your team's gaps are:
+It takes about 5 minutes and gives you a clear picture of where your managers' gaps are:
 
 ${getDiagnosticUrl(data.prospectId, 3)}
 
-No obligation, no follow-up unless you want it. I just think the data would be valuable for ${data.companyName}.
+No obligation, no follow-up unless you want it. I just think the data would be valuable for ${data.companyName}'s people strategy.
 
 — Kevin`
   };
@@ -153,9 +156,9 @@ function getStep4Template(data: ProspectData): { subject: string; body: string }
 
 I won't keep following up — I respect your time.
 
-If leadership development or team performance comes onto your radar in the next 6-12 months, I'm here: leadershipbydesign.co
+If leadership development or manager effectiveness comes onto your radar in the next 6-12 months, I'm here: leadershipbydesign.co
 
-In the meantime, I've put together some free resources that might be useful:
+In the meantime, I've put together some free resources that might be useful for your people team:
 
 • Team Diagnostic: ${getDiagnosticUrl(data.prospectId, 4)}
 • SHIFT Methodology overview: https://leadershipbydesign.lovable.app/shift-methodology
@@ -221,24 +224,29 @@ function getNextSendDate(currentStep: number): Date {
   return adjustToSendWindow(nextDate);
 }
 
+// Adjust to next valid send window - 8 AM SAST, any weekday
 function adjustToSendWindow(date: Date): Date {
   const result = new Date(date);
-  result.setUTCHours(6, 0, 0, 0); // 8 AM SAST
+  result.setUTCHours(6, 0, 0, 0); // 8 AM SAST (UTC+2)
   const day = result.getDay();
   
-  if (day === 0) result.setDate(result.getDate() + 2);
-  else if (day === 1) result.setDate(result.getDate() + 1);
-  else if (day === 5) result.setDate(result.getDate() + 4);
-  else if (day === 6) result.setDate(result.getDate() + 3);
+  // Skip weekends
+  if (day === 0) result.setDate(result.getDate() + 1); // Sunday -> Monday
+  else if (day === 6) result.setDate(result.getDate() + 2); // Saturday -> Monday
   
   return result;
 }
 
+// Check if within send window - 8-10 AM SAST, weekdays only (Mon-Fri)
 function isWithinSendWindow(): boolean {
   const now = new Date();
-  const hour = now.getUTCHours() + 2;
+  const hour = now.getUTCHours() + 2; // SAST is UTC+2
   const day = now.getDay();
-  if (day < 2 || day > 4) return false;
+  
+  // Skip weekends (0 = Sunday, 6 = Saturday)
+  if (day === 0 || day === 6) return false;
+  
+  // Check if 8-10 AM SAST
   return hour >= 8 && hour < 10;
 }
 
@@ -261,7 +269,7 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if we're within send window (Tue-Thu, 8-10 AM SAST)
+    // Check if we're within send window (Mon-Fri, 8-10 AM SAST)
     if (!isWithinSendWindow()) {
       console.log('Outside send window, skipping follow-up processing');
       return new Response(
