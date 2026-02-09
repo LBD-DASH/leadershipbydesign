@@ -18,245 +18,338 @@ interface PdfSummary {
   };
 }
 
+// Brand colors
+const BRAND = {
+  dark: [27, 42, 74] as [number, number, number],
+  accent: [42, 123, 136] as [number, number, number],
+  accentLight: [230, 244, 246] as [number, number, number],
+  text: [40, 40, 50] as [number, number, number],
+  textLight: [100, 100, 110] as [number, number, number],
+  white: [255, 255, 255] as [number, number, number],
+  bgLight: [248, 249, 252] as [number, number, number],
+  gold: [180, 155, 100] as [number, number, number],
+  divider: [210, 218, 226] as [number, number, number],
+};
+
 export async function generateLeadMagnetPdf(
   pdfSummary: PdfSummary,
   videoTitle?: string | null
 ): Promise<void> {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = 210;
-  const margin = 20;
+  const pageHeight = 297;
+  const margin = 22;
   const contentWidth = pageWidth - margin * 2;
   let y = 0;
 
-  const brandDark = '#1B2A4A';
-  const accent = '#2A7B88';
-  const textColor = '#1a1a2e';
-  const lightGray = '#666666';
-
-  // Helper: add new page if needed
   const checkPage = (needed: number) => {
-    if (y + needed > 275) {
+    if (y + needed > 272) {
+      addPageFooter();
       doc.addPage();
-      y = 20;
+      y = 25;
+      addPageHeader();
     }
   };
 
-  // Helper: wrap text and return lines
   const wrapText = (text: string, maxWidth: number, fontSize: number): string[] => {
     doc.setFontSize(fontSize);
     return doc.splitTextToSize(text, maxWidth);
   };
 
-  // ─── HEADER BAR ───
-  doc.setFillColor(27, 42, 74); // brandDark
-  doc.rect(0, 0, pageWidth, 45, 'F');
+  // Thin accent bar at very top of every page
+  const addPageHeader = () => {
+    doc.setFillColor(...BRAND.accent);
+    doc.rect(0, 0, pageWidth, 2.5, 'F');
+  };
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text('LEADERSHIP BY DESIGN', margin, 15);
-
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  const titleLines = wrapText(pdfSummary.title, contentWidth, 18);
-  doc.text(titleLines, margin, 26);
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Key Insights & Action Steps', margin, 26 + titleLines.length * 7 + 4);
-
-  y = 55;
-
-  // ─── KEY TAKEAWAYS ───
-  doc.setTextColor(27, 42, 74);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Key Takeaways', margin, y);
-  y += 2;
-
-  // Accent underline
-  doc.setDrawColor(42, 123, 136);
-  doc.setLineWidth(0.8);
-  doc.line(margin, y, margin + 50, y);
-  y += 8;
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  doc.setTextColor(51, 51, 51);
-
-  for (const takeaway of pdfSummary.takeaways) {
-    checkPage(12);
-    const lines = wrapText(takeaway, contentWidth - 8, 11);
-    doc.setTextColor(42, 123, 136);
-    doc.setFont('helvetica', 'bold');
-    doc.text('✓', margin, y);
-    doc.setTextColor(51, 51, 51);
+  // Subtle footer on every page
+  const addPageFooter = () => {
+    doc.setFontSize(7);
+    doc.setTextColor(...BRAND.textLight);
     doc.setFont('helvetica', 'normal');
-    doc.text(lines, margin + 8, y);
-    y += lines.length * 5 + 4;
+    doc.text('leadershipbydesign.co', margin, 290);
+    doc.text('© Leadership by Design', pageWidth - margin, 290, { align: 'right' });
+  };
+
+  // Rounded rect helper
+  const roundedRect = (x: number, ry: number, w: number, h: number, r: number, fill: [number, number, number], stroke?: [number, number, number]) => {
+    doc.setFillColor(...fill);
+    if (stroke) {
+      doc.setDrawColor(...stroke);
+      doc.setLineWidth(0.4);
+    }
+    doc.roundedRect(x, ry, w, h, r, r, stroke ? 'FD' : 'F');
+  };
+
+  // Section title helper
+  const sectionTitle = (title: string, iconChar: string) => {
+    checkPage(18);
+    doc.setFontSize(15);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BRAND.dark);
+    doc.text(`${iconChar}  ${title}`, margin, y);
+    y += 2;
+    doc.setDrawColor(...BRAND.accent);
+    doc.setLineWidth(1);
+    doc.line(margin, y, margin + 45, y);
+    // Thin extension line
+    doc.setLineWidth(0.2);
+    doc.setDrawColor(...BRAND.divider);
+    doc.line(margin + 45, y, margin + contentWidth, y);
+    y += 8;
+  };
+
+  // ═══════════════════════════════════════
+  // PAGE 1 — COVER HEADER
+  // ═══════════════════════════════════════
+  addPageHeader();
+
+  // Full-width header block with gradient effect
+  doc.setFillColor(...BRAND.dark);
+  doc.rect(0, 2.5, pageWidth, 58, 'F');
+
+  // Decorative accent stripe
+  doc.setFillColor(...BRAND.accent);
+  doc.rect(0, 58, pageWidth, 3, 'F');
+
+  // Brand name
+  doc.setTextColor(...BRAND.gold);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('LEADERSHIP BY DESIGN', margin, 18);
+
+  // Decorative dot separator
+  doc.setFillColor(...BRAND.gold);
+  doc.circle(margin + doc.getTextWidth('LEADERSHIP BY DESIGN') + 4, 16.5, 1, 'F');
+
+  // Subtitle
+  doc.setTextColor(180, 195, 220);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.text('INSIGHT BRIEF', margin + doc.getTextWidth('LEADERSHIP BY DESIGN') + 8, 18);
+
+  // Title
+  doc.setTextColor(...BRAND.white);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  const titleLines = wrapText(pdfSummary.title, contentWidth - 10, 22);
+  let titleY = 32;
+  for (const line of titleLines) {
+    doc.text(line, margin, titleY);
+    titleY += 9;
   }
 
-  y += 6;
+  // Tagline
+  doc.setTextColor(160, 180, 210);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Key Insights & Action Steps', margin, Math.min(titleY + 3, 55));
 
-  // ─── SUMMARY ───
-  checkPage(20);
-  doc.setTextColor(27, 42, 74);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Summary', margin, y);
-  y += 2;
-  doc.setDrawColor(42, 123, 136);
-  doc.setLineWidth(0.8);
-  doc.line(margin, y, margin + 35, y);
+  y = 70;
+
+  // ═══════════════════════════════════════
+  // KEY TAKEAWAYS
+  // ═══════════════════════════════════════
+  sectionTitle('Key Takeaways', '◆');
+
+  for (let i = 0; i < pdfSummary.takeaways.length; i++) {
+    const takeaway = pdfSummary.takeaways[i];
+    checkPage(14);
+    const lines = wrapText(takeaway, contentWidth - 14, 10.5);
+    const blockHeight = lines.length * 4.8 + 4;
+
+    // Alternating subtle background
+    if (i % 2 === 0) {
+      roundedRect(margin, y - 3.5, contentWidth, blockHeight, 2, BRAND.bgLight);
+    }
+
+    // Teal bullet circle
+    doc.setFillColor(...BRAND.accent);
+    doc.circle(margin + 4, y, 1.8, 'F');
+    doc.setTextColor(...BRAND.white);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.text('✓', margin + 2.8, y + 0.8);
+
+    // Text
+    doc.setTextColor(...BRAND.text);
+    doc.setFontSize(10.5);
+    doc.setFont('helvetica', 'normal');
+    doc.text(lines, margin + 12, y + 0.5);
+    y += blockHeight;
+  }
+
   y += 8;
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  doc.setTextColor(51, 51, 51);
+  // ═══════════════════════════════════════
+  // SUMMARY
+  // ═══════════════════════════════════════
+  sectionTitle('Summary', '■');
 
-  // Clean markdown from summary
   const cleanSummary = pdfSummary.summary
     .replace(/###?\s*/g, '')
     .replace(/\*\*/g, '');
 
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10.5);
+  doc.setTextColor(...BRAND.text);
+
+  // Left accent bar for summary block
+  const summaryStartY = y;
   const summaryParagraphs = cleanSummary.split('\n\n').filter(p => p.trim());
+
   for (const para of summaryParagraphs) {
-    checkPage(15);
-    const lines = wrapText(para.trim(), contentWidth, 11);
-    doc.text(lines, margin, y);
-    y += lines.length * 5 + 4;
+    checkPage(12);
+    const lines = wrapText(para.trim(), contentWidth - 8, 10.5);
+    doc.text(lines, margin + 6, y);
+    y += lines.length * 4.8 + 3;
   }
 
-  y += 6;
+  // Draw the accent bar after we know the height
+  if (y > summaryStartY + 5) {
+    doc.setDrawColor(...BRAND.accent);
+    doc.setLineWidth(1.5);
+    doc.line(margin + 1, summaryStartY - 2, margin + 1, Math.min(y - 2, 270));
+  }
 
-  // ─── ACTION STEPS ───
-  checkPage(20);
-  doc.setTextColor(27, 42, 74);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Action Steps', margin, y);
-  y += 2;
-  doc.setDrawColor(42, 123, 136);
-  doc.setLineWidth(0.8);
-  doc.line(margin, y, margin + 42, y);
   y += 8;
 
-  // Light background box
-  const stepsStartY = y;
-  doc.setFillColor(248, 249, 250);
-  
-  // Calculate total height for steps
-  let tempY = 0;
-  for (const step of pdfSummary.action_steps) {
-    const lines = wrapText(step, contentWidth - 16, 11);
-    tempY += lines.length * 5 + 6;
-  }
-  
-  doc.rect(margin, y - 4, contentWidth, tempY + 8, 'F');
+  // ═══════════════════════════════════════
+  // ACTION STEPS
+  // ═══════════════════════════════════════
+  sectionTitle('Action Steps', '▶');
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  doc.setTextColor(51, 51, 51);
+  for (let i = 0; i < pdfSummary.action_steps.length; i++) {
+    const step = pdfSummary.action_steps[i];
+    checkPage(18);
 
-  pdfSummary.action_steps.forEach((step, i) => {
-    checkPage(15);
-    // Left accent bar
-    doc.setDrawColor(42, 123, 136);
-    doc.setLineWidth(1);
-    doc.line(margin + 4, y - 2, margin + 4, y + 4);
+    const lines = wrapText(step, contentWidth - 20, 10.5);
+    const blockH = lines.length * 4.8 + 8;
 
+    // Card background
+    roundedRect(margin, y - 4, contentWidth, blockH, 3, BRAND.bgLight, BRAND.divider);
+
+    // Step number circle
+    doc.setFillColor(...BRAND.accent);
+    doc.circle(margin + 8, y + 1, 4, 'F');
+    doc.setTextColor(...BRAND.white);
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Step ${i + 1}: `, margin + 8, y);
-    const stepLabel = `Step ${i + 1}: `;
-    const labelWidth = doc.getTextWidth(stepLabel);
-    
+    doc.text(`${i + 1}`, margin + 8, y + 2, { align: 'center' });
+
+    // Step text
+    doc.setTextColor(...BRAND.text);
+    doc.setFontSize(10.5);
     doc.setFont('helvetica', 'normal');
-    const lines = wrapText(step, contentWidth - 16 - labelWidth, 11);
-    doc.text(lines[0], margin + 8 + labelWidth, y);
-    if (lines.length > 1) {
-      for (let l = 1; l < lines.length; l++) {
-        y += 5;
-        doc.text(lines[l], margin + 8, y);
-      }
-    }
-    y += 8;
-  });
+    doc.text(lines, margin + 16, y + 1);
+
+    y += blockH + 2;
+  }
 
   y += 10;
 
-  // ─── PRODUCT CTA ───
-  checkPage(35);
-  doc.setFillColor(27, 42, 74);
-  doc.rect(margin, y, contentWidth, 30, 'F');
-  
-  doc.setTextColor(200, 200, 200);
-  doc.setFontSize(8);
-  doc.text('RECOMMENDED RESOURCE', margin + 8, y + 8);
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(14);
+  // ═══════════════════════════════════════
+  // RECOMMENDED RESOURCE CTA
+  // ═══════════════════════════════════════
+  checkPage(38);
+
+  // Dark card
+  roundedRect(margin, y, contentWidth, 32, 4, BRAND.dark);
+
+  // Gold accent line
+  doc.setFillColor(...BRAND.gold);
+  doc.rect(margin + 6, y + 6, 2, 20, 'F');
+
+  doc.setTextColor(...BRAND.gold);
+  doc.setFontSize(7);
   doc.setFont('helvetica', 'bold');
-  doc.text(pdfSummary.product_cta.product_name, margin + 8, y + 16);
-  
-  doc.setFontSize(10);
+  doc.text('RECOMMENDED RESOURCE', margin + 14, y + 10);
+
+  doc.setTextColor(...BRAND.white);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text(pdfSummary.product_cta.product_name, margin + 14, y + 18);
+
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  const descLines = wrapText(pdfSummary.product_cta.product_description, contentWidth - 16, 10);
-  doc.text(descLines[0] || '', margin + 8, y + 23);
+  doc.setTextColor(180, 195, 220);
+  const descLines = wrapText(pdfSummary.product_cta.product_description, contentWidth - 24, 9);
+  doc.text(descLines[0] || '', margin + 14, y + 25);
 
-  y += 38;
-
-  // ─── DIAGNOSTIC CTA ───
-  checkPage(30);
-  doc.setFillColor(240, 247, 248);
-  doc.rect(margin, y, contentWidth, 25, 'F');
-  doc.setDrawColor(42, 123, 136);
-  doc.setLineWidth(0.5);
-  doc.rect(margin, y, contentWidth, 25, 'S');
-
-  doc.setTextColor(100, 100, 100);
+  // URL on right
+  doc.setTextColor(...BRAND.accent);
   doc.setFontSize(8);
-  doc.text('FREE ASSESSMENT', margin + 8, y + 8);
+  doc.text('leadershipbydesign.co/products →', margin + contentWidth - 4, y + 28, { align: 'right' });
 
-  doc.setTextColor(27, 42, 74);
+  y += 40;
+
+  // ═══════════════════════════════════════
+  // DIAGNOSTIC CTA
+  // ═══════════════════════════════════════
+  checkPage(32);
+
+  roundedRect(margin, y, contentWidth, 28, 4, BRAND.accentLight, BRAND.accent);
+
+  // Accent circle
+  doc.setFillColor(...BRAND.accent);
+  doc.circle(margin + 10, y + 14, 5, 'F');
+  doc.setTextColor(...BRAND.white);
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text(pdfSummary.diagnostic_cta.diagnostic_name, margin + 8, y + 15);
+  doc.text('?', margin + 10, y + 15.5, { align: 'center' });
 
-  doc.setFontSize(10);
+  doc.setTextColor(...BRAND.accent);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FREE ASSESSMENT', margin + 20, y + 9);
+
+  doc.setTextColor(...BRAND.dark);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text(pdfSummary.diagnostic_cta.diagnostic_name, margin + 20, y + 16);
+
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(51, 51, 51);
-  const diagLines = wrapText(pdfSummary.diagnostic_cta.diagnostic_description, contentWidth - 16, 10);
-  doc.text(diagLines[0] || '', margin + 8, y + 21);
+  doc.setTextColor(...BRAND.textLight);
+  const diagLines = wrapText(pdfSummary.diagnostic_cta.diagnostic_description, contentWidth - 30, 9);
+  doc.text(diagLines[0] || '', margin + 20, y + 23);
 
-  y += 33;
+  y += 36;
 
-  // ─── FOOTER ───
-  checkPage(25);
-  doc.setDrawColor(224, 224, 224);
+  // ═══════════════════════════════════════
+  // FOOTER
+  // ═══════════════════════════════════════
+  checkPage(30);
+
+  // Divider
+  doc.setDrawColor(...BRAND.divider);
   doc.setLineWidth(0.3);
-  doc.line(margin, y, margin + contentWidth, y);
+  doc.line(margin + 30, y, margin + contentWidth - 30, y);
   y += 10;
 
-  doc.setTextColor(27, 42, 74);
-  doc.setFontSize(14);
+  doc.setTextColor(...BRAND.dark);
+  doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.text('Leadership by Design', pageWidth / 2, y, { align: 'center' });
-  y += 6;
+  y += 5;
 
-  doc.setTextColor(102, 102, 102);
-  doc.setFontSize(10);
+  doc.setTextColor(...BRAND.textLight);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text('Developing leaders who develop others', pageWidth / 2, y, { align: 'center' });
   y += 6;
 
-  doc.setTextColor(42, 123, 136);
-  doc.setFontSize(9);
-  doc.text('leadershipbydesign.co  |  LinkedIn  |  hello@leadershipbydesign.co', pageWidth / 2, y, { align: 'center' });
+  doc.setTextColor(...BRAND.accent);
+  doc.setFontSize(8);
+  doc.text('leadershipbydesign.co  •  LinkedIn  •  hello@leadershipbydesign.co', pageWidth / 2, y, { align: 'center' });
   y += 5;
 
-  doc.setTextColor(153, 153, 153);
-  doc.setFontSize(8);
+  doc.setTextColor(180, 180, 180);
+  doc.setFontSize(7);
   doc.text(`© ${new Date().getFullYear()} Leadership by Design. All rights reserved.`, pageWidth / 2, y, { align: 'center' });
+
+  // Add footer to last page
+  addPageFooter();
 
   // Save
   const slug = (pdfSummary.title || videoTitle || 'content')
