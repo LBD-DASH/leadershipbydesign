@@ -320,7 +320,7 @@ const Products = () => {
       </div>
     </motion.div>;
   return <div className="min-h-screen bg-background">
-      <SEO title="Leadership Tools & Resources | Leadership by Design" description="Practical leadership tools and frameworks for managers. From survival kits to conversation scripts—everything you need to lead with confidence." canonicalUrl="/products" ogImage="https://leadershipbydesign.co/og-products.jpg" />
+      <SEO title="Leadership Tools & Digital Products | Leadership by Design" description="Frameworks, scripts, and systems for managers and leaders. The New Manager Survival Kit, The Difficult Conversations Playbook, and more. Instant PDF download." canonicalUrl="/products" ogImage="https://leadershipbydesign.co/og-products.jpg" keywords="leadership tools, digital products, new manager kit, difficult conversations, leadership frameworks, manager templates" />
       
       {/* Product Structured Data for AI Discovery */}
       <ProductSchema

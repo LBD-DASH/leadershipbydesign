@@ -126,11 +126,11 @@ export default function Resources() {
   return (
     <>
       <SEO
-        title="Resources"
-        description="Access leadership development resources including articles, downloadable guides, videos, and case studies. Free tools and frameworks for emerging and executive leaders."
+        title="Leadership Resources & Free Tools | Leadership by Design"
+        description="Access free leadership development resources including articles, downloadable guides, podcasts, and assessment tools. Practical frameworks for emerging and executive leaders."
         canonicalUrl="/resources"
         ogImage="https://leadershipbydesign.co/og-blog.jpg"
-        keywords="leadership resources, leadership articles, leadership guides, leadership videos, case studies, free leadership tools"
+        keywords="leadership resources, free leadership tools, leadership guides, leadership podcast, SHIFT methodology, leadership articles"
       />
 
       <div className="min-h-screen bg-background">

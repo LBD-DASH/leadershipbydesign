@@ -68,10 +68,11 @@ export default function AlignmentWorkshop() {
   return (
     <>
       <SEO
-        title="SHIFT Team Alignment Workshop | Leadership by Design"
-        description="A morning workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and reactive ways of working using the SHIFT Methodology™."
+        title="SHIFT Team Alignment Workshop | Clarity & Direction | Leadership by Design"
+        description="A half-day workshop for teams working hard but not in the same direction. Address conflicting priorities, unclear success metrics, and create unified direction using the SHIFT Methodology™."
         canonicalUrl="/workshops/alignment"
         ogImage="https://leadershipbydesign.co/og-workshop-alignment.jpg"
+        keywords="team alignment workshop, team clarity, SHIFT methodology, team priorities, strategic alignment, team direction"
       />
       <EventSchema
         name="SHIFT Team Alignment Workshop"

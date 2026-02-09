@@ -10,9 +10,16 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
 User-agent: *
 Allow: /
-Disallow: /leadership-mistakes-checklist.html
+Disallow: /admin
+Disallow: /blog-admin
+Disallow: /marketing
 Disallow: /leadership-mistakes-checklist
+Disallow: /life-os
 
+# Sitemap
 Sitemap: https://leadershipbydesign.co/sitemap.xml

@@ -24,10 +24,11 @@ export default function LeadershipDiagnosticLanding() {
   return (
     <>
       <SEO
-        title="Free Leadership Assessment | Find Your Level in 4 Minutes"
-        description="Take the free leadership diagnostic used by 500+ leaders. Discover your operating level and get instant personalized development insights."
+        title="Free Leadership Assessment | Discover Your Leadership Level | Leadership by Design"
+        description="Take the free leadership diagnostic used by 500+ leaders. Discover your operating level across 5 leadership dimensions and get personalized development insights."
         canonicalUrl="/leader-assessment"
-        keywords="leadership test, leadership assessment, free leadership quiz, leadership level, leadership diagnostic, leadership development"
+        ogImage="https://leadershipbydesign.co/og-leadership-diagnostic.jpg"
+        keywords="leadership assessment, leadership test, free leadership diagnostic, leadership level quiz, leadership development"
       />
       
       <div className="min-h-screen bg-gradient-to-b from-primary/5 via-background to-background">

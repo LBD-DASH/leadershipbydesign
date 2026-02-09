@@ -73,11 +73,11 @@ export default function About() {
   return (
     <>
       <SEO
-        title="About Us"
-        description="Learn about Leadership by Design's philosophy, values, and approach to transforming leaders. We design people solutions through leadership design, training design, and coaching design."
+        title="About Leadership by Design | 11 Years of Executive Coaching in South Africa"
+        description="Leadership by Design has served 3,000+ organizations across South Africa with executive coaching, team workshops, and leadership development programmes."
         canonicalUrl="/about"
         ogImage="https://leadershipbydesign.co/og-about.jpg"
-        keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching approach, leadership values"
+        keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching, South Africa coaching"
       />
       <div className="min-h-screen bg-background">
         <Header />

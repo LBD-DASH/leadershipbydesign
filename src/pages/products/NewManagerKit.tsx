@@ -148,11 +148,11 @@ export default function NewManagerKit() {
   return (
     <div className="min-h-screen scroll-smooth">
       <SEO
-        title="The New Manager Survival Kit: Your First 90 Days"
-        description="Your complete 90-day roadmap to go from 'just promoted' to trusted leader — with the exact scripts, frameworks, and templates used by 3,000+ organizations."
+        title="The New Manager Survival Kit — Your First 90 Days | Leadership by Design"
+        description="The complete 90-day roadmap for first-time managers. Leadership self-assessment, 5 conversation scripts, 1-on-1 framework, 30-60-90 day plan, and templates. R497."
         canonicalUrl="/new-manager-kit"
         ogImage="https://leadershipbydesign.co/og-products.jpg"
-        keywords="new manager, leadership, first 90 days, management training, team leadership, 1-on-1 meetings, leadership scripts"
+        keywords="new manager kit, first 90 days, management training, team leadership, 1-on-1 meetings, leadership scripts, new manager"
       />
 
       <CheckoutModal

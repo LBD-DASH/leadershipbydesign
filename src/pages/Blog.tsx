@@ -14,11 +14,11 @@ const Blog = () => {
   return (
     <>
       <SEO
-        title="Blog | Leadership by Design"
-        description="Insights on leadership development, organizational change, and personal growth from Kevin Britz and the Leadership by Design team."
+        title="Leadership Blog | Insights from Leadership by Design"
+        description="Practical insights on leadership development, team effectiveness, and organizational performance from 11 years of executive coaching experience."
         canonicalUrl="/blog"
         ogImage="https://leadershipbydesign.co/og-blog.jpg"
-        keywords="leadership blog, executive coaching insights, organizational development, personal growth, Kevin Britz"
+        keywords="leadership blog, leadership insights, executive coaching blog, team development, Kevin Britz, leadership articles"
       />
       <div className="min-h-screen flex flex-col">
         <Header />

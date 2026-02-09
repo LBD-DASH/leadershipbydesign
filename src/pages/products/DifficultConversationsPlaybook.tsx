@@ -148,11 +148,11 @@ export default function DifficultConversationsPlaybook() {
   return (
     <div className="min-h-screen scroll-smooth">
       <SEO
-        title="The Difficult Conversations Playbook | Leadership by Design"
-        description="Stop avoiding tough conversations. Get 12 word-for-word scripts and the CLEAR framework to handle any difficult workplace discussion with confidence."
+        title="The Difficult Conversations Playbook — 12 Scripts for Managers | Leadership by Design"
+        description="12 word-for-word scripts for the conversations every manager dreads. Performance, conflict, retention, managing up, and more. Built on the CLEAR framework. R247."
         canonicalUrl="/difficult-conversations"
         ogImage="https://leadershipbydesign.co/og-products.jpg"
-        keywords="difficult conversations, workplace conflict, feedback, performance management, conflict resolution, leadership communication, tough conversations"
+        keywords="difficult conversations, workplace conflict, feedback scripts, performance management, conflict resolution, CLEAR framework"
       />
 
       <CheckoutModal
