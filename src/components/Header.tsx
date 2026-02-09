@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const Header = () => {
   const [programmesOpen, setProgrammesOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -235,13 +236,41 @@ const Header = () => {
             About
           </NavLink>
 
-          <NavLink 
-            to="/contact" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            activeClassName="text-foreground"
+          {/* Contact Dropdown */}
+          <div 
+            className="relative"
+            onMouseEnter={() => setContactOpen(true)}
+            onMouseLeave={() => setContactOpen(false)}
           >
-            Contact
-          </NavLink>
+            <button 
+              className={cn(
+                "flex items-center gap-1 text-sm font-medium transition-colors",
+                location.pathname === "/contact" || location.pathname === "/marketing" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Contact
+              <ChevronDown className={cn("w-4 h-4 transition-transform", contactOpen && "rotate-180")} />
+            </button>
+            
+            {contactOpen && (
+              <div className="absolute top-full right-0 pt-2">
+                <div className="bg-background border border-border rounded-lg shadow-lg py-2 min-w-[140px]">
+                  <Link 
+                    to="/contact" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Get in Touch
+                  </Link>
+                  <Link 
+                    to="/marketing" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Admin
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -416,13 +445,23 @@ const Header = () => {
               About
             </Link>
 
-            <Link 
-              to="/contact" 
-              className="block text-sm font-medium text-muted-foreground hover:text-foreground"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Contact
-            </Link>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Contact</p>
+              <Link 
+                to="/contact" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Get in Touch
+              </Link>
+              <Link 
+                to="/marketing" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Admin
+              </Link>
+            </div>
           </div>
         </div>
       )}
