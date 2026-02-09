@@ -50,3 +50,7 @@ verify_jwt = false
 
 [functions.check-prospect-engagement]
 verify_jwt = false
+
+[functions.admin-prospects]
+verify_jwt = false
+
