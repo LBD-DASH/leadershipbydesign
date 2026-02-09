@@ -336,11 +336,16 @@ function AssetCard({
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold text-lg">{asset.pdf_summary.title}</h4>
                         {asset.pdf_url && (
-                          <Button asChild>
-                            <a href={asset.pdf_url} target="_blank" rel="noopener noreferrer">
-                              <Download className="w-4 h-4 mr-2" />
-                              Download PDF
-                            </a>
+                          <Button onClick={() => {
+                            const printWindow = window.open(asset.pdf_url, '_blank');
+                            if (printWindow) {
+                              printWindow.addEventListener('load', () => {
+                                printWindow.print();
+                              });
+                            }
+                          }}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Save as PDF
                           </Button>
                         )}
                       </div>
