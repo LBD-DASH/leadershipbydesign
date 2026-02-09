@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -17,11 +17,12 @@ import ProspectList from '@/components/marketing/ProspectList';
 import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
 import PipelineFunnel from '@/components/marketing/PipelineFunnel';
 import SequenceStatusView from '@/components/marketing/SequenceStatusView';
+import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState('prospects');
+  const [activeTab, setActiveTab] = useState('submissions');
   const [autoOpenProspectId, setAutoOpenProspectId] = useState<string | null>(null);
   const [prospectsSubTab, setProspectsSubTab] = useState<string>('research');
   const [pendingDeepLink, setPendingDeepLink] = useState<{ action: string; prospectId: string } | null>(null);
@@ -134,7 +135,11 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-7 w-full max-w-4xl">
+              <TabsList className="grid grid-cols-8 w-full max-w-5xl">
+                <TabsTrigger value="submissions" className="flex items-center gap-2">
+                  <ClipboardList className="w-4 h-4" />
+                  <span className="hidden sm:inline">Leads</span>
+                </TabsTrigger>
                 <TabsTrigger value="prospects" className="flex items-center gap-2">
                   <Users className="w-4 h-4" />
                   <span className="hidden sm:inline">Prospects</span>
@@ -165,6 +170,10 @@ export default function MarketingDashboard() {
                 </TabsTrigger>
               </TabsList>
 
+              <TabsContent value="submissions" className="mt-6">
+                <SubmissionsPanel />
+              </TabsContent>
+
               <TabsContent value="prospects" className="mt-6">
                 <Tabs value={prospectsSubTab} onValueChange={setProspectsSubTab} className="w-full">
                   <TabsList className="mb-4">
@@ -191,11 +200,11 @@ export default function MarketingDashboard() {
               </TabsContent>
 
               <TabsContent value="automation" className="mt-6">
+                <ProspectingAutomation />
               </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
                 <ContentGenerator />
-                <ProspectingAutomation />
               </TabsContent>
 
               <TabsContent value="google-ads" className="mt-6">
