@@ -54,3 +54,12 @@ verify_jwt = false
 [functions.admin-prospects]
 verify_jwt = false
 
+[functions.extract-youtube-transcript]
+verify_jwt = false
+
+[functions.generate-content-assets]
+verify_jwt = false
+
+[functions.generate-lead-magnet-pdf]
+verify_jwt = false
+

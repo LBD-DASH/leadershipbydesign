@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight, Youtube } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import ProspectingAutomation from '@/components/marketing/ProspectingAutomation'
 import PipelineFunnel from '@/components/marketing/PipelineFunnel';
 import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
+import ContentEngine from '@/components/marketing/ContentEngine';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -135,7 +136,7 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-8 w-full max-w-5xl">
+              <TabsList className="grid grid-cols-9 w-full max-w-5xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
@@ -151,6 +152,10 @@ export default function MarketingDashboard() {
                 <TabsTrigger value="automation" className="flex items-center gap-2">
                   <Zap className="w-4 h-4" />
                   <span className="hidden sm:inline">Automation</span>
+                </TabsTrigger>
+                <TabsTrigger value="content-engine" className="flex items-center gap-2">
+                  <Youtube className="w-4 h-4" />
+                  <span className="hidden sm:inline">YouTube</span>
                 </TabsTrigger>
                 <TabsTrigger value="generate" className="flex items-center gap-2">
                   <PenTool className="w-4 h-4" />
@@ -201,6 +206,10 @@ export default function MarketingDashboard() {
 
               <TabsContent value="automation" className="mt-6">
                 <ProspectingAutomation />
+              </TabsContent>
+
+              <TabsContent value="content-engine" className="mt-6">
+                <ContentEngine />
               </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
