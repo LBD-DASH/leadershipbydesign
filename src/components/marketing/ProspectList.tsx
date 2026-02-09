@@ -202,24 +202,45 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
     setEmailProspect(null);
   };
 
-  // Apply filters based on filter type
+  // Apply filters based on filter type, then sort with contacted at bottom
   const filteredProspects = (() => {
+    let filtered: ProspectCompany[];
     switch (statusFilter) {
       case 'all':
-        return prospects;
+        filtered = prospects;
+        break;
       case 'hot_leads':
         // Hot leads: score >= 60 with email
-        return prospects.filter(p => scoreFromProspect(p).score >= 60 && p.contact_email);
+        filtered = prospects.filter(p => scoreFromProspect(p).score >= 60 && p.contact_email);
+        break;
       case 'no_email':
         // Prospects needing research (no email)
-        return prospects.filter(p => !p.contact_email);
+        filtered = prospects.filter(p => !p.contact_email);
+        break;
       case 'has_hr':
         // Prospects with HR contacts found
-        return prospects.filter(p => p.hr_contacts && p.hr_contacts.length > 0);
+        filtered = prospects.filter(p => p.hr_contacts && p.hr_contacts.length > 0);
+        break;
       default:
         // Regular status filter
-        return prospects.filter(p => p.status === statusFilter);
+        filtered = prospects.filter(p => p.status === statusFilter);
     }
+    
+    // Sort: contacted/responded/converted/not_interested go to bottom, others sorted by score
+    return filtered.sort((a, b) => {
+      const contactedStatuses = ['contacted', 'responded', 'converted', 'not_interested'];
+      const aContacted = contactedStatuses.includes(a.status);
+      const bContacted = contactedStatuses.includes(b.status);
+      
+      // If one is contacted and the other isn't, push contacted to bottom
+      if (aContacted && !bContacted) return 1;
+      if (!aContacted && bContacted) return -1;
+      
+      // Within the same group, sort by score (highest first)
+      const aScore = scoreFromProspect(a).score;
+      const bScore = scoreFromProspect(b).score;
+      return bScore - aScore;
+    });
   })();
 
   const stats = {
