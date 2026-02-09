@@ -1,3 +1,5 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
@@ -33,6 +35,28 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Initialize Supabase to check existing companies
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Fetch existing company names to avoid duplicates
+    const { data: existingCompanies } = await supabase
+      .from('prospect_companies')
+      .select('company_name, website_url')
+      .limit(500);
+
+    const existingNames = (existingCompanies || []).map(c => c.company_name.toLowerCase());
+    const existingDomains = (existingCompanies || []).map(c => {
+      try {
+        return new URL(c.website_url).hostname.replace('www.', '');
+      } catch {
+        return '';
+      }
+    }).filter(Boolean);
+
+    const exclusionList = existingNames.slice(0, 50).join(', '); // Limit to 50 for prompt size
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       console.error('LOVABLE_API_KEY not configured');
@@ -61,6 +85,11 @@ Deno.serve(async (req) => {
 
     console.log('Discovering companies:', { industry, location, companySize });
 
+    // Build exclusion instruction if we have existing companies
+    const exclusionInstruction = exclusionList 
+      ? `\n\nALREADY IN DATABASE - DO NOT INCLUDE THESE COMPANIES:\n${exclusionList}\n\nYou MUST suggest DIFFERENT companies than those listed above.`
+      : '';
+
     // Use Lovable AI to generate a list of real companies - HR-focused discovery
     const discoveryPrompt = `You are a B2B lead generation specialist for a leadership development consultancy targeting HR and People leaders in South Africa.
 
@@ -72,6 +101,7 @@ STRICT REQUIREMENTS:
 - EXCLUDE: Any company that clearly has 800+ employees (no Discovery, Sasol, Vodacom, MTN, etc.)
 - FOCUS: Owner-managed businesses, family businesses, regional players, growth-stage companies
 - These should be REAL companies that actually exist in South Africa
+${exclusionInstruction}
 
 TARGET COMPANIES:
 - Mid-market companies that have scaled past the startup phase
@@ -150,15 +180,36 @@ Respond ONLY with a valid JSON array (no markdown):
       const cleanJson = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       companies = JSON.parse(cleanJson);
       
-      // Validate and clean up the companies - filter out enterprise names
+      // Validate and clean up the companies - filter out enterprise names and duplicates
       const enterpriseKeywords = ['holdings', 'group', 'limited', 'ltd', 'plc', 'inc'];
       companies = companies.filter(c => {
         const nameLower = c.company_name.toLowerCase();
         const hasEnterpriseKeyword = enterpriseKeywords.some(kw => nameLower.includes(kw));
+        
+        // Check if already in database by name
+        const nameExists = existingNames.some(existing => 
+          existing.includes(nameLower) || nameLower.includes(existing)
+        );
+        
+        // Check if already in database by domain
+        let domainExists = false;
+        try {
+          const newDomain = new URL(c.website_url).hostname.replace('www.', '');
+          domainExists = existingDomains.some(existing => 
+            existing === newDomain || existing.includes(newDomain) || newDomain.includes(existing)
+          );
+        } catch {}
+        
+        if (nameExists || domainExists) {
+          console.log(`Filtering out duplicate: ${c.company_name}`);
+        }
+        
         return c.company_name && 
                c.website_url && 
                c.website_url.startsWith('http') &&
-               !hasEnterpriseKeyword;
+               !hasEnterpriseKeyword &&
+               !nameExists &&
+               !domainExists;
       }).slice(0, 10); // Limit to 10
       
     } catch (parseError) {
