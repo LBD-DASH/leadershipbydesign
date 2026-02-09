@@ -323,6 +323,81 @@ export type Database = {
         }
         Relationships: []
       }
+      content_assets: {
+        Row: {
+          blog_post: Json | null
+          created_at: string
+          email_block: Json | null
+          error_message: string | null
+          id: string
+          linkedin_long: string | null
+          linkedin_short: string | null
+          pdf_summary: Json | null
+          pdf_url: string | null
+          published_date: string | null
+          relevant_diagnostic: string | null
+          relevant_product: string | null
+          short_form_scripts: Json | null
+          status: string
+          transcript: string | null
+          twitter_thread: Json | null
+          updated_at: string
+          video_description: string | null
+          video_duration: string | null
+          video_thumbnail: string | null
+          video_title: string | null
+          video_url: string
+        }
+        Insert: {
+          blog_post?: Json | null
+          created_at?: string
+          email_block?: Json | null
+          error_message?: string | null
+          id?: string
+          linkedin_long?: string | null
+          linkedin_short?: string | null
+          pdf_summary?: Json | null
+          pdf_url?: string | null
+          published_date?: string | null
+          relevant_diagnostic?: string | null
+          relevant_product?: string | null
+          short_form_scripts?: Json | null
+          status?: string
+          transcript?: string | null
+          twitter_thread?: Json | null
+          updated_at?: string
+          video_description?: string | null
+          video_duration?: string | null
+          video_thumbnail?: string | null
+          video_title?: string | null
+          video_url: string
+        }
+        Update: {
+          blog_post?: Json | null
+          created_at?: string
+          email_block?: Json | null
+          error_message?: string | null
+          id?: string
+          linkedin_long?: string | null
+          linkedin_short?: string | null
+          pdf_summary?: Json | null
+          pdf_url?: string | null
+          published_date?: string | null
+          relevant_diagnostic?: string | null
+          relevant_product?: string | null
+          short_form_scripts?: Json | null
+          status?: string
+          transcript?: string | null
+          twitter_thread?: Json | null
+          updated_at?: string
+          video_description?: string | null
+          video_duration?: string | null
+          video_thumbnail?: string | null
+          video_title?: string | null
+          video_url?: string
+        }
+        Relationships: []
+      }
       diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
@@ -469,6 +544,59 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      lead_captures: {
+        Row: {
+          company: string | null
+          content_asset_id: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          resource_slug: string | null
+          resource_title: string | null
+          source: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          company?: string | null
+          content_asset_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          resource_slug?: string | null
+          resource_title?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          company?: string | null
+          content_asset_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          resource_slug?: string | null
+          resource_title?: string | null
+          source?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_captures_content_asset_id_fkey"
+            columns: ["content_asset_id"]
+            isOneToOne: false
+            referencedRelation: "content_assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lead_magnet_downloads: {
         Row: {
