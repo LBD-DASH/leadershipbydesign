@@ -26,6 +26,9 @@ const statusConfig: Record<string, { label: string; icon: React.ElementType; col
   'not_interested': { label: 'Not Interested', icon: XCircle, color: 'bg-gray-100 text-gray-700' },
 };
 
+// Special filter types
+type FilterType = 'all' | 'hot_leads' | 'no_email' | 'has_hr' | string;
+
 interface ProspectListProps {
   autoOpenProspectId?: string | null;
   onAutoOpenHandled?: () => void;
@@ -35,7 +38,7 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
   const { toast } = useToast();
   const [prospects, setProspects] = useState<ProspectCompany[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<FilterType>('all');
   const [selectedProspect, setSelectedProspect] = useState<ProspectCompany | null>(null);
   const [notes, setNotes] = useState('');
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -199,9 +202,25 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
     setEmailProspect(null);
   };
 
-  const filteredProspects = statusFilter === 'all' 
-    ? prospects 
-    : prospects.filter(p => p.status === statusFilter);
+  // Apply filters based on filter type
+  const filteredProspects = (() => {
+    switch (statusFilter) {
+      case 'all':
+        return prospects;
+      case 'hot_leads':
+        // Hot leads: score >= 60 with email
+        return prospects.filter(p => scoreFromProspect(p).score >= 60 && p.contact_email);
+      case 'no_email':
+        // Prospects needing research (no email)
+        return prospects.filter(p => !p.contact_email);
+      case 'has_hr':
+        // Prospects with HR contacts found
+        return prospects.filter(p => p.hr_contacts && p.hr_contacts.length > 0);
+      default:
+        // Regular status filter
+        return prospects.filter(p => p.status === statusFilter);
+    }
+  })();
 
   const stats = {
     total: prospects.length,
@@ -209,6 +228,9 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
     contacted: prospects.filter(p => p.status === 'contacted').length,
     responded: prospects.filter(p => p.status === 'responded').length,
     converted: prospects.filter(p => p.status === 'converted').length,
+    hotLeads: prospects.filter(p => scoreFromProspect(p).score >= 60 && p.contact_email).length,
+    noEmail: prospects.filter(p => !p.contact_email).length,
+    hasHR: prospects.filter(p => p.hr_contacts && p.hr_contacts.length > 0).length,
   };
 
   return (
@@ -231,14 +253,43 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
         ))}
       </div>
 
+      {/* Quick Filters */}
+      <div className="flex flex-wrap gap-2">
+        <Badge 
+          variant={statusFilter === 'hot_leads' ? 'default' : 'outline'}
+          className="cursor-pointer hover:bg-primary/80 transition-colors"
+          onClick={() => setStatusFilter(statusFilter === 'hot_leads' ? 'all' : 'hot_leads')}
+        >
+          🔥 Hot Leads ({stats.hotLeads})
+        </Badge>
+        <Badge 
+          variant={statusFilter === 'has_hr' ? 'default' : 'outline'}
+          className="cursor-pointer hover:bg-primary/80 transition-colors"
+          onClick={() => setStatusFilter(statusFilter === 'has_hr' ? 'all' : 'has_hr')}
+        >
+          <Users className="w-3 h-3 mr-1" /> HR Found ({stats.hasHR})
+        </Badge>
+        <Badge 
+          variant={statusFilter === 'no_email' ? 'destructive' : 'outline'}
+          className="cursor-pointer hover:opacity-80 transition-colors"
+          onClick={() => setStatusFilter(statusFilter === 'no_email' ? 'all' : 'no_email')}
+        >
+          <Mail className="w-3 h-3 mr-1" /> No Email ({stats.noEmail})
+        </Badge>
+      </div>
+
       {/* Filters */}
       <div className="flex items-center justify-between">
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as FilterType)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Prospects</SelectItem>
+            <SelectItem value="all">All Prospects ({stats.total})</SelectItem>
+            <SelectItem value="hot_leads">🔥 Hot Leads ({stats.hotLeads})</SelectItem>
+            <SelectItem value="has_hr">HR Contacts Found ({stats.hasHR})</SelectItem>
+            <SelectItem value="no_email">⚠️ No Email ({stats.noEmail})</SelectItem>
+            <SelectItem value="separator" disabled>— By Status —</SelectItem>
             {Object.entries(statusConfig).map(([value, config]) => (
               <SelectItem key={value} value={value}>{config.label}</SelectItem>
             ))}
@@ -488,21 +539,34 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
                                             <p className="text-xs text-muted-foreground">{contact.role}</p>
                                           </div>
                                         </div>
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          asChild
-                                          className="border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2]/10"
-                                        >
-                                          <a 
-                                            href={contact.linkedin_search_url} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer"
+                                        <div className="flex gap-2">
+                                          <Button
+                                            variant="default"
+                                            size="sm"
+                                            asChild
+                                            className="bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white"
                                           >
-                                            <Linkedin className="w-4 h-4 mr-1" />
-                                            Find on LinkedIn
-                                          </a>
-                                        </Button>
+                                            <a 
+                                              href={contact.linkedin_search_url} 
+                                              target="_blank" 
+                                              rel="noopener noreferrer"
+                                            >
+                                              <Linkedin className="w-4 h-4 mr-1" />
+                                              Connect
+                                            </a>
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                              const message = `Hi ${contact.name.split(' ')[0]}, I came across ${prospect.company_name} and your work in ${prospect.industry || 'your industry'}. I help HR and People leaders develop their management teams through practical leadership development. Would love to connect!`;
+                                              navigator.clipboard.writeText(message);
+                                              toast({ title: "Copied!", description: "Connection message copied to clipboard" });
+                                            }}
+                                          >
+                                            <Copy className="w-4 h-4" />
+                                          </Button>
+                                        </div>
                                       </div>
                                     ))}
                                   </div>

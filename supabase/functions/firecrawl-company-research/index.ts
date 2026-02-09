@@ -25,9 +25,9 @@ interface CompanyIntelligence {
   contact_role: string | null;
   physical_address: string | null;
   linkedin_url: string | null;
-  // HR/L&D/People leadership for LinkedIn outreach
+  // HR/L&D/People leadership for LinkedIn outreach - PRIMARY FOCUS
   hr_contacts: { name: string; role: string; linkedin_search_url: string }[] | null;
-  // NEW: Enhanced AI insights for email personalization
+  // Enhanced AI insights for email personalization
   industry_insight: string | null;
   recommended_diagnostic: string | null;
   recommended_product: string | null;
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
     
     console.log('Website scraped successfully, content length:', websiteContent.length);
 
-    // Step 2: Use AI to analyze the company
+    // Step 2: Use AI to analyze the company - HR-FIRST FOCUS
     const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
     if (!ANTHROPIC_API_KEY) {
       return new Response(
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const analysisPrompt = `You are an expert business intelligence analyst for a leadership development consultancy. Analyze this company website content and extract key information for sales outreach.
+    const analysisPrompt = `You are an expert business intelligence analyst for a leadership development consultancy. Your PRIMARY goal is to find HR/People/L&D decision-makers for sales outreach.
 
 WEBSITE URL: ${formattedUrl}
 PAGE TITLE: ${metadata.title || 'Unknown'}
@@ -140,53 +140,55 @@ Based on this content, provide a JSON response with the following structure:
 {
   "company_name": "The company name",
   "industry": "Their industry sector",
-  "company_size": "Estimate: startup, SME, mid-market, enterprise, or unknown",
+  "company_size": "Estimate: startup (<50), SME (50-200), mid-market (200-800), or enterprise (800+)",
   "about_summary": "2-3 sentence summary of what they do",
+  
+  "hr_contacts": [
+    {"name": "Full Name", "role": "Exact Role Title"}
+  ],
+  
   "leadership_team": [{"name": "Person Name", "role": "Their Role"}] or null if not found,
   "pain_points": ["Likely leadership challenges based on their context", "Another challenge"],
   "opportunity_signals": ["Signals that suggest they need leadership development", "Growth signals"],
-  "personalised_pitch": "MUST be structured in exactly 3 paragraphs separated by \\n\\n:\\n\\nOPENING PARAGRAPH: A personalized hook that references something specific about their company (recent news, their mission, a challenge in their industry). Show you've done your research. 2-3 sentences.\\n\\nMIDDLE PARAGRAPH: Connect their specific situation to how leadership development can help. Reference their likely pain points and aspirations. Introduce your expertise in helping similar organizations. 3-4 sentences.\\n\\nCLOSING PARAGRAPH: Clear, low-pressure call to action. Suggest a brief conversation to explore fit. Sign off professionally. 2-3 sentences.",
+  "personalised_pitch": "MUST be structured in exactly 3 paragraphs separated by \\n\\n:\\n\\nOPENING PARAGRAPH: A personalized hook that references something specific about their company. 2-3 sentences.\\n\\nMIDDLE PARAGRAPH: Connect their specific situation to how leadership development can help HR with manager effectiveness, team performance, or talent retention. 3-4 sentences.\\n\\nCLOSING PARAGRAPH: Clear, low-pressure call to action. Suggest a brief conversation. 2-3 sentences.",
   "suggested_approach": "One of: 'executive_coaching', 'team_workshop', 'shift_programme', 'leadership_diagnostic', or 'discovery_call' - with brief reasoning",
-  "contact_email": "Extract any business email address found (info@, hello@, contact@, or personal) or null",
+  "contact_email": "Extract any business email address found (info@, hello@, hr@, people@, or personal) or null",
   "contact_phone": "Extract any phone number found or null",
-  "contact_name": "Name of key decision maker (CEO, MD, HR Director) if found or null",
-  "contact_role": "Role of the key decision maker if found or null",
+  "contact_name": "Name of HR/People decision maker if found, otherwise CEO/MD, or null",
+  "contact_role": "Role of the contact (prefer HR/People roles over executive roles)",
   "physical_address": "Physical office address if found or null",
   "linkedin_url": "LinkedIn profile or company URL if found or null",
-  "hr_contacts": [{"name": "Full Name", "role": "Exact role title"}] - IMPORTANT: Look specifically for people in HR, People, L&D, or Talent roles,
-  "industry_insight": "One specific, data-driven insight about leadership challenges in this company's industry. Example: 'Mining companies scaling past 500 employees typically see a 40% drop in frontline supervisor effectiveness.' Make it specific and quotable for cold emails.",
-  "recommended_diagnostic": "Which diagnostic fits this company best: 'shift_diagnostic' (for team performance), 'leadership_diagnostic' (for individual leaders), 'team_diagnostic' (for team alignment), or 'ai_readiness_diagnostic' (for tech-forward companies)",
-  "recommended_product": "Which product/workshop is most relevant: 'executive_coaching', 'team_workshop_alignment', 'team_workshop_motivation', 'team_workshop_leadership', 'shift_programme', or 'contagious_identity'"
+  "industry_insight": "One specific, data-driven insight about leadership challenges in this company's industry. Make it specific to HR concerns like turnover, engagement, or manager effectiveness. Example: 'Mining companies scaling past 500 employees typically see a 40% drop in frontline supervisor effectiveness.'",
+  "recommended_diagnostic": "Which diagnostic fits: 'shift_diagnostic' (team performance), 'leadership_diagnostic' (individual leaders), 'team_diagnostic' (team alignment), or 'ai_readiness_diagnostic' (tech companies)",
+  "recommended_product": "Which product is most relevant: 'executive_coaching', 'team_workshop_alignment', 'team_workshop_motivation', 'team_workshop_leadership', 'shift_programme', or 'contagious_identity'"
 }
 
-CRITICAL - PERSONALISED PITCH FORMAT:
-The personalised_pitch MUST have exactly 3 distinct paragraphs:
-1. OPENING: Personalized hook showing research (mention their company name, industry, or specific detail)
-2. MIDDLE: Value proposition connecting their challenges to leadership development solutions
-3. CLOSING: Low-pressure CTA suggesting a brief call or conversation
+CRITICAL - HR/PEOPLE CONTACT EXTRACTION (PRIMARY PRIORITY):
+Look EXTREMELY carefully for any names and roles related to these HR/People functions. These are your PRIMARY targets:
 
-Separate each paragraph with \\n\\n (double newline). Do NOT use bullet points or numbered lists.
-
-CRITICAL - HR/People/L&D Contact Extraction:
-Look VERY carefully for any names and roles related to:
-- Head of HR / HR Director / HR Manager / Chief People Officer / CHRO
-- Head of Learning & Development / L&D Director / Training Manager
-- Head of People / People Director / People Partner
-- Head of Talent / Talent Director / Talent Acquisition
+SOUTH AFRICAN HR TITLES TO FIND:
+- Head of HR / HR Director / HR Manager / HR Business Partner
+- Chief People Officer / Head of People / People Director / People Manager
+- Head of Learning & Development / L&D Director / L&D Manager / Training Manager
+- Head of Talent / Talent Director / Talent Acquisition Manager
 - Head of Organisational Development / OD Manager
-- Chief Human Resources Officer
+- CHRO / Chief Human Resources Officer
+- VP People / VP Human Resources
 
-If you find ANY of these roles with names, include them in hr_contacts. Even if found in the leadership_team, duplicate them in hr_contacts for easy access.
+INDUSTRY-SPECIFIC TITLES:
+- Mining/Manufacturing: Training & Development Officer, Industrial Relations Manager, SHEQ Manager, Plant HR Manager
+- Tech: VP People, Employee Experience Lead, Head of People Ops, Chief People Officer
+- Engineering: HR Business Partner, Talent Development Manager
 
-Focus on:
-1. Leadership challenges they might face (scaling teams, culture, performance)
-2. Growth signals (hiring, expansion, new products)
-3. Pain points visible in their messaging
-4. Personalization hooks for outreach
-5. CONTACT DETAILS: Look carefully for email addresses, phone numbers, and physical addresses
-6. HR/PEOPLE/L&D CONTACTS: Extract ALL names with HR, People, L&D, Talent, or Training-related roles
-7. INDUSTRY INSIGHT: Generate a specific, quotable insight about leadership challenges in their industry
-8. PRODUCT FIT: Determine which diagnostic and product would be most relevant based on their situation
+If you find ANY person with these role titles, include them in hr_contacts. This is the MOST IMPORTANT field.
+
+If no specific HR person is found, look for:
+1. Team page or About Us page mentions
+2. LinkedIn company page references
+3. Press releases mentioning HR hires
+4. Job listings indicating HR team members
+
+FALLBACK: If no email is found on the website, generate a likely email format: info@domain.com
 
 Respond ONLY with valid JSON, no markdown formatting.`;
 
@@ -199,7 +201,7 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
+        max_tokens: 2500,
         messages: [
           { role: 'user', content: analysisPrompt }
         ],
@@ -230,7 +232,8 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       console.error('Failed to parse AI response:', parseError);
       console.log('Raw AI response:', aiContent);
       
-      // Return partial data
+      // Return partial data with fallback email
+      const domain = new URL(formattedUrl).hostname.replace('www.', '');
       intelligence = {
         company_name: metadata.title || new URL(formattedUrl).hostname,
         about_summary: 'Unable to fully analyze - manual review recommended',
@@ -238,6 +241,7 @@ Respond ONLY with valid JSON, no markdown formatting.`;
         opportunity_signals: null,
         personalised_pitch: null,
         suggested_approach: 'discovery_call',
+        contact_email: `info@${domain}`,
       };
     }
 
@@ -248,6 +252,17 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       role: contact.role,
       linkedin_search_url: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(contact.name + ' ' + companyName)}&origin=GLOBAL_SEARCH_HEADER`
     })) || null;
+
+    // Fallback email if none found
+    let contactEmail = intelligence.contact_email;
+    if (!contactEmail) {
+      try {
+        const domain = new URL(formattedUrl).hostname.replace('www.', '');
+        contactEmail = `info@${domain}`;
+      } catch {
+        contactEmail = null;
+      }
+    }
 
     // Build final response
     const result: CompanyIntelligence = {
@@ -261,20 +276,20 @@ Respond ONLY with valid JSON, no markdown formatting.`;
       opportunity_signals: intelligence.opportunity_signals || null,
       personalised_pitch: intelligence.personalised_pitch || null,
       suggested_approach: intelligence.suggested_approach || null,
-      contact_email: intelligence.contact_email || null,
+      contact_email: contactEmail,
       contact_phone: intelligence.contact_phone || null,
       contact_name: intelligence.contact_name || null,
       contact_role: intelligence.contact_role || null,
       physical_address: intelligence.physical_address || null,
       linkedin_url: intelligence.linkedin_url || null,
       hr_contacts: hrContacts,
-      // NEW: Enhanced AI insights
+      // Enhanced AI insights
       industry_insight: intelligence.industry_insight || null,
       recommended_diagnostic: intelligence.recommended_diagnostic || null,
       recommended_product: intelligence.recommended_product || null,
     };
 
-    console.log('Company research complete:', result.company_name);
+    console.log('Company research complete:', result.company_name, 'HR contacts found:', hrContacts?.length || 0);
 
     return new Response(
       JSON.stringify({ success: true, data: result }),

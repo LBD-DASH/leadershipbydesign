@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { industry, location, companySize, targetContacts } = await req.json() as DiscoveryRequest;
+    const { industry, location, companySize } = await req.json() as DiscoveryRequest;
 
     if (!industry || !location) {
       return new Response(
@@ -42,33 +42,44 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Size description for AI
+    // Size description for AI - strict 50-800 employee focus
     const sizeDescription = companySize === '50-200' 
       ? 'SME companies with 50-200 employees'
       : companySize === '200-500'
       ? 'mid-market companies with 200-500 employees'
-      : 'larger companies with 500+ employees';
+      : companySize === '50-800'
+      ? 'mid-market companies with 50-800 employees (NOT enterprise, NOT listed companies)'
+      : 'mid-market companies with 50-500 employees';
 
-    // Contact focus for AI
-    const contactFocus = targetContacts === 'hr' 
-      ? 'HR/People contacts (Head of HR, People & Culture Manager, Talent Director)'
-      : targetContacts === 'csuite'
-      ? 'C-Suite executives (CEO, MD, COO, Founder)'
-      : 'Both HR/People contacts AND C-Suite executives';
+    // Industry-specific focus for South Africa
+    const industryContext: Record<string, string> = {
+      'Manufacturing': 'manufacturing, industrial, production, FMCG, food processing, automotive parts, packaging companies',
+      'Technology': 'software, IT services, fintech, digital agencies, SaaS, tech startups that have scaled',
+      'Mining': 'mining services, mining contractors, equipment suppliers, exploration companies, mineral processing',
+      'Engineering': 'engineering consulting, civil engineering, mechanical engineering, electrical contractors, project management firms',
+    };
 
     console.log('Discovering companies:', { industry, location, companySize });
 
-    // Use Lovable AI to generate a list of real companies
-    const discoveryPrompt = `You are a B2B lead generation specialist for a leadership development consultancy in South Africa.
+    // Use Lovable AI to generate a list of real companies - HR-focused discovery
+    const discoveryPrompt = `You are a B2B lead generation specialist for a leadership development consultancy targeting HR and People leaders in South Africa.
 
-TASK: Generate a list of 8-10 REAL ${industry} companies based in ${location}, South Africa that match these criteria:
-- Company Size: ${sizeDescription}
-- These should be REAL companies that actually exist (not made up)
-- Focus on established local South African companies or regional HQs of international firms
-- These companies should potentially need leadership development services
+TASK: Generate a list of 8-10 REAL ${industry} companies (${industryContext[industry] || industry}) based in ${location}, South Africa that match these criteria:
+
+STRICT REQUIREMENTS:
+- Company Size: ${sizeDescription} - this is CRITICAL
+- EXCLUDE: Listed companies on JSE, multinational headquarters, companies with "Holdings", "Group", "Limited" in their name
+- EXCLUDE: Any company that clearly has 800+ employees (no Discovery, Sasol, Vodacom, MTN, etc.)
+- FOCUS: Owner-managed businesses, family businesses, regional players, growth-stage companies
+- These should be REAL companies that actually exist in South Africa
+
+TARGET COMPANIES:
+- Mid-market companies that have scaled past the startup phase
+- Companies likely to have an HR Manager, Head of People, or L&D function
+- Companies experiencing growth challenges, high turnover, or leadership development needs
 
 For each company, provide:
-1. Company Name (must be a real company)
+1. Company Name (must be a real South African company)
 2. Website URL (must be a real, working URL - format: https://example.co.za)
 3. Industry sub-sector
 4. Location within ${location}
@@ -76,9 +87,10 @@ For each company, provide:
 
 IMPORTANT:
 - Only include companies you're confident are REAL South African companies
-- Focus on well-established companies in ${industry}
-- Include a mix of well-known and lesser-known companies
+- Focus on companies in the 50-800 employee range
+- Include a mix of well-known regional players and growing mid-market companies
 - Website URLs must be real and accurate
+- Prioritize companies likely to have HR/People leadership functions
 
 Respond ONLY with a valid JSON array (no markdown):
 [
@@ -138,12 +150,16 @@ Respond ONLY with a valid JSON array (no markdown):
       const cleanJson = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       companies = JSON.parse(cleanJson);
       
-      // Validate and clean up the companies
-      companies = companies.filter(c => 
-        c.company_name && 
-        c.website_url && 
-        c.website_url.startsWith('http')
-      ).slice(0, 10); // Limit to 10
+      // Validate and clean up the companies - filter out enterprise names
+      const enterpriseKeywords = ['holdings', 'group', 'limited', 'ltd', 'plc', 'inc'];
+      companies = companies.filter(c => {
+        const nameLower = c.company_name.toLowerCase();
+        const hasEnterpriseKeyword = enterpriseKeywords.some(kw => nameLower.includes(kw));
+        return c.company_name && 
+               c.website_url && 
+               c.website_url.startsWith('http') &&
+               !hasEnterpriseKeyword;
+      }).slice(0, 10); // Limit to 10
       
     } catch (parseError) {
       console.error('Failed to parse AI response:', parseError);
