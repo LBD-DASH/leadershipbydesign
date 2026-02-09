@@ -9,6 +9,7 @@ export interface PodcastEpisode {
   guest?: string;
   guestTitle?: string;
   tags: string[];
+  contentAssetId?: string;
 }
 
 export const PODCAST_SHOW_ID = "34amsn8UPkBhY0dRZYFf1u";
@@ -58,7 +59,8 @@ This conversation challenges conventional leadership wisdom and offers a fresh p
     publishedDate: "2025-01-08",
     guest: "Nick Kinley",
     guestTitle: "Psychologist & Author of 'The Power Trap'",
-    tags: ["Leadership Psychology", "Power", "Self-Awareness", "Coaching"]
+    tags: ["Leadership Psychology", "Power", "Self-Awareness", "Coaching"],
+    contentAssetId: "d131cf62-4e04-4c97-a7bb-0b6fa86b0f7e"
   },
   {
     id: "leaders-reflecting-deeply-enough",
@@ -136,7 +138,8 @@ Key Themes:
 An honest, practical episode for anyone ready to examine their leadership approach and make meaningful changes.`,
     duration: "28 min",
     publishedDate: "2024-11-06",
-    tags: ["Leadership Style", "Self-Assessment", "Management", "Growth"]
+    tags: ["Leadership Style", "Self-Assessment", "Management", "Growth"],
+    contentAssetId: "05177960-d1f6-43d9-b28f-6d4629c0f568"
   }
 ];
 
