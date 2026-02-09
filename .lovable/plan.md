@@ -1,360 +1,216 @@
 
-# Prospecting System Upgrade: Automated Lead Warming & Conversion
 
-## Overview
+# Prospecting Engine Overhaul: HR-Focused Discovery & Automation
 
-This upgrade transforms the existing prospecting system from a "discover and cold email" approach into a sophisticated "discover, warm, engage, and convert" pipeline with automated multi-touch sequences, diagnostic funnel integration, and comprehensive analytics.
+## Summary
 
-## Current System Analysis
+A complete overhaul of the prospecting system to focus on **HR decision-makers** (not CEOs), enforce **50-800 staff size limits**, ensure **emails are actually sent**, and guarantee **real-time notifications** when prospects engage.
 
-The existing system includes:
-- **Discovery Pipeline** (`find-companies`): Uses Gemini AI to identify 8-10 companies per industry
-- **Deep Research** (`firecrawl-company-research`): Scrapes websites and uses Claude to extract intelligence
-- **Prospect Scoring** (`prospectScoring.ts`): Traffic light system (Hot 60+, Warm 35-59, Cool <35)
-- **Outreach Composer**: Manual email sending via Resend with POPIA compliance
-- **Automation Pipeline** (`auto-prospect-pipeline`): Daily discovery at 8:00 AM SAST via pg_cron
-- **Database**: `prospect_companies`, `prospect_outreach`, `prospecting_runs`, `prospecting_config`
+---
 
-## Upgrade Architecture
+## Current Problems Identified
+
+1. **Wrong contact focus**: System extracts CEOs/leadership, but you need **HR/People/L&D heads**
+2. **Wrong company sizes**: Database shows "enterprise" companies (Coca-Cola, Mimecast, etc.) instead of 50-800 staff
+3. **No HR contacts found**: Most prospects have empty `hr_contacts` arrays
+4. **No emails sent**: Only 1 outreach email ever sent; no sequences are active
+5. **Industries need updating**: Need to focus on Manufacturing, Tech, Mining, Engineering for February
+6. **LinkedIn integration missing**: No direct "Connect" button for HR contacts
+7. **Follow-up window too restrictive**: Tue-Thu only means 4 days/week of silence
+
+---
+
+## Implementation Plan
+
+### 1. Update Industry Configuration
+
+**Database Update**: Update `prospecting_config` table to:
+- Disable Healthcare
+- Add Mining industry
+- Keep Manufacturing, Technology, Engineering
+- Ensure all have company_size = "50-800"
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        DISCOVERY LAYER (8:00 AM)                        │
-│  find-companies → firecrawl-company-research → prospect_companies       │
-│  (Enhanced: Now generates industry insights + recommended diagnostics)  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     SEQUENCE ENGINE (9:00 AM Daily)                     │
-│  process-follow-up-sequences                                            │
-│  • Selects template by prospect score (Hot/Warm/Cool)                   │
-│  • Schedules Step 1-4 follow-ups (Day 0, 3, 7, 14)                     │
-│  • Rate limiting: 10 new outreach + 15 follow-ups/day                  │
-│  • Smart scheduling: Tue-Thu, 8-10 AM only                             │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     ENGAGEMENT TRACKING                                 │
-│  • UTM-tagged diagnostic links in all emails                            │
-│  • Prospect-to-diagnostic matching on submission                        │
-│  • Status updates: researched → contacted → engaged → replied → converted│
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     DAILY DIGEST (9:30 AM)                              │
-│  send-daily-digest                                                      │
-│  • New prospects discovered                                             │
-│  • Follow-ups sent                                                      │
-│  • Engaged/replied prospects                                            │
-│  • Top 3 hot leads ready for outreach                                  │
-│  • Weekly funnel stats                                                  │
-└─────────────────────────────────────────────────────────────────────────┘
+Industries for February:
+├── Manufacturing  (active, 50-800)
+├── Technology     (active, 50-800)
+├── Mining        (active, 50-800)  [NEW]
+└── Engineering   (active, 50-800)
 ```
 
 ---
 
-## Phase 1: Database Schema Changes
+### 2. Enhance AI Discovery Prompt (`find-companies`)
 
-### New Table: `prospect_sequences`
+Update the edge function to:
+- **Explicitly exclude enterprise companies** (>800 employees)
+- **Prioritize mid-market SMEs** with 50-800 staff
+- Add validation to reject companies that are clearly too large
 
-Tracks the multi-step email sequence for each prospect.
-
-```sql
-CREATE TABLE prospect_sequences (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  prospect_id UUID REFERENCES prospect_companies(id) ON DELETE CASCADE,
-  sequence_step INTEGER DEFAULT 1,
-  next_send_at TIMESTAMPTZ,
-  status TEXT DEFAULT 'active',
-  paused_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Status values: active, paused, completed, replied, unsubscribed, engaged
--- RLS policies for admin-only access
-```
-
-### Update: `prospect_outreach` Table
-
-Add columns to track sequence steps and templates:
-
-```sql
-ALTER TABLE prospect_outreach 
-  ADD COLUMN sequence_step INTEGER DEFAULT 1,
-  ADD COLUMN template_used TEXT;
-```
-
-### Update: `prospect_companies` Table
-
-Add columns for enhanced AI insights:
-
-```sql
-ALTER TABLE prospect_companies 
-  ADD COLUMN industry_insight TEXT,
-  ADD COLUMN recommended_diagnostic TEXT,
-  ADD COLUMN recommended_product TEXT,
-  ADD COLUMN engagement_source TEXT,
-  ADD COLUMN engaged_at TIMESTAMPTZ;
-```
-
----
-
-## Phase 2: Email Template System
-
-### Template Selection Logic
-
-Based on prospect quality score:
-- **Hot Lead (60+)**: Direct, confident approach
-- **Warm Lead (35-59)**: Value-first with diagnostic link
-- **Cool Lead (<35)**: Curiosity-based industry insight
-
-### 4-Step Sequence Templates
-
-| Step | Timing | Subject Pattern | Purpose |
-|------|--------|-----------------|---------|
-| 1 | Day 0 | Score-based template | Initial outreach |
-| 2 | Day 3 | "Re: [Original]" | Simple follow-up |
-| 3 | Day 7 | "A resource for [Company]" | Value-add with diagnostic |
-| 4 | Day 14 | "Last note from me" | Door-open close |
-
-All emails include:
-- UTM tracking: `?utm_source=outreach&utm_medium=email&utm_campaign=sequence&utm_content=prospect_[id]`
-- SHIFT Diagnostic link
-- POPIA-compliant unsubscribe
-
----
-
-## Phase 3: Edge Functions
-
-### 1. `process-follow-up-sequences` (New)
-
-Scheduled daily at 9:00 AM SAST via pg_cron.
-
-**Responsibilities:**
-- Query all `prospect_sequences` where `status = 'active'` and `next_send_at <= NOW()`
-- For each sequence, select the appropriate template based on step and score
-- Send email via Resend
-- Update sequence step and schedule next send
-- Apply rate limiting (max 15 follow-ups/day)
-- Smart scheduling: only send Tue-Thu, 8-10 AM
-
-**Flow:**
+Key prompt changes:
 ```text
-1. Fetch active sequences due for sending
-2. Group by step (1, 2, 3, 4)
-3. Apply daily rate limit (15 max)
-4. For each:
-   a. Load prospect data
-   b. Select template by step + score
-   c. Personalise with company data
-   d. Send via Resend
-   e. Record in prospect_outreach
-   f. Update sequence (step++, next_send_at)
-   g. Mark completed after step 4
+"Generate 8-10 REAL ${industry} companies in ${location} with 50-800 employees.
+ EXCLUDE: Listed companies, multinationals, companies with 'Limited' or 'Holdings'.
+ FOCUS: Owner-managed, family businesses, regional players, growth-stage firms."
 ```
-
-### 2. `send-prospect-outreach` (Enhance)
-
-Update existing function to:
-- Accept `sequence_step` and `template_used` parameters
-- Auto-create sequence record when step 1 is sent
-- Schedule follow-up steps automatically
-
-### 3. `send-daily-digest` (New)
-
-Scheduled daily at 9:30 AM SAST via pg_cron.
-
-**Contents:**
-- New prospects discovered today
-- Follow-ups sent today by step
-- Engaged prospects (clicked diagnostic)
-- Replied prospects
-- Weekly funnel stats
-- Top 3 hot leads not yet contacted
-
-**Recipients:** kevin@kevinbritz.com, lauren@kevinbritz.com
-
-### 4. `firecrawl-company-research` (Enhance)
-
-Update AI prompt to also extract:
-- `industry_insight`: One industry-specific observation for email personalisation
-- `recommended_diagnostic`: Which diagnostic fits this company (SHIFT, Values Blueprint, etc.)
-- `recommended_product`: Which workshop/product is most relevant
 
 ---
 
-## Phase 4: Diagnostic Funnel Integration
+### 3. Overhaul Company Research for HR Focus (`firecrawl-company-research`)
 
-### UTM Tracking in Emails
+Current AI prompt asks for leadership team first, HR contacts second. This reversal is critical:
 
-All diagnostic links include UTM parameters:
-```
-https://leadershipbydesign.co/shift-diagnostic?utm_source=outreach&utm_medium=email&utm_campaign=prospect_[prospect_id]
-```
+**Priority Changes**:
+1. **HR contacts as PRIMARY focus** - Head of HR, People Director, L&D Manager, Talent Lead
+2. **LinkedIn search URLs** for each HR contact (already implemented but not finding contacts)
+3. **Add industry-specific HR role variations**:
+   - Mining: "Training & Development Officer", "SHEQ Manager"
+   - Manufacturing: "Industrial Relations Manager", "Plant HR Manager"
+   - Tech: "VP People", "Chief People Officer", "Employee Experience Lead"
 
-### Prospect-Diagnostic Matching
-
-When a diagnostic is submitted:
-1. Check if `utm_campaign` matches pattern `prospect_[uuid]`
-2. Extract prospect ID from UTM
-3. Update prospect record:
-   - `status = 'engaged'`
-   - `engaged_at = NOW()`
-   - `engagement_source = 'shift_diagnostic'`
-4. Update sequence: `status = 'engaged'`
-5. Send hot notification to Kevin
-
-### Implementation Location
-
-Modify the diagnostic submission handlers (`ShiftDiagnostic.tsx`, etc.) to:
-- Parse UTM parameters on results page
-- Call new `check-prospect-engagement` edge function
-- Trigger notification if match found
+**Enhanced extraction prompt** to find HR contacts from:
+- About/Team pages
+- LinkedIn company pages
+- Press releases mentioning HR hires
+- Job listings (HR team expansion signals)
 
 ---
 
-## Phase 5: Dashboard Enhancements
+### 4. Add LinkedIn Connect Button for HR Contacts
 
-### Pipeline Funnel Visualization
+Update `ProspectList.tsx` to include:
+- A prominent **"Connect on LinkedIn"** button for each HR contact
+- Opens LinkedIn search pre-filtered to that person + company
+- Track click events for engagement metrics
 
-New component showing:
+Current code already has a "Find on LinkedIn" button. Enhance it to:
+- Use a LinkedIn connection message template
+- Copy suggested connection message to clipboard
+- Track clicks in analytics
+
+---
+
+### 5. Fix Email Sequence Automation
+
+**Root cause**: The `send-prospect-outreach` function creates sequences, but `process-follow-up-sequences` only runs Tue-Thu 8-10 AM SAST. Today is Sunday, so no emails send.
+
+**Fixes**:
+1. **Change schedule to DAILY** (Mon-Sun, 8-10 AM) for February testing
+2. **Remove day-of-week restriction** in `isWithinSendWindow()`
+3. **Ensure sequences are created** when first email is sent
+4. **Verify cron jobs are running** by checking logs
+
+**Modified schedule**:
 ```text
-Discovered → Researched → Contacted → Engaged → Replied → Converted
-    42          38           24          8          4          2
-         90%         63%         33%         50%        50%
+┌─ 8:00 AM SAST ─┐  Discovery pipeline runs
+│                │
+├─ 9:00 AM SAST ─┤  Follow-up sequences process  [DAILY now]
+│                │
+└─ 9:30 AM SAST ─┘  Daily digest email sent
 ```
-
-### Sequence Status View
-
-New tab in Marketing Dashboard showing:
-- All active sequences
-- Current step (1-4)
-- Next scheduled send date
-- Quick actions: Pause, Skip, Advance
-
-### Meeting Logger
-
-When prospect status = 'replied', show form:
-- Meeting date/time
-- Notes
-- Outcome dropdown (Converted, Not Interested, Follow Up Later)
 
 ---
 
-## Phase 6: Smart Scheduling & Rate Limiting
+### 6. Ensure Email Is Actually Sent
 
-### Timing Configuration
+**Current issue**: Prospects have no `contact_email`, so outreach can't be sent.
 
-| Task | Time (SAST) | Day Restriction |
-|------|-------------|-----------------|
-| Discovery Pipeline | 8:00 AM | Daily |
-| Follow-up Sequences | 9:00 AM | Daily (sends only Tue-Thu) |
-| Daily Digest | 9:30 AM | Weekdays only |
-| New Outreach Emails | 8-10 AM | Tue-Thu only |
+**Solutions**:
+1. **Require email extraction** in research - flag prospects without email as "needs_research"
+2. **Add email discovery fallback**: If no email found on website, generate `info@company.com` as fallback
+3. **Auto-start sequence** when first email is sent (already implemented, verify it works)
+4. **Add "Send Test Email" button** in dashboard for debugging
 
-### Rate Limits (POPIA Compliance)
+---
 
-- Max 10 new outreach emails per day
-- Max 15 follow-up emails per day
-- Queue overflow for next business day
+### 7. Real-Time Hot Lead Notifications
 
-### Deliverability
+**Current state**: `check-prospect-engagement` sends emails to Kevin and Lauren when a prospect clicks the diagnostic. This works but needs verification.
 
+**Enhancements**:
+1. **Add in-app toast notification** when engagement detected (if dashboard is open)
+2. **Add browser push notification** option (optional future enhancement)
+3. **Ensure UTM tracking** is present in all diagnostic links
+4. **Test the full flow**: Click diagnostic link → Complete → Notification sent
+
+---
+
+### 8. Update Email Templates for HR Audience
+
+Modify templates in `process-follow-up-sequences` to speak to HR buyers, not CEOs:
+
+**Step 1 (Hot)**: 
+- Reference "leadership capability across your management team"
+- Mention ROI of leadership development
+
+**Step 1 (Warm)**:
+- Lead with the diagnostic tool
+- Position as "quick win" for HR to assess team gaps
+
+**Step 1 (Cool)**:
+- Industry insight hook specific to HR challenges
+- Reference turnover, engagement, manager effectiveness
+
+---
+
+### 9. Rate Limiting & POPIA Compliance
+
+**Current limits** (keep):
+- 10 new outreach per day
+- 15 follow-ups per day
 - 2-second delay between sends
-- Different subject lines per step
-- Plain-text alternative for all HTML
+
+**Add**:
+- Unsubscribe tracking (already exists)
+- "Do not email" status for prospects who unsubscribe
+- Respect bounce tracking
 
 ---
 
-## Phase 7: Enhanced AI Research
+### 10. Update Dashboard Features
 
-### Updated Claude Prompt
+**Add to ProspectList**:
+1. **"No Email" filter** - Show prospects needing research
+2. **"Hot Leads" filter** - Score 60+ with email
+3. **"Pending Sequences"** indicator - Show which prospects have active sequences
+4. **LinkedIn outreach tracker** - Log when you connected on LinkedIn
 
-The `firecrawl-company-research` prompt will be enhanced to return:
-
-```json
-{
-  "industry_insight": "Mining companies scaling past 500 employees typically see a 40% drop in frontline supervisor effectiveness due to...",
-  "recommended_diagnostic": "shift_diagnostic",
-  "recommended_product": "team_workshop",
-  ...existing fields
-}
-```
-
-This data auto-populates in email templates for hyper-personalisation.
+**Add to Automation tab**:
+1. **Last run status** - Show when pipeline last ran
+2. **Error log** - Show any failures
+3. **"Run Sequences Now"** button for testing
 
 ---
 
-## Implementation Phases
+## Technical Changes Summary
 
-### Week 1: Core Infrastructure
-1. Database migrations (new tables + columns)
-2. Update `prospect_outreach` table structure
-3. Create `prospect_sequences` with RLS policies
-4. Enhance `firecrawl-company-research` with new AI fields
-
-### Week 2: Sequence Engine
-1. Build email template constants/utilities
-2. Create `process-follow-up-sequences` edge function
-3. Update `send-prospect-outreach` to auto-create sequences
-4. Set up pg_cron job for 9:00 AM
-
-### Week 3: Engagement & Notifications
-1. Create `send-daily-digest` edge function
-2. Set up pg_cron for 9:30 AM
-3. Add prospect-diagnostic matching logic
-4. Create engagement notification handler
-
-### Week 4: Dashboard & Polish
-1. Build Pipeline Funnel component
-2. Build Sequence Status view
-3. Build Meeting Logger component
-4. Add rate limiting UI indicators
-5. Testing and refinement
+| File | Changes |
+|------|---------|
+| `supabase/functions/find-companies/index.ts` | Tighter company size prompt, exclude enterprise |
+| `supabase/functions/firecrawl-company-research/index.ts` | HR-first extraction, industry-specific roles |
+| `supabase/functions/process-follow-up-sequences/index.ts` | Remove Tue-Thu restriction, daily runs |
+| `src/components/marketing/ProspectList.tsx` | Enhanced LinkedIn buttons, filters |
+| `src/lib/emailTemplates.ts` | HR-focused messaging |
+| Database: `prospecting_config` | Add Mining, update sizes to 50-800 |
 
 ---
 
-## Technical Specifications
+## Immediate Actions After Approval
 
-### New Edge Functions
-
-| Function | Trigger | Purpose |
-|----------|---------|---------|
-| `process-follow-up-sequences` | pg_cron 9:00 AM | Send scheduled follow-ups |
-| `send-daily-digest` | pg_cron 9:30 AM | Summary email to Kevin |
-| `check-prospect-engagement` | API call | Match diagnostic to prospect |
-
-### New Frontend Components
-
-| Component | Location | Purpose |
-|-----------|----------|---------|
-| `PipelineFunnel` | Marketing Dashboard | Visual funnel stats |
-| `SequenceStatusView` | Marketing Dashboard | Manage active sequences |
-| `MeetingLogger` | Prospect detail | Log meeting outcomes |
-| `EmailTemplatePreview` | Outreach composer | Preview step templates |
-
-### Database Indexes
-
-```sql
-CREATE INDEX idx_sequences_next_send ON prospect_sequences(next_send_at) WHERE status = 'active';
-CREATE INDEX idx_sequences_prospect ON prospect_sequences(prospect_id);
-CREATE INDEX idx_companies_status ON prospect_companies(status);
-CREATE INDEX idx_companies_engaged ON prospect_companies(engaged_at) WHERE engaged_at IS NOT NULL;
-```
+1. **Update prospecting_config** → Add Mining, verify 50-800 size
+2. **Deploy updated edge functions** → HR focus + daily sends
+3. **Trigger pipeline manually** → Discover new prospects
+4. **Verify email sends** → Check Resend dashboard
+5. **Test engagement flow** → Click diagnostic link → Verify notification
 
 ---
 
-## Success Metrics
+## Expected Outcome
 
 After implementation:
-- **Discovery to Contact Rate**: Target 80% (from current manual process)
-- **Sequence Completion Rate**: Target 90% (all 4 steps sent)
-- **Diagnostic Engagement Rate**: Target 5% of contacted prospects
-- **Reply Rate**: Target 10% (industry average 1-5%)
-- **Time Saved**: ~2 hours/day in manual outreach
+- **Daily discovery** of 8-10 companies per industry (32-40 total)
+- **HR contacts extracted** with LinkedIn search URLs
+- **Automated 4-step sequences** running daily
+- **Real-time alerts** when prospects engage
+- **Clean dashboard** with hot lead prioritization
 
-This upgrade transforms the prospecting system into a comprehensive lead warming engine that automatically nurtures prospects through a proven sequence while integrating seamlessly with your diagnostic tools.
