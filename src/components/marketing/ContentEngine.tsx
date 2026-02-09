@@ -46,7 +46,17 @@ export default function ContentEngine() {
       return;
     }
 
-    await processVideo(videoUrl, manualTranscript || undefined);
+    if (!manualTranscript.trim()) {
+      toast({
+        title: 'Transcript required',
+        description: 'Please paste the video transcript. On YouTube, click "..." → "Show transcript", then copy the text.',
+        variant: 'destructive',
+      });
+      setShowManualInput(true);
+      return;
+    }
+
+    await processVideo(videoUrl, manualTranscript);
     setVideoUrl('');
     setManualTranscript('');
     setShowManualInput(false);
@@ -96,7 +106,7 @@ export default function ContentEngine() {
             Process YouTube Video
           </CardTitle>
           <CardDescription>
-            Paste a YouTube URL to generate 9+ content assets automatically
+            Paste a YouTube URL and transcript to generate 9+ content assets automatically
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -124,13 +134,19 @@ export default function ContentEngine() {
             </Button>
           </div>
 
-          <button
-            onClick={() => setShowManualInput(!showManualInput)}
-            className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
-          >
-            {showManualInput ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            Paste transcript manually (if auto-extraction fails)
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={() => setShowManualInput(!showManualInput)}
+              className="text-sm font-medium text-foreground flex items-center gap-1"
+            >
+              {showManualInput ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              Paste transcript {!manualTranscript && <span className="text-destructive ml-1">(required)</span>}
+              {manualTranscript && <Check className="w-4 h-4 text-green-600 ml-1" />}
+            </button>
+            <p className="text-xs text-muted-foreground">
+              On YouTube: click ⋯ below the video → "Show transcript" → Select all → Copy
+            </p>
+          </div>
 
           <AnimatePresence>
             {showManualInput && (
@@ -154,7 +170,7 @@ export default function ContentEngine() {
           {processing && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>This may take 1-2 minutes. Extracting transcript, generating content, creating PDF...</span>
+              <span>This may take 1-2 minutes. Generating content with AI...</span>
             </div>
           )}
         </CardContent>
