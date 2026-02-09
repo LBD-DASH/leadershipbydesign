@@ -165,7 +165,7 @@ export const prospectsApi = {
     return { success: true, data: transformProspectRow(data as Record<string, unknown>) };
   },
 
-  // Get all prospects
+  // Get all prospects (client-side; may be filtered by database access rules)
   async getProspects(): Promise<{ success: boolean; data?: ProspectCompany[]; error?: string }> {
     const { data, error } = await supabase
       .from('prospect_companies')
@@ -178,6 +178,58 @@ export const prospectsApi = {
     return { success: true, data: (data as Record<string, unknown>[]).map(transformProspectRow) };
   },
 
+  // Admin-only: fetch prospects via server-privileged function (avoids RLS filtering)
+  async getProspectsAdmin(adminToken: string): Promise<{ success: boolean; data?: ProspectCompany[]; error?: string }> {
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-prospects', {
+        body: { action: 'list' },
+        headers: { 'x-admin-token': adminToken },
+      });
+
+      if (error) {
+        const message = typeof error.message === 'string' ? error.message : 'Failed to load prospects';
+        return { success: false, error: message };
+      }
+
+      if (!data?.success) {
+        return { success: false, error: data?.error || 'Failed to load prospects' };
+      }
+
+      return {
+        success: true,
+        data: (data.data as Record<string, unknown>[]).map(transformProspectRow),
+      };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load prospects';
+      return { success: false, error: message };
+    }
+  },
+
+  async getProspectByIdAdmin(
+    adminToken: string,
+    prospectId: string
+  ): Promise<{ success: boolean; data?: ProspectCompany; error?: string }> {
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-prospects', {
+        body: { action: 'get', prospectId },
+        headers: { 'x-admin-token': adminToken },
+      });
+
+      if (error) {
+        const message = typeof error.message === 'string' ? error.message : 'Failed to load prospect';
+        return { success: false, error: message };
+      }
+
+      if (!data?.success) {
+        return { success: false, error: data?.error || 'Failed to load prospect' };
+      }
+
+      return { success: true, data: transformProspectRow(data.data as Record<string, unknown>) };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load prospect';
+      return { success: false, error: message };
+    }
+  },
   // Discover companies using AI search
   async discoverCompanies(params: DiscoverySearchParams): Promise<{ success: boolean; data?: DiscoveredCompany[]; error?: string }> {
     try {
