@@ -22,4 +22,4 @@ Disallow: /leadership-mistakes-checklist
 Disallow: /life-os
 
 # Sitemap
-Sitemap: https://leadershipbydesign.co/sitemap.xml
+Sitemap: https://fdtlljyfjdlrymfeguoa.supabase.co/functions/v1/generate-sitemap
