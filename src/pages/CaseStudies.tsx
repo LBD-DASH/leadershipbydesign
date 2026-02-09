@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, TrendingUp, Users, Building2, DollarSign, Clock, Target, CheckCircle2 } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, Target, CheckCircle2 } from "lucide-react";
+import caseStudyTechScaling from "@/assets/case-study-tech-scaling.jpg";
+import caseStudyManufacturing from "@/assets/case-study-manufacturing.jpg";
+import caseStudyFinancial from "@/assets/case-study-financial.jpg";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -13,6 +16,7 @@ const caseStudies = [
     company: "Technology Scale-Up",
     industry: "Technology",
     employees: "250+ employees",
+    image: caseStudyTechScaling,
     challenge: "Rapid growth from 50 to 250 employees in 18 months was causing culture erosion, leadership gaps, and high turnover among mid-level managers.",
     solution: "SHIFT Leadership Development Programme for 25 managers over 6 months, combined with executive coaching for the leadership team.",
     results: [
@@ -33,6 +37,7 @@ const caseStudies = [
     company: "Manufacturing Firm",
     industry: "Manufacturing",
     employees: "500+ employees",
+    image: caseStudyManufacturing,
     challenge: "High turnover (35% annually), low engagement scores, and a leadership team operating in silos with no succession planning.",
     solution: "Team Effectiveness Workshops for department heads, followed by Executive Coaching for the senior leadership team over 9 months.",
     results: [
@@ -53,6 +58,7 @@ const caseStudies = [
     company: "Financial Services Group",
     industry: "Financial Services",
     employees: "800+ employees",
+    image: caseStudyFinancial,
     challenge: "No internal leadership succession pipeline. 90% of senior roles filled externally, creating culture friction and long ramp-up times.",
     solution: "Bespoke Leadership Development Programme spanning 12 months, integrating leadership diagnostics, group workshops, and individual coaching.",
     results: [
@@ -160,20 +166,28 @@ export default function CaseStudies() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className={`${colors.bg} ${colors.border} border-2 rounded-3xl overflow-hidden`}
                 >
-                  {/* Header */}
-                  <div className="p-8 md:p-10 border-b border-inherit">
-                    <div className="flex flex-wrap items-center gap-3 mb-4">
-                      <span className={`${colors.badge} px-3 py-1 rounded-full text-sm font-medium`}>
-                        {study.industry}
-                      </span>
-                      <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Users className="w-4 h-4" />
-                        {study.employees}
-                      </span>
+                  {/* Header with Image */}
+                  <div className="relative h-48 md:h-64 overflow-hidden">
+                    <img 
+                      src={study.image} 
+                      alt={`${study.company} case study`}
+                      className="w-full h-full object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <span className={`${colors.badge} px-3 py-1 rounded-full text-sm font-medium`}>
+                          {study.industry}
+                        </span>
+                        <span className="flex items-center gap-1 text-sm text-white/90">
+                          <Users className="w-4 h-4" />
+                          {study.employees}
+                        </span>
+                      </div>
+                      <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">
+                        {study.company}
+                      </h2>
                     </div>
-                    <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-2">
-                      {study.company}
-                    </h2>
                   </div>
 
                   {/* Content */}
