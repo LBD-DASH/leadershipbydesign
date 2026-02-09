@@ -70,28 +70,32 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
   };
 
   useEffect(() => {
-    fetchProspects().then((data) => {
-      // Auto-open outreach composer if prospect ID is provided from digest email
-      if (autoOpenProspectId && data.length > 0) {
-        const prospect = data.find(p => p.id === autoOpenProspectId);
-        if (prospect) {
-          setEmailProspect(prospect);
-          setExpandedIds(new Set([autoOpenProspectId]));
-          toast({
-            title: "Hot Lead from Digest",
-            description: `Opening outreach composer for ${prospect.company_name}`,
-          });
-        } else {
-          toast({
-            title: "Prospect Not Found",
-            description: "The prospect from the email may have been deleted",
-            variant: "destructive",
-          });
-        }
-        onAutoOpenHandled?.();
+    fetchProspects();
+  }, []);
+
+  // Separate effect to handle auto-open when prospect ID is provided
+  useEffect(() => {
+    console.log('[ProspectList] Auto-open check:', { autoOpenProspectId, prospectsCount: prospects.length, isLoading });
+    if (autoOpenProspectId && prospects.length > 0 && !isLoading) {
+      const prospect = prospects.find(p => p.id === autoOpenProspectId);
+      console.log('[ProspectList] Found prospect:', prospect?.company_name);
+      if (prospect) {
+        setEmailProspect(prospect);
+        setExpandedIds(new Set([autoOpenProspectId]));
+        toast({
+          title: "Hot Lead from Digest",
+          description: `Opening outreach composer for ${prospect.company_name}`,
+        });
+      } else {
+        toast({
+          title: "Prospect Not Found",
+          description: "The prospect from the email may have been deleted",
+          variant: "destructive",
+        });
       }
-    });
-  }, [autoOpenProspectId]);
+      onAutoOpenHandled?.();
+    }
+  }, [autoOpenProspectId, prospects, isLoading]);
 
   const toggleExpanded = (id: string) => {
     setExpandedIds(prev => {

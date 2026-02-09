@@ -23,21 +23,42 @@ export default function MarketingDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('prospects');
   const [autoOpenProspectId, setAutoOpenProspectId] = useState<string | null>(null);
+  const [prospectsSubTab, setProspectsSubTab] = useState<string>('research');
+  const [pendingDeepLink, setPendingDeepLink] = useState<{ action: string; prospectId: string } | null>(null);
 
-  // Handle URL parameters for deep linking from digest email
+  // Capture URL parameters on initial load
   useEffect(() => {
-    if (isAuthenticated) {
-      const action = searchParams.get('action');
-      const prospectId = searchParams.get('prospect');
+    const action = searchParams.get('action');
+    const prospectId = searchParams.get('prospect');
+    
+    if (action === 'outreach' && prospectId) {
+      console.log('[MarketingDashboard] Deep link captured:', { action, prospectId, isAuthenticated });
       
-      if (action === 'outreach' && prospectId) {
+      if (isAuthenticated) {
+        // Already authenticated - process immediately
+        console.log('[MarketingDashboard] Processing immediately (already authenticated)');
         setActiveTab('prospects');
+        setProspectsSubTab('list');
         setAutoOpenProspectId(prospectId);
-        // Clear URL params after processing
+        setSearchParams({});
+      } else {
+        // Not authenticated - store for later
+        setPendingDeepLink({ action, prospectId });
         setSearchParams({});
       }
     }
-  }, [isAuthenticated, searchParams, setSearchParams]);
+  }, [searchParams, isAuthenticated]);
+
+  // Process pending deep link after authentication
+  useEffect(() => {
+    if (isAuthenticated && pendingDeepLink && !loading) {
+      console.log('[MarketingDashboard] Processing pending deep link after auth:', pendingDeepLink);
+      setActiveTab('prospects');
+      setProspectsSubTab('list');
+      setAutoOpenProspectId(pendingDeepLink.prospectId);
+      setPendingDeepLink(null);
+    }
+  }, [isAuthenticated, pendingDeepLink, loading]);
 
   if (loading) {
     return (
@@ -145,7 +166,7 @@ export default function MarketingDashboard() {
               </TabsList>
 
               <TabsContent value="prospects" className="mt-6">
-                <Tabs defaultValue={autoOpenProspectId ? "list" : "research"} className="w-full">
+                <Tabs value={prospectsSubTab} onValueChange={setProspectsSubTab} className="w-full">
                   <TabsList className="mb-4">
                     <TabsTrigger value="research">Research Company</TabsTrigger>
                     <TabsTrigger value="list">Prospect List</TabsTrigger>
