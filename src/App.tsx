@@ -117,8 +117,8 @@ const App = () => (
           <Route path="/contagious-identity" element={<ContagiousIdentityCoaching />} />
           <Route path="/contagious-identity-workbook" element={<ContagiousIdentityWorkbook />} />
           <Route path="/contagious-identity-workbook/success" element={<ContagiousIdentityWorkbookSuccess />} />
-          <Route path="/auth" element={<Navigate to="/admin" replace />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/auth" element={<Navigate to="/marketing" replace />} />
+          <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
           <Route path="/admin/overview/executive-coaching" element={<ExecutiveCoachingOverview />} />
           <Route path="/admin/overview/shift-leadership" element={<ShiftLeadershipOverview />} />
