@@ -85,7 +85,7 @@ const Products = () => {
     shortDesc: "Build your leadership identity",
     price: "R697",
     link: "/contagious-identity-workbook",
-    image: productHandshake,
+    image: contagiousIdentityHero,
     isExternal: false,
     isBuilt: true,
     features: ["Identity Discovery Process", "50% Discount Codes for Tools", "Self-Coaching Prompts", "Executive Coaching Preview"]
