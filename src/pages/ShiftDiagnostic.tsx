@@ -29,7 +29,8 @@ export default function ShiftDiagnostic() {
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     const scores = calculateShiftScores(answers);
-    const shiftResult = getShiftResult(scores);
+    const aiScore = calculateAIReadinessScore(answers);
+    const shiftResult = getShiftResult(scores, aiScore);
     setResult(shiftResult);
     setPendingAnswers(answers);
     setStage('capture');
