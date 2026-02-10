@@ -173,8 +173,8 @@ export default function ShiftDiagnostic() {
         keywords="SHIFT skills, AI readiness, team diagnostic, self-management, human intelligence, innovation, focus, thinking, AI leadership"
       />
       <WebApplicationSchema
-        name="SHIFT Team Diagnostic"
-        description="Discover your team's strengths and development areas across the five SHIFT skills: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        name="SHIFT AI-Ready Diagnostic"
+        description="Discover your team's strengths and AI readiness across the five SHIFT skills plus AI leadership capabilities."
         url="/shift-diagnostic"
       />
       <BreadcrumbSchema
