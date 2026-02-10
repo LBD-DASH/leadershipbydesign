@@ -10,8 +10,8 @@ import ShiftDiagnosticForm from '@/components/shift-diagnostic/ShiftDiagnosticFo
 import ShiftResultsPage from '@/components/shift-diagnostic/ShiftResultsPage';
 import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptureGate';
 import { supabase } from '@/integrations/supabase/client';
-import { calculateShiftScores, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
-import { useUtmParams } from '@/hooks/useUtmParams';
+import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
+import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
 import { processLead } from '@/utils/notifications';
 
