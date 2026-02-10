@@ -166,11 +166,11 @@ export default function ShiftDiagnostic() {
   return (
     <>
       <SEO
-        title="SHIFT Team Diagnostic | Discover Your Team's Skills Profile"
-        description="Take the free SHIFT Team Diagnostic to discover your team's strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        title="SHIFT AI-Ready Diagnostic | Discover Your Team's Skills & AI Readiness"
+        description="Take the free SHIFT AI-Ready Diagnostic to discover your team's strengths across Self-Management, Human Intelligence, Innovation, Focus, Thinking, and AI Readiness."
         canonicalUrl="/shift-diagnostic"
         ogImage="https://leadershipbydesign.co/og-shift-diagnostic.jpg"
-        keywords="SHIFT skills, team diagnostic, self-management, human intelligence, innovation, focus, thinking, team development"
+        keywords="SHIFT skills, AI readiness, team diagnostic, self-management, human intelligence, innovation, focus, thinking, AI leadership"
       />
       <WebApplicationSchema
         name="SHIFT Team Diagnostic"
