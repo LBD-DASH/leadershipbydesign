@@ -25,6 +25,7 @@ import productKeysHandoff from "@/assets/product-keys-handoff.jpg";
 import productRopesConnecting from "@/assets/product-ropes-connecting.jpg";
 import productRopesFocus from "@/assets/product-ropes-focus.jpg";
 import productLightbulbIdea from "@/assets/product-lightbulb-idea.jpg";
+import contagiousIdentityHero from "@/assets/contagious-identity-coaching-hero.jpg";
 const Products = () => {
   const [bundleCheckoutOpen, setBundleCheckoutOpen] = useState(false);
   const tier1Products = [{
@@ -84,7 +85,7 @@ const Products = () => {
     shortDesc: "Build your leadership identity",
     price: "R697",
     link: "/contagious-identity-workbook",
-    image: productHandshake,
+    image: contagiousIdentityHero,
     isExternal: false,
     isBuilt: true,
     features: ["Identity Discovery Process", "50% Discount Codes for Tools", "Self-Coaching Prompts", "Executive Coaching Preview"]
