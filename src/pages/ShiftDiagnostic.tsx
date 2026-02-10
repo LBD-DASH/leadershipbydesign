@@ -13,7 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
 import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import { useUtmParams } from '@/hooks/useUtmParams';
-import { processLead } from '@/utils/notifications';
+import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
