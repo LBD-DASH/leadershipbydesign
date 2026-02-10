@@ -222,11 +222,11 @@ export default function ShiftDiagnostic() {
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
                   Discover Your Team's
                   <br />
-                  <span className="text-primary">SHIFT Skills Profile</span>
+                  <span className="text-primary">SHIFT & AI Readiness Profile</span>
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
-                  Rate the 20 statements below and discover your team's strongest skill and where to focus development.
+                  Rate the 25 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
                 </p>
                 
                 <p className="text-xs sm:text-sm text-muted-foreground italic px-2">
