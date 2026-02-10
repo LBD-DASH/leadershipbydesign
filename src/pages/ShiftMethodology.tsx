@@ -20,6 +20,7 @@ export default function ShiftMethodology() {
       letter: "S",
       title: "Self-Management",
       description: "The ability to regulate emotions, behaviour, and energy. Taking responsibility for how you show up—regardless of circumstances.",
+      aiEdge: "Regulating anxiety about AI disruption; maintaining composure during technological change; staying grounded when uncertainty rises.",
       icon: Cog,
       image: skillSelfManagement
     },
@@ -27,6 +28,7 @@ export default function ShiftMethodology() {
       letter: "H",
       title: "Human Intelligence",
       description: "The ability to read, connect with, and influence others. Understanding needs, values, and what drives behaviour—in yourself and others.",
+      aiEdge: "The skill AI cannot replicate—empathy, trust-building, reading the room. Understanding human needs and motivations that no algorithm can parse.",
       icon: Users,
       image: skillHumanIntelligence
     },
@@ -34,6 +36,7 @@ export default function ShiftMethodology() {
       letter: "I",
       title: "Innovation",
       description: "The ability to think beyond the obvious. Taking initiative, questioning assumptions, and finding better ways forward.",
+      aiEdge: "Using AI as a creative tool, not replacement. Questioning AI outputs, maintaining creative ownership, driving improvement beyond what AI suggests.",
       icon: Lightbulb,
       image: skillInnovation
     },
@@ -41,6 +44,7 @@ export default function ShiftMethodology() {
       letter: "F",
       title: "Focus",
       description: "The ability to prioritise what matters. Cutting through noise, aligning effort to outcomes, and staying on track under pressure.",
+      aiEdge: "Cutting through AI-generated noise. Staying aligned to human outcomes when AI offers endless options. Prioritising what truly matters.",
       icon: Focus,
       image: skillFocus
     },
@@ -48,6 +52,7 @@ export default function ShiftMethodology() {
       letter: "T",
       title: "Thinking",
       description: "The ability to make clear, independent decisions. Understanding context, weighing options, and taking ownership of conclusions.",
+      aiEdge: "Critical evaluation of AI recommendations. Maintaining human judgment. Taking ownership of decisions regardless of AI input.",
       icon: Brain,
       image: skillThinking
     }
