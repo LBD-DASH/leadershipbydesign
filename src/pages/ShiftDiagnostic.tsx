@@ -10,7 +10,8 @@ import ShiftDiagnosticForm from '@/components/shift-diagnostic/ShiftDiagnosticFo
 import ShiftResultsPage from '@/components/shift-diagnostic/ShiftResultsPage';
 import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptureGate';
 import { supabase } from '@/integrations/supabase/client';
-import { calculateShiftScores, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
+import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
+import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import { useUtmParams } from '@/hooks/useUtmParams';
 import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
 import { processLead } from '@/utils/notifications';
@@ -28,7 +29,8 @@ export default function ShiftDiagnostic() {
 
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     const scores = calculateShiftScores(answers);
-    const shiftResult = getShiftResult(scores);
+    const aiScore = calculateAIReadinessScore(answers);
+    const shiftResult = getShiftResult(scores, aiScore);
     setResult(shiftResult);
     setPendingAnswers(answers);
     setStage('capture');
@@ -164,15 +166,15 @@ export default function ShiftDiagnostic() {
   return (
     <>
       <SEO
-        title="SHIFT Team Diagnostic | Discover Your Team's Skills Profile"
-        description="Take the free SHIFT Team Diagnostic to discover your team's strengths and development areas across Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        title="SHIFT AI-Ready Diagnostic | Discover Your Team's Skills & AI Readiness"
+        description="Take the free SHIFT AI-Ready Diagnostic to discover your team's strengths across Self-Management, Human Intelligence, Innovation, Focus, Thinking, and AI Readiness."
         canonicalUrl="/shift-diagnostic"
         ogImage="https://leadershipbydesign.co/og-shift-diagnostic.jpg"
-        keywords="SHIFT skills, team diagnostic, self-management, human intelligence, innovation, focus, thinking, team development"
+        keywords="SHIFT skills, AI readiness, team diagnostic, self-management, human intelligence, innovation, focus, thinking, AI leadership"
       />
       <WebApplicationSchema
-        name="SHIFT Team Diagnostic"
-        description="Discover your team's strengths and development areas across the five SHIFT skills: Self-Management, Human Intelligence, Innovation, Focus, and Thinking."
+        name="SHIFT AI-Ready Diagnostic"
+        description="Discover your team's strengths and AI readiness across the five SHIFT skills plus AI leadership capabilities."
         url="/shift-diagnostic"
       />
       <BreadcrumbSchema

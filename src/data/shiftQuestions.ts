@@ -13,6 +13,18 @@ export interface ShiftCategory {
   description: string;
 }
 
+export interface AIReadinessQuestion {
+  id: number;
+  text: string;
+  category: string;
+}
+
+export interface AIReadinessCategory {
+  key: string;
+  title: string;
+  description: string;
+}
+
 export const shiftCategories: ShiftCategory[] = [
   {
     key: 'S',
@@ -77,3 +89,23 @@ export const shiftQuestions: ShiftQuestion[] = [
   { id: 19, text: 'My team weighs options objectively rather than going with gut instinct.', skill: 'T' },
   { id: 20, text: 'My team takes ownership of conclusions and defends them when challenged.', skill: 'T' },
 ];
+
+// AI Readiness questions (bonus section in combined diagnostic)
+export const aiReadinessCategories: AIReadinessCategory[] = [
+  {
+    key: 'ai_readiness',
+    title: 'AI Readiness',
+    description: 'Your team\'s ability to lead effectively in an AI-augmented workplace.',
+  },
+];
+
+export const aiReadinessQuestions: AIReadinessQuestion[] = [
+  { id: 21, text: 'I understand which tasks AI can and cannot do effectively.', category: 'ai_readiness' },
+  { id: 22, text: 'My team critically evaluates AI-generated outputs before acting on them.', category: 'ai_readiness' },
+  { id: 23, text: 'I proactively prepare my team for technological changes.', category: 'ai_readiness' },
+  { id: 24, text: 'I have clear guidelines for responsible AI use within my team.', category: 'ai_readiness' },
+  { id: 25, text: 'I invest in developing my team\'s uniquely human skills (empathy, creativity, judgment).', category: 'ai_readiness' },
+];
+
+// Total questions for progress tracking
+export const totalDiagnosticQuestions = shiftQuestions.length + aiReadinessQuestions.length;

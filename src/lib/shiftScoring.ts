@@ -1,4 +1,4 @@
-import { ShiftSkill, shiftQuestions, shiftCategories } from '@/data/shiftQuestions';
+import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions } from '@/data/shiftQuestions';
 
 export interface ShiftScores {
   S: number;
@@ -13,6 +13,8 @@ export interface ShiftResult {
   primaryDevelopment: ShiftSkill;
   secondaryDevelopment: ShiftSkill | null;
   primaryStrength: ShiftSkill;
+  aiReadinessScore: number;
+  aiReadinessLevel: 'strong' | 'developing' | 'foundation';
 }
 
 export interface SkillDetail {
@@ -161,7 +163,47 @@ export function calculateShiftScores(answers: Record<number, number>): ShiftScor
   return scores;
 }
 
-export function getShiftResult(scores: ShiftScores): ShiftResult {
+export function calculateAIReadinessScore(answers: Record<number, number>): number {
+  let total = 0;
+  aiReadinessQuestions.forEach((question) => {
+    const answer = answers[question.id];
+    if (answer !== undefined) {
+      total += answer;
+    }
+  });
+  return total;
+}
+
+export function getAIReadinessLevel(score: number): 'strong' | 'developing' | 'foundation' {
+  if (score >= 20) return 'strong';
+  if (score >= 13) return 'developing';
+  return 'foundation';
+}
+
+export function getAIReadinessLevelInfo(level: 'strong' | 'developing' | 'foundation'): { title: string; description: string; color: string } {
+  switch (level) {
+    case 'strong':
+      return {
+        title: 'AI-Ready',
+        description: 'Your team shows strong readiness to lead in an AI-augmented workplace.',
+        color: 'text-green-600',
+      };
+    case 'developing':
+      return {
+        title: 'Developing AI Readiness',
+        description: 'Your team has a solid foundation—targeted development will accelerate AI readiness.',
+        color: 'text-blue-600',
+      };
+    case 'foundation':
+      return {
+        title: 'Building AI Foundation',
+        description: 'Invest in AI leadership development to prepare your team for the AI-augmented workplace.',
+        color: 'text-amber-600',
+      };
+  }
+}
+
+export function getShiftResult(scores: ShiftScores, aiScore: number = 0): ShiftResult {
   const skillScores: { skill: ShiftSkill; score: number }[] = [
     { skill: 'S', score: scores.S },
     { skill: 'H', score: scores.H },
@@ -170,16 +212,12 @@ export function getShiftResult(scores: ShiftScores): ShiftResult {
     { skill: 'T', score: scores.T },
   ];
   
-  // Sort by score ascending (lowest first = most development needed)
   const sortedAsc = [...skillScores].sort((a, b) => a.score - b.score);
-  
-  // Sort by score descending (highest first = strongest)
   const sortedDesc = [...skillScores].sort((a, b) => b.score - a.score);
   
   const primaryDevelopment = sortedAsc[0].skill;
   const primaryStrength = sortedDesc[0].skill;
   
-  // Secondary development if within 3 points of primary and not the same
   let secondaryDevelopment: ShiftSkill | null = null;
   if (sortedAsc[1].score - sortedAsc[0].score <= 3) {
     secondaryDevelopment = sortedAsc[1].skill;
@@ -190,6 +228,8 @@ export function getShiftResult(scores: ShiftScores): ShiftResult {
     primaryDevelopment,
     secondaryDevelopment,
     primaryStrength,
+    aiReadinessScore: aiScore,
+    aiReadinessLevel: getAIReadinessLevel(aiScore),
   };
 }
 
