@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Target, Users, TrendingUp, Brain, Sparkles, Zap } from 'lucide-react';
+import { ArrowRight, Target, Users, TrendingUp, Brain, Sparkles, Zap, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInterpretation } from '@/lib/shiftScoring';
+import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInterpretation, getAIReadinessLevelInfo } from '@/lib/shiftScoring';
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
@@ -18,9 +18,11 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
   const primarySkill = skillDetails[result.primaryDevelopment];
   const strengthSkill = skillDetails[result.primaryStrength];
   const insights = getShiftInsights(result);
+  const aiLevelInfo = getAIReadinessLevelInfo(result.aiReadinessLevel);
 
   const skillOrder: ShiftSkill[] = ['S', 'H', 'I', 'F', 'T'];
   const maxScore = 20;
+  const aiMaxScore = 25;
 
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
@@ -51,7 +53,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-2 rounded-full mb-4 sm:mb-6">
           <Sparkles className="w-4 h-4 flex-shrink-0" />
-          <span className="text-xs sm:text-sm font-medium">Your Team's SHIFT Skills Profile</span>
+          <span className="text-xs sm:text-sm font-medium">Your Team's SHIFT AI-Ready Profile</span>
         </div>
         
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 px-2 leading-tight">
@@ -94,6 +96,42 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         </div>
       </motion.div>
 
+      {/* AI Readiness Score */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25, duration: 0.6 }}
+        className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-2xl p-6 sm:p-8"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Bot className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">AI Readiness</h3>
+              <p className={cn("text-sm font-medium", aiLevelInfo.color)}>{aiLevelInfo.title}</p>
+            </div>
+          </div>
+          <div className="text-center sm:text-right">
+            <div className="text-3xl font-bold text-primary">{result.aiReadinessScore}/{aiMaxScore}</div>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground">{aiLevelInfo.description}</p>
+        <div className="h-3 bg-muted rounded-full overflow-hidden mt-4">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${(result.aiReadinessScore / aiMaxScore) * 100}%` }}
+            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+            className={cn(
+              "h-full rounded-full",
+              result.aiReadinessLevel === 'strong' ? "bg-green-500" :
+              result.aiReadinessLevel === 'developing' ? "bg-blue-500" : "bg-amber-400"
+            )}
+          />
+        </div>
+      </motion.div>
+
       {/* What This Typically Impacts */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -122,8 +160,8 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
           <div className="flex items-start gap-3">
             <TrendingUp className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
             <div>
-              <p className="font-medium text-foreground text-sm">Career Progress</p>
-              <p className="text-xs text-muted-foreground">Long-term impact potential</p>
+              <p className="font-medium text-foreground text-sm">AI Integration</p>
+              <p className="text-xs text-muted-foreground">Leading in an AI-augmented world</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
@@ -236,8 +274,8 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
         className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50"
       >
         <SocialShareButtons
-          title={`I just discovered my team's SHIFT profile - ${getSkillTitle(result.primaryStrength)} is our strongest skill!`}
-          description="Take the free SHIFT Team Diagnostic to discover your team's skills profile."
+          title={`I just discovered my team's SHIFT AI-Ready profile - ${getSkillTitle(result.primaryStrength)} is our strongest skill!`}
+          description="Take the free SHIFT AI-Ready Diagnostic to discover your team's skills profile."
         />
       </motion.div>
 
