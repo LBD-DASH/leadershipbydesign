@@ -182,6 +182,30 @@ export default function ShiftMethodology() {
           </div>
         </section>
 
+        {/* Video Introduction */}
+        <section className="py-16 sm:py-20 bg-muted/30">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+                Watch: The SHIFT Methodology™ Explained
+              </h2>
+              <p className="text-muted-foreground mb-8">
+                See how the five SHIFT skills work together to drive real performance and leadership growth.
+              </p>
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-border" style={{ paddingBottom: '56.25%' }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/OpAtZyfQEME"
+                  title="The SHIFT Methodology™ Explained"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* What SHIFT Is */}
         <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6">
