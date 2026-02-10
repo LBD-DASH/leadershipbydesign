@@ -204,9 +204,9 @@ export default function ShiftDiagnostic() {
                     <Clock className="w-3.5 h-3.5 text-primary" />
                     <span>4 min</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
+                   <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Target className="w-3.5 h-3.5 text-primary" />
-                    <span>20 questions</span>
+                    <span>25 questions</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Zap className="w-3.5 h-3.5 text-primary" />
@@ -216,17 +216,17 @@ export default function ShiftDiagnostic() {
 
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
                   <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm font-medium">Free SHIFT Team Assessment</span>
+                  <span className="text-xs sm:text-sm font-medium">Free SHIFT AI-Ready Assessment</span>
                 </div>
                 
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
                   Discover Your Team's
                   <br />
-                  <span className="text-primary">SHIFT Skills Profile</span>
+                  <span className="text-primary">SHIFT & AI Readiness Profile</span>
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
-                  Rate the 20 statements below and discover your team's strongest skill and where to focus development.
+                  Rate the 25 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
                 </p>
                 
                 <p className="text-xs sm:text-sm text-muted-foreground italic px-2">

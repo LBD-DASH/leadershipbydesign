@@ -102,8 +102,8 @@ const App = () => (
           <Route path="/leadership-mistakes" element={<LeadershipMistakes />} />
           <Route path="/leadership-mistakes-checklist" element={<LeadershipMistakesChecklist />} />
           <Route path="/team-development-framework" element={<TeamDevelopmentFramework />} />
-          <Route path="/ai-readiness" element={<AIReadinessDiagnosticLanding />} />
-          <Route path="/ai-readiness-diagnostic" element={<AIReadinessDiagnostic />} />
+          <Route path="/ai-readiness" element={<Navigate to="/shift-diagnostic" replace />} />
+          <Route path="/ai-readiness-diagnostic" element={<Navigate to="/shift-diagnostic" replace />} />
           <Route path="/life-os" element={<LifeOS />} />
           <Route path="/life-os/auth" element={<LifeOSAuth />} />
           <Route path="/podcast" element={<Podcast />} />

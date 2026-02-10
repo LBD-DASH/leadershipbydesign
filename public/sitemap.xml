@@ -101,19 +101,7 @@
     <loc>https://leadershipbydesign.co/shift-diagnostic</loc>
     <lastmod>2026-02-10</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://leadershipbydesign.co/ai-readiness</loc>
-    <lastmod>2026-02-10</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://leadershipbydesign.co/ai-readiness-diagnostic</loc>
-    <lastmod>2026-02-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   
   <!-- Resources & Content -->
