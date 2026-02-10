@@ -21,5 +21,7 @@ Disallow: /marketing
 Disallow: /leadership-mistakes-checklist
 Disallow: /life-os
 
-# Sitemap
+# Sitemaps
 Sitemap: https://fdtlljyfjdlrymfeguoa.supabase.co/functions/v1/generate-sitemap
+Sitemap: https://fdtlljyfjdlrymfeguoa.supabase.co/functions/v1/generate-sitemap?type=page
+Sitemap: https://fdtlljyfjdlrymfeguoa.supabase.co/functions/v1/generate-sitemap?type=post
