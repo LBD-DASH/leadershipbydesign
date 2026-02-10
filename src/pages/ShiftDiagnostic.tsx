@@ -14,6 +14,7 @@ import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftR
 import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import { useUtmParams } from '@/hooks/useUtmParams';
 import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
+import { processLead } from '@/utils/notifications';
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
 
