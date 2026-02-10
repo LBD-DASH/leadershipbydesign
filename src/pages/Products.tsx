@@ -75,7 +75,7 @@ const Products = () => {
     shortDesc: "Your first 90 days, solved",
     price: "R497",
     link: "/new-manager-kit",
-    image: newManagerHero,
+    image: "/lovable-uploads/3fe48d34-7904-4861-b2d4-d4b8cfeea2cb.png",
     isExternal: false,
     isBuilt: true,
     features: ["30-60-90 Day Roadmap", "Team Assessment Tools", "Weekly Reflection Templates", "Quick-Win Strategies"]
