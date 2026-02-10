@@ -216,7 +216,7 @@ export default function ShiftDiagnostic() {
 
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
                   <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="text-xs sm:text-sm font-medium">Free SHIFT Team Assessment</span>
+                  <span className="text-xs sm:text-sm font-medium">Free SHIFT AI-Ready Assessment</span>
                 </div>
                 
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 leading-tight px-2">
