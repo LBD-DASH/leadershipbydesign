@@ -12,7 +12,7 @@ import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptur
 import { supabase } from '@/integrations/supabase/client';
 import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
 import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
-import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
+import { useUtmParams } from '@/hooks/useUtmParams';
 import { processLead } from '@/utils/notifications';
 
 type DiagnosticStage = 'questionnaire' | 'capture' | 'results';
