@@ -42,7 +42,6 @@ import AILeadershipOverview from "./pages/admin/overviews/AILeadershipOverview";
 import LeaderAsCoachOverview from "./pages/admin/overviews/LeaderAsCoachOverview";
 import AdminPDFLibrary from "./pages/admin/AdminPDFLibrary";
 import AdminInfographicsLibrary from "./pages/admin/AdminInfographicsLibrary";
-import AdminAllProgrammes from "./pages/admin/AdminAllProgrammes";
 import ProgrammeDetailView from "./pages/admin/programmes/ProgrammeDetailView";
 import CaseStudies from "./pages/CaseStudies";
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
@@ -141,7 +140,7 @@ const App = () => (
           <Route path="/admin/overview/grand-masters" element={<GrandMastersOverview />} />
           <Route path="/admin/overview/ai-leadership" element={<AILeadershipOverview />} />
           <Route path="/admin/overview/leader-as-coach" element={<LeaderAsCoachOverview />} />
-          <Route path="/admin/programmes" element={<AdminAllProgrammes />} />
+          <Route path="/admin/programmes" element={<Navigate to="/admin/overviews" replace />} />
           <Route path="/admin/pdf-library" element={<AdminPDFLibrary />} />
           <Route path="/admin/infographics" element={<AdminInfographicsLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
