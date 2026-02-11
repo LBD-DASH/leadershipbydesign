@@ -132,6 +132,16 @@ const Products = () => {
     isFree: true,
     features: ["5-Minute Assessment", "Instant Results", "Personalized Insights", "Development Roadmap"]
   }, {
+    id: "leader-as-coach-programme",
+    title: "Leader as Coach Programme",
+    shortDesc: "10-month leadership transformation",
+    price: "R2,497",
+    link: "/leader-as-coach-programme",
+    image: leaderAsCoach,
+    isExternal: false,
+    isBuilt: true,
+    features: ["5-Phase SHIFT Framework", "6 Professional Assessments", "Coaching Templates & Tools", "People-Profit-Process Model"]
+  }, {
     id: "90-day-intensive",
     title: "90-Day Leadership Intensive",
     shortDesc: "Self-coaching journal & workbook",
