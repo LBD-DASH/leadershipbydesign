@@ -41,6 +41,7 @@ import GrandMastersOverview from "./pages/admin/overviews/GrandMastersOverview";
 import AILeadershipOverview from "./pages/admin/overviews/AILeadershipOverview";
 import LeaderAsCoachOverview from "./pages/admin/overviews/LeaderAsCoachOverview";
 import AdminPDFLibrary from "./pages/admin/AdminPDFLibrary";
+import AdminInfographicsLibrary from "./pages/admin/AdminInfographicsLibrary";
 import AdminAllProgrammes from "./pages/admin/AdminAllProgrammes";
 import ProgrammeDetailView from "./pages/admin/programmes/ProgrammeDetailView";
 import CaseStudies from "./pages/CaseStudies";
