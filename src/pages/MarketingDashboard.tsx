@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight, Youtube } from 'lucide-react';
+import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight, Youtube, Image } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -125,6 +125,34 @@ export default function MarketingDashboard() {
               </Button>
             </div>
           </motion.div>
+
+          {/* Quick Access Libraries */}
+          <div className="flex flex-wrap gap-3 mt-6">
+            <Link to="/admin/pdf-library">
+              <Button variant="outline" size="sm" className="gap-2">
+                <FileText className="w-4 h-4" />
+                PDF Library
+              </Button>
+            </Link>
+            <Link to="/admin/infographics">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Image className="w-4 h-4" />
+                Infographics
+              </Button>
+            </Link>
+            <Link to="/admin/programmes">
+              <Button variant="outline" size="sm" className="gap-2">
+                <BookOpen className="w-4 h-4" />
+                Programmes
+              </Button>
+            </Link>
+            <Link to="/admin/overviews">
+              <Button variant="outline" size="sm" className="gap-2">
+                <ClipboardList className="w-4 h-4" />
+                Overviews
+              </Button>
+            </Link>
+          </div>
 
           {/* Stats Overview */}
           <MarketingStats />
