@@ -19,7 +19,7 @@ export const SPOTIFY_SHOW_URL = `https://open.spotify.com/show/${PODCAST_SHOW_ID
 export const podcastEpisodes: PodcastEpisode[] = [
   {
     id: "seven-workplace-trends-2026",
-    spotifyId: "2kJ3G4X8vR5Y6Z7A8B9C0D", // Placeholder - update with real ID
+    spotifyId: "56RJUkJwEZSAN6oGvHrvYJ",
     title: "Seven Key Workplace Trends Shaping 2026",
     description: "Join Kevin and marketing communications expert Craig Paisley as they explore seven critical workplace trends reshaping how organizations operate. From AI integration to leadership evolution, discover actionable insights for leaders navigating unprecedented change.",
     fullDescription: `In this episode, Kevin Britz sits down with Craig Paisley to unpack the seven most significant workplace trends that every leader needs to understand for 2026 and beyond.
@@ -42,7 +42,7 @@ Whether you're leading a team of 5 or 500, these trends will directly impact how
   },
   {
     id: "prison-psychology-to-boardrooms",
-    spotifyId: "3lM4N5O6pQ7R8S9T0U1V2W", // Placeholder - update with real ID
+    spotifyId: "0J6xtPfBWrBRmJ3GAHO865",
     title: "From Prison Psychology to Boardrooms",
     description: "Award-winning psychologist Nick Kinley reveals why power changes leaders and how to avoid the silent traps that cause most leaders to lose their effectiveness. Essential listening for any leader seeking to stay grounded and human.",
     fullDescription: `Nick Kinley, author of "The Power Trap," shares his remarkable journey from working with high-security prisoners to coaching C-suite executives—and the surprising similarities he discovered.
@@ -64,7 +64,7 @@ This conversation challenges conventional leadership wisdom and offers a fresh p
   },
   {
     id: "leaders-reflecting-deeply-enough",
-    spotifyId: "4mN5O6P7qR8S9T0U1V2W3X", // Placeholder - update with real ID
+    spotifyId: "4hD16BZLRoOsuamRJWHRZN",
     title: "Are Leaders Reflecting Deeply Enough?",
     description: "Kevin explores why reflection is the most underutilized leadership practice and how building reflection habits can transform your decision-making, relationships, and overall leadership effectiveness.",
     fullDescription: `In a world of constant action and quick decisions, Kevin Britz makes the case for slowing down to speed up.
@@ -83,7 +83,7 @@ Learn how the best leaders use intentional pauses to drive better outcomes for t
   },
   {
     id: "employee-brand-proposition",
-    spotifyId: "5nO6P7Q8rS9T0U1V2W3X4Y", // Placeholder - update with real ID
+    spotifyId: "2V1bfriIERJhejACcw6ZvB",
     title: "The Employee Brand Proposition",
     description: "Craig Page-Lee joins Kevin to discuss how organizations can build compelling employee value propositions that attract and retain top talent, and why leaders must champion their employer brand.",
     fullDescription: `Craig Page-Lee brings his expertise in talent strategy to explore the critical intersection of leadership and employer branding.
@@ -104,7 +104,7 @@ Essential listening for leaders who want to win the war for talent in 2025 and b
   },
   {
     id: "strategic-ambiguity-vs-clarity",
-    spotifyId: "6oP7Q8R9sT0U1V2W3X4Y5Z", // Placeholder - update with real ID
+    spotifyId: "4IUmspy0i3w7Ru3oI9g6sl",
     title: "Strategic Ambiguity vs. Clarity in Leadership",
     description: "When should leaders be crystal clear, and when is strategic ambiguity the smarter choice? Kevin unpacks this nuanced leadership skill that separates good leaders from great ones.",
     fullDescription: `One of leadership's most challenging balancing acts: knowing when to provide clarity and when to leave room for interpretation.
@@ -123,7 +123,7 @@ A thoughtful exploration of how great leaders use intentional communication to d
   },
   {
     id: "boss-or-leader",
-    spotifyId: "7pQ8R9S0tU1V2W3X4Y5Z6A", // Placeholder - update with real ID
+    spotifyId: "6H88lkGV24XSV2DqYyEvf1",
     title: "Are You a Boss or a Leader?",
     description: "Kevin challenges listeners to honestly assess whether they're simply managing people or truly leading them. Discover the key distinctions and how to make the shift from boss to leader.",
     fullDescription: `The difference between being a boss and being a leader is more than semantics—it's the difference between compliance and commitment.
