@@ -43,10 +43,10 @@ const Products = () => {
     title: "The Feedback Formula",
     shortDesc: "Give feedback people actually hear",
     price: "R297",
-    link: "/products",
+    link: "/feedback-formula",
     image: productLightbulbIdea,
     isExternal: false,
-    comingSoon: true,
+    isBuilt: true,
     features: ["10 Feedback Frameworks", "Praise & Correction Scripts", "Development Review Templates", "Real-time Feedback Tools"]
   }, {
     id: "meeting-detox",

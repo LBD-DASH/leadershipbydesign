@@ -66,6 +66,8 @@ import Products from "./pages/Products";
 import ContagiousIdentityCoaching from "./pages/ContagiousIdentityCoaching";
 import ContagiousIdentityWorkbook from "./pages/products/ContagiousIdentityWorkbook";
 import ContagiousIdentityWorkbookSuccess from "./pages/products/ContagiousIdentityWorkbookSuccess";
+import FeedbackFormula from "./pages/products/FeedbackFormula";
+import FeedbackFormulaSuccess from "./pages/products/FeedbackFormulaSuccess";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -117,6 +119,8 @@ const App = () => (
           <Route path="/contagious-identity" element={<ContagiousIdentityCoaching />} />
           <Route path="/contagious-identity-workbook" element={<ContagiousIdentityWorkbook />} />
           <Route path="/contagious-identity-workbook/success" element={<ContagiousIdentityWorkbookSuccess />} />
+          <Route path="/feedback-formula" element={<FeedbackFormula />} />
+          <Route path="/feedback-formula/success" element={<FeedbackFormulaSuccess />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
