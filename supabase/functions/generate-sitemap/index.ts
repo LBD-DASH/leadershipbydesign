@@ -37,6 +37,7 @@ const staticPages = [
   { loc: "/difficult-conversations", priority: "0.7", changefreq: "monthly" },
   { loc: "/contagious-identity-workbook", priority: "0.7", changefreq: "monthly" },
   { loc: "/feedback-formula", priority: "0.7", changefreq: "monthly" },
+  { loc: "/leader-as-coach-programme", priority: "0.8", changefreq: "monthly" },
 ];
 
 function buildPageSitemap(today: string): string {
