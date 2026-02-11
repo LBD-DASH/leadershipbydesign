@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { X, Gift, CheckCircle, ArrowLeft, TrendingUp, Zap, Clock, Download, MessageSquare } from "lucide-react";
+import { X, Gift, CheckCircle, ArrowLeft, Zap, Clock, Download, MessageSquare } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import { motion } from "framer-motion";
+import { useGeoPricing } from "@/hooks/useGeoPricing";
 import productLightbulbIdea from "@/assets/product-lightbulb-idea.jpg";
 import leadershipFeedback from "@/assets/leadership-feedback.jpg";
 import productTeamHandsBelow from "@/assets/product-team-hands-below.jpg";
+
+const PRICE_ZAR = 97;
+const STRIKETHROUGH_ZAR = 197;
 
 const featurePills = [
   "4-Step Proprietary System",
@@ -72,7 +76,7 @@ const personas = [
   },
 ];
 
-const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
+const PricingCTA = ({ onCheckout, localPrice, strikethroughLocal, isLocal }: { onCheckout: () => void; localPrice: string; strikethroughLocal: string; isLocal: boolean }) => (
   <div className="text-center px-4">
     <div className="flex flex-wrap justify-center gap-3 mb-4">
       <motion.span
@@ -105,16 +109,23 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
     </div>
 
     <div className="mb-4">
-      <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">R597</span>
+      <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">
+        {isLocal ? `R${STRIKETHROUGH_ZAR}` : strikethroughLocal}
+      </span>
       <motion.span
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 10 }}
         className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block text-primary-foreground"
       >
-        R297
+        {isLocal ? `R${PRICE_ZAR}` : localPrice}
       </motion.span>
     </div>
+    {!isLocal && (
+      <p className="text-white/50 text-xs mb-1">
+        ≈ R{PRICE_ZAR} ZAR • Payment processed in ZAR
+      </p>
+    )}
     <p className="text-white/70 text-xs md:text-sm mb-4 md:mb-6">
       🔥 50% OFF • Limited time offer
     </p>
@@ -135,6 +146,8 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
 
 export default function FeedbackFormula() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const geo = useGeoPricing(PRICE_ZAR);
+  const geoStrikethrough = useGeoPricing(STRIKETHROUGH_ZAR);
 
   const handleOpenCheckout = () => {
     setCheckoutOpen(true);
@@ -144,7 +157,7 @@ export default function FeedbackFormula() {
     <div className="min-h-screen scroll-smooth">
       <SEO
         title="The Feedback Formula — Give Feedback People Actually Hear | Leadership by Design"
-        description="A proprietary 4-step feedback system with 10 real-world scripts, preparation worksheets, and development templates. Stop guessing, start coaching. R297."
+        description="A proprietary 4-step feedback system with 10 real-world scripts, preparation worksheets, and development templates. Stop guessing, start coaching. R97."
         canonicalUrl="/feedback-formula"
         ogImage="https://leadershipbydesign.co/og-products.jpg"
         keywords="feedback formula, feedback framework, leadership feedback, giving feedback, feedback scripts, manager feedback, coaching feedback"
@@ -154,8 +167,8 @@ export default function FeedbackFormula() {
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
         productName="The Feedback Formula"
-        price={297}
-        priceDisplay="R297"
+        price={PRICE_ZAR}
+        priceDisplay={`R${PRICE_ZAR}`}
         successPath="/feedback-formula/success"
       />
 
@@ -234,7 +247,12 @@ export default function FeedbackFormula() {
             ))}
           </div>
 
-          <PricingCTA onCheckout={handleOpenCheckout} />
+          <PricingCTA
+            onCheckout={handleOpenCheckout}
+            localPrice={geo.localPrice}
+            strikethroughLocal={geoStrikethrough.localPrice}
+            isLocal={geo.isLocal}
+          />
         </div>
       </section>
 
@@ -409,7 +427,12 @@ export default function FeedbackFormula() {
             Your team needs to hear the truth — delivered in a way they can actually use. Get the exact system that turns feedback into your most powerful leadership tool.
           </p>
 
-          <PricingCTA onCheckout={handleOpenCheckout} />
+          <PricingCTA
+            onCheckout={handleOpenCheckout}
+            localPrice={geo.localPrice}
+            strikethroughLocal={geoStrikethrough.localPrice}
+            isLocal={geo.isLocal}
+          />
         </div>
       </section>
 
