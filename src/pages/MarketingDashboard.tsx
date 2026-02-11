@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Megaphone, PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, ArrowRight, Youtube, Image } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -105,54 +105,42 @@ export default function MarketingDashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div>
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 mb-3">
-                  <Megaphone className="w-4 h-4" />
-                  <span className="text-sm font-medium">Marketing Engine</span>
-                </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
                   Content Studio
                 </h1>
-                <p className="text-muted-foreground mt-1">
-                  Generate, review, and schedule marketing content with AI
+                <p className="text-sm text-muted-foreground mt-1">
+                  Marketing engine — content, leads, and prospecting
                 </p>
               </div>
-              <Button variant="outline" onClick={logout}>
-                Sign Out
-              </Button>
+              <div className="flex items-center gap-2">
+                <Link to="/admin/pdf-library">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                    <FileText className="w-4 h-4" />
+                    <span className="hidden md:inline">PDFs</span>
+                  </Button>
+                </Link>
+                <Link to="/admin/infographics">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                    <Image className="w-4 h-4" />
+                    <span className="hidden md:inline">Infographics</span>
+                  </Button>
+                </Link>
+                <Link to="/admin/overviews">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                    <BookOpen className="w-4 h-4" />
+                    <span className="hidden md:inline">Programmes</span>
+                  </Button>
+                </Link>
+                <div className="w-px h-6 bg-border mx-1" />
+                <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground hover:text-foreground">
+                  Sign Out
+                </Button>
+              </div>
             </div>
           </motion.div>
-
-          {/* Quick Access Libraries */}
-          <div className="flex flex-wrap gap-3 mt-6">
-            <Link to="/admin/pdf-library">
-              <Button variant="outline" size="sm" className="gap-2">
-                <FileText className="w-4 h-4" />
-                PDF Library
-              </Button>
-            </Link>
-            <Link to="/admin/infographics">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Image className="w-4 h-4" />
-                Infographics
-              </Button>
-            </Link>
-            <Link to="/admin/programmes">
-              <Button variant="outline" size="sm" className="gap-2">
-                <BookOpen className="w-4 h-4" />
-                Programmes
-              </Button>
-            </Link>
-            <Link to="/admin/overviews">
-              <Button variant="outline" size="sm" className="gap-2">
-                <ClipboardList className="w-4 h-4" />
-                Overviews
-              </Button>
-            </Link>
-          </div>
 
           {/* Stats Overview */}
           <MarketingStats />
