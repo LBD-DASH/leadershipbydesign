@@ -97,7 +97,14 @@ export default function AdminPDFLibrary() {
                 <ArrowLeft className="w-4 h-4" />
                 Back to Dashboard
               </Link>
-              <h1 className="text-3xl font-bold text-foreground">PDF Library</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold text-foreground">PDF Library</h1>
+                <Link to="/admin/infographics">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-muted">
+                    Infographics →
+                  </Badge>
+                </Link>
+              </div>
               <p className="text-muted-foreground mt-1">
                 All product and programme PDFs — one click to download
               </p>
