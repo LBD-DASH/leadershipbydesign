@@ -40,6 +40,7 @@ import LeadershipWomenOverview from "./pages/admin/overviews/LeadershipWomenOver
 import GrandMastersOverview from "./pages/admin/overviews/GrandMastersOverview";
 import AILeadershipOverview from "./pages/admin/overviews/AILeadershipOverview";
 import LeaderAsCoachOverview from "./pages/admin/overviews/LeaderAsCoachOverview";
+import AdminPDFLibrary from "./pages/admin/AdminPDFLibrary";
 import AdminAllProgrammes from "./pages/admin/AdminAllProgrammes";
 import ProgrammeDetailView from "./pages/admin/programmes/ProgrammeDetailView";
 import CaseStudies from "./pages/CaseStudies";
@@ -140,6 +141,7 @@ const App = () => (
           <Route path="/admin/overview/ai-leadership" element={<AILeadershipOverview />} />
           <Route path="/admin/overview/leader-as-coach" element={<LeaderAsCoachOverview />} />
           <Route path="/admin/programmes" element={<AdminAllProgrammes />} />
+          <Route path="/admin/pdf-library" element={<AdminPDFLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
           <Route path="/marketing" element={<MarketingDashboard />} />
           <Route
