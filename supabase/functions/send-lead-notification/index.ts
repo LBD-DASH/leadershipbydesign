@@ -380,7 +380,7 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const sendEmail = async (to: string, subject: string, html: string) => {
+    const sendEmail = async (to: string | string[], subject: string, html: string) => {
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -402,56 +402,32 @@ serve(async (req: Request): Promise<Response> => {
       return response.json();
     };
 
+    const recipients = ["kevin@kevinbritz.com", "lauren@kevinbritz.com"];
+
     // Send emails for ALL leads to both Kevin and Lauren
     if (leadScore.temperature === 'hot') {
-      // Send detailed email to Kevin
       await sendEmail(
-        "kevin@kevinbritz.com",
+        recipients,
         `🔥 HOT LEAD: ${leadData.name} from ${companyName}`,
         generateHotLeadEmail(data)
       );
-      emailsSent.push("kevin@kevinbritz.com");
-
-      // Send notification to Lauren
-      await sendEmail(
-        "lauren@kevinbritz.com",
-        `🔥 Hot Lead Alert - ${leadData.name}`,
-        generateLaurenNotificationEmail(data)
-      );
-      emailsSent.push("lauren@kevinbritz.com");
+      emailsSent.push(...recipients);
 
     } else if (leadScore.temperature === 'warm') {
-      // Send email to Kevin
       await sendEmail(
-        "kevin@kevinbritz.com",
+        recipients,
         `💼 Warm Lead: ${leadData.name}`,
         generateWarmLeadEmail(data)
       );
-      emailsSent.push("kevin@kevinbritz.com");
-
-      // Send notification to Lauren
-      await sendEmail(
-        "lauren@kevinbritz.com",
-        `💼 Warm Lead Alert - ${leadData.name}`,
-        generateLaurenNotificationEmail(data)
-      );
-      emailsSent.push("lauren@kevinbritz.com");
+      emailsSent.push(...recipients);
 
     } else {
-      // Cool leads - send to both Kevin and Lauren
       await sendEmail(
-        "kevin@kevinbritz.com",
+        recipients,
         `❄️ New Lead: ${leadData.name}`,
         generateCoolLeadEmail(data)
       );
-      emailsSent.push("kevin@kevinbritz.com");
-
-      await sendEmail(
-        "lauren@kevinbritz.com",
-        `❄️ New Lead Alert - ${leadData.name}`,
-        generateLaurenNotificationEmail(data)
-      );
-      emailsSent.push("lauren@kevinbritz.com");
+      emailsSent.push(...recipients);
     }
 
     console.log(`Lead notification sent for ${leadData.name} (${leadScore.temperature}) to: ${emailsSent.join(', ')}`);
