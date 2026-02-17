@@ -95,7 +95,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification to Kevin
     const notificationResponse = await resend.emails.send({
       from: "Leadership by Design <hello@leadershipbydesign.co>",
-      to: ["kevin@kevinbritz.com"],
+      to: ["kevin@kevinbritz.com", "lauren@kevinbritz.com"],
       subject: `📥 New Lead Magnet Download: ${name}`,
       html: `
         <!DOCTYPE html>

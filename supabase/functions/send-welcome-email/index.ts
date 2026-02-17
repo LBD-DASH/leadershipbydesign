@@ -274,7 +274,7 @@ const handler = async (req: Request): Promise<Response> => {
     try {
       const notificationResponse = await sendEmail({
         from: "Leadership by Design <onboarding@resend.dev>",
-        to: ["kevin@kevinbritz.com"],
+        to: ["kevin@kevinbritz.com", "lauren@kevinbritz.com"],
         subject: `🎯 New ${diagnosticLabel} Waiting List: ${name} (${isEager ? 'Ready Now' : 'Maybe'})`,
         html: notificationHtml,
       });
