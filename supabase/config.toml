@@ -63,3 +63,12 @@ verify_jwt = false
 [functions.generate-lead-magnet-pdf]
 verify_jwt = false
 
+[functions.content-api]
+verify_jwt = false
+
+[functions.content-rss]
+verify_jwt = false
+
+[functions.content-mcp]
+verify_jwt = false
+
