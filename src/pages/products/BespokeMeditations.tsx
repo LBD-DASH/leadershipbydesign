@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play } from "lucide-react";
+import meditationHero from "@/assets/meditation-hero.jpg";
+import meditationMindset from "@/assets/meditation-mindset.jpg";
+import meditationSport from "@/assets/meditation-sport.jpg";
+import meditationCorporate from "@/assets/meditation-corporate.jpg";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -26,6 +30,7 @@ const bespokeCategories = [
   {
     id: "mindset",
     icon: Brain,
+    image: meditationMindset,
     title: "Mindset",
     description: "Reprogram your subconscious for abundance, personal power, and identity transformation.",
     bullets: [
@@ -39,6 +44,7 @@ const bespokeCategories = [
   {
     id: "sport",
     icon: Dumbbell,
+    image: meditationSport,
     title: "Sport",
     description: "Gain the mental edge with competition visualisation and peak performance programming.",
     bullets: [
@@ -52,6 +58,7 @@ const bespokeCategories = [
   {
     id: "corporate",
     icon: Briefcase,
+    image: meditationCorporate,
     title: "Corporate Executives",
     description: "Command presence in the boardroom with clarity, confidence, and strategic thinking meditations.",
     bullets: [
@@ -125,19 +132,25 @@ const BespokeMeditations = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="mb-12"
           >
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-              <Headphones className="w-4 h-4" />
-              Premium Audio Content
+            <div className="relative rounded-2xl overflow-hidden mb-8">
+              <img src={meditationHero} alt="Bespoke meditation session" className="w-full aspect-video object-cover object-top" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-center">
+                <div className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary-foreground px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+                  <Headphones className="w-4 h-4" />
+                  Premium Audio Content
+                </div>
+                <h1 className="font-serif text-3xl md:text-5xl font-bold text-foreground mb-4">
+                  Bespoke Mindset Meditations & Visualisations
+                </h1>
+                <div className="w-20 h-1 bg-primary mx-auto mb-4" />
+                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                  Custom-crafted audio experiences designed to rewire your mind for peak performance — whether in business, sport, or personal transformation.
+                </p>
+              </div>
             </div>
-            <h1 className="font-serif text-3xl md:text-5xl font-bold text-foreground mb-4">
-              Bespoke Mindset Meditations & Visualisations
-            </h1>
-            <div className="w-20 h-1 bg-primary mx-auto mb-6" />
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Custom-crafted audio experiences designed to rewire your mind for peak performance — whether in business, sport, or personal transformation.
-            </p>
           </motion.div>
 
           {/* Three Bespoke Category Cards */}
@@ -158,9 +171,12 @@ const BespokeMeditations = () => {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                 >
-                  <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 group">
+                  <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 group overflow-hidden">
+                    <div className="aspect-video overflow-hidden">
+                      <img src={cat.image} alt={cat.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    </div>
                     <CardHeader className="text-center pb-2">
-                      <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                      <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors -mt-7 relative z-10 border-4 border-background">
                         <cat.icon className="w-7 h-7 text-primary" />
                       </div>
                       <CardTitle className="font-serif text-xl">{cat.title}</CardTitle>
