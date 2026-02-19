@@ -294,7 +294,7 @@ export default function CorporateMindReset() {
                 With over 11 years of experience and more than 3,000 coaching sessions delivered, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
               </p>
               <div className="flex flex-wrap gap-4">
-                {["11 Years", "3,000+ Organisations", "10,000+ Leaders Impacted"].map((s) => (
+                {["11 Years", "3,000+ Coaching Sessions", "10,000+ Leaders Impacted"].map((s) => (
                   <span key={s} className="rounded-full px-5 py-2 text-xs font-semibold" style={{ background: `${gold}15`, color: gold }}>{s}</span>
                 ))}
               </div>
