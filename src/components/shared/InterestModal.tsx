@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar, Mail, Loader2, CheckCircle } from "lucide-react";
+import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { calculateLeadScore } from "@/utils/leadScoring";
@@ -98,13 +99,13 @@ export default function InterestModal({
       setIsSubmitted(true);
       toast.success("Thank you! We'll be in touch soon.");
       
-      // Reset and close after a moment
+      // Keep open longer so user can see referral prompt
       setTimeout(() => {
         onOpenChange(false);
         setShowForm(false);
         setIsSubmitted(false);
         setFormData({ name: '', email: '', phone: '' });
-      }, 2000);
+      }, 8000);
 
     } catch (error) {
       console.error('Error submitting interest form:', error);
@@ -136,10 +137,11 @@ export default function InterestModal({
         </DialogHeader>
 
         {isSubmitted ? (
-          <div className="py-8 text-center">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <div className="py-6 text-center">
+            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
             <p className="text-lg font-medium">Thank you!</p>
-            <p className="text-muted-foreground">We'll be in touch within 24 hours.</p>
+            <p className="text-muted-foreground text-sm mb-2">We'll be in touch within 24 hours.</p>
+            <ReferralSharePrompt context="Leadership by Design" variant="inline" shareUrl="https://leadershipbydesign.lovable.app" />
           </div>
         ) : !showForm ? (
           <div className="space-y-4 py-4">
