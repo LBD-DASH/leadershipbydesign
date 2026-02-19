@@ -15,6 +15,7 @@ import problemImage from "@/assets/cmr-problem-burnout.jpg";
 import sessionsImage from "@/assets/cmr-sessions-team.jpg";
 import facilitatorImage from "@/assets/cmr-facilitator-kevin.jpg";
 import ctaImage from "@/assets/cmr-cta-reset.jpg";
+import kevinImage from "@/assets/kevin-britz-facilitator.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -286,13 +287,13 @@ export default function CorporateMindReset() {
           </motion.h2>
           <motion.div variants={fadeUp} className="grid md:grid-cols-5 gap-10 items-center">
             <div className="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/5]">
-              <img src={facilitatorImage} alt="Kevin Bischoff — Founder, Leadership by Design" className="w-full h-full object-cover object-top" />
+              <img src={kevinImage} alt="Kevin Britz — Founder, Leadership by Design" className="w-full h-full object-cover object-top" />
             </div>
             <div className="md:col-span-3">
               <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: navy }}>Kevin Britz</h3>
-              <p className="text-sm font-medium mb-5" style={{ color: gold }}>Founder | Leadership by Design</p>
+              <p className="text-sm font-medium mb-5" style={{ color: gold }}>Master Practitioner in Time Line Therapy & Hypnotherapy | Founder, Leadership by Design</p>
               <p className="text-sm leading-relaxed mb-8" style={{ color: `${navy}99` }}>
-                With over 11 years of experience and more than 3,000 organisations served, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
+                With over 11 years of experience and hundreds of organisations served, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
               </p>
               <div className="flex flex-wrap gap-4">
                 {["11 Years", "3,000+ Organisations", "10,000+ Leaders Impacted"].map((s) => (
