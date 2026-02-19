@@ -264,7 +264,7 @@ export default function CaseStudies() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
-                  href="https://calendar.app.google/F3D2TZ5ccJ58q4ML8" 
+                  href="https://calendar.app.google/seCHb5KB1PwGzJhQ6" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
