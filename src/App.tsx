@@ -71,6 +71,7 @@ import FeedbackFormula from "./pages/products/FeedbackFormula";
 import FeedbackFormulaSuccess from "./pages/products/FeedbackFormulaSuccess";
 import LeaderAsCoachProgramme from "./pages/products/LeaderAsCoachProgramme";
 import LeaderAsCoachSuccess from "./pages/products/LeaderAsCoachSuccess";
+import CorporateMindReset from "./pages/CorporateMindReset";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -126,6 +127,7 @@ const App = () => (
           <Route path="/feedback-formula/success" element={<FeedbackFormulaSuccess />} />
           <Route path="/leader-as-coach-programme" element={<LeaderAsCoachProgramme />} />
           <Route path="/leader-as-coach-programme/success" element={<LeaderAsCoachSuccess />} />
+          <Route path="/corporate-mind-reset" element={<CorporateMindReset />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
