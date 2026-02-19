@@ -1,97 +1,60 @@
 
+# Bespoke Mindset Meditations Page + Ready-to-Buy Meditations
 
-# Create Static AI-Readable HTML Pages
+## Overview
+Create a premium product page at `/bespoke-meditations` with two distinct sections:
+1. **Bespoke (Custom) Meditations** -- 3 category cards across the page for custom-made meditation orders (Mindset, Sport, Corporate Executives) at R997
+2. **Ready-to-Buy Meditations** -- A separate section below for pre-recorded meditations available for immediate purchase at a lower price point
 
-## Goal
-Create static HTML pages in the `public/` folder that mirror key website content in pure, crawlable HTML. These pages will be immediately readable by NotebookLM, AI crawlers, and any tool that doesn't execute JavaScript.
+## Page Structure
 
-## Pages to Create
+### Section 1: Hero
+- Headline: "Bespoke Mindset Meditations & Visualisations"
+- Subtitle about custom and ready-made audio content
+- "Back to Products" link at top
 
-### 1. `public/ai/index.html` — Homepage
-Content extracted from Hero, Services, PartnerApps, TestimonialSlider, and ClientLogos components:
-- Headline and value proposition
-- Core services (SHIFT, Workshops, Contagious Identity Coaching)
-- Testimonials with metrics
-- Partner apps listing
-- Contact/CTA information
+### Section 2: Three Bespoke Category Cards (3-column grid)
+Three cards displayed side-by-side on desktop, stacked on mobile:
 
-### 2. `public/ai/feedback-formula.html` — Feedback Formula Product
-Content from FeedbackFormula.tsx:
-- Product description and 4-step system overview
-- Pain points it solves
-- All 5 modules detailed
-- Bonus cheat sheet
-- Target personas
-- Pricing and guarantee
+| Mindset | Sport | Corporate Executives |
+|---------|-------|---------------------|
+| Millionaire mindset, abundance, personal power, identity transformation | PowerLifters, athletes, competition visualisation, mental edge | Leadership presence, boardroom confidence, high-stakes clarity |
 
-### 3. `public/ai/leader-as-coach.html` — Leader as Coach Programme
-Content from LeaderAsCoachProgramme.tsx:
-- 10-month programme overview
-- All 5 phases with topics
-- Pain points addressed
-- Target audience
-- Pricing
+- Each card has an icon, title, description, and bullet points
+- Single "Order Bespoke" CTA at R997 opening the CheckoutModal
 
-### 4. `public/ai/products.html` — Full Products Catalogue
-Content from Products.tsx:
-- All product tiers (Tier 1, Tier 2, Tier 3)
-- Each product with description, price, and features
-- Bundle information
+### Section 3: Ready-to-Buy Meditations
+A separate grid section for pre-recorded meditations that people can purchase and download immediately. Initially set up with placeholder cards that can be updated as you share the recordings. Each meditation will have:
+- Title, description, duration
+- Individual pricing (suggested R197-R397 range -- can be adjusted)
+- Its own checkout flow via the shared CheckoutModal
+- A database table (`meditation_products`) to manage listings so you can add/edit them easily without code changes
 
-## Approach
-- Pure semantic HTML5 — no JavaScript, no CSS frameworks
-- Clean heading hierarchy (h1 > h2 > h3)
-- Meta tags for SEO (title, description, canonical)
-- Links back to the live React pages
-- A small navigation between AI pages
-- Each page under 50KB for fast crawling
+### Section 4: Guarantee + Final CTA
 
-## Sitemap Update
-Update `public/sitemap.xml` to include the 4 new static pages with appropriate priority.
+### Success Page
+Post-purchase confirmation at `/bespoke-meditations/success` handling both bespoke orders and ready-to-buy downloads.
 
 ## Technical Details
 
-**File structure:**
-```text
-public/
-  ai/
-    index.html
-    feedback-formula.html
-    leader-as-coach.html
-    products.html
-```
+**Files to create:**
+- `src/pages/products/BespokeMeditations.tsx` -- main page with both sections
+- `src/pages/products/BespokeMeditationsSuccess.tsx` -- success/delivery page
 
-**Each HTML file will follow this template:**
-```text
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>[Page Title] | Leadership by Design</title>
-  <meta name="description" content="...">
-  <link rel="canonical" href="https://leadershipbydesign.co/ai/...">
-  <style> /* minimal inline styles for readability */ </style>
-</head>
-<body>
-  <header> nav links between AI pages + link to main site </header>
-  <main> structured content </main>
-  <footer> company info </footer>
-</body>
-</html>
-```
+**Files to modify:**
+- `src/App.tsx` -- add `/bespoke-meditations` and `/bespoke-meditations/success` routes
+- `src/pages/Products.tsx` -- add to Premium tier listing
 
-**Sitemap additions** (4 new entries in `public/sitemap.xml`):
-- `/ai/index.html` — priority 0.6
-- `/ai/feedback-formula.html` — priority 0.6
-- `/ai/leader-as-coach.html` — priority 0.6
-- `/ai/products.html` — priority 0.6
+**Database (optional, recommended):**
+- Create a `meditation_products` table with columns: `id`, `title`, `description`, `category` (mindset/sport/corporate), `price_zar`, `duration`, `file_url`, `is_active`, `created_at`
+- This lets you manage ready-to-buy meditations from the backend without needing code changes each time you add a new recording
 
-## Files to Create
-- `public/ai/index.html`
-- `public/ai/feedback-formula.html`
-- `public/ai/leader-as-coach.html`
-- `public/ai/products.html`
+**Reused patterns:**
+- `CheckoutModal` with `successPath="/bespoke-meditations/success"`
+- `useGeoPricing` for regional currency display
+- `SEO` component for metadata
+- `framer-motion` animations
+- Teal design system with premium styling
+- 3-column responsive grid for the bespoke cards
 
-## Files to Edit
-- `public/sitemap.xml` — add 4 new URL entries
-
+**No new dependencies required.**
