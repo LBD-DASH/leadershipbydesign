@@ -7,12 +7,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useBlogPost } from "@/hooks/useBlogPosts";
+import { useBlogPost, useBlogPosts } from "@/hooks/useBlogPosts";
+import BlogCTA from "@/components/blog/BlogCTA";
+import RelatedPosts from "@/components/blog/RelatedPosts";
+import SocialShareButtons from "@/components/shared/SocialShareButtons";
 
 const BlogPost = () => {
   const { id } = useParams<{ id: string }>();
   const { data: post, isLoading, error } = useBlogPost(id);
-
+  const { data: allPosts } = useBlogPosts();
   if (isLoading) {
     return (
       <>
@@ -165,6 +168,16 @@ const BlogPost = () => {
               >
                 <ReactMarkdown>{post.content}</ReactMarkdown>
               </div>
+              {/* Blog CTA */}
+              <BlogCTA postTitle={post.title} />
+
+              {/* Share */}
+              <div className="my-12">
+                <SocialShareButtons
+                  title={post.title}
+                  description={post.excerpt}
+                />
+              </div>
             </div>
 
             {/* Author Bio */}
@@ -181,6 +194,17 @@ const BlogPost = () => {
                 </div>
               </div>
             </div>
+
+            {/* Related Posts */}
+            {allPosts && (
+              <div className="max-w-5xl mx-auto">
+                <RelatedPosts
+                  currentSlug={post.slug}
+                  currentTags={post.tags || []}
+                  posts={allPosts}
+                />
+              </div>
+            )}
           </div>
         </article>
 
