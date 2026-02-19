@@ -11,6 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import heroImage from "@/assets/corporate-mind-reset-hero.jpg";
+import problemImage from "@/assets/cmr-problem-burnout.jpg";
+import sessionsImage from "@/assets/cmr-sessions-team.jpg";
+import facilitatorImage from "@/assets/cmr-facilitator-kevin.jpg";
+import ctaImage from "@/assets/cmr-cta-reset.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -143,6 +147,9 @@ export default function CorporateMindReset() {
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
             Your team is showing up — but are they really <span style={{ color: gold }}>present</span>?
           </motion.h2>
+          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden mb-14 aspect-video">
+            <img src={problemImage} alt="Executive finding stillness in the corporate environment" className="w-full h-full object-cover object-top" />
+          </motion.div>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { icon: Zap, title: "Burnout", stat: "67% of employees report chronic stress directly affecting their output" },
@@ -182,9 +189,12 @@ export default function CorporateMindReset() {
       <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
         <div className="max-w-6xl mx-auto">
           <motion.p variants={fadeUp} className="uppercase tracking-[0.25em] text-xs text-center mb-3" style={{ color: `${navy}66` }}>Programme Structure</motion.p>
-          <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
+          <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-10" style={{ color: navy }}>
             4 × 90-Minute <span style={{ color: gold }}>Sessions</span>
           </motion.h2>
+          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden mb-14 aspect-video">
+            <img src={sessionsImage} alt="Corporate team in mindful meditation session" className="w-full h-full object-cover object-top" />
+          </motion.div>
           <div className="grid md:grid-cols-2 gap-8">
             {sessions.map((s) => (
               <motion.div
@@ -275,10 +285,8 @@ export default function CorporateMindReset() {
             Meet Your <span style={{ color: gold }}>Facilitator</span>
           </motion.h2>
           <motion.div variants={fadeUp} className="grid md:grid-cols-5 gap-10 items-center">
-            <div className="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/5]" style={{ background: `${navy}11` }}>
-              <div className="w-full h-full flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${navy}22, ${gold}22)` }}>
-                <Brain className="w-20 h-20" style={{ color: `${navy}33` }} />
-              </div>
+            <div className="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/5]">
+              <img src={facilitatorImage} alt="Kevin Bischoff — Founder, Leadership by Design" className="w-full h-full object-cover object-top" />
             </div>
             <div className="md:col-span-3">
               <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: navy }}>Kevin Bischoff</h3>
@@ -297,8 +305,12 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* FINAL CTA */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6 text-center" style={{ background: navy }}>
-        <div className="max-w-3xl mx-auto">
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="relative py-24 px-6 text-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={ctaImage} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{ background: `${navy}cc` }} />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-5xl font-bold mb-6" style={{ color: cream }}>
             Your team's next level starts with a single <span style={{ color: gold }}>reset</span>.
           </motion.h2>
