@@ -17,7 +17,7 @@ const Header = () => {
     path => location.pathname.startsWith(path)
   );
 
-  const isProductsActive = location.pathname.startsWith("/products");
+  const isProductsActive = location.pathname.startsWith("/products") || location.pathname.startsWith("/bespoke-meditations");
 
   const isResourcesActive = ["/resources", "/blog", "/hellocoach", "/book", "/leadership-mistakes", "/case-studies", "/podcast"].some(
     path => location.pathname.startsWith(path)
@@ -162,6 +162,12 @@ const Header = () => {
                     Leadership Index
                     <ExternalLink className="w-3 h-3" />
                   </a>
+                  <Link 
+                    to="/bespoke-meditations" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Bespoke Meditations
+                  </Link>
                 </div>
               </div>
             )}
@@ -395,6 +401,13 @@ const Header = () => {
                 Leadership Index
                 <ExternalLink className="w-3 h-3" />
               </a>
+              <Link 
+                to="/bespoke-meditations" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Bespoke Meditations
+              </Link>
             </div>
 
             <div className="space-y-2">
