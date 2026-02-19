@@ -107,7 +107,7 @@ const themedProducts = [
     ],
   },
   {
-    theme: "🏆 Sports Performance",
+    theme: "🏆 Sports/Competing Performance",
     products: [
       { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 297, icon: Crosshair, gradient: "from-lime-700 to-green-900" },
       { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 297, icon: Trophy, gradient: "from-yellow-600 to-orange-800" },
