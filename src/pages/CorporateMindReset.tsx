@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import { generateCorporateMindResetPdf } from "@/lib/generateCorporateMindResetPdf";
+import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import heroImage from "@/assets/corporate-mind-reset-hero.jpg";
 import problemImage from "@/assets/cmr-problem-burnout.jpg";
 import sessionsImage from "@/assets/cmr-sessions-team.jpg";
@@ -64,6 +65,7 @@ export default function CorporateMindReset() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", dates: "", attendees: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [bookingSubmitted, setBookingSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +81,7 @@ export default function CorporateMindReset() {
       });
       if (error) throw error;
       toast.success("Booking request submitted! We'll be in touch shortly.");
-      setBookingOpen(false);
+      setBookingSubmitted(true);
       setFormData({ name: "", company: "", email: "", phone: "", dates: "", attendees: "" });
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -333,8 +335,32 @@ export default function CorporateMindReset() {
       <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
         <DialogContent className="max-w-md" style={{ background: cream }}>
           <DialogHeader>
-            <DialogTitle className="font-serif text-2xl" style={{ color: navy }}>Book Your Programme</DialogTitle>
+            <DialogTitle className="font-serif text-2xl" style={{ color: navy }}>
+              {bookingSubmitted ? "Booking Received!" : "Book Your Programme"}
+            </DialogTitle>
           </DialogHeader>
+          {bookingSubmitted ? (
+            <div className="text-center py-4">
+              <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ background: `${gold}20` }}>
+                <Star className="w-6 h-6" style={{ color: gold }} />
+              </div>
+              <p className="text-sm mb-1 font-medium" style={{ color: navy }}>Thank you! We'll be in touch shortly.</p>
+              <p className="text-xs mb-4" style={{ color: `${navy}88` }}>Our team will confirm your dates within 24 hours.</p>
+              <ReferralSharePrompt
+                context="Corporate Mind Reset"
+                variant="card"
+                customMessage="I just booked The Corporate Mind Reset — a mindset meditation programme for corporate teams. You should check it out:"
+              />
+              <Button
+                className="mt-4 text-sm"
+                variant="outline"
+                onClick={() => { setBookingOpen(false); setBookingSubmitted(false); }}
+                style={{ borderColor: `${navy}22`, color: navy }}
+              >
+                Close
+              </Button>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-4 mt-2">
             <Input placeholder="Full Name" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ borderColor: `${navy}22` }} />
             <Input placeholder="Company" required value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} style={{ borderColor: `${navy}22` }} />
@@ -346,6 +372,7 @@ export default function CorporateMindReset() {
               {submitting ? "Submitting..." : "Submit Booking Request"}
             </Button>
           </form>
+          )}
         </DialogContent>
       </Dialog>
     </>

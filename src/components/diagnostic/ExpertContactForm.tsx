@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,6 +39,7 @@ export default function ExpertContactForm({
   primaryRecommendation
 }: ExpertContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -101,7 +103,7 @@ export default function ExpertContactForm({
         .catch(err => console.error('Lead processing error:', err));
 
       toast.success("Thank you! We'll be in touch within 24 hours.");
-      onOpenChange(false);
+      setIsSubmitted(true);
       setFormData({ name: '', email: '', company: '', teamSize: '', message: '' });
     } catch (error) {
       console.error('Error submitting contact form:', error);
@@ -114,6 +116,22 @@ export default function ExpertContactForm({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
+        {isSubmitted ? (
+          <div className="py-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-green-100 mx-auto mb-3 flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-green-600" />
+            </div>
+            <p className="font-medium mb-1">Request sent!</p>
+            <p className="text-sm text-muted-foreground mb-2">We'll be in touch within 24 hours.</p>
+            <ReferralSharePrompt context="Team Diagnostic" variant="inline" />
+            <div className="mt-4">
+              <Button variant="outline" size="sm" onClick={() => { onOpenChange(false); setIsSubmitted(false); }}>
+                Close
+              </Button>
+            </div>
+          </div>
+        ) : (
+        <>
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-primary/10">
@@ -205,6 +223,8 @@ export default function ExpertContactForm({
             )}
           </Button>
         </form>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );
