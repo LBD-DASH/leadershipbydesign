@@ -293,7 +293,7 @@ export default function CorporateMindReset() {
               <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: navy }}>Kevin Britz</h3>
               <p className="text-sm font-medium mb-5" style={{ color: gold }}>Master Practitioner in Time Line Therapy & Hypnotherapy | Founder, Leadership by Design</p>
               <p className="text-sm leading-relaxed mb-8" style={{ color: `${navy}99` }}>
-                With over 11 years of experience and hundreds of organisations served, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
+                With over 11 years of experience and more than 3,000 coaching sessions delivered, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
               </p>
               <div className="flex flex-wrap gap-4">
                 {["11 Years", "3,000+ Organisations", "10,000+ Leaders Impacted"].map((s) => (
