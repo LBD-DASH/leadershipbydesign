@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Brain, Target, Heart, Shield, Users, Lightbulb, Star, ArrowLeft, X, Sparkles, Focus, HeartHandshake, Eye, Volume2, Zap } from "lucide-react";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
+import { generateCorporateMindResetPdf } from "@/lib/generateCorporateMindResetPdf";
 import heroImage from "@/assets/corporate-mind-reset-hero.jpg";
 import problemImage from "@/assets/cmr-problem-burnout.jpg";
 import sessionsImage from "@/assets/cmr-sessions-team.jpg";
@@ -125,7 +126,7 @@ export default function CorporateMindReset() {
             <Button size="lg" onClick={() => setBookingOpen(true)} className="text-base font-semibold px-8 py-6" style={{ background: gold, color: navy }}>
               Book Your Programme
             </Button>
-            <Button size="lg" variant="outline" className="text-base font-semibold px-8 py-6" style={{ borderColor: gold, color: gold, background: "transparent" }}>
+            <Button size="lg" variant="outline" onClick={() => generateCorporateMindResetPdf()} className="text-base font-semibold px-8 py-6" style={{ borderColor: gold, color: gold, background: "transparent" }}>
               Download the Brochure
             </Button>
           </motion.div>
