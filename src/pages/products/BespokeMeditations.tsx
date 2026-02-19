@@ -304,10 +304,46 @@ const BespokeMeditations = () => {
               </p>
             </motion.div>
 
-            {themedProducts.map((theme, ti) => (
+            {themedProducts.map((theme, ti) => {
+              // Map DB products into matching theme categories
+              const categoryMap: Record<string, number> = { mindset: 2, sport: 3, corporate: 0 };
+              const matchingDbProducts = readyToBuyProducts.filter(p => categoryMap[p.category] === ti);
+
+              return (
               <div key={ti} className="mb-10">
                 <h3 className="font-serif text-lg md:text-xl font-bold text-foreground mb-4">{theme.theme}</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {/* DB-driven products as compact cards */}
+                  {matchingDbProducts.map((product, di) => {
+                    const dbPricing = product.price_zar;
+                    return (
+                      <motion.div
+                        key={product.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: di * 0.05, duration: 0.35 }}
+                      >
+                        <Card className="h-full border-primary/30 hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col ring-1 ring-primary/20">
+                          <div className="h-20 bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center relative overflow-hidden">
+                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_40%,white_0%,transparent_60%)]" />
+                            <Play className="w-8 h-8 text-white/90 relative z-10 group-hover:scale-110 transition-transform" />
+                            <span className="absolute top-1 right-1 bg-white/20 text-white text-[8px] px-1.5 py-0.5 rounded-full font-medium backdrop-blur-sm">AVAILABLE</span>
+                          </div>
+                          <CardContent className="p-3 flex-1 flex flex-col">
+                            <h4 className="font-semibold text-xs leading-tight text-foreground mb-1">{product.title}</h4>
+                            <p className="text-[10px] text-muted-foreground leading-snug mb-3 flex-1">{product.description}</p>
+                            <div className="flex items-center justify-between pt-2 border-t border-border">
+                              <span className="text-sm font-bold text-foreground">R{dbPricing}</span>
+                              <Button size="sm" variant="default" className="h-7 text-[10px] px-2" onClick={() => openReadyToBuyCheckout(product, `R${dbPricing}`)}>
+                                Buy Now
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
                   {theme.products.map((product, pi) => {
                     const ProductIcon = product.icon;
                     return (
@@ -316,7 +352,7 @@ const BespokeMeditations = () => {
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: pi * 0.05, duration: 0.35 }}
+                        transition={{ delay: (matchingDbProducts.length + pi) * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
                           <div className={`h-20 bg-gradient-to-br ${product.gradient} flex items-center justify-center relative overflow-hidden`}>
@@ -339,19 +375,9 @@ const BespokeMeditations = () => {
                   })}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </section>
-
-          {/* DB-driven Ready-to-Buy Meditations */}
-          {readyToBuyProducts.length > 0 && (
-            <section className="mb-16">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {readyToBuyProducts.map((product, i) => (
-                  <ReadyToBuyCard key={product.id} product={product} index={i} onBuy={(priceDisplay) => openReadyToBuyCheckout(product, priceDisplay)} />
-                ))}
-              </div>
-            </section>
-          )}
 
           {/* Guarantee */}
           <motion.section
