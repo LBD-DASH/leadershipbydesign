@@ -142,16 +142,6 @@ const Products = () => {
     isBuilt: true,
     features: ["5-Phase SHIFT Framework", "6 Professional Assessments", "Coaching Templates & Tools", "People-Profit-Process Model"]
   }, {
-    id: "bespoke-meditations",
-    title: "Bespoke Mindset Meditations",
-    shortDesc: "Custom meditation & visualisation audio",
-    price: "R997",
-    link: "/bespoke-meditations",
-    image: shiftHeroTeam,
-    isExternal: false,
-    isBuilt: true,
-    features: ["Mindset, Sport & Executive Categories", "Custom-Crafted Audio", "Neuroscience-Backed Techniques", "Ready-to-Buy Options Available"]
-  }, {
     id: "90-day-intensive",
     title: "90-Day Leadership Intensive",
     shortDesc: "Self-coaching journal & workbook",
@@ -222,6 +212,16 @@ const Products = () => {
     isExternal: true,
     comingSoon: false,
     features: ["360° Assessment", "Benchmark Scores", "Development Roadmap"]
+  }, {
+    id: "bespoke-meditations",
+    title: "Bespoke Mindset Meditations",
+    shortDesc: "Custom meditation & visualisation audio",
+    price: "From R997",
+    link: "/bespoke-meditations",
+    image: shiftHeroTeam,
+    isExternal: false,
+    isBuilt: true,
+    features: ["Mindset, Sport & Executive Categories", "Custom-Crafted Audio", "Neuroscience-Backed Techniques", "Ready-to-Buy Options Available"]
   }];
   const trustItems = [{
     icon: Award,
