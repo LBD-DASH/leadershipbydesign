@@ -110,7 +110,7 @@ export default function CorporateMindReset() {
       {/* HERO */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style={{ background: navy }}>
         <div className="absolute inset-0 opacity-30">
-          <img src={heroImage} alt="" className="w-full h-full object-cover" />
+          <img src={problemImage} alt="" className="w-full h-full object-cover object-top" />
         </div>
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${navy}99 0%, ${navy}dd 60%, ${navy} 100%)` }} />
         <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="relative z-10 text-center px-6 max-w-4xl mx-auto">
@@ -148,9 +148,6 @@ export default function CorporateMindReset() {
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
             Your team is showing up — but are they really <span style={{ color: gold }}>present</span>?
           </motion.h2>
-          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden mb-14 aspect-video">
-            <img src={problemImage} alt="Executive finding stillness in the corporate environment" className="w-full h-full object-cover object-top" />
-          </motion.div>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { icon: Zap, title: "Burnout", stat: "67% of employees report chronic stress directly affecting their output" },
