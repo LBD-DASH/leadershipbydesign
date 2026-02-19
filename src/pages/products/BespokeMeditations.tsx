@@ -1,12 +1,32 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play, MessageCircle, Crown, Zap, Target, Eye, Shield, Moon, Award, Users, MessageSquare, Compass, UserCheck, Sunrise, Sunset, RefreshCw, Flame, Crosshair, Trophy, Heart, Star } from "lucide-react";
+import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play, MessageCircle } from "lucide-react";
 import meditationHero from "@/assets/meditation-hero.jpg";
 import meditationMindset from "@/assets/meditation-mindset.jpg";
 import meditationSport from "@/assets/meditation-sport.jpg";
 import meditationCorporate from "@/assets/meditation-corporate.jpg";
 import meditationMillionaireMindset from "@/assets/meditation-millionaire-mindset.jpg";
+import medBoardroomPresence from "@/assets/med-boardroom-presence.jpg";
+import medDecisionClarity from "@/assets/med-decision-clarity.jpg";
+import medBurnoutReset from "@/assets/med-burnout-reset.jpg";
+import medStrategicThinking from "@/assets/med-strategic-thinking.jpg";
+import medImposterRecode from "@/assets/med-imposter-recode.jpg";
+import medNegotiation from "@/assets/med-negotiation.jpg";
+import medSleepProtocol from "@/assets/med-sleep-protocol.jpg";
+import medLeadershipConfidence from "@/assets/med-leadership-confidence.jpg";
+import medConflictReset from "@/assets/med-conflict-reset.jpg";
+import medDifficultConvo from "@/assets/med-difficult-convo.jpg";
+import medVisionAlignment from "@/assets/med-vision-alignment.jpg";
+import medOwnership from "@/assets/med-ownership.jpg";
+import medMorningActivation from "@/assets/med-morning-activation.jpg";
+import medEveningDetox from "@/assets/med-evening-detox.jpg";
+import medOverthinking from "@/assets/med-overthinking.jpg";
+import medConfidencePressure from "@/assets/med-confidence-pressure.jpg";
+import medFutureSelf from "@/assets/med-future-self.jpg";
+import medPregameFocus from "@/assets/med-pregame-focus.jpg";
+import medClutchMoment from "@/assets/med-clutch-moment.jpg";
+import medComeback from "@/assets/med-comeback.jpg";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -77,41 +97,41 @@ const themedProducts = [
   {
     theme: "🏢 Executive Performance",
     products: [
-      { name: "Boardroom Presence Primer™", tagline: "7-min executive authority activation before high-stakes meetings.", price: 891, icon: Crown, gradient: "from-amber-600 to-amber-800" },
-      { name: "Decision Clarity Reset™", tagline: "Cut noise. Sharpen thinking. Lead without emotional distortion.", price: 891, icon: Target, gradient: "from-cyan-700 to-blue-900" },
-      { name: "High-Performance Burnout Reset™", tagline: "Nervous system recalibration for leaders under sustained pressure.", price: 1041, icon: RefreshCw, gradient: "from-rose-700 to-pink-900" },
-      { name: "Strategic Thinking Deep Dive™", tagline: "A guided cognitive reset to think 3 moves ahead.", price: 1041, icon: Compass, gradient: "from-indigo-700 to-violet-900" },
-      { name: "Imposter Syndrome Recode™", tagline: "Identity shift for newly promoted or high-achieving leaders.", price: 891, icon: Shield, gradient: "from-emerald-700 to-teal-900" },
-      { name: "Negotiation Neutrality™", tagline: "Emotional composure and psychological leverage before tough deals.", price: 1041, icon: Eye, gradient: "from-orange-600 to-red-800" },
-      { name: "Executive Sleep Protocol™", tagline: "Mental offloading ritual for true recovery.", price: 741, icon: Moon, gradient: "from-purple-800 to-indigo-950" },
-      { name: "Leadership Confidence Amplifier™", tagline: "Embody calm authority before stepping into influence.", price: 891, icon: Zap, gradient: "from-yellow-600 to-amber-800" },
+      { name: "Boardroom Presence Primer™", tagline: "7-min executive authority activation before high-stakes meetings.", price: 891, image: medBoardroomPresence },
+      { name: "Decision Clarity Reset™", tagline: "Cut noise. Sharpen thinking. Lead without emotional distortion.", price: 891, image: medDecisionClarity },
+      { name: "High-Performance Burnout Reset™", tagline: "Nervous system recalibration for leaders under sustained pressure.", price: 1041, image: medBurnoutReset },
+      { name: "Strategic Thinking Deep Dive™", tagline: "A guided cognitive reset to think 3 moves ahead.", price: 1041, image: medStrategicThinking },
+      { name: "Imposter Syndrome Recode™", tagline: "Identity shift for newly promoted or high-achieving leaders.", price: 891, image: medImposterRecode },
+      { name: "Negotiation Neutrality™", tagline: "Emotional composure and psychological leverage before tough deals.", price: 1041, image: medNegotiation },
+      { name: "Executive Sleep Protocol™", tagline: "Mental offloading ritual for true recovery.", price: 741, image: medSleepProtocol },
+      { name: "Leadership Confidence Amplifier™", tagline: "Embody calm authority before stepping into influence.", price: 891, image: medLeadershipConfidence },
     ],
   },
   {
     theme: "🚀 Team & Organisational Performance",
     products: [
-      { name: "Conflict Reset for Leaders™", tagline: "Detach ego. Re-enter the conversation with clarity.", price: 891, icon: Users, gradient: "from-red-700 to-rose-900" },
-      { name: "Difficult Conversation Priming™", tagline: "Emotional steadiness before feedback or accountability meetings.", price: 891, icon: MessageSquare, gradient: "from-sky-700 to-blue-900" },
-      { name: "Vision Alignment Visualisation™", tagline: "Reconnect to long-term strategy when overwhelmed by operations.", price: 1041, icon: Compass, gradient: "from-violet-700 to-purple-900" },
-      { name: "Ownership & Accountability Activation™", tagline: "Identity shift from manager to leader.", price: 891, icon: UserCheck, gradient: "from-green-700 to-emerald-900" },
+      { name: "Conflict Reset for Leaders™", tagline: "Detach ego. Re-enter the conversation with clarity.", price: 891, image: medConflictReset },
+      { name: "Difficult Conversation Priming™", tagline: "Emotional steadiness before feedback or accountability meetings.", price: 891, image: medDifficultConvo },
+      { name: "Vision Alignment Visualisation™", tagline: "Reconnect to long-term strategy when overwhelmed by operations.", price: 1041, image: medVisionAlignment },
+      { name: "Ownership & Accountability Activation™", tagline: "Identity shift from manager to leader.", price: 891, image: medOwnership },
     ],
   },
   {
     theme: "🧠 Personal Mental Edge",
     products: [
-      { name: "Morning Strategic Activation™", tagline: "Start the day aligned, focused, and decisive.", price: 741, icon: Sunrise, gradient: "from-orange-500 to-yellow-700" },
-      { name: "Evening Cognitive Detox™", tagline: "Shut down rumination and mental replay loops.", price: 741, icon: Sunset, gradient: "from-blue-900 to-slate-950" },
-      { name: "Overthinking Interruption Protocol™", tagline: "Reset analytical paralysis in under 8 minutes.", price: 741, icon: RefreshCw, gradient: "from-fuchsia-700 to-pink-900" },
-      { name: "Confidence Under Pressure™", tagline: "Perform when it matters most.", price: 891, icon: Flame, gradient: "from-red-600 to-orange-800" },
-      { name: "Future Self Leadership Integration™", tagline: "Step into the identity of the leader you are becoming.", price: 1041, icon: Star, gradient: "from-amber-500 to-yellow-700" },
+      { name: "Morning Strategic Activation™", tagline: "Start the day aligned, focused, and decisive.", price: 741, image: medMorningActivation },
+      { name: "Evening Cognitive Detox™", tagline: "Shut down rumination and mental replay loops.", price: 741, image: medEveningDetox },
+      { name: "Overthinking Interruption Protocol™", tagline: "Reset analytical paralysis in under 8 minutes.", price: 741, image: medOverthinking },
+      { name: "Confidence Under Pressure™", tagline: "Perform when it matters most.", price: 891, image: medConfidencePressure },
+      { name: "Future Self Leadership Integration™", tagline: "Step into the identity of the leader you are becoming.", price: 1041, image: medFutureSelf },
     ],
   },
   {
     theme: "🏆 Sports/Competing Performance",
     products: [
-      { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 891, icon: Crosshair, gradient: "from-lime-700 to-green-900" },
-      { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 891, icon: Trophy, gradient: "from-yellow-600 to-orange-800" },
-      { name: "Comeback Mindset Reset™", tagline: "Emotional recovery after mistakes or losses.", price: 891, icon: Heart, gradient: "from-teal-600 to-cyan-800" },
+      { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 891, image: medPregameFocus },
+      { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 891, image: medClutchMoment },
+      { name: "Comeback Mindset Reset™", tagline: "Emotional recovery after mistakes or losses.", price: 891, image: medComeback },
     ],
   },
 ];
@@ -345,7 +365,6 @@ const BespokeMeditations = () => {
                     );
                   })}
                   {theme.products.map((product, pi) => {
-                    const ProductIcon = product.icon;
                     return (
                       <motion.div
                         key={pi}
@@ -355,9 +374,9 @@ const BespokeMeditations = () => {
                         transition={{ delay: (matchingDbProducts.length + pi) * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
-                          <div className={`h-20 bg-gradient-to-br ${product.gradient} flex items-center justify-center relative overflow-hidden`}>
-                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_40%,white_0%,transparent_60%)]" />
-                            <ProductIcon className="w-8 h-8 text-white/90 relative z-10 group-hover:scale-110 transition-transform" />
+                          <div className="h-20 overflow-hidden relative">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                           </div>
                           <CardContent className="p-3 flex-1 flex flex-col">
                             <h4 className="font-semibold text-xs leading-tight text-foreground mb-1">{product.name}</h4>
