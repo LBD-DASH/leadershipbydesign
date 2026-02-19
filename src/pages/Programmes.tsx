@@ -4,7 +4,7 @@ import SEO from "@/components/SEO";
 import { CourseSchema, ServiceSchema, HowToSchema } from "@/components/StructuredData";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle, Bot } from "lucide-react";
+import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle, Bot, Brain } from "lucide-react";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -483,6 +483,51 @@ export default function Programmes() {
                       </div>
                     </Link>
                   </motion.div>)}
+              </div>
+            </motion.section>
+
+            {/* Corporate Mind Reset Section */}
+            <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-20">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                    The Corporate Mind Reset
+                  </h2>
+                  <p className="text-muted-foreground">4 × 90-minute sessions • Mindset training • Science-backed</p>
+                </div>
+              </div>
+
+              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" alt="Corporate Mind Reset" className="w-full h-full object-cover object-center" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+                  </div>
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
+                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
+                      Reset the Mind. Reclaim Performance.
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Science-backed, intentional mindset training that rewires how your people think, respond, and perform under pressure. Delivered in 4 × 90-minute facilitated sessions for measurable shifts in focus, resilience, and leadership presence.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {['Stress Reduction', 'Mental Clarity', 'Resilience', 'Mindset Blueprint'].map((tag) => (
+                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link to="/corporate-mind-reset">
+                      <Button className="rounded-full group">
+                        Explore Programme
+                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </motion.section>
 
