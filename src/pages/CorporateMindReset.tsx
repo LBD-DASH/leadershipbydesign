@@ -289,7 +289,7 @@ export default function CorporateMindReset() {
               <img src={facilitatorImage} alt="Kevin Bischoff — Founder, Leadership by Design" className="w-full h-full object-cover object-top" />
             </div>
             <div className="md:col-span-3">
-              <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: navy }}>Kevin Bischoff</h3>
+              <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: navy }}>Kevin Britz</h3>
               <p className="text-sm font-medium mb-5" style={{ color: gold }}>Founder | Leadership by Design</p>
               <p className="text-sm leading-relaxed mb-8" style={{ color: `${navy}99` }}>
                 With over 11 years of experience and more than 3,000 organisations served, Kevin brings a unique blend of executive coaching expertise and mindset methodology to The Corporate Mind Reset. His approach is practical, evidence-based, and designed specifically for the pressures of the modern corporate environment.
