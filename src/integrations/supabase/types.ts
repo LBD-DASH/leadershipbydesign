@@ -1121,6 +1121,45 @@ export type Database = {
         }
         Relationships: []
       }
+      meditation_products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          duration: string | null
+          file_url: string | null
+          id: string
+          is_active: boolean
+          price_zar: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean
+          price_zar?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration?: string | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean
+          price_zar?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prospect_companies: {
         Row: {
           about_summary: string | null
