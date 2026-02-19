@@ -6,6 +6,7 @@ import meditationHero from "@/assets/meditation-hero.jpg";
 import meditationMindset from "@/assets/meditation-mindset.jpg";
 import meditationSport from "@/assets/meditation-sport.jpg";
 import meditationCorporate from "@/assets/meditation-corporate.jpg";
+import meditationMillionaireMindset from "@/assets/meditation-millionaire-mindset.jpg";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -337,7 +338,12 @@ function ReadyToBuyCard({ product, index, onBuy }: { product: MeditationProduct;
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.4 }}
     >
-      <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 flex flex-col">
+      <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden">
+        {product.category === "mindset" && (
+          <div className="aspect-video overflow-hidden">
+            <img src={meditationMillionaireMindset} alt={product.title} className="w-full h-full object-cover object-top" />
+          </div>
+        )}
         <CardHeader className="pb-2">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
