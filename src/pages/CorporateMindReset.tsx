@@ -109,10 +109,10 @@ export default function CorporateMindReset() {
 
       {/* HERO */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden" style={{ background: navy }}>
-        <div className="absolute inset-0 opacity-30">
-          <img src={problemImage} alt="" className="w-full h-full object-cover object-top" />
+        <div className="absolute inset-0 opacity-50">
+          <img src={problemImage} alt="" className="w-full h-full object-cover object-center" />
         </div>
-        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${navy}99 0%, ${navy}dd 60%, ${navy} 100%)` }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${navy}66 0%, ${navy}aa 50%, ${navy}ee 100%)` }} />
         <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <motion.p variants={fadeUp} className="uppercase tracking-[0.3em] text-sm mb-6 font-medium" style={{ color: gold }}>Corporate Wellness</motion.p>
           <motion.h1 variants={fadeUp} className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-6" style={{ color: cream }}>
@@ -190,8 +190,8 @@ export default function CorporateMindReset() {
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-10" style={{ color: navy }}>
             4 × 90-Minute <span style={{ color: gold }}>Sessions</span>
           </motion.h2>
-          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden mb-14 aspect-video">
-            <img src={sessionsImage} alt="Corporate team in mindful meditation session" className="w-full h-full object-cover object-top" />
+          <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden mb-14 aspect-[21/9]">
+            <img src={sessionsImage} alt="Corporate team in mindful meditation session" className="w-full h-full object-cover object-center" />
           </motion.div>
           <div className="grid md:grid-cols-2 gap-8">
             {sessions.map((s) => (
