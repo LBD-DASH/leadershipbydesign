@@ -209,6 +209,18 @@ const BespokeMeditations = () => {
                           </audio>
                         </div>
                       )}
+                      {cat.id === "corporate" && (
+                        <div className="mt-4 pt-4 border-t border-border">
+                          <p className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5">
+                            <Headphones className="w-3.5 h-3.5" />
+                            30-Second Snippet
+                          </p>
+                          <audio controls preload="metadata" className="w-full h-8 [&::-webkit-media-controls-panel]:bg-muted/50 rounded">
+                            <source src="https://fdtlljyfjdlrymfeguoa.supabase.co/storage/v1/object/public/lead-magnets/audio/corporate-executive-snippet.mp3" type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
