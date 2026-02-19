@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play, MessageCircle } from "lucide-react";
+import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play, MessageCircle, Crown, Zap, Target, Eye, Shield, Moon, Award, Users, MessageSquare, Compass, UserCheck, Sunrise, Sunset, RefreshCw, Flame, Crosshair, Trophy, Heart, Star } from "lucide-react";
 import meditationHero from "@/assets/meditation-hero.jpg";
 import meditationMindset from "@/assets/meditation-mindset.jpg";
 import meditationSport from "@/assets/meditation-sport.jpg";
@@ -69,6 +69,49 @@ const bespokeCategories = [
       "High-stakes decision clarity",
       "Executive stress resilience",
       "Strategic thinking visualisation",
+    ],
+  },
+];
+
+const themedProducts = [
+  {
+    theme: "🏢 Executive Performance",
+    products: [
+      { name: "Boardroom Presence Primer™", tagline: "7-min executive authority activation before high-stakes meetings.", price: 297, icon: Crown, gradient: "from-amber-600 to-amber-800" },
+      { name: "Decision Clarity Reset™", tagline: "Cut noise. Sharpen thinking. Lead without emotional distortion.", price: 297, icon: Target, gradient: "from-cyan-700 to-blue-900" },
+      { name: "High-Performance Burnout Reset™", tagline: "Nervous system recalibration for leaders under sustained pressure.", price: 347, icon: RefreshCw, gradient: "from-rose-700 to-pink-900" },
+      { name: "Strategic Thinking Deep Dive™", tagline: "A guided cognitive reset to think 3 moves ahead.", price: 347, icon: Compass, gradient: "from-indigo-700 to-violet-900" },
+      { name: "Imposter Syndrome Recode™", tagline: "Identity shift for newly promoted or high-achieving leaders.", price: 297, icon: Shield, gradient: "from-emerald-700 to-teal-900" },
+      { name: "Negotiation Neutrality™", tagline: "Emotional composure and psychological leverage before tough deals.", price: 347, icon: Eye, gradient: "from-orange-600 to-red-800" },
+      { name: "Executive Sleep Protocol™", tagline: "Mental offloading ritual for true recovery.", price: 247, icon: Moon, gradient: "from-purple-800 to-indigo-950" },
+      { name: "Leadership Confidence Amplifier™", tagline: "Embody calm authority before stepping into influence.", price: 297, icon: Zap, gradient: "from-yellow-600 to-amber-800" },
+    ],
+  },
+  {
+    theme: "🚀 Team & Organisational Performance",
+    products: [
+      { name: "Conflict Reset for Leaders™", tagline: "Detach ego. Re-enter the conversation with clarity.", price: 297, icon: Users, gradient: "from-red-700 to-rose-900" },
+      { name: "Difficult Conversation Priming™", tagline: "Emotional steadiness before feedback or accountability meetings.", price: 297, icon: MessageSquare, gradient: "from-sky-700 to-blue-900" },
+      { name: "Vision Alignment Visualisation™", tagline: "Reconnect to long-term strategy when overwhelmed by operations.", price: 347, icon: Compass, gradient: "from-violet-700 to-purple-900" },
+      { name: "Ownership & Accountability Activation™", tagline: "Identity shift from manager to leader.", price: 297, icon: UserCheck, gradient: "from-green-700 to-emerald-900" },
+    ],
+  },
+  {
+    theme: "🧠 Personal Mental Edge",
+    products: [
+      { name: "Morning Strategic Activation™", tagline: "Start the day aligned, focused, and decisive.", price: 247, icon: Sunrise, gradient: "from-orange-500 to-yellow-700" },
+      { name: "Evening Cognitive Detox™", tagline: "Shut down rumination and mental replay loops.", price: 247, icon: Sunset, gradient: "from-blue-900 to-slate-950" },
+      { name: "Overthinking Interruption Protocol™", tagline: "Reset analytical paralysis in under 8 minutes.", price: 247, icon: RefreshCw, gradient: "from-fuchsia-700 to-pink-900" },
+      { name: "Confidence Under Pressure™", tagline: "Perform when it matters most.", price: 297, icon: Flame, gradient: "from-red-600 to-orange-800" },
+      { name: "Future Self Leadership Integration™", tagline: "Step into the identity of the leader you are becoming.", price: 347, icon: Star, gradient: "from-amber-500 to-yellow-700" },
+    ],
+  },
+  {
+    theme: "🏆 Sports Performance",
+    products: [
+      { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 297, icon: Crosshair, gradient: "from-lime-700 to-green-900" },
+      { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 297, icon: Trophy, gradient: "from-yellow-600 to-orange-800" },
+      { name: "Comeback Mindset Reset™", tagline: "Emotional recovery after mistakes or losses.", price: 297, icon: Heart, gradient: "from-teal-600 to-cyan-800" },
     ],
   },
 ];
@@ -245,13 +288,13 @@ const BespokeMeditations = () => {
             </motion.div>
           </section>
 
-          {/* Ready-to-Buy Meditations */}
+          {/* Themed Pre-Recorded Catalogue */}
           <section className="mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-8"
+              className="text-center mb-10"
             >
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-2">
                 Ready-to-Buy Meditations
@@ -261,27 +304,54 @@ const BespokeMeditations = () => {
               </p>
             </motion.div>
 
-            {readyToBuyProducts.length > 0 ? (
+            {themedProducts.map((theme, ti) => (
+              <div key={ti} className="mb-10">
+                <h3 className="font-serif text-lg md:text-xl font-bold text-foreground mb-4">{theme.theme}</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {theme.products.map((product, pi) => {
+                    const ProductIcon = product.icon;
+                    return (
+                      <motion.div
+                        key={pi}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: pi * 0.05, duration: 0.35 }}
+                      >
+                        <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
+                          <div className={`h-20 bg-gradient-to-br ${product.gradient} flex items-center justify-center relative overflow-hidden`}>
+                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_40%,white_0%,transparent_60%)]" />
+                            <ProductIcon className="w-8 h-8 text-white/90 relative z-10 group-hover:scale-110 transition-transform" />
+                          </div>
+                          <CardContent className="p-3 flex-1 flex flex-col">
+                            <h4 className="font-semibold text-xs leading-tight text-foreground mb-1">{product.name}</h4>
+                            <p className="text-[10px] text-muted-foreground leading-snug mb-3 flex-1">{product.tagline}</p>
+                            <div className="flex items-center justify-between pt-2 border-t border-border">
+                              <span className="text-sm font-bold text-foreground">R{product.price}</span>
+                              <Button size="sm" variant="default" className="h-7 text-[10px] px-2" onClick={() => setInterestOpen(true)}>
+                                Buy Now
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </section>
+
+          {/* DB-driven Ready-to-Buy Meditations */}
+          {readyToBuyProducts.length > 0 && (
+            <section className="mb-16">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {readyToBuyProducts.map((product, i) => (
                   <ReadyToBuyCard key={product.id} product={product} index={i} onBuy={(priceDisplay) => openReadyToBuyCheckout(product, priceDisplay)} />
                 ))}
               </div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="text-center py-12 bg-muted/30 rounded-xl border border-border"
-              >
-                <Headphones className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-                <h3 className="font-serif text-lg font-semibold text-foreground mb-2">Coming Soon</h3>
-                <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                  Pre-recorded meditations are being crafted and will be available here shortly. In the meantime, order a bespoke meditation above.
-                </p>
-              </motion.div>
-            )}
-          </section>
+            </section>
+          )}
 
           {/* Guarantee */}
           <motion.section
