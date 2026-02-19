@@ -192,7 +192,7 @@ const BespokeMeditations = () => {
                             30-Second Snippet
                           </p>
                           <audio controls preload="metadata" className="w-full h-8 [&::-webkit-media-controls-panel]:bg-muted/50 rounded">
-                            <source src="/audio/mindset-hypnosis-snippet.mp3" type="audio/mp4" />
+                            <source src="/audio/mindset-hypnosis-snippet.m4a" type="audio/mp4" />
                             Your browser does not support the audio element.
                           </audio>
                         </div>
