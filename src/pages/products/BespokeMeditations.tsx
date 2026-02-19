@@ -191,6 +191,18 @@ const BespokeMeditations = () => {
                           </li>
                         ))}
                       </ul>
+                      {cat.id === "mindset" && (
+                        <div className="mt-4 pt-4 border-t border-border">
+                          <p className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5">
+                            <Headphones className="w-3.5 h-3.5" />
+                            30-Second Snippet
+                          </p>
+                          <audio controls preload="metadata" className="w-full h-8 [&::-webkit-media-controls-panel]:bg-muted/50 rounded">
+                            <source src="/audio/mindset-hypnosis-snippet.mp3" type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      )}
                       {cat.id === "sport" && (
                         <div className="mt-4 pt-4 border-t border-border">
                           <p className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5">
