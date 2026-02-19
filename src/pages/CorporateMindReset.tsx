@@ -143,7 +143,7 @@ export default function CorporateMindReset() {
       </section>
 
       {/* THE PROBLEM */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
         <div className="max-w-6xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
             Your team is showing up — but are they really <span style={{ color: gold }}>present</span>?
@@ -170,7 +170,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* THE SOLUTION */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
         <div className="max-w-4xl mx-auto text-center">
           <motion.p variants={fadeUp} className="uppercase tracking-[0.25em] text-xs mb-4" style={{ color: `${gold}99` }}>Introducing</motion.p>
           <motion.h2 variants={fadeUp} className="font-serif text-4xl md:text-5xl font-bold mb-8" style={{ color: cream }}>
@@ -184,7 +184,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* THE 4 SESSIONS */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
         <div className="max-w-6xl mx-auto">
           <motion.p variants={fadeUp} className="uppercase tracking-[0.25em] text-xs text-center mb-3" style={{ color: `${navy}66` }}>Programme Structure</motion.p>
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-10" style={{ color: navy }}>
@@ -217,7 +217,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* OUTCOMES */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
         <div className="max-w-6xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: cream }}>
             What Changes After <span style={{ color: gold }}>The Corporate Mind Reset</span>
@@ -236,7 +236,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* WHO IS THIS FOR */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
         <div className="max-w-5xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
             Designed For Leaders at <span style={{ color: gold }}>Every Level</span>
@@ -253,7 +253,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* SOCIAL PROOF */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
         <div className="max-w-6xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: cream }}>
             What Our <span style={{ color: gold }}>Clients</span> Say
@@ -277,7 +277,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* FACILITATOR BIO */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: cream }}>
         <div className="max-w-5xl mx-auto">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: navy }}>
             Meet Your <span style={{ color: gold }}>Facilitator</span>
@@ -303,7 +303,7 @@ export default function CorporateMindReset() {
       </motion.section>
 
       {/* FINAL CTA */}
-      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer} className="relative py-24 px-6 text-center overflow-hidden">
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="relative py-24 px-6 text-center overflow-hidden">
         <div className="absolute inset-0">
           <img src={ctaImage} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: `${navy}cc` }} />
