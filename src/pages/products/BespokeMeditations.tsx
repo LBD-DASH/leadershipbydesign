@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play } from "lucide-react";
+import { Brain, Dumbbell, Briefcase, ArrowLeft, Headphones, Clock, ShieldCheck, CheckCircle, Sparkles, Play, MessageCircle } from "lucide-react";
 import meditationHero from "@/assets/meditation-hero.jpg";
 import meditationMindset from "@/assets/meditation-mindset.jpg";
 import meditationSport from "@/assets/meditation-sport.jpg";
@@ -12,6 +12,7 @@ import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
+import InterestModal from "@/components/shared/InterestModal";
 import { useGeoPricing } from "@/hooks/useGeoPricing";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -72,11 +73,12 @@ const bespokeCategories = [
 ];
 
 const BespokeMeditations = () => {
+  const [interestOpen, setInterestOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<{ name: string; price: number; priceDisplay: string } | null>(null);
   const [readyToBuyProducts, setReadyToBuyProducts] = useState<MeditationProduct[]>([]);
 
-  const bespokePricing = useGeoPricing(997);
+  const bespokePricing = useGeoPricing(1987);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,15 +91,6 @@ const BespokeMeditations = () => {
     };
     fetchProducts();
   }, []);
-
-  const openBespokeCheckout = () => {
-    setSelectedProduct({
-      name: "Bespoke Mindset Meditation (Custom)",
-      price: 997,
-      priceDisplay: bespokePricing.localPrice,
-    });
-    setCheckoutOpen(true);
-  };
 
   const openReadyToBuyCheckout = (product: MeditationProduct, priceDisplay: string) => {
     setSelectedProduct({
@@ -159,7 +152,7 @@ const BespokeMeditations = () => {
               Order Your Bespoke Meditation
             </h2>
             <p className="text-muted-foreground text-center mb-8 max-w-xl mx-auto">
-              Choose your category. We'll craft a personalised meditation tailored to your specific goals and challenges.
+              We interview you, use your personal content, name, and goals to record a meditation that is uniquely yours.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
@@ -221,7 +214,7 @@ const BespokeMeditations = () => {
               ))}
             </div>
 
-            {/* Single CTA for bespoke */}
+            {/* Single CTA for bespoke - now opens contact form */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -231,10 +224,10 @@ const BespokeMeditations = () => {
               <p className="text-2xl font-bold text-foreground mb-1">
                 {bespokePricing.localPrice}
               </p>
-              <p className="text-sm text-muted-foreground mb-4">per custom meditation</p>
-              <Button size="lg" className="text-lg px-8 py-6" onClick={openBespokeCheckout}>
-                <Sparkles className="w-5 h-5 mr-2" />
-                Order Bespoke Meditation
+              <p className="text-sm text-muted-foreground mb-4">per custom bespoke recording</p>
+              <Button size="lg" className="text-lg px-8 py-6" onClick={() => setInterestOpen(true)}>
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Enquire About Bespoke Meditation
               </Button>
             </motion.div>
           </section>
@@ -301,9 +294,9 @@ const BespokeMeditations = () => {
             <h2 className="font-serif text-2xl font-bold text-foreground mb-4">
               Ready to Transform Your Mind?
             </h2>
-            <Button size="lg" className="text-lg px-8 py-6" onClick={openBespokeCheckout}>
-              <Sparkles className="w-5 h-5 mr-2" />
-              Order Bespoke — {bespokePricing.localPrice}
+            <Button size="lg" className="text-lg px-8 py-6" onClick={() => setInterestOpen(true)}>
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Enquire About Bespoke — {bespokePricing.localPrice}
             </Button>
           </motion.div>
         </div>
@@ -311,6 +304,14 @@ const BespokeMeditations = () => {
 
       <Footer />
 
+      {/* Bespoke inquiry modal */}
+      <InterestModal
+        open={interestOpen}
+        onOpenChange={setInterestOpen}
+        context="Bespoke Meditation Enquiry (R1,987)"
+      />
+
+      {/* Ready-to-buy checkout modal */}
       {selectedProduct && (
         <CheckoutModal
           open={checkoutOpen}
