@@ -191,7 +191,7 @@ const BespokeMeditations = () => {
                           </li>
                         ))}
                       </ul>
-                      {cat.id === "mindset" && (
+                      {cat.id === "sport" && (
                         <div className="mt-4 pt-4 border-t border-border">
                           <p className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5">
                             <Headphones className="w-3.5 h-3.5" />
