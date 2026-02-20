@@ -31,11 +31,11 @@ export default function ServiceCard({ title, description, image, index }: Servic
       transition={{ delay: index * 0.1, duration: 0.6 }}
       className="group"
     >
-      <div className={`bg-card rounded-2xl md:rounded-3xl shadow-lg border border-border overflow-hidden hover:shadow-2xl transition-all duration-500 ${
+      <div className={`bg-card rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg border border-border overflow-hidden hover:shadow-2xl transition-all duration-500 ${
         isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
       } flex flex-col lg:flex`}>
         {/* Image - Responsive */}
-        <div className="lg:w-2/5 w-full aspect-video lg:aspect-auto relative overflow-hidden">
+        <div className="lg:w-2/5 w-full aspect-[16/10] sm:aspect-video lg:aspect-auto relative overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center bg-top transition-transform duration-500 group-hover:scale-110"
             style={{ backgroundImage: `url('${image}')` }}
@@ -44,15 +44,15 @@ export default function ServiceCard({ title, description, image, index }: Servic
         </div>
 
         {/* Content */}
-        <div className="lg:w-3/5 w-full p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
+        <div className="lg:w-3/5 w-full p-4 sm:p-8 lg:p-12 flex flex-col justify-center">
+          <h3 className="font-serif text-xl sm:text-3xl font-bold text-foreground mb-2 md:mb-4 group-hover:text-primary transition-colors duration-300">
             {title}
           </h3>
-          <p className="text-muted-foreground leading-relaxed mb-4 md:mb-6 text-base sm:text-lg">
+          <p className="text-muted-foreground leading-relaxed mb-3 md:mb-6 text-sm sm:text-lg">
             {description}
           </p>
           <Link to={getLinkDestination()}>
-            <button className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 group/btn text-base sm:text-lg">
+            <button className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 group/btn text-sm sm:text-lg">
               Learn More
               <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
             </button>
