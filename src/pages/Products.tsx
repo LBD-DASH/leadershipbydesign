@@ -266,7 +266,7 @@ const Products = () => {
     delay: index * 0.05,
     duration: 0.4
   }}>
-      <div className="bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 h-full group flex flex-col">
+        <div className="bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 h-full group flex flex-col min-w-0">
         <div className="relative aspect-[4/3] overflow-hidden">
           <img src={product.image} alt={product.title} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" loading="lazy" />
           {product.comingSoon && <div className="absolute top-1 right-1 md:top-2 md:right-2">
@@ -286,8 +286,8 @@ const Products = () => {
             </div>}
         </div>
 
-        <div className="p-2 md:p-3 flex flex-col flex-1">
-          <h3 className="font-serif text-xs md:text-sm font-bold text-foreground mb-0.5 line-clamp-2 md:line-clamp-1 group-hover:text-primary transition-colors leading-tight">
+        <div className="p-2 md:p-3 flex flex-col flex-1 min-w-0">
+          <h3 className="font-serif text-[11px] md:text-sm font-bold text-foreground mb-0.5 line-clamp-2 group-hover:text-primary transition-colors leading-tight break-words">
             {product.title}
           </h3>
           <p className="text-[10px] md:text-xs text-muted-foreground mb-1 md:mb-2 line-clamp-1 hidden md:block">
@@ -444,7 +444,7 @@ const Products = () => {
                 </div>
 
                 {/* Content Side */}
-                <div className="p-5 md:p-8 lg:p-10 flex flex-col justify-center">
+                <div className="p-4 md:p-8 lg:p-10 flex flex-col justify-center overflow-hidden">
                   <div className="flex items-center gap-2 mb-2 md:mb-4">
                     <Package className="w-5 h-5 md:w-6 md:h-6" style={{
                     color: "#C8A864"
@@ -460,7 +460,7 @@ const Products = () => {
                     The New Manager Bundle
                   </h2>
                   
-                  <p className="text-white/80 text-sm md:text-lg mb-4 md:mb-6">
+                  <p className="text-white/80 text-xs sm:text-sm md:text-lg mb-4 md:mb-6 break-words">
                     Everything you need to lead with confidence from day one. Get both flagship products together at an unbeatable price.
                   </p>
 
@@ -475,8 +475,8 @@ const Products = () => {
                       }}>1</span>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-sm md:text-base">New Manager Survival Kit</h4>
-                        <p className="text-white/70 text-xs md:text-sm">30-60-90 day roadmap, team assessments, weekly templates</p>
+                        <h4 className="font-semibold text-white text-xs sm:text-sm md:text-base">New Manager Survival Kit</h4>
+                        <p className="text-white/70 text-[10px] sm:text-xs md:text-sm">30-60-90 day roadmap, team assessments, weekly templates</p>
                         <span className="text-xs" style={{
                         color: "#C8A864"
                       }}>Value: R497</span>
@@ -492,8 +492,8 @@ const Products = () => {
                       }}>2</span>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-sm md:text-base">Difficult Conversations Playbook</h4>
-                        <p className="text-white/70 text-xs md:text-sm">12 word-for-word scripts, CLEAR framework, de-escalation toolkit</p>
+                        <h4 className="font-semibold text-white text-xs sm:text-sm md:text-base">Difficult Conversations Playbook</h4>
+                        <p className="text-white/70 text-[10px] sm:text-xs md:text-sm">12 word-for-word scripts, CLEAR framework, de-escalation toolkit</p>
                         <span className="text-xs" style={{
                         color: "#C8A864"
                       }}>Value: R247</span>

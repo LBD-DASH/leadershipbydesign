@@ -80,46 +80,46 @@ export default function ExecutiveCoaching() {
       
       <main className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
         {/* Hero Section */}
-        <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+        <section className="pt-24 sm:pt-32 pb-10 sm:pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             <Link 
               to="/programmes"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground mb-4 sm:mb-8 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Programmes
             </Link>
             
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="text-sm font-medium">Personalised Leadership Development</span>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm font-medium">Personalised Leadership Development</span>
                 </div>
                 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6">
                   Executive
                   <span className="text-primary block">Coaching</span>
                 </h1>
                 
-                <p className="text-xl text-muted-foreground mb-8">
+                <p className="text-sm sm:text-lg md:text-xl text-muted-foreground mb-5 sm:mb-8">
                   One-on-one guidance tailored for senior leaders. Refine your leadership approach, 
                   enhance decision-making, and drive organisational excellence.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Link to="/contact">
-                    <Button size="lg" className="px-8 py-6 text-lg font-semibold rounded-full group">
+                    <Button size="lg" className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full group">
                       Start Your Journey
-                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                   <Link to="/leadership-diagnostic">
-                    <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-semibold rounded-full">
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-lg font-semibold rounded-full">
                       Take Leadership Diagnostic
                     </Button>
                   </Link>
