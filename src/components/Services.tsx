@@ -26,16 +26,16 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="py-24 px-6 lg:px-8 bg-background">
+    <section className="py-12 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
+        <div className="text-center mb-8 sm:mb-16">
+          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-primary mb-4 sm:mb-6">
             Core Services
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto" />
+          <div className="w-16 sm:w-24 h-1 bg-primary mx-auto" />
         </div>
         
-        <div className="space-y-12">
+        <div className="space-y-6 sm:space-y-12">
           {services.map((service, index) => (
             <ServiceCard
               key={service.title}

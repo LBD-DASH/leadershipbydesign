@@ -173,7 +173,7 @@ export default function FeedbackFormula() {
       />
 
       {/* HERO SECTION */}
-      <section className="relative py-12 md:py-24 px-4 overflow-hidden bg-primary">
+      <section className="relative py-8 sm:py-12 md:py-24 px-4 overflow-hidden bg-primary">
         <div className="absolute inset-0">
           <img
             src={productLightbulbIdea}
@@ -224,23 +224,23 @@ export default function FeedbackFormula() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="block text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-2">
+            <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-1">
               The Feedback
             </span>
-            <span className="block text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-white via-primary-foreground to-white bg-clip-text text-transparent">
+            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-white via-primary-foreground to-white bg-clip-text text-transparent">
               Formula 💬
             </span>
           </motion.h1>
 
-          <p className="text-center text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            A proprietary 4-step system that turns feedback from something your team dreads into their biggest growth accelerator.
+          <p className="text-center text-white/80 text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-5 sm:mb-10 px-2">
+            A 4-step system that turns feedback into your team's biggest growth accelerator.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3 mb-6 sm:mb-12 max-w-sm sm:max-w-none mx-auto">
             {featurePills.map((pill) => (
               <span
                 key={pill}
-                className="px-4 py-2 rounded-full text-sm font-medium border border-primary-foreground/40 text-primary-foreground"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-primary-foreground/40 text-primary-foreground text-center"
               >
                 {pill}
               </span>
@@ -264,14 +264,14 @@ export default function FeedbackFormula() {
       </section>
 
       {/* PROBLEM SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-muted">
+      <section className="py-10 sm:py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-12 items-center">
             <div className="order-2 md:order-1">
               <img
                 src={leadershipFeedback}
                 alt="Leader struggling with feedback"
-                className="w-full rounded-lg shadow-xl object-cover aspect-[4/3]"
+                className="w-full rounded-lg shadow-xl object-cover aspect-[16/10] sm:aspect-[4/3]"
               />
             </div>
 
@@ -280,7 +280,7 @@ export default function FeedbackFormula() {
                 The Problem
               </p>
 
-              <h2 className="text-3xl md:text-4xl font-serif mb-6 text-foreground">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif mb-4 sm:mb-6 text-foreground leading-tight">
                 Most leaders give feedback that people ignore, resent, or misunderstand
               </h2>
 
@@ -331,10 +331,10 @@ export default function FeedbackFormula() {
                     {module.number}
                   </span>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-foreground">
+                    <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 text-foreground">
                       {module.title}
                     </h3>
-                    <p className="text-muted-foreground">{module.description}</p>
+                    <p className="text-muted-foreground text-xs sm:text-base leading-relaxed">{module.description}</p>
                   </div>
                 </div>
               </div>
@@ -344,7 +344,7 @@ export default function FeedbackFormula() {
       </section>
 
       {/* BONUS SECTION */}
-      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-br from-primary to-primary/80">
+      <section className="py-10 sm:py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-br from-primary to-primary/80">
         <div className="absolute top-10 right-20 w-24 h-24 rounded-full opacity-10 border border-primary-foreground" />
 
         <div className="container mx-auto max-w-3xl text-center relative z-10">
@@ -366,25 +366,25 @@ export default function FeedbackFormula() {
       </section>
 
       {/* WHO IS THIS FOR SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-muted">
+      <section className="py-10 sm:py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-foreground">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-center mb-6 sm:mb-12 text-foreground">
             This system is built for you if…
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
             {personas.map((persona) => (
               <div
                 key={persona.title}
-                className="p-6 bg-card rounded-lg shadow-sm border border-border"
+                className="p-4 sm:p-6 bg-card rounded-lg shadow-sm border border-border"
               >
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0 text-primary" />
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0 text-primary" />
                   <div>
-                    <h3 className="text-lg font-semibold mb-2 text-foreground">
+                    <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-foreground">
                       {persona.title}
                     </h3>
-                    <p className="text-muted-foreground">{persona.description}</p>
+                    <p className="text-muted-foreground text-xs sm:text-base">{persona.description}</p>
                   </div>
                 </div>
               </div>
@@ -394,7 +394,7 @@ export default function FeedbackFormula() {
       </section>
 
       {/* GUARANTEE SECTION */}
-      <section className="py-16 md:py-20 px-4 bg-primary/10">
+      <section className="py-8 sm:py-16 md:py-20 px-4 bg-primary/10">
         <div className="container mx-auto max-w-2xl text-center">
           <h2 className="text-2xl md:text-3xl font-serif mb-4 text-foreground">
             Use it in your next 3 conversations
@@ -406,7 +406,7 @@ export default function FeedbackFormula() {
       </section>
 
       {/* FINAL CTA SECTION */}
-      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-primary">
+      <section className="py-10 sm:py-16 md:py-24 px-4 relative overflow-hidden bg-primary">
         <div className="absolute inset-0">
           <img
             src={productTeamHandsBelow}
@@ -437,9 +437,9 @@ export default function FeedbackFormula() {
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 px-4 border-t bg-primary border-primary-foreground/20">
-        <p className="text-center text-white/60 text-sm">
-          © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • Built in South Africa
+      <footer className="py-6 sm:py-8 px-4 border-t bg-primary border-primary-foreground/20">
+        <p className="text-center text-white/60 text-[11px] sm:text-sm">
+          © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • South Africa
         </p>
       </footer>
     </div>

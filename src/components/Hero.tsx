@@ -14,7 +14,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-[85vh] flex flex-col overflow-hidden"
+        className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[85vh] flex flex-col overflow-hidden"
       >
         {/* Background Image with Overlay */}
         <div 
@@ -31,7 +31,7 @@ export default function Hero() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2"
+              className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
               We Turn Managers Into Leaders<br />
               <span className="text-white/90">Who Scale Business Performance</span>
@@ -41,7 +41,7 @@ export default function Hero() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-lg sm:text-xl md:text-2xl text-white/85 max-w-3xl mx-auto mb-6 sm:mb-8 px-4 font-light leading-relaxed"
+              className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
             >
               90-Day Leadership System That Delivers 40% Productivity Gains
             </motion.p>
@@ -56,7 +56,7 @@ export default function Hero() {
               <Button 
                 onClick={() => setShowInterestModal(true)}
                 size="lg" 
-                className="bg-white text-primary hover:bg-white/90 px-10 sm:px-12 py-6 sm:py-7 text-lg sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group"
+                className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
               >
                 <Phone className="mr-3 w-5 h-5" />
                 I'm Interested
@@ -75,9 +75,9 @@ export default function Hero() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
+                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
                 >
-                  Free Diagnostic for Teams
+                  Free Team Diagnostic
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -85,9 +85,9 @@ export default function Hero() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-6 sm:px-8 py-4 sm:py-5 text-sm sm:text-base font-medium rounded-full transition-all duration-300 group"
+                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
                 >
-                  Free Diagnostic for Leaders
+                  Free Leader Diagnostic
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
