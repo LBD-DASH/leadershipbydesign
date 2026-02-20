@@ -38,7 +38,7 @@ export default function InterestModal({
   });
   const utmParams = useUtmParams();
 
-  const CALENDAR_LINK = "https://calendar.app.google/GX4kQh8yht4hqcBNA";
+  const CALENDAR_LINK = "https://calendar.app.google/vFHzgHMvUqU6vzgv6";
 
   const handleBookAppointment = () => {
     window.open(CALENDAR_LINK, '_blank', 'noopener,noreferrer');
