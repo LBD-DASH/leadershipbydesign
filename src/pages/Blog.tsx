@@ -47,16 +47,16 @@ const Blog = () => {
         <Header />
 
         {/* Hero */}
-        <section className="pt-32 pb-12 bg-gradient-to-b from-primary/5 to-background">
-          <div className="container mx-auto px-6">
+        <section className="pt-24 sm:pt-32 pb-8 sm:pb-12 bg-gradient-to-b from-primary/5 to-background">
+          <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <Badge variant="outline" className="mb-4">
+              <Badge variant="outline" className="mb-3 sm:mb-4">
                 The Leadership Lab
               </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3 sm:mb-4">
                 Leadership Insights
               </h1>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8">
                 Frameworks, diagnostics, and hard-won lessons from working with 10,000+ leaders.
               </p>
 

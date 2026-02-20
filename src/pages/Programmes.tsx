@@ -136,12 +136,12 @@ export default function Programmes() {
             y: 0
           }} transition={{
             duration: 0.6
-          }} className="text-center mb-16">
-              <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-6">
+          }} className="text-center mb-8 sm:mb-12 md:mb-16">
+              <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-6">
                 Programmes & Workshops
               </h1>
-              <div className="w-24 h-1 bg-primary mx-auto mb-8" />
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              <div className="w-16 sm:w-24 h-1 bg-primary mx-auto mb-4 sm:mb-8" />
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
                 Explore our comprehensive programmes designed to develop leaders at every level—from emerging managers to seasoned executives.
               </p>
             </motion.div>
@@ -157,16 +157,16 @@ export default function Programmes() {
             once: true
           }} transition={{
             duration: 0.6
-          }} className="mb-16">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Bot className="w-6 h-6 text-primary" />
+          }} className="mb-8 sm:mb-12 md:mb-16">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Bot className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">
                     Leading in the AI Era
                   </h2>
-                  <p className="text-muted-foreground">6-week programme • Level-agnostic • Future-proof your leadership</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">6-week programme • Level-agnostic • Future-proof your leadership</p>
                 </div>
               </div>
 
@@ -226,16 +226,16 @@ export default function Programmes() {
             once: true
           }} transition={{
             duration: 0.6
-          }} className="mb-16">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6 text-primary" />
+          }} className="mb-8 sm:mb-12 md:mb-16">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
+                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">
                     Leader as Coach
                   </h2>
-                  <p className="text-muted-foreground">6-month programme • Weekly sessions • Build coaching culture</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">6-month programme • Weekly sessions • Build coaching culture</p>
                 </div>
               </div>
 
@@ -290,14 +290,14 @@ export default function Programmes() {
             once: true
           }} transition={{
             duration: 0.6
-          }} className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Compass className="w-6 h-6 text-primary" />
+          }} className="mb-10 sm:mb-16 md:mb-20">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Compass className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
-                  <p className="text-muted-foreground">35% faster decisions • 40% productivity gains • 94% accuracy rate</p>
+                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
+                  <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">35% faster decisions • 40% productivity gains • 94% accuracy rate</p>
                 </div>
               </div>
 
