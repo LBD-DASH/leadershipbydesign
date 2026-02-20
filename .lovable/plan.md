@@ -1,60 +1,85 @@
 
-# Bespoke Mindset Meditations Page + Ready-to-Buy Meditations
 
-## Overview
-Create a premium product page at `/bespoke-meditations` with two distinct sections:
-1. **Bespoke (Custom) Meditations** -- 3 category cards across the page for custom-made meditation orders (Mindset, Sport, Corporate Executives) at R997
-2. **Ready-to-Buy Meditations** -- A separate section below for pre-recorded meditations available for immediate purchase at a lower price point
+# 15-Day Revenue Acceleration Plan
 
-## Page Structure
+## The Strategy
+Your analytics show 990 clicks on `/new-manager-kit` from YouTube traffic, 93% mobile, with an 81% bounce rate. The fastest path to revenue is:
 
-### Section 1: Hero
-- Headline: "Bespoke Mindset Meditations & Visualisations"
-- Subtitle about custom and ready-made audio content
-- "Back to Products" link at top
+1. A **R147 impulse-buy micro-product** ("New Manager Survival Pack") that captures bounced traffic
+2. An **order bump checkbox** on the existing New Manager Kit checkout to increase average order value
+3. An **exit-intent offer** on the New Manager Kit page pointing to the cheaper Survival Pack
 
-### Section 2: Three Bespoke Category Cards (3-column grid)
-Three cards displayed side-by-side on desktop, stacked on mobile:
+---
 
-| Mindset | Sport | Corporate Executives |
-|---------|-------|---------------------|
-| Millionaire mindset, abundance, personal power, identity transformation | PowerLifters, athletes, competition visualisation, mental edge | Leadership presence, boardroom confidence, high-stakes clarity |
+## What Gets Built
 
-- Each card has an icon, title, description, and bullet points
-- Single "Order Bespoke" CTA at R997 opening the CheckoutModal
+### 1. New Manager Survival Pack (R147 micro-product)
+A new standalone sales page at `/survival-pack` -- ultra-simple, one-scroll, mobile-first.
 
-### Section 3: Ready-to-Buy Meditations
-A separate grid section for pre-recorded meditations that people can purchase and download immediately. Initially set up with placeholder cards that can be updated as you share the recordings. Each meditation will have:
-- Title, description, duration
-- Individual pricing (suggested R197-R397 range -- can be adjusted)
-- Its own checkout flow via the shared CheckoutModal
-- A database table (`meditation_products`) to manage listings so you can add/edit them easily without code changes
+**Contents sold:**
+- 3 plug-and-play conversation scripts (First 1:1, Addressing Underperformance, Running Your First Team Meeting)
+- 1 printable Team Expectations Sheet
+- 1 bonus: "Calm Authority Reset" audio mention (links to bespoke meditations)
 
-### Section 4: Guarantee + Final CTA
+**Page structure (single scroll, no sections to get lost in):**
+- Compact hero: "3 Scripts. R147. Use Today." with immediate CTA
+- 3 bullet cards showing exactly what they get
+- Social proof bar (same 11 years / 3,000+ orgs)
+- Single CTA again
+- Footer
 
-### Success Page
-Post-purchase confirmation at `/bespoke-meditations/success` handling both bespoke orders and ready-to-buy downloads.
+**Pricing:** R147 (approx $8-9 international -- true impulse territory)
+
+### 2. Order Bump on New Manager Kit Checkout
+Modify the existing `CheckoutModal` to support an optional order bump:
+- A checkbox below the email field: "Add the Manager Scripts Vault for R147"
+- When checked, the total increases from R497 to R644
+- The success page handles delivery of both products
+
+### 3. Exit-Intent Downsell on New Manager Kit Page
+A simple dismissible banner that appears when the user scrolls back up (mobile-friendly alternative to exit-intent):
+- "Not ready for the full kit? Get 3 scripts for R147"
+- Links to `/survival-pack`
+
+---
 
 ## Technical Details
 
-**Files to create:**
-- `src/pages/products/BespokeMeditations.tsx` -- main page with both sections
-- `src/pages/products/BespokeMeditationsSuccess.tsx` -- success/delivery page
+### New files to create:
+- `src/pages/products/SurvivalPack.tsx` -- the micro-product sales page
+- `src/pages/products/SurvivalPackSuccess.tsx` -- success/download page
 
-**Files to modify:**
-- `src/App.tsx` -- add `/bespoke-meditations` and `/bespoke-meditations/success` routes
-- `src/pages/Products.tsx` -- add to Premium tier listing
+### Files to modify:
+- `src/App.tsx` -- add `/survival-pack` and `/survival-pack/success` routes
+- `src/components/products/CheckoutModal.tsx` -- add optional `orderBump` prop with title, price, and description; render a checkbox when provided; adjust the total amount sent to Paystack
+- `src/pages/products/NewManagerKit.tsx` -- pass `orderBump` config to CheckoutModal; add scroll-direction-based downsell banner
+- `src/pages/Products.tsx` -- add Survival Pack to the Entry tier product grid
 
-**Database (optional, recommended):**
-- Create a `meditation_products` table with columns: `id`, `title`, `description`, `category` (mindset/sport/corporate), `price_zar`, `duration`, `file_url`, `is_active`, `created_at`
-- This lets you manage ready-to-buy meditations from the backend without needing code changes each time you add a new recording
+### No new dependencies required.
+### No database changes needed (uses existing Paystack checkout flow).
 
-**Reused patterns:**
-- `CheckoutModal` with `successPath="/bespoke-meditations/success"`
-- `useGeoPricing` for regional currency display
-- `SEO` component for metadata
-- `framer-motion` animations
-- Teal design system with premium styling
-- 3-column responsive grid for the bespoke cards
+### Order bump implementation detail:
+The `CheckoutModal` will accept a new optional prop:
+```text
+orderBump?: {
+  title: string;
+  price: number;
+  priceDisplay: string;
+  description: string;
+}
+```
+When checked, the `amount` sent to Paystack becomes `(basePrice + bumpPrice) * 100`. The success page URL will include a `&bump=true` query param so the success page knows to show both downloads.
 
-**No new dependencies required.**
+### Downsell banner logic:
+A lightweight scroll-direction detector (no new dependencies). When the user scrolls up past the hero section on mobile, a sticky bottom banner fades in with the R147 offer. Dismissible with an X button, and uses `sessionStorage` so it only shows once per visit.
+
+---
+
+## Priority Order
+1. Build the Survival Pack page + success page (Day 1-2 effort)
+2. Add the order bump to CheckoutModal (Day 2-3)
+3. Wire up the downsell banner on New Manager Kit (Day 3)
+4. Add to Products catalog (Day 3)
+
+This gets you a frictionless R147 entry product for your existing YouTube traffic, plus increased AOV on every R497 sale, with zero new traffic needed.
+
