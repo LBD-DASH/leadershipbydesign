@@ -153,7 +153,7 @@ export default function InterestModal({
               className="w-full py-6 text-lg"
             >
               <Calendar className="mr-3 w-5 h-5" />
-              Book an Appointment
+              Book a Clarity Call
             </Button>
             
             <div className="relative">
