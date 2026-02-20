@@ -8,6 +8,13 @@ import { Loader2, Lock, Tag, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface OrderBump {
+  title: string;
+  price: number;
+  priceDisplay: string;
+  description: string;
+}
+
 interface CheckoutModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -15,6 +22,7 @@ interface CheckoutModalProps {
   price: number; // Price in ZAR
   priceDisplay: string;
   successPath?: string; // Custom success page path
+  orderBump?: OrderBump;
 }
 
 const colors = {
@@ -33,7 +41,8 @@ export function CheckoutModal({
   productName, 
   price,
   priceDisplay,
-  successPath = "/new-manager-kit/success"
+  successPath = "/new-manager-kit/success",
+  orderBump,
 }: CheckoutModalProps) {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
@@ -42,8 +51,10 @@ export function CheckoutModal({
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [bumpChecked, setBumpChecked] = useState(false);
 
-  const finalPrice = appliedDiscount ? price * (1 - appliedDiscount / 100) : price;
+  const basePrice = appliedDiscount ? price * (1 - appliedDiscount / 100) : price;
+  const finalPrice = basePrice + (bumpChecked && orderBump ? orderBump.price : 0);
 
   const handleApplyDiscount = () => {
     const code = discountCode.trim().toUpperCase();
@@ -77,12 +88,15 @@ export function CheckoutModal({
     if (finalPrice === 0) {
       toast.success("Discount applied! Redirecting to your download...");
       onOpenChange(false);
-      navigate(`${successPath}?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT`);
+      const bumpParam = bumpChecked && orderBump ? "&bump=true" : "";
+      navigate(`${successPath}?reference=FREE_DISCOUNT&trxref=FREE_DISCOUNT${bumpParam}`);
       return;
     }
 
     try {
-      const callbackUrl = `${window.location.origin}${successPath}`;
+      const bumpParam = bumpChecked && orderBump ? "?bump=true" : "";
+      const callbackUrl = `${window.location.origin}${successPath}${bumpParam}`;
+      const productLabel = bumpChecked && orderBump ? `${productName} + ${orderBump.title}` : productName;
       
       const { data, error } = await supabase.functions.invoke('paystack-checkout', {
         body: {
@@ -90,7 +104,7 @@ export function CheckoutModal({
           firstName: firstName.trim(),
           lastName: lastName.trim(),
           amount: finalPrice * 100, // Convert to kobo/cents
-          productName,
+          productName: productLabel,
           callbackUrl,
         },
       });
@@ -210,6 +224,34 @@ export function CheckoutModal({
               )}
             </div>
           </div>
+
+          {/* Order Bump */}
+          {orderBump && (
+            <div 
+              className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+                bumpChecked ? "border-primary bg-primary/5" : "border-dashed border-border hover:border-primary/50"
+              }`}
+              onClick={() => setBumpChecked(!bumpChecked)}
+            >
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={bumpChecked}
+                  onChange={(e) => setBumpChecked(e.target.checked)}
+                  className="mt-1 w-4 h-4 accent-primary"
+                  disabled={isLoading}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-foreground">
+                    ✅ Add {orderBump.title} for {orderBump.priceDisplay}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {orderBump.description}
+                  </p>
+                </div>
+              </label>
+            </div>
+          )}
 
           <Button
             type="submit"
