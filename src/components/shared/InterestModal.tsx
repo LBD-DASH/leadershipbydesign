@@ -34,7 +34,8 @@ export default function InterestModal({
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    promoCode: ''
   });
   const utmParams = useUtmParams();
 
@@ -75,7 +76,7 @@ export default function InterestModal({
           name: formData.name,
           email: formData.email,
           phone: formData.phone || null,
-          message: `Interest expressed via: ${context}`,
+          message: `Interest expressed via: ${context}${formData.promoCode ? ` | Promo Code: ${formData.promoCode}` : ''}`,
           lead_score: leadScore.score,
           lead_temperature: leadScore.temperature,
           buyer_persona: leadScore.buyerPersona,
@@ -104,7 +105,7 @@ export default function InterestModal({
         onOpenChange(false);
         setShowForm(false);
         setIsSubmitted(false);
-        setFormData({ name: '', email: '', phone: '' });
+        setFormData({ name: '', email: '', phone: '', promoCode: '' });
       }, 8000);
 
     } catch (error) {
@@ -119,7 +120,7 @@ export default function InterestModal({
     if (!open) {
       setShowForm(false);
       setIsSubmitted(false);
-      setFormData({ name: '', email: '', phone: '' });
+      setFormData({ name: '', email: '', phone: '', promoCode: '' });
     }
     onOpenChange(open);
   };
@@ -212,6 +213,17 @@ export default function InterestModal({
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+27 XX XXX XXXX"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="promoCode">Promo Code (optional)</Label>
+              <Input
+                id="promoCode"
+                value={formData.promoCode}
+                onChange={(e) => setFormData({ ...formData, promoCode: e.target.value })}
+                placeholder="Enter promo code"
+                maxLength={50}
               />
             </div>
 
