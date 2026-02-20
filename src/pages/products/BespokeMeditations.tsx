@@ -332,7 +332,7 @@ const BespokeMeditations = () => {
               return (
               <div key={ti} className="mb-10">
                 <h3 className="font-serif text-lg md:text-xl font-bold text-foreground mb-4">{theme.theme}</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
                   {/* DB-driven products as compact cards */}
                   {matchingDbProducts.map((product, di) => {
                     const dbPricing = product.price_zar;
@@ -345,7 +345,7 @@ const BespokeMeditations = () => {
                         transition={{ delay: di * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-primary/30 hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col ring-1 ring-primary/20">
-                          <div className="h-20 bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center relative overflow-hidden">
+                          <div className="aspect-[4/3] bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center relative overflow-hidden">
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_40%,white_0%,transparent_60%)]" />
                             <Play className="w-8 h-8 text-white/90 relative z-10 group-hover:scale-110 transition-transform" />
                             <span className="absolute top-1 right-1 bg-white/20 text-white text-[8px] px-1.5 py-0.5 rounded-full font-medium backdrop-blur-sm">AVAILABLE</span>
@@ -374,7 +374,7 @@ const BespokeMeditations = () => {
                         transition={{ delay: (matchingDbProducts.length + pi) * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
-                          <div className="h-20 overflow-hidden relative">
+                          <div className="aspect-[4/3] overflow-hidden relative">
                             <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                           </div>
