@@ -340,8 +340,7 @@ const BespokeMeditations = () => {
                       <motion.div
                         key={product.id}
                         initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: di * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-primary/30 hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col ring-1 ring-primary/20">
@@ -369,9 +368,8 @@ const BespokeMeditations = () => {
                       <motion.div
                         key={pi}
                         initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: (matchingDbProducts.length + pi) * 0.05, duration: 0.35 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: pi * 0.05, duration: 0.35 }}
                       >
                         <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
                           <div className="aspect-[4/3] overflow-hidden relative">
