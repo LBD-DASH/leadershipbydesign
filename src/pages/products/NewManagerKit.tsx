@@ -10,129 +10,109 @@ import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
 import newManagerSuccess from "@/assets/new-manager-success.jpg";
 
 const featurePills = [
-  "5 Critical Conversation Scripts",
-  "1-on-1 Meeting Framework",
-  "Self-Assessment Tools",
-  "30-60-90 Day Plan",
+  "5 Conversation Scripts",
+  "1-on-1 Framework",
+  "Self-Assessment",
+  "30-60-90 Plan",
 ];
 
 const painPoints = [
   "You don't know what to say in your first team meeting",
   "Your 1-on-1s feel awkward and unstructured",
-  "You're avoiding a difficult conversation you know you need to have",
-  "Your former peers now report to you — and it's weird",
-  "You're working longer hours but somehow getting less done",
-  "Your boss expects results but hasn't told you what 'good' looks like",
+  "You're avoiding a difficult conversation",
+  "Former peers now report to you — and it's weird",
+  "Working longer hours but getting less done",
+  "Your boss expects results but hasn't defined 'good'",
 ];
 
 const modules = [
   {
     number: "01",
     title: "Leadership Style Self-Assessment",
-    description: "A scored diagnostic to identify whether you're a Driver, Connector, or Strategist — with specific guidance on when to flex each style.",
+    description: "Scored diagnostic to identify your style — Driver, Connector, or Strategist — with guidance on when to flex each.",
   },
   {
     number: "02",
     title: "The 5 Critical Conversations",
-    description: "Word-for-word scripts for the 5 conversations that build trust in your first 90 days: Expectation-Setting, Team Norms, \"What I Won't Change,\" Managing Up, and the Day 30 Feedback Loop.",
+    description: "Word-for-word scripts for trust-building: Expectation-Setting, Team Norms, Managing Up, and the Day 30 Feedback Loop.",
   },
   {
     number: "03",
-    title: "The 1-on-1 Meeting Framework",
+    title: "1-on-1 Meeting Framework",
     description: "A proven 30-minute structure with time blocks, coaching questions, and non-negotiable rules.",
   },
   {
     number: "04",
     title: "30-60-90 Day Action Plan",
-    description: "Phase-by-phase checklist with clear milestones. Days 1-30: Listen & Learn. Days 31-60: Build & Align. Days 61-90: Lead & Accelerate.",
+    description: "Phase-by-phase checklist. Days 1-30: Listen. Days 31-60: Build. Days 61-90: Accelerate.",
   },
   {
     number: "05",
     title: "Ready-to-Use Templates",
-    description: "Three printable templates: 1-on-1 Meeting Notes, Team Norms Agreement, and Weekly Manager Reflection.",
+    description: "1-on-1 Notes, Team Norms Agreement, and Weekly Manager Reflection — printable and ready.",
   },
 ];
 
 const personas = [
   {
     title: "Newly Promoted Manager",
-    description: "You just got the title and want to start strong, not stumble through your first quarter.",
+    description: "You just got the title and want to start strong.",
   },
   {
     title: "Team Lead Moving Up",
-    description: "You've led projects but never managed people. The gap is bigger than you expected.",
+    description: "You've led projects but never managed people.",
   },
   {
     title: "HR / L&D Professional",
-    description: "You need a practical onboarding resource for first-time managers across your organization.",
+    description: "Need a practical onboarding resource for first-time managers.",
   },
   {
-    title: "Founder Hiring Their First Team",
-    description: "Your business is growing and you need a management framework — fast.",
+    title: "Founder Hiring First Team",
+    description: "Your business is growing and you need a framework — fast.",
   },
 ];
 
-// Pricing CTA component used in hero and final section
+// Pricing CTA component — optimized for thumb reach on mobile
 const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
-  <div className="text-center px-4">
-    {/* Speed indicators for TikTok audience */}
-    <div className="flex flex-wrap justify-center gap-3 mb-4">
-      <motion.span 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
-      >
-        <Zap className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
-        Instant Download
-      </motion.span>
-      <motion.span 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
-      >
-        <Clock className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
-        30 sec to access
-      </motion.span>
-      <motion.span 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80"
-      >
-        <Download className="w-3 h-3 md:w-4 md:h-4 text-primary-foreground" />
-        PDF Ready
-      </motion.span>
+  <div className="text-center px-2">
+    {/* Speed indicators */}
+    <div className="flex justify-center gap-4 mb-3">
+      <span className="inline-flex items-center gap-1 text-xs text-white/80">
+        <Zap className="w-3 h-3" />
+        Instant
+      </span>
+      <span className="inline-flex items-center gap-1 text-xs text-white/80">
+        <Clock className="w-3 h-3" />
+        30 sec
+      </span>
+      <span className="inline-flex items-center gap-1 text-xs text-white/80">
+        <Download className="w-3 h-3" />
+        PDF
+      </span>
     </div>
 
-    <div className="mb-4">
-      <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">R1,497</span>
+    <div className="mb-3">
+      <span className="text-white/60 line-through text-base mr-2">R1,497</span>
       <motion.span 
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 10 }}
-        className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block text-primary-foreground"
+        className="text-4xl md:text-5xl font-bold inline-block text-primary-foreground"
       >
         R497
       </motion.span>
     </div>
-    <p className="text-white/70 text-xs md:text-sm mb-4 md:mb-6">
-      🔥 67% OFF • Limited time offer
+    <p className="text-white/70 text-xs mb-3">
+      🔥 67% OFF • Limited time
     </p>
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+    <Button
+      onClick={onCheckout}
+      size="lg"
+      className="text-base font-bold w-full max-w-sm min-h-[56px] bg-primary-foreground text-primary hover:bg-white transition-all duration-300 hover:shadow-lg rounded-xl"
     >
-      <Button
-        onClick={onCheckout}
-        size="lg"
-        className="text-base md:text-lg px-6 md:px-8 py-6 md:py-7 font-bold transition-all duration-300 hover:shadow-lg w-full sm:w-auto min-h-[56px] bg-primary-foreground text-primary hover:bg-white"
-      >
-        GET INSTANT ACCESS →
-      </Button>
-    </motion.div>
-    <p className="text-white/50 text-xs mt-4">
+      GET INSTANT ACCESS →
+    </Button>
+    <p className="text-white/50 text-[11px] mt-3">
       ✓ Secure checkout • ✓ Works on any device
     </p>
   </div>
@@ -163,82 +143,74 @@ export default function NewManagerKit() {
         priceDisplay="R497"
       />
 
-      {/* HERO SECTION */}
-      <section className="relative py-12 md:py-24 px-4 overflow-hidden bg-primary">
-        {/* Background image with overlay */}
+      {/* HERO — Compact for mobile, content above fold */}
+      <section className="relative py-8 sm:py-12 md:py-24 px-4 overflow-hidden bg-primary">
+        {/* Background image */}
         <div className="absolute inset-0">
           <img 
             src={newManagerHero} 
             alt="Professional coaching session" 
             className="w-full h-full object-cover object-top opacity-20"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/90 to-primary" />
         </div>
 
-        {/* Top Seller Badge - Animated */}
+        {/* Top Seller Badge */}
         <motion.div 
-          className="absolute top-4 left-4 md:top-8 md:left-8 z-20"
+          className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-8 md:left-8 z-20"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.3 }}
         >
           <motion.div 
-            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-bold shadow-lg bg-primary-foreground text-primary"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[11px] sm:text-sm font-bold shadow-lg bg-primary-foreground text-primary"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
-            <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
+            <TrendingUp className="w-3 h-3" />
             <span>🔥 TOP SELLER</span>
           </motion.div>
         </motion.div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-20 md:w-32 h-20 md:h-32 rounded-full opacity-10 hidden md:block border border-primary-foreground" />
-        <div className="absolute bottom-20 right-10 w-32 md:w-48 h-32 md:h-48 rounded-full opacity-5 hidden md:block border-2 border-primary-foreground" />
 
         <div className="container mx-auto max-w-4xl relative z-10">
           {/* Back Button */}
           <Link 
             to="/products" 
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8 group"
+            className="inline-flex items-center gap-1.5 text-white/70 hover:text-white transition-colors mb-5 sm:mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-medium">Back to Products</span>
+            <span className="text-xs sm:text-sm font-medium">Products</span>
           </Link>
 
           {/* Badge */}
-          <div className="flex justify-center mb-8">
-            <span className="px-4 py-2 rounded-full text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
+          <div className="flex justify-center mb-4 sm:mb-8">
+            <span className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
               Digital Leadership Product
             </span>
           </div>
 
-          {/* Headline with gradient text */}
-          <motion.h1 
-            className="text-center mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="block text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-2">
+          {/* Headline — tighter on mobile */}
+          <h1 className="text-center mb-3 sm:mb-4">
+            <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif text-white mb-1">
               The New Manager
             </span>
-            <span className="block text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-white via-primary-foreground to-white bg-clip-text text-transparent">
+            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif bg-gradient-to-r from-white via-primary-foreground to-white bg-clip-text text-transparent">
               Survival Kit 🚀
             </span>
-          </motion.h1>
+          </h1>
 
-          {/* Subheading */}
-          <p className="text-center text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            Your complete 90-day roadmap to go from "just promoted" to trusted leader — with the exact scripts, frameworks, and templates used by 3,000+ organizations.
+          {/* Subheading — shorter on mobile */}
+          <p className="text-center text-white/80 text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-5 sm:mb-8 leading-relaxed px-2">
+            Your complete 90-day roadmap from "just promoted" to trusted leader — with exact scripts, frameworks & templates.
           </p>
 
-          {/* Feature pills */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {/* Feature pills — 2-col grid on mobile */}
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3 mb-6 sm:mb-10 max-w-sm sm:max-w-none mx-auto">
             {featurePills.map((pill) => (
               <span
                 key={pill}
-                className="px-4 py-2 rounded-full text-sm font-medium border border-primary-foreground/40 text-primary-foreground"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border border-primary-foreground/40 text-primary-foreground text-center"
               >
                 {pill}
               </span>
@@ -250,96 +222,90 @@ export default function NewManagerKit() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF BAR */}
-      <section className="py-6 px-4 bg-background border-y border-border">
-        <p className="text-center text-muted-foreground font-medium">
-          Built on 11 years of executive coaching across 3,000+ organizations in Southern Africa
+      {/* SOCIAL PROOF BAR — compact */}
+      <section className="py-3 sm:py-6 px-4 bg-background border-y border-border">
+        <p className="text-center text-muted-foreground text-xs sm:text-sm font-medium">
+          Built on 11 years of coaching across 3,000+ organizations
         </p>
       </section>
 
-      {/* PROBLEM SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-muted">
+      {/* PROBLEM SECTION — stacked on mobile */}
+      <section className="py-10 sm:py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Image */}
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
+            {/* Image — smaller aspect ratio on mobile */}
             <div className="order-2 md:order-1">
               <img 
                 src={newManagerStruggle} 
                 alt="New manager facing challenges" 
-                className="w-full rounded-lg shadow-xl object-cover aspect-[4/3]"
+                className="w-full rounded-lg shadow-xl object-cover aspect-[16/10] sm:aspect-[4/3]"
+                loading="lazy"
               />
             </div>
 
             {/* Content */}
             <div className="order-1 md:order-2">
-              {/* Section label */}
-              <p className="text-sm font-semibold tracking-widest uppercase mb-4 text-primary">
+              <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-2 sm:mb-4 text-primary">
                 The Problem
               </p>
 
-              {/* Heading */}
-              <h2 className="text-3xl md:text-4xl font-serif mb-6 text-foreground">
-                The skills that got you promoted are not the skills that will make you succeed
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif mb-4 sm:mb-6 text-foreground leading-tight">
+                The skills that got you promoted won't make you succeed
               </h2>
 
-              {/* Body */}
-              <p className="text-muted-foreground text-lg mb-8">
-                You were promoted because you were great at your job. But nobody taught you how to manage people. And the first 90 days are when your team decides whether to trust you, test you, or tune you out.
+              <p className="text-muted-foreground text-sm sm:text-lg mb-5 sm:mb-8 leading-relaxed">
+                Nobody taught you how to manage people. The first 90 days are when your team decides whether to trust you, test you, or tune you out.
               </p>
 
-              {/* Pain points */}
-              <div className="space-y-3">
+              {/* Pain points — tighter spacing */}
+              <div className="space-y-2 sm:space-y-3">
                 {painPoints.map((point) => (
-                  <div key={point} className="flex items-start gap-3">
-                    <X className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                    <span className="text-muted-foreground text-sm">{point}</span>
+                  <div key={point} className="flex items-start gap-2 sm:gap-3">
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-destructive mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground text-xs sm:text-sm">{point}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Closing statement */}
-              <p className="font-semibold text-lg mt-8 text-foreground">
-                This kit gives you the exact words, frameworks, and plan to handle every one of these situations — starting today.
+              <p className="font-semibold text-sm sm:text-lg mt-5 sm:mt-8 text-foreground">
+                This kit gives you the exact words, frameworks, and plan — starting today.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WHAT'S INSIDE SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-background">
+      {/* WHAT'S INSIDE — compact module cards */}
+      <section className="py-10 sm:py-16 md:py-24 px-4 bg-background">
         <div className="container mx-auto max-w-4xl">
-          {/* Section label */}
-          <p className="text-sm font-semibold tracking-widest uppercase mb-4 text-center text-primary">
+          <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-2 sm:mb-4 text-center text-primary">
             What's Inside
           </p>
 
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-4 text-foreground">
-            Everything you need for your first 90 days
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-center mb-2 sm:mb-4 text-foreground">
+            Everything for your first 90 days
           </h2>
 
-          {/* Subheading */}
-          <p className="text-center text-muted-foreground text-lg mb-12">
-            21 pages of actionable frameworks, word-for-word scripts, and ready-to-use templates
+          <p className="text-center text-muted-foreground text-sm sm:text-lg mb-6 sm:mb-12">
+            21 pages of frameworks, scripts, and templates
           </p>
 
-          {/* Module cards */}
-          <div className="space-y-6">
+          {/* Module cards — tighter on mobile */}
+          <div className="space-y-3 sm:space-y-6">
             {modules.map((module) => (
               <div
                 key={module.number}
-                className="p-6 bg-card rounded-lg shadow-sm border border-border transition-all duration-300 hover:shadow-md hover:-translate-y-1 border-l-4 border-l-primary"
+                className="p-4 sm:p-6 bg-card rounded-lg shadow-sm border border-border border-l-4 border-l-primary"
               >
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl font-serif font-bold text-primary">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <span className="text-2xl sm:text-3xl font-serif font-bold text-primary leading-none">
                     {module.number}
                   </span>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2 text-foreground">
+                    <h3 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 text-foreground">
                       {module.title}
                     </h3>
-                    <p className="text-muted-foreground">{module.description}</p>
+                    <p className="text-muted-foreground text-xs sm:text-base leading-relaxed">{module.description}</p>
                   </div>
                 </div>
               </div>
@@ -348,54 +314,46 @@ export default function NewManagerKit() {
         </div>
       </section>
 
-      {/* BONUS SECTION */}
-      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-br from-primary to-primary/80">
-        {/* Decorative circles */}
-        <div className="absolute top-10 right-20 w-24 h-24 rounded-full opacity-10 border border-primary-foreground" />
-
+      {/* BONUS — compact */}
+      <section className="py-10 sm:py-16 md:py-24 px-4 relative overflow-hidden bg-gradient-to-br from-primary to-primary/80">
         <div className="container mx-auto max-w-3xl text-center relative z-10">
-          {/* Badge */}
-          <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
-              <Gift className="w-4 h-4" />
+          <div className="flex justify-center mb-4 sm:mb-6">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-primary-foreground/20 text-primary-foreground">
+              <Gift className="w-3 h-3 sm:w-4 sm:h-4" />
               Included Free
             </span>
           </div>
 
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-white mb-4 sm:mb-6">
             The Emergency Playbook
           </h2>
 
-          {/* Description */}
-          <p className="text-white/80 text-lg max-w-2xl mx-auto">
-            Word-for-word scripts for the 6 most common management crises: underperformance, team conflict, losing your best person, inherited problems, delivering bad news, and owning your own mistakes.
+          <p className="text-white/80 text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            Word-for-word scripts for 6 common crises: underperformance, team conflict, losing your best person, inherited problems, delivering bad news, and owning mistakes.
           </p>
         </div>
       </section>
 
-      {/* WHO IS THIS FOR SECTION */}
-      <section className="py-16 md:py-24 px-4 bg-muted">
+      {/* WHO IS THIS FOR — 2-col on mobile too */}
+      <section className="py-10 sm:py-16 md:py-24 px-4 bg-muted">
         <div className="container mx-auto max-w-4xl">
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-foreground">
-            This kit is built for you if…
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-center mb-6 sm:mb-12 text-foreground">
+            Built for you if…
           </h2>
 
-          {/* Persona cards */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
             {personas.map((persona) => (
               <div
                 key={persona.title}
-                className="p-6 bg-card rounded-lg shadow-sm border border-border"
+                className="p-4 sm:p-6 bg-card rounded-lg shadow-sm border border-border"
               >
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0 text-primary" />
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0 text-primary" />
                   <div>
-                    <h3 className="text-lg font-semibold mb-2 text-foreground">
+                    <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-foreground">
                       {persona.title}
                     </h3>
-                    <p className="text-muted-foreground">{persona.description}</p>
+                    <p className="text-muted-foreground text-xs sm:text-base">{persona.description}</p>
                   </div>
                 </div>
               </div>
@@ -404,53 +362,47 @@ export default function NewManagerKit() {
         </div>
       </section>
 
-      {/* GUARANTEE SECTION */}
-      <section className="py-16 md:py-20 px-4 bg-primary/10">
+      {/* GUARANTEE — compact */}
+      <section className="py-8 sm:py-16 md:py-20 px-4 bg-primary/10">
         <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl md:text-3xl font-serif mb-4 text-foreground">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif mb-3 sm:mb-4 text-foreground">
             Use it in your very first meeting
           </h2>
-          <p className="text-muted-foreground text-lg">
-            This kit is designed to be used immediately, not studied for weeks. Open it, find the conversation you need, and use the script in your next meeting.
+          <p className="text-muted-foreground text-sm sm:text-lg leading-relaxed">
+            Designed to be used immediately, not studied for weeks. Open it, find the conversation you need, and use the script today.
           </p>
         </div>
       </section>
 
-      {/* FINAL CTA SECTION */}
-      <section className="py-16 md:py-24 px-4 relative overflow-hidden bg-primary">
-        {/* Background image with overlay */}
+      {/* FINAL CTA */}
+      <section className="py-10 sm:py-16 md:py-24 px-4 relative overflow-hidden bg-primary">
         <div className="absolute inset-0">
           <img 
             src={newManagerSuccess} 
-            alt="Confident leader presenting to team" 
+            alt="Confident leader" 
             className="w-full h-full object-cover object-center opacity-15"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/95 to-primary/80" />
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute bottom-10 left-20 w-40 h-40 rounded-full opacity-5 border-2 border-primary-foreground" />
-
         <div className="container mx-auto max-w-3xl text-center relative z-10">
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-white mb-3 sm:mb-4">
             Stop guessing. Start leading.
           </h2>
 
-          {/* Subheading */}
-          <p className="text-white/80 text-lg max-w-2xl mx-auto mb-10">
-            Your team is watching. The first 90 days set the tone for everything that follows. Get the scripts, frameworks, and plan that 3,000+ organizations trust.
+          <p className="text-white/80 text-sm sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed">
+            Your team is watching. The first 90 days set the tone for everything. Get the scripts & frameworks that 3,000+ organizations trust.
           </p>
 
-          {/* Pricing CTA */}
           <PricingCTA onCheckout={handleOpenCheckout} />
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 px-4 border-t bg-primary border-primary-foreground/20">
-        <p className="text-center text-white/60 text-sm">
-          © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • Built in South Africa
+      <footer className="py-6 sm:py-8 px-4 border-t bg-primary border-primary-foreground/20">
+        <p className="text-center text-white/60 text-[11px] sm:text-sm">
+          © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • South Africa
         </p>
       </footer>
     </div>
