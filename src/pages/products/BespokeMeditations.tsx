@@ -27,6 +27,7 @@ import medFutureSelf from "@/assets/med-future-self.jpg";
 import medPregameFocus from "@/assets/med-pregame-focus.jpg";
 import medClutchMoment from "@/assets/med-clutch-moment.jpg";
 import medComeback from "@/assets/med-comeback.jpg";
+import medDancePerformance from "@/assets/med-dance-performance.jpg";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -131,7 +132,7 @@ const themedProducts = [
     theme: "🏆 Sports/Competing Performance",
     products: [
       { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 891, image: medPregameFocus },
-      { name: "Dance Performance Visualisation™", tagline: "Embody rhythm, presence, and stage confidence before you perform.", price: 891, image: medClutchMoment },
+      { name: "Dance Performance Visualisation™", tagline: "Embody rhythm, presence, and stage confidence before you perform.", price: 891, image: medDancePerformance },
       { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 891, image: medClutchMoment },
       { name: "Comeback Mindset Reset™", tagline: "Emotional recovery after mistakes or losses.", price: 891, image: medComeback },
     ],
