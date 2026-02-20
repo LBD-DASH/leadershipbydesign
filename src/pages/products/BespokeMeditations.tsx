@@ -71,6 +71,7 @@ const bespokeCategories = [
     description: "Gain the mental edge with competition visualisation and peak performance programming.",
     bullets: [
       "PowerLifting competition prep",
+      "Dance performance & stage presence",
       "Athletic performance visualisation",
       "Pre-competition mental priming",
       "Pain threshold & endurance focus",
@@ -130,6 +131,7 @@ const themedProducts = [
     theme: "🏆 Sports/Competing Performance",
     products: [
       { name: "Pre-Game Focus Lock™", tagline: "Narrow attention and elevate competitive readiness.", price: 891, image: medPregameFocus },
+      { name: "Dance Performance Visualisation™", tagline: "Embody rhythm, presence, and stage confidence before you perform.", price: 891, image: medClutchMoment },
       { name: "Clutch Moment Simulation™", tagline: "Train your nervous system for pressure moments.", price: 891, image: medClutchMoment },
       { name: "Comeback Mindset Reset™", tagline: "Emotional recovery after mistakes or losses.", price: 891, image: medComeback },
     ],
