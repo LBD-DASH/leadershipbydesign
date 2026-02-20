@@ -74,6 +74,8 @@ import LeaderAsCoachSuccess from "./pages/products/LeaderAsCoachSuccess";
 import CorporateMindReset from "./pages/CorporateMindReset";
 import BespokeMeditations from "./pages/products/BespokeMeditations";
 import BespokeMeditationsSuccess from "./pages/products/BespokeMeditationsSuccess";
+import SurvivalPack from "./pages/products/SurvivalPack";
+import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -132,6 +134,8 @@ const App = () => (
           <Route path="/corporate-mind-reset" element={<CorporateMindReset />} />
           <Route path="/bespoke-meditations" element={<BespokeMeditations />} />
           <Route path="/bespoke-meditations/success" element={<BespokeMeditationsSuccess />} />
+          <Route path="/survival-pack" element={<SurvivalPack />} />
+          <Route path="/survival-pack/success" element={<SurvivalPackSuccess />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />

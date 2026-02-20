@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { X, Gift, CheckCircle, ArrowLeft, TrendingUp, Zap, Clock, Download } from "lucide-react";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
 import newManagerStruggle from "@/assets/new-manager-struggle.jpg";
 import newManagerSuccess from "@/assets/new-manager-success.jpg";
@@ -120,6 +120,34 @@ const PricingCTA = ({ onCheckout }: { onCheckout: () => void }) => (
 
 export default function NewManagerKit() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [showDownsell, setShowDownsell] = useState(false);
+  const lastScrollY = useRef(0);
+  const heroRef = useRef<HTMLElement>(null);
+
+  // Scroll-direction downsell banner logic
+  useEffect(() => {
+    const dismissed = sessionStorage.getItem("downsell-dismissed");
+    if (dismissed) return;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const heroBottom = heroRef.current?.getBoundingClientRect().bottom ?? 0;
+      
+      // Show when scrolling UP and past the hero
+      if (currentY < lastScrollY.current && currentY > 300 && heroBottom < 0) {
+        setShowDownsell(true);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const dismissDownsell = () => {
+    setShowDownsell(false);
+    sessionStorage.setItem("downsell-dismissed", "true");
+  };
 
   const handleOpenCheckout = () => {
     setCheckoutOpen(true);
@@ -141,10 +169,16 @@ export default function NewManagerKit() {
         productName="The New Manager Survival Kit"
         price={497}
         priceDisplay="R497"
+        orderBump={{
+          title: "Manager Scripts Vault",
+          price: 147,
+          priceDisplay: "R147",
+          description: "3 plug-and-play conversation scripts: First 1:1, Addressing Underperformance, Running Your First Team Meeting.",
+        }}
       />
 
       {/* HERO — Compact for mobile, content above fold */}
-      <section className="relative py-8 sm:py-12 md:py-24 px-4 overflow-hidden bg-primary">
+      <section ref={heroRef} className="relative py-8 sm:py-12 md:py-24 px-4 overflow-hidden bg-primary">
         {/* Background image */}
         <div className="absolute inset-0">
           <img 
@@ -405,6 +439,44 @@ export default function NewManagerKit() {
           © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • South Africa
         </p>
       </footer>
+
+      {/* DOWNSELL BANNER */}
+      <AnimatePresence>
+        {showDownsell && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", damping: 25 }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-2xl p-3 sm:p-4 safe-bottom"
+          >
+            <div className="container mx-auto max-w-lg flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-semibold text-foreground truncate">
+                  Not ready for the full kit?
+                </p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground">
+                  Get 3 scripts for R147 →
+                </p>
+              </div>
+              <Button
+                asChild
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 text-xs px-3 flex-shrink-0"
+              >
+                <Link to="/survival-pack">R147 →</Link>
+              </Button>
+              <button
+                onClick={dismissDownsell}
+                className="text-muted-foreground hover:text-foreground p-1 flex-shrink-0"
+                aria-label="Dismiss"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

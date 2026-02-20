@@ -29,6 +29,16 @@ import contagiousIdentityHero from "@/assets/contagious-identity-coaching-hero.j
 const Products = () => {
   const [bundleCheckoutOpen, setBundleCheckoutOpen] = useState(false);
   const tier1Products = [{
+    id: "survival-pack",
+    title: "New Manager Survival Pack",
+    shortDesc: "3 scripts. R147. Use today.",
+    price: "R147",
+    link: "/survival-pack",
+    image: newManagerHero,
+    isExternal: false,
+    isBuilt: true,
+    features: ["First 1:1 Conversation Script", "Addressing Underperformance Script", "First Team Meeting Script", "Team Expectations Sheet"]
+  }, {
     id: "difficult-conversations",
     title: "Difficult Conversations Playbook",
     shortDesc: "12 scripts for tough talks",
