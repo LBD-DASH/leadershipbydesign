@@ -303,7 +303,7 @@ const BespokeMeditations = () => {
                 {bespokePricing.localPrice}
               </p>
               <p className="text-sm text-muted-foreground mb-4">per custom bespoke recording</p>
-              <Button size="lg" className="text-lg px-8 py-6" onClick={() => setInterestOpen(true)}>
+              <Button size="lg" className="text-lg px-8 py-6 bg-red-600 hover:bg-red-700 text-white" onClick={() => setInterestOpen(true)}>
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Enquire About Bespoke Meditation
               </Button>
