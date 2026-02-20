@@ -192,18 +192,18 @@ const BespokeMeditations = () => {
             className="mb-12"
           >
             <div className="relative rounded-2xl overflow-hidden mb-8">
-              <img src={meditationHero} alt="Bespoke meditation session" className="w-full aspect-video object-cover object-top" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-center">
-                <div className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary-foreground px-4 py-1.5 rounded-full text-sm font-medium mb-4">
-                  <Headphones className="w-4 h-4" />
+              <img src={meditationHero} alt="Bespoke meditation session" className="w-full aspect-[4/3] sm:aspect-video object-cover object-top" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-10 text-center">
+                <div className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary-foreground px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium mb-2 sm:mb-4">
+                  <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   Premium Audio Content
                 </div>
-                <h1 className="font-serif text-3xl md:text-5xl font-bold text-foreground mb-4">
+                <h1 className="font-serif text-xl sm:text-3xl md:text-5xl font-bold text-foreground mb-2 sm:mb-4">
                   Bespoke Mindset Meditations & Visualisations
                 </h1>
-                <div className="w-20 h-1 bg-primary mx-auto mb-4" />
-                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                <div className="w-16 sm:w-20 h-1 bg-primary mx-auto mb-2 sm:mb-4" />
+                <p className="text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto">
                   Custom-crafted audio experiences designed to rewire your mind for peak performance — whether in business, sport, or personal transformation.
                 </p>
               </div>
@@ -224,8 +224,7 @@ const BespokeMeditations = () => {
                 <motion.div
                   key={cat.id}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                 >
                   <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 group overflow-hidden">
@@ -293,8 +292,8 @@ const BespokeMeditations = () => {
             {/* Single CTA for bespoke - now opens contact form */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
               className="text-center"
             >
               <p className="text-2xl font-bold text-foreground mb-1">
@@ -312,8 +311,8 @@ const BespokeMeditations = () => {
           <section className="mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
               className="text-center mb-10"
             >
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground mb-2">
@@ -337,12 +336,7 @@ const BespokeMeditations = () => {
                   {matchingDbProducts.map((product, di) => {
                     const dbPricing = product.price_zar;
                     return (
-                      <motion.div
-                        key={product.id}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: di * 0.05, duration: 0.35 }}
-                      >
+                      <div key={product.id}>
                         <Card className="h-full border-primary/30 hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col ring-1 ring-primary/20">
                           <div className="aspect-[4/3] bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center relative overflow-hidden">
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_40%,white_0%,transparent_60%)]" />
@@ -360,17 +354,12 @@ const BespokeMeditations = () => {
                             </div>
                           </CardContent>
                         </Card>
-                      </motion.div>
+                      </div>
                     );
                   })}
                   {theme.products.map((product, pi) => {
                     return (
-                      <motion.div
-                        key={pi}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: pi * 0.05, duration: 0.35 }}
-                      >
+                      <div key={pi}>
                         <Card className="h-full border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col">
                           <div className="aspect-[4/3] overflow-hidden relative">
                             <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
@@ -387,7 +376,7 @@ const BespokeMeditations = () => {
                             </div>
                           </CardContent>
                         </Card>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
@@ -399,8 +388,8 @@ const BespokeMeditations = () => {
           {/* Guarantee */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
             className="text-center py-12 bg-primary/5 rounded-2xl border border-primary/20 mb-12"
           >
             <ShieldCheck className="w-10 h-10 text-primary mx-auto mb-4" />
@@ -413,8 +402,8 @@ const BespokeMeditations = () => {
           {/* Final CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
             className="text-center"
           >
             <h2 className="font-serif text-2xl font-bold text-foreground mb-4">
