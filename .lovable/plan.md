@@ -1,78 +1,103 @@
 
 
-# Fix Products Page Visibility, Hide Coming Soon, and Enhance Survival Pack
+# Newsletter System: Contact Upload + Monthly Email Campaigns
 
-## Overview
-Six changes across two pages: fix the invisible Products page, hide unreleased products, and upgrade the Survival Pack sales page with better copy, social proof, a money-back guarantee, and an email capture form.
-
----
-
-## Change 1: Fix Invisible Sections on /products
-
-**Problem:** The `motion.div` / `motion.section` components use `initial={{ opacity: 0 }}` with `whileInView` animations. The IntersectionObserver isn't firing, so sections stay invisible.
-
-**Fix:** Change all `motion.section` and `motion.div` wrappers on the Products page to use `animate` instead of `whileInView` for above-the-fold content, and ensure `whileInView` sections have `amount: 0` in the viewport config so they trigger immediately when any pixel is visible. Alternatively (simpler and safer): set `initial={{ opacity: 1, y: 0 }}` on all sections so content is always visible regardless of animation state.
-
-**Approach chosen:** Set `initial={{ opacity: 1, y: 0 }}` on all `motion.section` / `motion.div` wrappers (hero, bundle, diagnostic, tier sections, trust bar) to guarantee visibility. Remove `whileInView` props since they're unreliable. This ensures the page is always fully visible.
-
-**Files:** `src/pages/Products.tsx`
+## What You Get
+A new "Newsletter" tab in your Marketing Dashboard where you can:
+1. Upload a CSV of contacts (bulk import)
+2. Compose and preview a newsletter email
+3. Send it to all contacts (or filtered segments) directly from the website
 
 ---
 
-## Change 2: Hide "Coming Soon" Products on /products
+## Part 1: Expand the Contact Database
 
-**Problem:** Products like "The Meeting Detox Kit" and "The Delegation Playbook" (and others with `comingSoon: true`) are shown but disabled.
+Upgrade the existing `email_subscribers` table to support richer contact data and CSV imports.
 
-**Fix:** Filter out `comingSoon` products from each tier before rendering. The product data stays in code, just hidden with `.filter(p => !p.comingSoon)`.
+**New columns added to `email_subscribers`:**
+- `name` (text, optional) -- contact's name for personalization
+- `company` (text, optional) -- for segmenting by organization
+- `tags` (text array, optional) -- e.g. "imported", "diagnostic-lead", "newsletter"
+- `status` (text, default "active") -- active / unsubscribed / bounced
+- `unsubscribed_at` (timestamptz, optional)
 
-**Files:** `src/pages/Products.tsx` -- change the `.map()` calls in the three tier grids to `.filter(p => !p.comingSoon).map(...)`.
-
----
-
-## Change 3: Change "IMPULSE BUY" Badge to "MOST POPULAR" on /survival-pack
-
-**Fix:** Change the text on line 90 from "IMPULSE BUY" to "MOST POPULAR" and update the emoji from lightning bolt to a star/fire.
-
-**Files:** `src/pages/products/SurvivalPack.tsx`
+This keeps all contacts in one place -- both manually uploaded and those captured from the survival pack form, diagnostics, etc.
 
 ---
 
-## Change 4: Add Social Proof Testimonials to /survival-pack
+## Part 2: CSV Upload Interface
 
-**Fix:** Add 3 testimonial cards between the "What's Inside" script cards and the "Also Included" bonuses section. Clean card style with quote marks, italic text, and attribution. Uses the page's existing colour scheme (primary tones, card backgrounds).
+A new component in the Marketing Dashboard "Newsletter" tab that:
+- Accepts a CSV file (drag-and-drop or file picker)
+- Previews the first 5 rows so you can confirm column mapping (email, name, company)
+- Shows a count of new vs. duplicate contacts
+- Imports with a single click, tagging all as `source: "csv-import"` and `tags: ["imported"]`
+- Skips duplicates by email (no double entries)
 
-**Files:** `src/pages/products/SurvivalPack.tsx`
+**Supported CSV format:**
+```
+email,name,company
+john@acme.co,John Smith,Acme Corp
+jane@startup.io,Jane Doe,StartupCo
+```
+
+Minimum requirement: just an `email` column. Name and company are optional.
 
 ---
 
-## Change 5: Add Money-Back Guarantee Below CTA Buttons on /survival-pack
+## Part 3: Newsletter Composer
 
-**Fix:** Add a subtle guarantee line with a Shield icon below both "GET INSTANT ACCESS" buttons (hero CTA and final CTA). Small, muted text: "100% Money-Back Guarantee -- If these scripts don't help, get a full refund. No questions asked."
-
-**Files:** `src/pages/products/SurvivalPack.tsx`
+A simple email composer with:
+- Subject line input
+- Rich text body editor (reusing the existing Quill editor already in the project)
+- Preview button (shows how the email will look)
+- "Send to All Active Contacts" button with a confirmation dialog showing the recipient count
+- Send progress indicator
 
 ---
 
-## Change 6: Add Email Capture for Non-Buyers on /survival-pack
+## Part 4: Newsletter Sending (Backend)
 
-**Fix:** Add a new section after the final CTA with:
-- Heading: "Not ready yet? Get the free checklist."
-- Subheading about the First 90 Days Checklist
-- Email input + "Send Me The Checklist" button
-- "No spam" disclaimer
-- Light grey background for contrast
+A new backend function `send-newsletter` that:
+- Receives subject, HTML body, and optional tag filter
+- Fetches all active subscribers from the database
+- Sends via Resend API in batches (Resend supports batch sending up to 100 per call)
+- Logs each send in a new `newsletter_sends` table for tracking
 
-**Backend:** Create a new `email_subscribers` table with columns: `id` (uuid PK), `email` (text, not null), `source` (text), `created_at` (timestamptz). RLS: public INSERT, authenticated SELECT. The form submits directly to this table via the Supabase client.
+**New `newsletter_sends` table:**
+- `id` (UUID)
+- `subject` (text)
+- `body_html` (text)
+- `sent_at` (timestamptz)
+- `recipient_count` (integer)
+- `sent_by` (text)
+- `status` (text: draft / sending / sent / failed)
 
-**Files:** `src/pages/products/SurvivalPack.tsx`, plus a database migration for the new table.
+---
+
+## Part 5: Unsubscribe Handling
+
+Every newsletter email includes an unsubscribe link at the bottom. When clicked:
+- Sets the subscriber's `status` to "unsubscribed" and records `unsubscribed_at`
+- Shows a simple "You've been unsubscribed" confirmation page
+- That contact is automatically excluded from future sends
 
 ---
 
 ## Technical Summary
 
-| File | Changes |
-|------|---------|
-| `src/pages/Products.tsx` | Remove opacity:0 initial states from all motion wrappers; filter out comingSoon products |
-| `src/pages/products/SurvivalPack.tsx` | Change badge text; add 3 testimonial cards; add guarantee text x2; add email capture section |
-| Database migration | Create `email_subscribers` table with public INSERT RLS |
+| Component | Details |
+|-----------|---------|
+| Database migration | Add columns to `email_subscribers`; create `newsletter_sends` table |
+| New edge function | `send-newsletter` -- batch sends via Resend API |
+| New edge function | `unsubscribe` -- handles unsubscribe link clicks |
+| UI components | CSV uploader, newsletter composer, send history (all in Marketing Dashboard) |
+| Files modified | `src/pages/MarketingDashboard.tsx` (new tab), new components in `src/components/marketing/` |
+| Dependencies | No new packages needed (Quill editor + file reader already available) |
+
+## Important Notes
+
+- **Resend free tier** supports 100 emails/day and 3,000/month. If your list is larger, you may need to upgrade your Resend plan.
+- **Domain verification**: Emails will send from `hello@leadershipbydesign.co` (already verified in Resend).
+- All contact data is protected by row-level security -- only authenticated admin users can view or manage contacts.
 
