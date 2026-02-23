@@ -77,6 +77,7 @@ import BespokeMeditationsSuccess from "./pages/products/BespokeMeditationsSucces
 import SurvivalPack from "./pages/products/SurvivalPack";
 import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
 import Unsubscribe from "./pages/Unsubscribe";
+import ShiftCertified from "./pages/ShiftCertified";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -137,6 +138,7 @@ const App = () => (
           <Route path="/bespoke-meditations/success" element={<BespokeMeditationsSuccess />} />
           <Route path="/survival-pack" element={<SurvivalPack />} />
           <Route path="/survival-pack/success" element={<SurvivalPackSuccess />} />
+          <Route path="/shift-certified" element={<ShiftCertified />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />

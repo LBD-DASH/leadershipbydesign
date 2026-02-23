@@ -1,106 +1,70 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import InterestModal from "@/components/shared/InterestModal";
+import kevinPhoto from "@/assets/kevin-britz-facilitator.jpg";
 
 export default function Hero() {
-  const [showInterestModal, setShowInterestModal] = useState(false);
-
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[85vh] flex flex-col overflow-hidden"
-      >
-        {/* Background Image with Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `linear-gradient(135deg, rgba(58, 124, 165, 0.85) 0%, rgba(45, 99, 132, 0.75) 100%), url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=80')`,
-          }}
-        />
-        
-        {/* Main Content - Centered */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.h1
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
-            >
-              We Turn Managers Into Leaders<br />
-              <span className="text-white/90">Who Scale Business Performance</span>
-            </motion.h1>
-            
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
-            >
-              90-Day Leadership System That Delivers 40% Productivity Gains
-            </motion.p>
-            
-            {/* Primary CTA - I'm Interested */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="mb-4 sm:mb-6"
-            >
-              <Button 
-                onClick={() => setShowInterestModal(true)}
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
-              >
-                <Phone className="mr-3 w-5 h-5" />
-                I'm Interested
-                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </motion.div>
-            
-            {/* Secondary CTAs - Diagnostics */}
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
-            >
-              <Link to="/team-diagnostic" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
-                >
-                  Free Team Diagnostic
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link to="/leadership-diagnostic" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
-                >
-                  Free Leader Diagnostic
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
+    <section className="relative min-h-[90vh] flex items-center bg-primary overflow-hidden">
+      {/* Subtle geometric texture */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }} />
+      </div>
 
-      <InterestModal 
-        open={showInterestModal} 
-        onOpenChange={setShowInterestModal}
-        context="Homepage Hero"
-      />
-    </>
+      <div className="relative z-10 container mx-auto px-6 lg:px-8 py-24 sm:py-32">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left content */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
+              The Leadership System Trusted by South Africa's Most Ambitious Organisations
+            </h1>
+            <p className="text-lg sm:text-xl text-accent mb-10 leading-relaxed max-w-xl">
+              The SHIFT Framework has transformed over 3,000 leaders across 11 years. Now we're certifying the next generation of SHIFT practitioners — and taking the system global.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link to="/contact">
+                <Button size="lg" className="bg-accent text-accent-foreground hover:opacity-90 px-8 py-6 text-base font-semibold w-full sm:w-auto">
+                  Request a Proposal
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/leadership-diagnostic">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-base font-semibold w-full sm:w-auto"
+                >
+                  Take the Free Leadership Diagnostic
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Right photo */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="hidden lg:block"
+          >
+            <div className="relative">
+              <div className="absolute -inset-4 border-2 border-accent/30 rounded-lg" />
+              <img
+                src={kevinPhoto}
+                alt="Kevin Britz — Leadership Architect"
+                className="rounded-lg w-full max-w-md mx-auto object-cover aspect-[3/4] shadow-2xl"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 }
