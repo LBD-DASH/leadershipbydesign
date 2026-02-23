@@ -603,66 +603,20 @@ const Products = () => {
                 
                 {/* Visual Side */}
                 <div className="hidden md:flex items-center justify-center">
-                  <div className="relative">
-                    {/* Layered circles */}
-                    <motion.div initial={{
-                    scale: 0.8,
-                    opacity: 0
-                  }} whileInView={{
-                    scale: 1,
-                    opacity: 1
-                  }} viewport={{
-                    once: true
-                  }} transition={{
-                    duration: 0.6,
-                    delay: 0.2
-                  }} className="w-48 h-48 rounded-full border-4 border-white/20 flex items-center justify-center">
-                      <motion.div initial={{
-                      scale: 0.8,
-                      opacity: 0
-                    }} whileInView={{
-                      scale: 1,
-                      opacity: 1
-                    }} viewport={{
-                      once: true
-                    }} transition={{
-                      duration: 0.6,
-                      delay: 0.4
-                    }} className="w-36 h-36 rounded-full border-2 border-white/30 flex items-center justify-center bg-white/10 backdrop-blur-sm">
-                        <motion.div initial={{
-                        scale: 0.8,
-                        opacity: 0
-                      }} whileInView={{
-                        scale: 1,
-                        opacity: 1
-                      }} viewport={{
-                        once: true
-                      }} transition={{
-                        duration: 0.6,
-                        delay: 0.6
-                      }} className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center">
-                          <Target className="w-10 h-10 text-white" />
-                        </motion.div>
-                      </motion.div>
-                    </motion.div>
-                    
-                    {/* Floating accent circles */}
-                    <motion.div animate={{
-                    y: [0, -8, 0]
-                  }} transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }} className="absolute -top-4 -right-4 w-8 h-8 rounded-full bg-white/30" />
-                    <motion.div animate={{
-                    y: [0, 8, 0]
-                  }} transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5
-                  }} className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-white/20" />
-                  </div>
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-white/20"
+                  >
+                    <img
+                      src={leadershipFeedback}
+                      alt="Leadership diagnostic assessment session"
+                      className="w-full h-64 lg:h-72 object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  </motion.div>
                 </div>
               </div>
             </div>
