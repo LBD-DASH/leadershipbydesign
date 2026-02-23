@@ -8,6 +8,7 @@ import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Penc
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import StatsBar from "@/components/StatsBar";
 
 const levelOrder: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
 
@@ -146,6 +147,8 @@ export default function Programmes() {
               </p>
             </motion.div>
 
+            <StatsBar />
+
             {/* Leading in the AI Era Section */}
             <motion.section initial={{
             opacity: 0,
@@ -202,12 +205,15 @@ export default function Programmes() {
                         </span>
                       ))}
                     </div>
-                    <Link to="/contact">
-                      <Button className="rounded-full group">
-                        Enquire About Programme
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
+                    <p className="text-sm font-semibold text-primary mb-3">From R35,000 per cohort</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link to="/contact">
+                        <Button className="rounded-full group">
+                          Get a Custom Quote
+                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -264,12 +270,15 @@ export default function Programmes() {
                         </span>
                       ))}
                     </div>
-                    <Link to="/contact">
-                      <Button className="rounded-full group">
-                        Enquire About Programme
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
+                    <p className="text-sm font-semibold text-primary mb-3">From R45,000 per cohort</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link to="/contact">
+                        <Button className="rounded-full group">
+                          Get a Custom Quote
+                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -291,7 +300,7 @@ export default function Programmes() {
                 </div>
                 <div>
                   <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
-                  <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">35% faster decisions • 40% productivity gains • 94% accuracy rate</p>
+                  <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">From R25,000 per level • 35% faster decisions • 40% productivity gains</p>
                 </div>
               </div>
 
@@ -410,7 +419,7 @@ export default function Programmes() {
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
                     Team Leadership Workshops
                   </h2>
-                  <p className="text-muted-foreground">Develop leadership at every level • 50% less conflict • Results in 60 days</p>
+                  <p className="text-muted-foreground">From R15,000 per workshop • 50% less conflict • Results in 60 days</p>
                 </div>
               </div>
 
@@ -482,7 +491,7 @@ export default function Programmes() {
                   <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
                     The Corporate Mind Reset
                   </h2>
-                  <p className="text-muted-foreground">4 × 90-minute sessions • Mindset training • Science-backed</p>
+                  <p className="text-muted-foreground">From R25,000 per group • 4 × 90-minute sessions • Science-backed</p>
                 </div>
               </div>
 

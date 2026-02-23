@@ -8,6 +8,8 @@ import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import FloatingSocial from "@/components/FloatingSocial";
+import StatsBar from "@/components/StatsBar";
+import CredibilityBlock from "@/components/CredibilityBlock";
 
 const Index = () => {
   return (
@@ -24,7 +26,9 @@ const Index = () => {
         <Hero />
         <StartHere />
         <ClientLogos />
+        <StatsBar />
         <Services />
+        <CredibilityBlock />
         <PartnerApps />
         <TestimonialSlider />
         <FloatingSocial />
