@@ -150,11 +150,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="mb-8 sm:mb-12 md:mb-16">
@@ -219,11 +217,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="mb-8 sm:mb-12 md:mb-16">
@@ -283,11 +279,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="mb-10 sm:mb-16 md:mb-20">
@@ -328,11 +322,9 @@ export default function Programmes() {
                 return <motion.div key={level} initial={{
                   opacity: 0,
                   y: 20
-                }} whileInView={{
+                }} animate={{
                   opacity: 1,
                   y: 0
-                }} viewport={{
-                  once: true
                 }} transition={{
                   delay: index * 0.1,
                   duration: 0.5
@@ -366,11 +358,9 @@ export default function Programmes() {
                 <motion.div initial={{
                 opacity: 0,
                 y: 20
-              }} whileInView={{
+              }} animate={{
                 opacity: 1,
                 y: 0
-              }} viewport={{
-                once: true
               }} transition={{
                 delay: 0.5,
                 duration: 0.5
@@ -406,11 +396,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="mb-20">
@@ -451,11 +439,9 @@ export default function Programmes() {
                 {teamWorkshops.map((workshop, index) => <motion.div key={workshop.id} initial={{
                 opacity: 0,
                 y: 20
-              }} whileInView={{
+              }} animate={{
                 opacity: 1,
                 y: 0
-              }} viewport={{
-                once: true
               }} transition={{
                 delay: index * 0.1,
                 duration: 0.5
@@ -487,7 +473,7 @@ export default function Programmes() {
             </motion.section>
 
             {/* Corporate Mind Reset Section */}
-            <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-20">
+            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-20">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Brain className="w-6 h-6 text-primary" />
@@ -535,11 +521,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="mb-16">
@@ -618,11 +602,9 @@ export default function Programmes() {
             <motion.section initial={{
             opacity: 0,
             y: 20
-          }} whileInView={{
+          }} animate={{
             opacity: 1,
             y: 0
-          }} viewport={{
-            once: true
           }} transition={{
             duration: 0.6
           }} className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50">

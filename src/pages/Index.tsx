@@ -2,6 +2,7 @@ import SEO from "@/components/SEO";
 import OrganizationSchema from "@/components/OrganizationSchema";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import StartHere from "@/components/StartHere";
 import Services from "@/components/Services";
 import PartnerApps from "@/components/PartnerApps";
 import ClientLogos from "@/components/ClientLogos";
@@ -21,6 +22,7 @@ const Index = () => {
       <div className="min-h-screen">
         <Header />
         <Hero />
+        <StartHere />
         <ClientLogos />
         <Services />
         <PartnerApps />

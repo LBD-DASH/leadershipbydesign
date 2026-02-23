@@ -97,12 +97,7 @@ const Blog = () => {
                 </div>
               )}
 
-              <Link to="/blog-admin">
-                <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
-                  <Settings className="h-3 w-3 mr-1" />
-                  Manage
-                </Button>
-              </Link>
+              {/* Manage button hidden - access via /blog-admin directly */}
             </div>
           </div>
         </section>
