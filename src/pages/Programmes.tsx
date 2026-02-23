@@ -98,7 +98,7 @@ const programmes = [
     tagline: "Create a culture of accountability",
     meta: "1–2 days • In-person",
     price: "From R15,000",
-    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80",
     link: "/workshops/leadership",
     tags: ["Accountability", "Ownership", "Growth"],
   },
