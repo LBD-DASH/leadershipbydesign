@@ -78,8 +78,22 @@ export default function SurvivalPack() {
     if (!email.trim()) return;
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("email_subscribers" as any).insert({ email: email.trim(), source: "survival-pack-checklist" } as any);
-      if (error) throw error;
+      // Store subscriber with tag
+      await supabase.from("email_subscribers" as any).insert({
+        email: email.trim(),
+        source: "survival-pack-checklist",
+        tags: ["new-manager-funnel"],
+      } as any);
+
+      // Send the actual checklist via email
+      await supabase.functions.invoke("send-lead-magnet-email", {
+        body: {
+          email: email.trim(),
+          leadMagnet: "First 90 Days Checklist",
+          downloadUrl: `${window.location.origin}/new-manager-kit.pdf`,
+        },
+      });
+
       toast.success("Checklist on its way! Check your inbox.");
       setEmail("");
     } catch {

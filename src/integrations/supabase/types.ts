@@ -1232,6 +1232,60 @@ export type Database = {
         }
         Relationships: []
       }
+      product_purchases: {
+        Row: {
+          amount_zar: number
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          payment_reference: string | null
+          product_name: string
+          purchased_at: string
+          upsell_converted: boolean | null
+          upsell_shown: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          amount_zar?: number
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          payment_reference?: string | null
+          product_name: string
+          purchased_at?: string
+          upsell_converted?: boolean | null
+          upsell_shown?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          amount_zar?: number
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          payment_reference?: string | null
+          product_name?: string
+          purchased_at?: string
+          upsell_converted?: boolean | null
+          upsell_shown?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: []
+      }
       prospect_companies: {
         Row: {
           about_summary: string | null
