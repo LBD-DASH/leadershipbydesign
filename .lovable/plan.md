@@ -1,62 +1,99 @@
 
 
-# Align Authority Numbers Across the Entire Site
+# Leader as Coach — Corporate Sales Page
 
-The **StatsBar** and **CredibilityBlock** already have the correct figures. However, many other pages still reference outdated "3,000+ organizations" copy. This plan updates every inconsistent reference sitewide, plus rewrites the About page bio to align.
+## Overview
+Create a new premium sales page at `/leader-as-coach` styled identically to the `/leadership-development` page (navy/gold aesthetic, animated sections, enquiry modal with Supabase submission). This positions the Leader as Coach Programme as a corporate engagement sold via proposal, separate from the existing self-serve product page at `/leader-as-coach-programme`.
 
----
+## Page Structure
 
-## Canonical Numbers
+### 1. Sticky Header
+- "Back to Programmes" link
+- "Leader as Coach" title
+- "Enquire Now" gold CTA button
 
-| Metric | Correct Value |
-|--------|---------------|
-| Years | 11 |
-| Workshops | 750+ |
-| Leaders Developed | 4,000+ |
-| Organisations | 50+ |
-| Proprietary Methodologies | 6 |
+### 2. Hero Section (navy background with image overlay)
+- Badge: "Flagship 10-Month Programme"
+- Headline: "Transform Managers into Leaders Who Coach, Not Control."
+- Subtext: Programme description referencing SHIFT Skills, People-Profit-Process model
+- Pricing hint: "From R45,000 per cohort | 10 Months | Hybrid Delivery"
+- CTAs: "Request a Proposal" + "Take the Free Diagnostic"
 
----
+### 3. The Problem (cream background)
+Three problem cards matching the L1-L5 page pattern:
+- "One-Day Workshops Don't Work" — training events forgotten within 2 weeks
+- "Toxic Culture Persists" — drama cycles and conflict avoidance remain
+- "No Coaching Capability" — managers promoted for skill, not leadership
 
-## Changes by File
+### 4. The Solution (navy background)
+Overview of the 5-Phase system with the People-Profit-Process methodology tagline
 
-### 1. `src/pages/Index.tsx`
-- SEO description: change "3,000+ organizations" to "50+ organisations"
+### 5. The 5 Phases (cream background, alternating image/text layout)
+Reuse the existing `phases` data from LeaderAsCoachProgramme.tsx:
+- Phase 01: Leadership Identity and Self-Awareness (Months 1-2)
+- Phase 02: Communication Mastery and Emotional Intelligence (Months 3-4)
+- Phase 03: Performance, Accountability and Boundaries (Months 5-6)
+- Phase 04: High-Performing Teams and Strategic Leadership (Months 7-8)
+- Phase 05: Sustainability, Succession and Embedding (Months 9-10)
 
-### 2. `src/pages/About.tsx`
-- SEO description (line 77): change "3,000+ organizations" to "50+ organisations"
-- Rewrite the bio/philosophy to include the corrected numbers where relevant (e.g., mention 750+ workshops, 4,000+ leaders, 50+ organisations)
+Each phase shows: number, title, duration, SHIFT focus, and key topics with alternating image layout using existing assets.
 
-### 3. `src/pages/Products.tsx`
-- Trust items array (line 241): change "3,000+ Organizations" to "4,000+ Leaders Developed"
-- Section description (line 399): "11 years of coaching 3,000+ organizations" becomes "11 years developing 4,000+ leaders across 50+ organisations"
-- Footer stats bar (line 546): same correction
+### 6. Outcomes (navy background)
+Six outcome cards with icons:
+- Culture shift within 90 days
+- Coaching capability embedded at every level
+- 40% reduction in unresolved conflict
+- Measurable ROI with pulse assessments
+- Succession pipeline activated
+- Common leadership language across the organisation
 
-### 4. `src/pages/LeadershipDevelopmentSales.tsx`
-- Kevin bio text (line 362): "over 3,000 coaching sessions" update to "over 4,000 leaders developed"
-- Stats row (line 371): change "3,000+" / "Coaching Sessions" to "4,000+" / "Leaders Developed"; change "20+" / "Years Experience" to "11" / "Years"
+### 7. How It Works (cream background)
+Four-step process: Diagnose, Design, Deliver, Embed
 
-### 5. `src/pages/products/NewManagerKit.tsx`
-- Line 262: "3,000+ organizations" to "50+ organisations"
-- Line 429: same correction
-- Footer line 439: same correction
+### 8. Testimonials (navy background)
+Three testimonial cards (anonymised corporate quotes)
 
-### 6. `src/pages/products/SurvivalPack.tsx`
-- Line 219: "3,000+ organizations" to "50+ organisations"
+### 9. Facilitator Section (cream background)
+Kevin Britz bio with photo, stats (4,000+ leaders, 11 years, 94% diagnostic accuracy) -- same as L1-L5 page
 
-### 7. `src/pages/products/LeaderAsCoachProgramme.tsx`
-- Line 286: "3,000+ organisations" to "50+ organisations"
+### 10. Pricing Section (navy background)
+Three tiers:
+- Single Cohort: From R45,000
+- Multi-Cohort: From R120,000
+- Enterprise: Custom pricing
+CTAs: "Request a Proposal" + "Take the Free Diagnostic First"
 
-### 8. `src/lib/emailTemplates.ts`
-- Lines 73 and 92: "3,000+ organisations" to "50+ organisations"
+### 11. Final CTA (cream background)
+"Ready to Build a Coaching Culture?" with enquiry button
 
-### 9. `supabase/functions/process-follow-up-sequences/index.ts`
-- Lines 68 and 87: same corrections as emailTemplates
+### 12. Booking Modal
+Form fields: Name, Company, Email, Phone, Message
+Submits to `contact_form_submissions` table with `service_interest: "Leader as Coach Programme"`
+Shows `ReferralSharePrompt` on success
 
----
+## Technical Details
 
-## Technical Notes
+### New File
+- `src/pages/LeaderAsCoachSales.tsx` — follows the exact pattern and code structure of `LeadershipDevelopmentSales.tsx`
 
-- All changes are copy-only text replacements -- no structural, database, or dependency changes
-- The pattern is consistent: replace every instance of "3,000+" with either "4,000+ leaders" or "50+ organisations" depending on context
-- About 15-20 individual line edits across 9 files
+### Route Addition in `src/App.tsx`
+```
+<Route path="/leader-as-coach" element={<LeaderAsCoachSales />} />
+```
+
+### Assets Used (existing)
+- `leader-as-coach.jpg` — hero background
+- `leadership-feedback.jpg` — phase section images
+- `product-team-hands-above.jpg` — alternating phase images
+- `kevin-britz-facilitator.jpg` — facilitator section
+- `shift-hero-team.jpg` — additional phase image
+
+### Styling
+- Navy/gold/cream inline colour scheme matching `/leadership-development` exactly
+- Framer Motion `fadeUp` and `staggerContainer` animations
+- Responsive grid layouts
+
+### Data Submission
+- Uses existing `contact_form_submissions` Supabase table
+- Service interest tagged as "Leader as Coach Programme"
+
