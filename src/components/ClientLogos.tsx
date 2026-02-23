@@ -64,34 +64,6 @@ export default function ClientLogos() {
             </motion.div>
           </div>
 
-          {/* Second Row - Scrolling Right */}
-          <div className="overflow-hidden">
-            <motion.div
-              className="flex gap-8"
-              animate={{
-                x: [-50 * clients.length, 0],
-              }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 60,
-                  ease: "linear",
-                },
-              }}
-            >
-              {duplicatedClients.map((client, index) => (
-                <div
-                  key={`row2-${index}`}
-                  className="flex-shrink-0 w-48 h-24 bg-card rounded-xl shadow-md border border-border flex items-center justify-center px-6 hover:shadow-lg transition-shadow duration-300"
-                >
-                  <span className="font-semibold text-foreground text-center text-sm">
-                    {client}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
         </div>
       </div>
     </section>

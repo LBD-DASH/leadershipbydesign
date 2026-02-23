@@ -32,8 +32,8 @@ const partnerApps = [
     name: "Leadership Index",
     logo: leadershipIndexLogo,
     description: "Measure and elevate your leadership effectiveness with data-driven insights",
-    link: null,
-    comingSoon: true
+    link: "https://leadershipindex.lovable.app",
+    comingSoon: false
   },
   {
     name: "Purpose Blueprint",
