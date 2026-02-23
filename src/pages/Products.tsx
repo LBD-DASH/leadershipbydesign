@@ -11,6 +11,7 @@ import { CheckoutModal } from "@/components/products/CheckoutModal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
 import leadershipFeedback from "@/assets/leadership-feedback.jpg";
+import leadershipDiagnosticVisual from "@/assets/leadership-diagnostic-visual.jpg";
 import leaderAsCoach from "@/assets/leader-as-coach.jpg";
 import workshopLeadership from "@/assets/workshop-leadership.jpg";
 import workshopMotivation from "@/assets/workshop-motivation.jpg";
@@ -611,8 +612,8 @@ const Products = () => {
                     className="relative rounded-xl overflow-hidden shadow-2xl border-2 border-white/20"
                   >
                     <img
-                      src={leadershipFeedback}
-                      alt="Leadership diagnostic assessment session"
+                      src={leadershipDiagnosticVisual}
+                      alt="Team reviewing leadership assessment results"
                       className="w-full h-64 lg:h-72 object-cover object-top"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
