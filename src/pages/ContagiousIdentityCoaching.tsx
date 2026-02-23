@@ -31,19 +31,17 @@ import legacyImage from "@/assets/contagious-identity-legacy.jpg";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
+  animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6 },
 };
 
 const staggerContainer = {
   initial: {},
-  whileInView: {
+  animate: {
     transition: {
       staggerChildren: 0.1,
     },
   },
-  viewport: { once: true },
 };
 
 const painPoints = [
@@ -423,8 +421,7 @@ export default function ContagiousIdentityCoaching() {
           <motion.div
             variants={staggerContainer}
             initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
+            animate="animate"
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
           >
             {painPoints.map((point, index) => (
@@ -676,8 +673,7 @@ export default function ContagiousIdentityCoaching() {
           <motion.div
             variants={staggerContainer}
             initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true }}
+            animate="animate"
             className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
           >
             {pricingTiers.map((tier, index) => (

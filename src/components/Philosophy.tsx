@@ -6,8 +6,7 @@ export default function Philosophy() {
       <div className="max-w-4xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
