@@ -264,18 +264,7 @@ const Products = () => {
   }: {
     product: Product;
     index: number;
-  }) => <motion.div initial={{
-    opacity: 0,
-    y: 20
-  }} whileInView={{
-    opacity: 1,
-    y: 0
-  }} viewport={{
-    once: true
-  }} transition={{
-    delay: index * 0.05,
-    duration: 0.4
-  }}>
+  }) => <div>
         <div className="bg-card rounded-lg overflow-hidden border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300 h-full group flex flex-col min-w-0">
         <div className="relative aspect-[4/3] overflow-hidden">
           <img src={product.image} alt={product.title} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" loading="lazy" />
@@ -349,7 +338,7 @@ const Products = () => {
           </div>
         </div>
       </div>
-    </motion.div>;
+    </div>;
   return <div className="min-h-screen bg-background">
       <SEO title="Leadership Tools & Digital Products | Leadership by Design" description="Frameworks, scripts, and systems for managers and leaders. The New Manager Survival Kit, The Difficult Conversations Playbook, and more. Instant PDF download." canonicalUrl="/products" ogImage="https://leadershipbydesign.co/og-products.jpg" keywords="leadership tools, digital products, new manager kit, difficult conversations, leadership frameworks, manager templates" />
       
@@ -412,17 +401,7 @@ const Products = () => {
           </motion.div>
 
           {/* Featured Bundle Section - HERO DEAL */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-8 md:mb-16">
+          <section className="mb-8 md:mb-16">
             <div className="relative rounded-2xl overflow-hidden border-2 shadow-2xl" style={{
             borderColor: "#C8A864",
             background: "linear-gradient(135deg, #1B2A4A 0%, #2a3f6a 100%)"
@@ -570,20 +549,10 @@ const Products = () => {
                 </div>
               </div>
             </div>
-          </motion.section>
+          </section>
 
           {/* Featured: Leadership Diagnostic - Free Assessment */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-8 md:mb-16">
+          <section className="mb-8 md:mb-16">
             <div className="relative rounded-xl md:rounded-2xl overflow-hidden border shadow-xl" style={{
             borderColor: "hsl(var(--primary) / 0.3)",
             background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)"
@@ -697,20 +666,10 @@ const Products = () => {
                 </div>
               </div>
             </div>
-          </motion.section>
+          </section>
 
           {/* Tier 1: Entry Products */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-6 md:mb-10">
+          <section className="mb-6 md:mb-10">
             <div className="flex items-center gap-2 mb-3 md:mb-5">
               <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-green-600" />
@@ -724,22 +683,12 @@ const Products = () => {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
-              {tier1Products.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
+              {tier1Products.filter(p => !p.comingSoon).map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
             </div>
-          </motion.section>
+          </section>
 
           {/* Tier 2: Core Systems */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-6 md:mb-10">
+          <section className="mb-6 md:mb-10">
             <div className="flex items-center gap-2 mb-3 md:mb-5">
               <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
                 <Star className="w-3 h-3 md:w-4 md:h-4 text-blue-600" />
@@ -753,22 +702,12 @@ const Products = () => {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
-              {tier2Products.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
+              {tier2Products.filter(p => !p.comingSoon).map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
             </div>
-          </motion.section>
+          </section>
 
           {/* Tier 3: Premium Products */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-6 md:mb-10">
+          <section className="mb-6 md:mb-10">
             <div className="flex items-center gap-2 mb-3 md:mb-5">
               <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                 <Crown className="w-3 h-3 md:w-4 md:h-4 text-amber-600" />
@@ -782,22 +721,12 @@ const Products = () => {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
-              {tier3Products.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
+              {tier3Products.filter(p => !p.comingSoon).map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
             </div>
-          </motion.section>
+          </section>
 
           {/* Free Tools */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-6 md:mb-10">
+          <section className="mb-6 md:mb-10">
             <div className="flex items-center gap-2 mb-3 md:mb-5">
               <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-primary/10 flex items-center justify-center">
                 <ExternalLink className="w-3 h-3 md:w-4 md:h-4 text-primary" />
@@ -813,20 +742,10 @@ const Products = () => {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {freeTools.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
             </div>
-          </motion.section>
+          </section>
 
           {/* Trust Section */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }} className="mb-10">
+          <section className="mb-10">
             <div className="bg-primary/5 rounded-xl p-5 border border-primary/20">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
                 {trustItems.map((item, index) => <div key={index} className="flex items-center gap-2">
@@ -837,20 +756,10 @@ const Products = () => {
                   </div>)}
               </div>
             </div>
-          </motion.section>
+          </section>
 
           {/* CTA Section */}
-          <motion.section initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          duration: 0.6
-        }}>
+          <section>
             <div className="bg-gradient-to-br from-primary to-primary/80 rounded-xl p-6 sm:p-8 text-center">
               <h2 className="font-serif text-xl md:text-2xl font-bold text-primary-foreground mb-3">
                 Want Personalized Guidance?
@@ -866,7 +775,7 @@ const Products = () => {
                 </Link>
               </Button>
             </div>
-          </motion.section>
+          </section>
         </div>
       </main>
 
