@@ -72,3 +72,9 @@ verify_jwt = false
 [functions.content-mcp]
 verify_jwt = false
 
+[functions.send-newsletter]
+verify_jwt = false
+
+[functions.unsubscribe]
+verify_jwt = false
+
