@@ -359,8 +359,8 @@ export default function LeadershipDevelopmentSales() {
               <p className="text-sm font-medium mb-4" style={{ color: gold }}>Founder — Leadership by Design</p>
               <p className="text-sm leading-relaxed mb-4" style={{ color: `${navy}99` }}>
                 Kevin is the architect of the L1–L5 Leadership System and the SHIFT Methodology™. 
-                With over 3,000 coaching sessions delivered and two decades of experience developing leaders 
-                across industries, Kevin brings a rare combination of scientific rigour and practical wisdom.
+                With over 4,000 leaders developed, 750+ workshops delivered, and 11 years of experience across 
+                50+ organisations, Kevin brings a rare combination of scientific rigour and practical wisdom.
               </p>
               <p className="text-sm leading-relaxed mb-6" style={{ color: `${navy}99` }}>
                 Master Practitioner in NLP, Time Line Therapy & Hypnotherapy. Published author. 
@@ -368,8 +368,8 @@ export default function LeadershipDevelopmentSales() {
               </p>
               <div className="flex gap-6">
                 {[
-                  { num: "3,000+", label: "Coaching Sessions" },
-                  { num: "20+", label: "Years Experience" },
+                  { num: "4,000+", label: "Leaders Developed" },
+                  { num: "11", label: "Years" },
                   { num: "94%", label: "Diagnostic Accuracy" },
                 ].map((s) => (
                   <div key={s.label} className="text-center">

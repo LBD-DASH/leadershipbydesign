@@ -238,7 +238,7 @@ const Products = () => {
     label: "11 Years of Coaching"
   }, {
     icon: Users,
-    label: "3,000+ Organizations"
+    label: "4,000+ Leaders Developed"
   }, {
     icon: Download,
     label: "Instant Download"
@@ -396,7 +396,7 @@ const Products = () => {
             </h1>
             <div className="w-16 md:w-20 h-1 bg-primary mx-auto mb-3 md:mb-6" />
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-              Practical frameworks and templates built from 11 years of coaching 3,000+ organizations.
+              Practical frameworks and templates built from 11 years developing 4,000+ leaders across 50+ organisations.
             </p>
           </motion.div>
 
@@ -543,7 +543,7 @@ const Products = () => {
                       <Award className="w-3 h-3" /> 11 Years Experience
                     </span>
                     <span className="flex items-center gap-1">
-                      <Users className="w-3 h-3" /> 3,000+ Organizations
+                      <Users className="w-3 h-3" /> 4,000+ Leaders Developed
                     </span>
                   </div>
                 </div>

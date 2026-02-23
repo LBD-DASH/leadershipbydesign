@@ -65,7 +65,7 @@ I've been working with ${data.industry} companies in ${data.location} on a speci
 
 One question: if you could strengthen one capability across your management team right now, what would it be?
 
-I ask because I've spent 11 years coaching 3,000+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
+I ask because I've spent 11 years developing 4,000+ leaders across 50+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
 
 Happy to share what I've seen working for ${data.industry} companies if you're open to a 15-minute conversation.
 
@@ -84,7 +84,7 @@ function getStep1WarmTemplate(data: ProspectData): { subject: string; body: stri
 
 I put together a team diagnostic that helps HR and People leaders identify their biggest leadership skill gaps in about 5 minutes.
 
-No sales pitch attached — it's a genuine tool we built based on 11 years of data from 3,000+ organisations.
+No sales pitch attached — it's a genuine tool we built based on 11 years of data from 50+ organisations and 4,000+ leaders.
 
 Thought it might be useful for ${data.companyName}, ${painPointRef}.
 

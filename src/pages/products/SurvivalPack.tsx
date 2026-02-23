@@ -216,7 +216,7 @@ export default function SurvivalPack() {
       {/* SOCIAL PROOF */}
       <section className="py-4 sm:py-6 px-4 bg-muted border-y border-border">
         <p className="text-center text-muted-foreground text-xs sm:text-sm font-medium">
-          Built on 11 years of coaching across 3,000+ organizations
+          Built on 11 years developing 4,000+ leaders across 50+ organisations
         </p>
       </section>
 
