@@ -283,7 +283,7 @@ export default function LeaderAsCoachProgramme() {
       {/* SOCIAL PROOF BAR */}
       <section className="py-6 px-4 bg-background border-y border-border">
         <p className="text-center text-muted-foreground font-medium">
-          Built on 11 years of executive coaching across 3,000+ organisations • People–Profit–Process methodology
+          Built on 11 years developing 4,000+ leaders across 50+ organisations • People–Profit–Process methodology
         </p>
       </section>
 
