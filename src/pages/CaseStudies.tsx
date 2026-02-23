@@ -158,12 +158,8 @@ export default function CaseStudies() {
               const colors = colorClasses[study.color as keyof typeof colorClasses];
               
               return (
-                <motion.article
+                <article
                   key={study.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className={`${colors.bg} ${colors.border} border-2 rounded-3xl overflow-hidden`}
                 >
                   {/* Header with Image */}
@@ -238,7 +234,7 @@ export default function CaseStudies() {
                       </div>
                     </div>
                   </div>
-                </motion.article>
+                </article>
               );
             })}
           </div>
@@ -250,12 +246,7 @@ export default function CaseStudies() {
         {/* CTA Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary text-primary-foreground">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
                 Ready to Create Your Success Story?
               </h2>
@@ -283,7 +274,7 @@ export default function CaseStudies() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 

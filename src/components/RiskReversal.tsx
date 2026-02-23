@@ -9,11 +9,7 @@ interface RiskReversalProps {
 export default function RiskReversal({ variant = "banner", className = "" }: RiskReversalProps) {
   if (variant === "compact") {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
+      <div
         className={`flex items-center gap-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-xl p-4 ${className}`}
       >
         <Shield className="w-8 h-8 text-green-600 flex-shrink-0" />
@@ -25,16 +21,12 @@ export default function RiskReversal({ variant = "banner", className = "" }: Ris
             If you don't see measurable results, we work for free until you do.
           </p>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+    <section
       className={`py-10 sm:py-12 px-4 sm:px-6 lg:px-8 ${className}`}
     >
       <div className="max-w-4xl mx-auto">
@@ -81,6 +73,6 @@ export default function RiskReversal({ variant = "banner", className = "" }: Ris
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

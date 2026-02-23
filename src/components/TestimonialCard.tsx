@@ -15,10 +15,7 @@ interface TestimonialCardProps {
 
 export default function TestimonialCard({ testimonial, index }: TestimonialCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
+    <div
       className="bg-card rounded-2xl p-8 shadow-lg border border-border hover:shadow-xl transition-all duration-300 h-full flex flex-col"
     >
       {/* Metric Badge */}
@@ -61,6 +58,6 @@ export default function TestimonialCard({ testimonial, index }: TestimonialCardP
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

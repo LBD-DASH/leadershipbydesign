@@ -84,11 +84,7 @@ export default function BlogCTA({ postTitle, variant = "waitlist" }: BlogCTAProp
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.5 }}
+    <div
       className="my-16 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-background border border-primary/20 p-8 md:p-12"
     >
       <div className="max-w-2xl mx-auto text-center">
@@ -141,6 +137,6 @@ export default function BlogCTA({ postTitle, variant = "waitlist" }: BlogCTAProp
           No spam. Unsubscribe anytime. We typically send 2-4 insights per month.
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

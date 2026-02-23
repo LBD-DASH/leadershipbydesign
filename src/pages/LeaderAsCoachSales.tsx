@@ -24,11 +24,11 @@ import shiftSkillFocus from "@/assets/shift-skill-focus.jpg";
 import shiftSkillThinking from "@/assets/shift-skill-thinking.jpg";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  hidden: { opacity: 1, y: 0 },
+  visible: { opacity: 1, y: 0 },
 };
 const staggerContainer = {
-  visible: { transition: { staggerChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0 } },
 };
 
 const navy = "#0A1F44";

@@ -167,12 +167,8 @@ export default function SurvivalPack() {
 
           <div className="space-y-3 sm:space-y-4">
             {scriptCards.map((card, i) => (
-              <motion.div
+              <div
                 key={card.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
                 className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 bg-card rounded-lg border border-border border-l-4 border-l-primary"
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -182,7 +178,7 @@ export default function SurvivalPack() {
                   <h3 className="text-sm sm:text-base font-semibold text-foreground mb-1">{card.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{card.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

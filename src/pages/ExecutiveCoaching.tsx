@@ -148,11 +148,7 @@ export default function ExecutiveCoaching() {
         {/* SHIFT Framework Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
               className="text-center mb-12"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -163,16 +159,12 @@ export default function ExecutiveCoaching() {
                 SHIFT expands five core competencies into a practical, behaviour-based leadership system 
                 designed for real-world application.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-5 gap-4">
               {shiftSkills.map((skill, index) => (
-                <motion.div
+                <div
                   key={skill.letter}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="bg-background rounded-xl p-6 border border-border hover:border-primary/30 hover:shadow-lg transition-all"
                 >
                   <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mb-4">
@@ -180,7 +172,7 @@ export default function ExecutiveCoaching() {
                   </div>
                   <h3 className="font-bold text-foreground mb-2">{skill.title}</h3>
                   <p className="text-sm text-muted-foreground">{skill.description}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -189,12 +181,7 @@ export default function ExecutiveCoaching() {
         {/* Assessments Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
@@ -214,12 +201,8 @@ export default function ExecutiveCoaching() {
                 
                 <div className="space-y-4">
                   {assessments.map((assessment, index) => (
-                    <motion.div
+                    <div
                       key={assessment.title}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
                       className="bg-card rounded-xl p-6 border border-border"
                     >
                       <div className="flex items-start gap-4">
@@ -231,22 +214,18 @@ export default function ExecutiveCoaching() {
                           <p className="text-sm text-muted-foreground">{assessment.description}</p>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Development Areas Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary/5">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
               className="text-center mb-12"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -255,21 +234,17 @@ export default function ExecutiveCoaching() {
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Focused coaching areas designed to elevate your leadership impact and executive presence.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {developmentAreas.map((area, index) => (
-                <motion.div
+                <div
                   key={area}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="bg-card rounded-xl p-6 border border-border hover:border-primary/30 transition-all flex items-center gap-4"
                 >
                   <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0" />
                   <span className="font-medium text-foreground">{area}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -278,12 +253,7 @@ export default function ExecutiveCoaching() {
         {/* Session Structure Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                   What to Expect in Sessions
@@ -295,12 +265,8 @@ export default function ExecutiveCoaching() {
 
               <div className="grid md:grid-cols-5 gap-4">
                 {sessionStructure.map((item, index) => (
-                  <motion.div
+                  <div
                     key={item.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
                     className="bg-background rounded-xl p-6 border border-border text-center"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-bold mx-auto mb-4">
@@ -308,22 +274,17 @@ export default function ExecutiveCoaching() {
                     </div>
                     <h3 className="font-bold text-foreground mb-2 text-sm">{item.title}</h3>
                     <p className="text-xs text-muted-foreground">{item.description}</p>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Outcomes Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-8 md:p-12 border border-primary/20">
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <div>
@@ -351,34 +312,25 @@ export default function ExecutiveCoaching() {
                   
                   <div className="space-y-3">
                     {outcomes.map((outcome, index) => (
-                      <motion.div
+                      <div
                         key={outcome}
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
                         className="flex items-start gap-3 bg-card rounded-lg p-4"
                       >
                         <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                         <span className="text-foreground">{outcome}</span>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Foundation Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-card">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
                 <Heart className="w-8 h-8 text-primary" />
               </div>
@@ -393,19 +345,14 @@ export default function ExecutiveCoaching() {
                 Your values, purpose, and personal leadership philosophy become anchors for growth, consistency, 
                 and long-term impact.
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Final CTA */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary text-primary-foreground">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Leadership?
               </h2>
@@ -425,7 +372,7 @@ export default function ExecutiveCoaching() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

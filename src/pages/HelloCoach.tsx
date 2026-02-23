@@ -164,12 +164,8 @@ export default function HelloCoach() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <motion.div
+                <div
                   key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="bg-card rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="w-14 h-14 bg-[#3A7CA5]/10 rounded-full flex items-center justify-center mb-4">
@@ -181,7 +177,7 @@ export default function HelloCoach() {
                   <p className="text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -200,12 +196,8 @@ export default function HelloCoach() {
 
           <div className="space-y-6">
             {steps.map((step, index) => (
-              <motion.div
+              <div
                 key={step.number}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
                 className="flex gap-6 items-start bg-card rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="w-14 h-14 bg-[#3A7CA5] text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xl">
@@ -219,7 +211,7 @@ export default function HelloCoach() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -228,12 +220,7 @@ export default function HelloCoach() {
       {/* CTA Section */}
       <section className="py-20 px-6 lg:px-8 bg-gradient-to-br from-[#3A7CA5] to-[#2d6384]">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Transform Your Life?
             </h2>
@@ -259,7 +246,7 @@ export default function HelloCoach() {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </a>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -276,11 +263,7 @@ export default function HelloCoach() {
             </p>
           </div>
           
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="flex justify-center"
           >
             <img 
@@ -288,7 +271,7 @@ export default function HelloCoach() {
               alt="HelloCoach Mobile App"
               className="w-full max-w-5xl rounded-xl shadow-2xl"
             />
-          </motion.div>
+          </div>
         </div>
       </section>
 

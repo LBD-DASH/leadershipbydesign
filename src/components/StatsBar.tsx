@@ -10,11 +10,7 @@ const stats = [
 
 export default function StatsBar() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+    <section
       className="py-8 sm:py-12 bg-primary/5 border-y border-primary/10"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,6 +27,6 @@ export default function StatsBar() {
           ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

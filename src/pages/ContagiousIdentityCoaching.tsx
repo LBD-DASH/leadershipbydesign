@@ -30,9 +30,8 @@ import influenceImage from "@/assets/contagious-identity-influence.jpg";
 import legacyImage from "@/assets/contagious-identity-legacy.jpg";
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 1, y: 0 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
 };
 
 const staggerContainer = {

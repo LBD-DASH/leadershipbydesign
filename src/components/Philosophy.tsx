@@ -4,11 +4,7 @@ export default function Philosophy() {
   return (
     <section className="py-24 px-6 lg:px-8 bg-secondary/20">
       <div className="max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <div>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
             Our Philosophy
           </h2>
@@ -27,7 +23,7 @@ export default function Philosophy() {
               By combining human behaviour diagnostics, practical skill development, and identity-level insight, we craft bespoke leadership strategies that deliver measurable outcomes. We equip leaders to navigate complexity, build ownership, and create lasting change — not through control, but through clarity, alignment, and example.
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
