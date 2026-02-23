@@ -15,7 +15,7 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Leadership by Design | Executive Coaching & Leadership Development in South Africa"
+        title="Leadership by Design | Executive Coaching & Leadership Development"
         description="Executive coaching, leadership development, and human performance systems for managers and senior leaders. 11 years, 4,000+ leaders developed across 50+ organisations. Based in South Africa."
         canonicalUrl="/"
         keywords="leadership development, executive coaching, team workshops, leadership training, South Africa, Kevin Britz, leadership coaching"
