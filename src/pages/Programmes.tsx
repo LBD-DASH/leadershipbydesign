@@ -4,625 +4,300 @@ import SEO from "@/components/SEO";
 import { CourseSchema, ServiceSchema, HowToSchema } from "@/components/StructuredData";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { Target, Users, MessageSquare, ClipboardCheck, ArrowRight, Compass, Pencil, MessageCircle, Bot, Brain } from "lucide-react";
+import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target } from "lucide-react";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import StatsBar from "@/components/StatsBar";
 
-const levelOrder: LeadershipLevel[] = ['L1', 'L2', 'L3', 'L4', 'L5'];
+// --- Programme Card Data ---
+const programmes = [
+  {
+    id: "leader-as-coach",
+    icon: MessageCircle,
+    title: "Leader as Coach",
+    tagline: "Transform leaders into effective coaches",
+    meta: "6 months • Weekly sessions",
+    price: "From R45,000",
+    image: leaderAsCoachImage,
+    link: "/contact",
+    tags: ["Trust Building", "Neuroscience", "Wellbeing"],
+  },
+  {
+    id: "leadership-levels",
+    icon: Compass,
+    title: "Leadership Development (L1–L5)",
+    tagline: "The #1 system for scaling leaders",
+    meta: "4–12 weeks per level",
+    price: "From R25,000 per level",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80",
+    link: "/leadership-diagnostic",
+    tags: ["Productivity", "Strategy", "Purpose"],
+  },
+  {
+    id: "corporate-mind-reset",
+    icon: Brain,
+    title: "The Corporate Mind Reset",
+    tagline: "Reset the mind. Reclaim performance.",
+    meta: "4 × 90-minute sessions",
+    price: "From R25,000",
+    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
+    link: "/corporate-mind-reset",
+    tags: ["Stress Reduction", "Resilience", "Mindset"],
+  },
+  {
+    id: "contagious-identity",
+    icon: MessageSquare,
+    title: "Contagious Identity Coaching",
+    tagline: "Lead from a clear, contagious identity",
+    meta: "6–12 sessions • Premium 1:1",
+    price: "From R15,000",
+    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
+    link: "/contagious-identity",
+    tags: ["Identity", "Influence", "Legacy"],
+  },
+  {
+    id: "alignment-workshop",
+    icon: Users,
+    title: "Alignment Workshop",
+    tagline: "Get everyone rowing in the same direction",
+    meta: "1–2 days • In-person",
+    price: "From R15,000",
+    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
+    link: "/workshops/alignment",
+    tags: ["Clarity", "Direction", "Strategy"],
+  },
+  {
+    id: "motivation-workshop",
+    icon: Users,
+    title: "Motivation Workshop",
+    tagline: "Reignite team energy and engagement",
+    meta: "1–2 days • In-person",
+    price: "From R15,000",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+    link: "/workshops/motivation",
+    tags: ["Energy", "Purpose", "Engagement"],
+  },
+  {
+    id: "leadership-workshop",
+    icon: Users,
+    title: "Leadership Workshop",
+    tagline: "Create a culture of accountability",
+    meta: "1–2 days • In-person",
+    price: "From R15,000",
+    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
+    link: "/workshops/leadership",
+    tags: ["Accountability", "Ownership", "Growth"],
+  },
+  {
+    id: "executive-coaching",
+    icon: Target,
+    title: "Executive Coaching",
+    tagline: "Bespoke 1:1 coaching for senior leaders",
+    meta: "90-day engagement",
+    price: "Custom pricing",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80",
+    link: "/executive-coaching",
+    tags: ["Strategic Clarity", "Performance", "Presence"],
+  },
+];
 
-const teamWorkshops = [{
-  id: "alignment",
-  title: "Alignment Workshop",
-  subtitle: "Clarity & Direction",
-  description: "Build strategic clarity and get everyone rowing in the same direction with shared purpose and goals.",
-  duration: "1-2 days",
-  format: "In-person Workshop",
-  image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
-  link: "/workshops/alignment"
-}, {
-  id: "motivation",
-  title: "Motivation Workshop",
-  subtitle: "Energy & Engagement",
-  description: "Reignite team energy and create sustainable motivation through purpose-driven engagement strategies.",
-  duration: "1-2 days",
-  format: "In-person Workshop",
-  image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
-  link: "/workshops/motivation"
-}, {
-  id: "leadership",
-  title: "Leadership Workshop",
-  subtitle: "Accountability & Ownership",
-  description: "Develop leadership capabilities at every level and create a culture of accountability and ownership.",
-  duration: "1-2 days",
-  format: "In-person Workshop",
-  image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
-  link: "/workshops/leadership"
-}];
-
-import { leadershipLevelDetails, LeadershipLevel } from "@/lib/leadershipScoring";
+function ProgrammeCard({ programme, index }: { programme: typeof programmes[0]; index: number }) {
+  const Icon = programme.icon;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.5 }}
+    >
+      <Link to={programme.link} className="block group h-full">
+        <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+          <div className="relative h-44 overflow-hidden">
+            <img
+              src={typeof programme.image === "string" ? programme.image : programme.image}
+              alt={programme.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+            <div className="absolute top-3 right-3">
+              <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+                {programme.price}
+              </span>
+            </div>
+          </div>
+          <div className="p-5 flex flex-col flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <Icon className="w-4 h-4 text-primary shrink-0" />
+              <h3 className="font-serif text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                {programme.title}
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">{programme.tagline}</p>
+            <p className="text-xs text-muted-foreground/70 mb-4">{programme.meta}</p>
+            <div className="flex flex-wrap gap-1.5 mt-auto">
+              {programme.tags.map((tag) => (
+                <span key={tag} className="bg-muted text-muted-foreground text-[10px] px-2 py-0.5 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
 
 export default function Programmes() {
-  return <>
-      <SEO title="Leadership Programmes & Team Workshops | Leadership by Design" description="Executive coaching, team workshops, and bespoke leadership development programmes. Contagious Identity coaching, SHIFT methodology, and team effectiveness training." canonicalUrl="/programmes" ogImage="https://leadershipbydesign.co/og-programmes.jpg" keywords="leadership programmes, executive coaching, team workshops, SHIFT methodology, contagious identity coaching, leadership development South Africa" />
-      
-      {/* Course Structured Data for AI Discovery */}
-      <CourseSchema
-        name="Leading in the AI Era"
-        description="Move from AI uncertainty to confident integration in 6 weeks. Learn AI capabilities, protect your Human Edge, and build augmented workflows."
-        duration="P6W"
-        url="/programmes"
+  return (
+    <>
+      <SEO
+        title="Leadership Programmes & Team Workshops | Leadership by Design"
+        description="Executive coaching, team workshops, and bespoke leadership development programmes. Contagious Identity coaching, SHIFT methodology, and team effectiveness training."
+        canonicalUrl="/programmes"
+        ogImage="https://leadershipbydesign.co/og-programmes.jpg"
+        keywords="leadership programmes, executive coaching, team workshops, SHIFT methodology, contagious identity coaching, leadership development South Africa"
       />
-      <CourseSchema
-        name="Leader as Coach Programme"
-        description="Transform leaders into effective coaches over 6 months with weekly virtual sessions covering trust building, conflict management, neuroscience, and wellbeing."
-        duration="P6M"
-        url="/programmes"
-      />
-      <CourseSchema
-        name="Effective Personal Productivity (L1)"
-        description="Master personal output and task completion. 8-week programme focusing on productivity systems and self-management."
-        duration="P8W"
-        url="/programmes"
-      />
-      <CourseSchema
-        name="Effective Leadership Development (L2)"
-        description="Learn to invest in growing others. 6-week programme on developing team members and coaching skills."
-        duration="P6W"
-        url="/programmes"
-      />
-      <CourseSchema
-        name="Effective Personal Leadership (L3)"
-        description="Connect work to meaning and vision. 12-week programme on purpose-driven leadership."
-        duration="P12W"
-        url="/programmes"
-      />
-      <CourseSchema
-        name="Effective Motivational Leadership (L4)"
-        description="Inspire and energize teams. 8-week programme on motivational leadership and team engagement."
-        duration="P8W"
-        url="/programmes"
-      />
-      <CourseSchema
-        name="Effective Strategic Leadership (L5)"
-        description="Drive long-term organizational success. 4-week intensive on strategic thinking and decision-making."
-        duration="P4W"
-        url="/programmes"
-      />
-      <ServiceSchema
-        name="Team Alignment Workshop"
-        description="Build strategic clarity and get everyone rowing in the same direction. 1-2 day in-person workshop achieving 50% reduction in team conflict."
-        url="/workshops/alignment"
-      />
-      <ServiceSchema
-        name="Team Motivation Workshop"
-        description="Reignite team energy and create sustainable motivation through purpose-driven engagement strategies. 1-2 day workshop."
-        url="/workshops/motivation"
-      />
-      <ServiceSchema
-        name="Team Leadership Workshop"
-        description="Develop leadership capabilities at every level and create a culture of accountability and ownership. 1-2 day workshop."
-        url="/workshops/leadership"
-      />
-      <ServiceSchema
-        name="Executive Coaching"
-        description="One-on-one coaching for senior leaders achieving 2x strategic clarity in 90 days. Bespoke executive development."
-        url="/executive-coaching"
-      />
+
+      {/* Structured Data */}
+      <CourseSchema name="Leading in the AI Era" description="Move from AI uncertainty to confident integration in 6 weeks." duration="P6W" url="/programmes" />
+      <CourseSchema name="Leader as Coach Programme" description="Transform leaders into effective coaches over 6 months." duration="P6M" url="/programmes" />
+      <ServiceSchema name="Team Alignment Workshop" description="Build strategic clarity. 1-2 day in-person workshop." url="/workshops/alignment" />
+      <ServiceSchema name="Executive Coaching" description="One-on-one coaching for senior leaders. 90-day engagement." url="/executive-coaching" />
       <HowToSchema
         name="How to Develop Leadership Skills with the L1-L5 Framework"
-        description="Progress through 5 leadership levels from personal productivity to strategic leadership. 35% faster decision-making within 60 days."
+        description="Progress through 5 leadership levels from personal productivity to strategic leadership."
         totalTime="P12M"
         steps={[
-          { name: "L1: Master Personal Productivity", text: "Focus on personal output, task completion, and self-management systems." },
-          { name: "L2: Develop Others", text: "Invest in growing team members through coaching, feedback, and development conversations." },
-          { name: "L3: Lead with Purpose", text: "Connect work to meaning and vision. Inspire through purpose-driven leadership." },
-          { name: "L4: Motivate Teams", text: "Energize and inspire teams through motivational leadership and engagement." },
-          { name: "L5: Think Strategically", text: "Drive long-term organizational success through strategic thinking and decision-making." }
+          { name: "L1: Master Personal Productivity", text: "Focus on personal output and self-management." },
+          { name: "L2: Develop Others", text: "Invest in growing team members through coaching." },
+          { name: "L3: Lead with Purpose", text: "Connect work to meaning and vision." },
+          { name: "L4: Motivate Teams", text: "Energize teams through motivational leadership." },
+          { name: "L5: Think Strategically", text: "Drive long-term success through strategic thinking." },
         ]}
       />
-      
+
       <div className="min-h-screen bg-background">
         <Header />
-      
-        <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            {/* Hero Section */}
-            <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="text-center mb-8 sm:mb-12 md:mb-16">
-              <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-6">
-                Programmes & Workshops
-              </h1>
-              <div className="w-16 sm:w-24 h-1 bg-primary mx-auto mb-4 sm:mb-8" />
-              <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-                Explore our comprehensive programmes designed to develop leaders at every level—from emerging managers to seasoned executives.
+
+        <main className="pt-24 pb-16">
+          {/* Hero Offer — Leading in the AI Era */}
+          <section className="relative overflow-hidden mb-0">
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `linear-gradient(135deg, hsla(200, 70%, 25%, 0.92) 0%, hsla(200, 60%, 35%, 0.85) 100%), url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80')`,
+              }}
+            />
+            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+              >
+                <div>
+                  <span className="inline-block bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20">
+                    Featured Programme
+                  </span>
+                  <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                    Leading in the AI Era
+                  </h1>
+                  <p className="text-white/80 text-base sm:text-lg mb-6 leading-relaxed">
+                    Move from AI uncertainty to confident integration in 6 weeks. Protect your Human Edge and build augmented workflows that enhance—not replace—human judgment.
+                  </p>
+                  <div className="flex flex-wrap gap-3 mb-8 text-sm text-white/70">
+                    <span>6 weeks</span>
+                    <span className="text-white/30">•</span>
+                    <span>Online + Coaching</span>
+                    <span className="text-white/30">•</span>
+                    <span className="text-white font-semibold">From R35,000 per cohort</span>
+                  </div>
+                  <Link to="/contact">
+                    <Button size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group">
+                      Get a Custom Quote
+                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
+                <div className="hidden md:flex flex-wrap gap-2 justify-end">
+                  {["AI Capabilities", "Human Edge", "POPI Act", "Augmented Workflows", "Change Management"].map((tag) => (
+                    <span key={tag} className="bg-white/10 text-white/90 text-xs px-3 py-1.5 rounded-full border border-white/10">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Stats Bar */}
+          <StatsBar />
+
+          {/* All Programmes Grid */}
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-10"
+            >
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
+                All Programmes & Workshops
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
+                From half-day workshops to 6-month coaching journeys — find the right intervention for your team.
               </p>
             </motion.div>
 
-            <StatsBar />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {programmes.map((programme, index) => (
+                <ProgrammeCard key={programme.id} programme={programme} index={index} />
+              ))}
+            </div>
 
-            {/* Leading in the AI Era Section */}
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="mb-8 sm:mb-12 md:mb-16">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Bot className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">
-                    Leading in the AI Era
-                  </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">6-week programme • Level-agnostic • Future-proof your leadership</p>
-                </div>
+            {/* Diagnostic CTA — subtle */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="mt-12 bg-muted/50 rounded-2xl p-6 sm:p-8 border border-border text-center"
+            >
+              <h3 className="font-serif text-xl font-bold text-foreground mb-2">Not sure where to start?</h3>
+              <p className="text-muted-foreground text-sm mb-5 max-w-xl mx-auto">
+                Take a free 5-minute diagnostic to discover which programme fits your team's biggest challenge.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
+                <Link to="/team-diagnostic">
+                  <Button variant="outline" className="rounded-full group">
+                    Team Diagnostic
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Link to="/leadership-diagnostic">
+                  <Button variant="outline" className="rounded-full group">
+                    Leadership Diagnostic
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
               </div>
+            </motion.div>
+          </section>
 
-              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img 
-                      src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80" 
-                      alt="Leading in the AI Era Programme" 
-                      className="w-full h-full object-cover object-center" 
-                      loading="lazy" 
-                    />
-                  </div>
-                  <div className="p-6 sm:p-8 flex flex-col justify-center">
-                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
-                      From AI Uncertainty to Confident Integration
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Move from AI overwhelm to confident integration in 6 weeks. This cross-functional programme helps leaders at any level understand AI capabilities, protect their 'Human Edge', and build augmented workflows that enhance rather than replace human judgment.
-                    </p>
-                    <div className="flex flex-wrap gap-4 mb-6 text-sm">
-                      <div>
-                        <span className="font-semibold text-foreground">Duration:</span>{" "}
-                        <span className="text-muted-foreground">6 weeks</span>
-                      </div>
-                      <div>
-                        <span className="font-semibold text-foreground">Format:</span>{" "}
-                        <span className="text-muted-foreground">Online + Coaching</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {['AI Capabilities', 'Human Edge', 'POPI Act', 'Augmented Workflows', 'Change Management'].map((tag) => (
-                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-sm font-semibold text-primary mb-3">From R35,000 per cohort</p>
-                    <div className="flex flex-wrap gap-3">
-                      <Link to="/contact">
-                        <Button className="rounded-full group">
-                          Get a Custom Quote
-                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Leader as Coach Section */}
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="mb-8 sm:mb-12 md:mb-16">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">
-                    Leader as Coach
-                  </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">6-month programme • Weekly sessions • Build coaching culture</p>
-                </div>
-              </div>
-
-              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img src={leaderAsCoachImage} alt="Leader as Coach Programme" className="w-full h-full object-cover object-top" loading="lazy" />
-                  </div>
-                  <div className="p-6 sm:p-8 flex flex-col justify-center">
-                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
-                      Transform Leaders into Effective Coaches
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Cultivate successful, empowered leadership coaches who understand human behaviour and are equipped with effective methods to get the most out of their teams. Build a coaching culture that boosts company performance and reduces team overwhelm.
-                    </p>
-                    <div className="flex flex-wrap gap-4 mb-6 text-sm">
-                      <div>
-                        <span className="font-semibold text-foreground">Duration:</span>{" "}
-                        <span className="text-muted-foreground">6 months</span>
-                      </div>
-                      <div>
-                        <span className="font-semibold text-foreground">Format:</span>{" "}
-                        <span className="text-muted-foreground">Weekly Virtual Sessions</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {['Trust Building', 'Conflict Management', 'Neuroscience', 'Bias Awareness', 'Wellbeing'].map((tag) => (
-                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-sm font-semibold text-primary mb-3">From R45,000 per cohort</p>
-                    <div className="flex flex-wrap gap-3">
-                      <Link to="/contact">
-                        <Button className="rounded-full group">
-                          Get a Custom Quote
-                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Leadership Development Section */}
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="mb-10 sm:mb-16 md:mb-20">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8">
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Compass className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-foreground">The #1 Leadership System for Scaling Leaders</h2>
-                  <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">From R25,000 per level • 35% faster decisions • 40% productivity gains</p>
-                </div>
-              </div>
-
-              {/* Leadership Diagnostic CTA */}
-              <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 border border-primary/20 mb-8">
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      Not Sure Where You're Operating?
-                    </h3>
-                    <p className="text-muted-foreground">
-                      Take our free 5-minute diagnostic to discover your primary leadership level and get personalised development recommendations.
-                    </p>
-                  </div>
-                  <Link to="/leadership-diagnostic">
-                    <Button size="lg" className="rounded-full group whitespace-nowrap">
-                      Take Leadership Diagnostic
-                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Leadership Level Cards */}
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {levelOrder.map((level, index) => {
-                const details = leadershipLevelDetails[level];
-                return <motion.div key={level} initial={{
-                  opacity: 0,
-                  y: 20
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} transition={{
-                  delay: index * 0.1,
-                  duration: 0.5
-                }}>
-                      <Link to="/leadership-diagnostic" className="block group">
-                        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
-                          <div className="relative aspect-video overflow-hidden">
-                            <img src={details.image} alt={details.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                            <div className="absolute top-3 left-3">
-                              <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
-                                {level}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="p-4">
-                            <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-                              {details.title}
-                            </h3>
-                            <p className="text-xs text-primary font-medium mb-2">{details.subtitle}</p>
-                            <p className="text-sm text-muted-foreground line-clamp-2">
-                              {details.description}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.div>;
-              })}
-
-                {/* Design Your Leadership Card */}
-                <motion.div initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                delay: 0.5,
-                duration: 0.5
-              }}>
-                  <Link to="/contact" className="block group h-full">
-                    <div className="bg-gradient-to-br from-primary/10 via-card to-primary/5 rounded-xl overflow-hidden border-2 border-dashed border-primary/30 hover:border-primary hover:shadow-lg transition-all duration-300 h-full flex flex-col">
-                      <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                          <Pencil className="w-8 h-8 text-primary" />
-                        </div>
-                        <div className="absolute top-3 left-3">
-                          <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
-                            Bespoke
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 flex-1 flex flex-col">
-                        <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-                          Design Your Leadership
-                        </h3>
-                        <p className="text-xs text-primary font-medium mb-2">Tailored Development</p>
-                        <p className="text-sm text-muted-foreground line-clamp-2 flex-1">
-                          Custom leadership programme designed for your unique needs.
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              </div>
-            </motion.section>
-
-            {/* Team Workshops Section */}
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    Team Leadership Workshops
-                  </h2>
-                  <p className="text-muted-foreground">From R15,000 per workshop • 50% less conflict • Results in 60 days</p>
-                </div>
-              </div>
-
-              {/* Team Diagnostic CTA */}
-              <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 border border-primary/20 mb-8">
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      Not Sure What Your Team Needs?
-                    </h3>
-                    <p className="text-muted-foreground">
-                      Take our free 5-minute diagnostic to discover the single intervention that will make the biggest difference for your team.
-                    </p>
-                  </div>
-                  <Link to="/team-diagnostic">
-                    <Button size="lg" className="rounded-full group whitespace-nowrap">
-                      Take Team Diagnostic
-                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Team Workshop Cards */}
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {teamWorkshops.map((workshop, index) => <motion.div key={workshop.id} initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                delay: index * 0.1,
-                duration: 0.5
-              }}>
-                    <Link to={workshop.link} className="block group">
-                      <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full">
-                        <div className="relative aspect-video overflow-hidden">
-                          <img src={workshop.image} alt={workshop.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-                            {workshop.title}
-                          </h3>
-                          <p className="text-xs text-primary font-medium mb-2">{workshop.subtitle}</p>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                            {workshop.description}
-                          </p>
-                          <div className="flex gap-3 text-xs text-muted-foreground">
-                            <span>{workshop.duration}</span>
-                            <span>•</span>
-                            <span>{workshop.format}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>)}
-              </div>
-            </motion.section>
-
-            {/* Corporate Mind Reset Section */}
-            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    The Corporate Mind Reset
-                  </h2>
-                  <p className="text-muted-foreground">From R25,000 per group • 4 × 90-minute sessions • Science-backed</p>
-                </div>
-              </div>
-
-              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" alt="Corporate Mind Reset" className="w-full h-full object-cover object-center" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
-                  </div>
-                  <div className="p-6 sm:p-8 flex flex-col justify-center">
-                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
-                      Reset the Mind. Reclaim Performance.
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Science-backed, intentional mindset training that rewires how your people think, respond, and perform under pressure. Delivered in 4 × 90-minute facilitated sessions for measurable shifts in focus, resilience, and leadership presence.
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {['Stress Reduction', 'Mental Clarity', 'Resilience', 'Mindset Blueprint'].map((tag) => (
-                        <span key={tag} className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <Link to="/corporate-mind-reset">
-                      <Button className="rounded-full group">
-                        Explore Programme
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Contagious Identity Coaching Section */}
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="mb-16">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-bold text-foreground">
-                    Contagious Identity Coaching
-                  </h2>
-                  <p className="text-muted-foreground">Identity-driven leadership • Culture shaping • Premium 1:1 coaching</p>
-                </div>
-              </div>
-
-              <div className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative aspect-video md:aspect-auto overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80" alt="Contagious Identity Coaching" className="w-full h-full object-cover object-top" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
-                  </div>
-                  <div className="p-6 sm:p-8 flex flex-col justify-center">
-                    <h3 className="font-serif text-2xl font-bold text-foreground mb-3">
-                      Executive Coaching for Contagious Identity
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Your identity as a leader is already spreading—through your decisions, presence, and how you show up under pressure. This premium coaching helps you lead from a clear, contagious identity that shapes culture and drives results.
-                    </p>
-                    
-                    {/* Key Benefits */}
-                    <ul className="space-y-2 mb-6 text-sm">
-                      <li className="flex items-center gap-2 text-muted-foreground">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        Shape the identity others catch from you
-                      </li>
-                      <li className="flex items-center gap-2 text-muted-foreground">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        Build influence that transcends your position
-                      </li>
-                      <li className="flex items-center gap-2 text-muted-foreground">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        Create a legacy that survives your exit
-                      </li>
-                    </ul>
-
-                    {/* Pricing Tiers */}
-                    <div className="grid grid-cols-3 gap-2 mb-6 text-xs">
-                      <div className="bg-muted/50 rounded-lg p-3 text-center">
-                        <p className="font-semibold text-foreground">Foundation</p>
-                        <p className="text-primary font-bold">R15,000</p>
-                        <p className="text-muted-foreground">6 sessions</p>
-                      </div>
-                      <div className="bg-primary/10 rounded-lg p-3 text-center border border-primary/30">
-                        <p className="font-semibold text-foreground">Executive</p>
-                        <p className="text-primary font-bold">R45,000</p>
-                        <p className="text-muted-foreground">12 sessions</p>
-                      </div>
-                      <div className="bg-muted/50 rounded-lg p-3 text-center">
-                        <p className="font-semibold text-foreground">Strategic</p>
-                        <p className="text-primary font-bold">R75,000</p>
-                        <p className="text-muted-foreground">+ SHIFT</p>
-                      </div>
-                    </div>
-
-                    <Link to="/contagious-identity">
-                      <Button className="rounded-full group w-full sm:w-auto">
-                        Explore Coaching Programme
-                        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            <motion.section initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }} className="bg-sky-50/50 dark:bg-sky-950/30 rounded-xl p-6 border border-sky-200/50 dark:border-sky-800/50">
-              <SocialShareButtons title="Explore leadership development programmes and workshops" description="Discover programmes designed to develop leaders at every level—from emerging managers to seasoned executives." />
-            </motion.section>
-          </div>
+          {/* Social Share */}
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+            <div className="bg-muted/30 rounded-xl p-6 border border-border">
+              <SocialShareButtons
+                title="Explore leadership development programmes and workshops"
+                description="Discover programmes designed to develop leaders at every level."
+              />
+            </div>
+          </section>
         </main>
-        
+
         <Footer />
       </div>
-    </>;
+    </>
+  );
 }
