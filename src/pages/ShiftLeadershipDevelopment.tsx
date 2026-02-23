@@ -64,11 +64,7 @@ export default function ShiftLeadershipDevelopment() {
             </Link>
             
             <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
+              <div>
                 <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" />
                   <span className="text-sm font-medium">Internationally Recognised Programme</span>
@@ -97,7 +93,7 @@ export default function ShiftLeadershipDevelopment() {
                     </Button>
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -105,11 +101,7 @@ export default function ShiftLeadershipDevelopment() {
         {/* Leadership Operating Levels Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
               className="text-center mb-12"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -118,7 +110,7 @@ export default function ShiftLeadershipDevelopment() {
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Every leader operates at a primary level. Understanding yours is the first step to intentional growth.
               </p>
-            </motion.div>
+            </div>
 
             {/* Level Cards Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -127,12 +119,8 @@ export default function ShiftLeadershipDevelopment() {
                 const isSelected = selectedLevel === level;
                 
                 return (
-                  <motion.div
+                  <div
                     key={level}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
                     onClick={() => setSelectedLevel(isSelected ? null : level)}
                     className={`bg-white rounded-2xl overflow-hidden shadow-sm border-2 cursor-pointer transition-all duration-300 hover:shadow-lg ${
                       isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-gray-100 hover:border-primary/30'
@@ -173,7 +161,7 @@ export default function ShiftLeadershipDevelopment() {
                         </motion.div>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -193,11 +181,7 @@ export default function ShiftLeadershipDevelopment() {
         {/* SHIFT Methodology Integration */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary/5">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
               className="grid md:grid-cols-2 gap-12 items-center"
             >
               <div>
@@ -249,19 +233,14 @@ export default function ShiftLeadershipDevelopment() {
                   ))}
                 </ul>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Bespoke Programme Design Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-8 md:p-12 border border-primary/20">
                 <div className="grid md:grid-cols-2 gap-8 items-center">
                   <div>
@@ -337,19 +316,14 @@ export default function ShiftLeadershipDevelopment() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Final CTA */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-primary text-white">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Ready to Transform Your Leadership?
               </h2>
@@ -369,7 +343,7 @@ export default function ShiftLeadershipDevelopment() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

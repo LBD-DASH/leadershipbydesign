@@ -176,10 +176,7 @@ export default function ContagiousIdentityWorkbook() {
         {/* Two Paths Section */}
         <section className="py-10 sm:py-16 md:py-24 bg-muted/30">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <div
               className="text-center mb-12"
             >
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -188,14 +185,11 @@ export default function ContagiousIdentityWorkbook() {
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Choose the path that fits your leadership journey.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-8 max-w-5xl mx-auto">
               {/* Path 1: Standalone */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+              <div
                 className="bg-card rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-border"
               >
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
@@ -222,14 +216,10 @@ export default function ContagiousIdentityWorkbook() {
                     Natural pathway to coaching when ready
                   </li>
                 </ul>
-              </motion.div>
+              </div>
 
               {/* Path 2: With Coaching */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
+              <div
                 className="bg-card rounded-xl sm:rounded-2xl p-5 sm:p-8 border-2 relative overflow-hidden"
                 style={{ borderColor: colors.gold }}
               >
@@ -272,14 +262,11 @@ export default function ContagiousIdentityWorkbook() {
                     Explore Coaching Options
                   </Link>
                 </Button>
-              </motion.div>
+              </div>
             </div>
 
             {/* Upgrade Credit Note */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+            <div
               className="max-w-3xl mx-auto mt-12 text-center"
             >
               <div className="bg-card rounded-xl p-6 border border-border">
@@ -291,17 +278,14 @@ export default function ContagiousIdentityWorkbook() {
                   upgrade within 90 days. Zero-risk entry point.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* What's Inside Section */}
         <section className="py-10 sm:py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <div
               className="max-w-4xl mx-auto"
             >
               <div className="text-center mb-12">
@@ -337,20 +321,16 @@ export default function ContagiousIdentityWorkbook() {
                     description: "Shape the leadership identity that will outlast your tenure."
                   },
                 ].map((section, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
                     className="bg-card p-4 sm:p-6 rounded-xl border border-border"
                   >
                     <h3 className="font-semibold text-lg mb-2">{section.title}</h3>
                     <p className="text-muted-foreground text-sm">{section.description}</p>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -360,11 +340,7 @@ export default function ContagiousIdentityWorkbook() {
           style={{ background: `linear-gradient(135deg, ${colors.navy} 0%, #2a3f6a 100%)` }}
         >
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                 Start Building Your Contagious Identity
               </h2>
@@ -381,7 +357,7 @@ export default function ContagiousIdentityWorkbook() {
                 <Download className="w-5 h-5 mr-2" />
                 Get the Workbook — R697
               </Button>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

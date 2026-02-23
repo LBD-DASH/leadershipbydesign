@@ -6,11 +6,7 @@ import kevinPhoto from "@/assets/kevin-britz-facilitator.jpg";
 
 export default function CredibilityBlock() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
+    <section
       className="py-16 sm:py-20 bg-muted/50"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,6 +57,6 @@ export default function CredibilityBlock() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

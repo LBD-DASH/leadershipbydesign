@@ -83,7 +83,7 @@ export default function CorporateTraining() {
             }}
           />
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <div>
               <span className="inline-block bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full mb-6 border border-white/20">
                 For HR Directors & L&D Teams
               </span>
@@ -110,7 +110,7 @@ export default function CorporateTraining() {
                   <Download className="ml-2 w-5 h-5" />
                 </Button>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -119,10 +119,10 @@ export default function CorporateTraining() {
         {/* Who This Is For */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <div className="text-center mb-10">
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">Who This Is For</h2>
               <div className="w-16 h-1 bg-primary mx-auto mb-6" />
-            </motion.div>
+            </div>
             <div className="flex flex-wrap justify-center gap-3">
               {audiences.map((a) => (
                 <span key={a} className="bg-primary/10 text-primary text-sm font-medium px-4 py-2 rounded-full border border-primary/20">
@@ -137,23 +137,19 @@ export default function CorporateTraining() {
         {/* 3 Engagement Types */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <div className="text-center mb-10">
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">Three Ways to Engage</h2>
               <div className="w-16 h-1 bg-primary mx-auto mb-4" />
               <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
                 Every engagement is bespoke. Here's how most organisations start.
               </p>
-            </motion.div>
+            </div>
             <div className="grid md:grid-cols-3 gap-6">
               {engagementTypes.map((type, i) => {
                 const Icon = type.icon;
                 return (
-                  <motion.div
+                  <div
                     key={type.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
                     className="bg-card rounded-2xl p-6 sm:p-8 border border-border hover:shadow-lg transition-shadow"
                   >
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
@@ -173,7 +169,7 @@ export default function CorporateTraining() {
                     <span className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
                       {type.investment}
                     </span>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -183,23 +179,19 @@ export default function CorporateTraining() {
         {/* Process */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <div className="text-center mb-10">
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">Our Process</h2>
               <div className="w-16 h-1 bg-primary mx-auto mb-4" />
               <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
                 A structured, proven approach that respects your time and delivers results.
               </p>
-            </motion.div>
+            </div>
             <div className="grid sm:grid-cols-5 gap-4">
               {processSteps.map((step, i) => {
                 const Icon = step.icon;
                 return (
-                  <motion.div
+                  <div
                     key={step.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
                     className="text-center"
                   >
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
@@ -207,7 +199,7 @@ export default function CorporateTraining() {
                     </div>
                     <h4 className="font-bold text-foreground text-sm mb-1">{step.title}</h4>
                     <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>

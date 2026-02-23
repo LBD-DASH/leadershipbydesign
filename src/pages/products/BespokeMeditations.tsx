@@ -449,11 +449,7 @@ function ReadyToBuyCard({ product, index, onBuy }: { product: MeditationProduct;
   const pricing = useGeoPricing(product.price_zar);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.4 }}
+    <div
     >
       <Card className="h-full border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden">
         {product.category === "mindset" && (
@@ -487,7 +483,7 @@ function ReadyToBuyCard({ product, index, onBuy }: { product: MeditationProduct;
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }
 

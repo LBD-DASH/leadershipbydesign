@@ -16,10 +16,7 @@ export default function ClientLogos() {
   return (
     <section className="py-24 px-6 lg:px-8 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+        <div
           className="text-center mb-16"
         >
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-6">
@@ -30,7 +27,7 @@ export default function ClientLogos() {
             Kevin has partnered with some of South Africa's most respected organizations to develop 
             their leadership capabilities and drive sustainable growth.
           </p>
-        </motion.div>
+        </div>
 
         {/* Scrolling Container */}
         <div className="relative">

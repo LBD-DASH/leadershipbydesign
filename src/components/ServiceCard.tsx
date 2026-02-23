@@ -24,10 +24,7 @@ export default function ServiceCard({ title, description, image, index }: Servic
   };
   
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
+    <div
       className="group"
     >
       <div className={`bg-card rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg border border-border overflow-hidden hover:shadow-2xl transition-all duration-500 ${
@@ -58,6 +55,6 @@ export default function ServiceCard({ title, description, image, index }: Servic
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

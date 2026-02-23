@@ -10,10 +10,7 @@ export default function Hero() {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+      <div
         className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[85vh] flex flex-col overflow-hidden"
       >
         {/* Background Image with Overlay */}
@@ -27,29 +24,20 @@ export default function Hero() {
         {/* Main Content - Centered */}
         <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.h1
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
+            <h1
               className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
               The Leadership Partner Trusted by South Africa's Most Forward-Thinking Organisations
-            </motion.h1>
+            </h1>
             
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
+            <p
               className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
             >
               A 90-Day Leadership System Proven to Deliver Up to 40% Productivity Gains
-            </motion.p>
+            </p>
             
             {/* Primary CTA - I'm Interested */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+            <div
               className="mb-4 sm:mb-6"
             >
               <Button 
@@ -61,13 +49,10 @@ export default function Hero() {
                 I'm Interested
                 <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
+            </div>
             
             {/* Secondary CTAs - Diagnostics */}
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
+            <div
               className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
             >
               <Link to="/team-diagnostic" className="w-full sm:w-auto">
@@ -90,10 +75,10 @@ export default function Hero() {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       <InterestModal 
         open={showInterestModal} 
