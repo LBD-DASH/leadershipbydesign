@@ -27,7 +27,7 @@ export default function Hero() {
             <h1
               className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
-              The Leadership Partner Trusted by South Africa's Most Forward-Thinking Organisations
+              The Leadership Partner Trusted by Future Forward-Thinking Organisations
             </h1>
             
             <p
