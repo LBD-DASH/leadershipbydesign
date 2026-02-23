@@ -225,13 +225,13 @@ const Products = () => {
   }, {
     id: "bespoke-meditations",
     title: "Bespoke Mindset Meditations",
-    shortDesc: "Custom meditation & visualisation audio",
+    shortDesc: "Custom-scripted mindset and visualisation audio programmes for your leadership team, built around your organisation's specific challenges.",
     price: "From R997",
     link: "/bespoke-meditations",
     image: shiftHeroTeam,
     isExternal: false,
     isBuilt: true,
-    features: ["Mindset, Sport & Executive Categories", "Custom-Crafted Audio", "Neuroscience-Backed Techniques", "Ready-to-Buy Options Available"]
+    features: ["Custom-Scripted for Your Organisation", "Executive, Sport & Team Categories", "Neuroscience-Backed Techniques", "No Competitor Offers This"]
   }];
   const trustItems = [{
     icon: Award,

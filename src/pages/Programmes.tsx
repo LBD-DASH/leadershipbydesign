@@ -1,10 +1,12 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { CourseSchema, ServiceSchema, HowToSchema } from "@/components/StructuredData";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target } from "lucide-react";
+import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target, GraduationCap, Shield, Headphones } from "lucide-react";
+import InterestModal from "@/components/shared/InterestModal";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -17,7 +19,7 @@ const programmes = [
     icon: MessageCircle,
     title: "Leader as Coach",
     tagline: "Transform leaders into effective coaches",
-    meta: "6 months • Weekly sessions",
+    meta: "10 months • 5 phases",
     price: "From R45,000",
     image: leaderAsCoachImage,
     link: "/contact",
@@ -31,16 +33,16 @@ const programmes = [
     meta: "4–12 weeks per level",
     price: "From R25,000 per level",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80",
-    link: "/leadership-diagnostic",
+    link: "/leadership-development",
     tags: ["Productivity", "Strategy", "Purpose"],
   },
   {
     id: "corporate-mind-reset",
     icon: Brain,
     title: "The Corporate Mind Reset",
-    tagline: "Reset the mind. Reclaim performance.",
-    meta: "4 × 90-minute sessions",
-    price: "From R25,000",
+    tagline: "4 × 90-minute intentional mindset meditation sessions for teams. Reset the mind. Reclaim signal through stillness.",
+    meta: "4 × 90-minute sessions • In-person",
+    price: "From R25,000 per group",
     image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80",
     link: "/corporate-mind-reset",
     tags: ["Stress Reduction", "Resilience", "Mindset"],
@@ -55,6 +57,17 @@ const programmes = [
     image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=800&q=80",
     link: "/contagious-identity",
     tags: ["Identity", "Influence", "Legacy"],
+  },
+  {
+    id: "enneagram-workshop",
+    icon: Shield,
+    title: "Enneagram Workshop",
+    tagline: "Deep self-awareness and team understanding through the Enneagram personality framework",
+    meta: "1 day • In-person",
+    price: "R7,000 pp / R10,000 group",
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80",
+    link: "/contact",
+    tags: ["Self-Awareness", "Team Dynamics", "Personality"],
   },
   {
     id: "alignment-workshop",
@@ -99,6 +112,17 @@ const programmes = [
     image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80",
     link: "/executive-coaching",
     tags: ["Strategic Clarity", "Performance", "Presence"],
+  },
+  {
+    id: "bespoke-meditations",
+    icon: Headphones,
+    title: "Bespoke Mindset Meditations",
+    tagline: "Custom-scripted mindset and visualisation audio programmes built around your organisation's specific challenges",
+    meta: "Custom duration • Digital delivery",
+    price: "From R997",
+    image: "https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&q=80",
+    link: "/bespoke-meditations",
+    tags: ["Visualisation", "Performance", "Custom Audio"],
   },
 ];
 
@@ -150,6 +174,7 @@ function ProgrammeCard({ programme, index }: { programme: typeof programmes[0]; 
 }
 
 export default function Programmes() {
+  const [facilitatorModalOpen, setFacilitatorModalOpen] = useState(false);
   return (
     <>
       <SEO
@@ -257,7 +282,39 @@ export default function Programmes() {
               ))}
             </div>
 
-            {/* Diagnostic CTA — subtle */}
+            {/* Certified Facilitator — Coming Soon */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="mt-8 relative overflow-hidden rounded-2xl border-2 border-dashed border-primary/30 bg-gradient-to-r from-primary/5 to-muted/30 p-6 sm:p-8"
+            >
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-7 h-7 text-primary" />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-foreground">
+                      Certified Leadership by Design Facilitator
+                    </h3>
+                    <span className="bg-primary/15 text-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      Coming Q3 2026
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground max-w-2xl">
+                    Deliver our proven methodology in your organisation or coaching practice. License the SHIFT Framework™, Contagious Identity tools, and L1–L5 system.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => setFacilitatorModalOpen(true)}
+                  className="rounded-full shrink-0"
+                >
+                  Expression of Interest
+                </Button>
+              </div>
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -298,6 +355,12 @@ export default function Programmes() {
 
         <Footer />
       </div>
+
+      <InterestModal
+        open={facilitatorModalOpen}
+        onOpenChange={setFacilitatorModalOpen}
+        context="Certified Facilitator Programme — Expression of Interest"
+      />
     </>
   );
 }
