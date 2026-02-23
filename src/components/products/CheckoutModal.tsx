@@ -84,6 +84,10 @@ export function CheckoutModal({
 
     setIsLoading(true);
 
+    // Store checkout info for success page tracking
+    sessionStorage.setItem("checkout_email", email.trim());
+    sessionStorage.setItem("checkout_name", `${firstName.trim()} ${lastName.trim()}`);
+
     // If 100% discount, skip payment and go directly to success
     if (finalPrice === 0) {
       toast.success("Discount applied! Redirecting to your download...");

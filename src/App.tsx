@@ -79,6 +79,7 @@ import BespokeMeditations from "./pages/products/BespokeMeditations";
 import BespokeMeditationsSuccess from "./pages/products/BespokeMeditationsSuccess";
 import SurvivalPack from "./pages/products/SurvivalPack";
 import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
+import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 const queryClient = new QueryClient();
 
@@ -143,6 +144,7 @@ const App = () => (
           <Route path="/bespoke-meditations/success" element={<BespokeMeditationsSuccess />} />
           <Route path="/survival-pack" element={<SurvivalPack />} />
           <Route path="/survival-pack/success" element={<SurvivalPackSuccess />} />
+          <Route path="/new-manager-training" element={<NewManagerTraining />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
