@@ -211,6 +211,7 @@ export default function ContagiousIdentityCoaching() {
             alt="Executive coaching session" 
             className="w-full h-full object-cover object-top"
           />
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(210,35%,12%,0.95)] via-[hsl(210,35%,12%,0.85)] to-[hsl(210,35%,12%,0.6)]" />
         </div>
 

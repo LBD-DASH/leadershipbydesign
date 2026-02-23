@@ -9,6 +9,8 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import newManagerHero from "@/assets/new-manager-hero.jpg";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const scriptCards = [
   {
@@ -89,6 +91,7 @@ export default function SurvivalPack() {
 
   return (
     <div className="min-h-screen scroll-smooth">
+      <Header />
       <SEO
         title="New Manager Survival Pack — 3 Scripts. R147. Use Today. | Leadership by Design"
         description="3 plug-and-play conversation scripts for new managers. First 1:1, addressing underperformance, running your first team meeting. R147 instant download."
@@ -107,7 +110,7 @@ export default function SurvivalPack() {
       />
 
       {/* HERO */}
-      <section className="relative py-10 sm:py-16 md:py-24 px-4 overflow-hidden bg-primary">
+      <section className="relative pt-24 pb-10 sm:pt-28 sm:pb-16 md:pb-24 px-4 overflow-hidden bg-primary">
         <div className="absolute inset-0">
           <img src={newManagerHero} alt="New manager coaching" className="w-full h-full object-cover object-top opacity-15" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/90 to-primary" />
@@ -253,12 +256,7 @@ export default function SurvivalPack() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="py-6 px-4 border-t bg-primary border-primary-foreground/20">
-        <p className="text-center text-white/60 text-[11px] sm:text-sm">
-          © 2026 Leadership by Design • 11 Years • 3,000+ Organizations • South Africa
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

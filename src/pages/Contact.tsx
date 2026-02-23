@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
 import { useUtmParams } from "@/hooks/useUtmParams";
+import Footer from "@/components/Footer";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -416,6 +417,7 @@ export default function Contact() {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </div>
     </>
   );
