@@ -4,79 +4,74 @@ import ldbLogo from "@/assets/ldb-logo.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-muted/50 border-t">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 sm:gap-8">
+    <footer className="bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-3 md:col-span-1">
-            <Link to="/" className="inline-block mb-3 sm:mb-4">
-              <img src={ldbLogo} alt="Leadership by Design" className="h-8 sm:h-10 w-auto" />
+            <Link to="/" className="inline-block mb-4">
+              <img src={ldbLogo} alt="Leadership by Design" className="h-10 w-auto brightness-0 invert" />
             </Link>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Transforming leaders and organisations through evidence-based coaching and development programmes.
+            <p className="text-xs text-primary-foreground/60">
+              Transforming leaders and organisations through evidence-based coaching and development systems.
             </p>
           </div>
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold text-foreground text-sm sm:text-base mb-3 sm:mb-4">Services</h4>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link to="/programmes" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Programmes</Link></li>
-              <li><Link to="/executive-coaching" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Executive Coaching</Link></li>
-              <li><Link to="/contagious-identity" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Contagious Identity</Link></li>
-              <li><Link to="/shift-methodology" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">SHIFT Methodology</Link></li>
-              <li><Link to="/workshops/alignment" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Alignment Workshop</Link></li>
-              <li><Link to="/workshops/motivation" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Motivation Workshop</Link></li>
-              <li><Link to="/workshops/leadership" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Leadership Workshop</Link></li>
+            <h4 className="font-semibold text-sm mb-4 text-accent">Services</h4>
+            <ul className="space-y-2">
+              <li><Link to="/programmes" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">SHIFT Programmes</Link></li>
+              <li><Link to="/contagious-identity" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Contagious Identity Coaching</Link></li>
+              <li><Link to="/workshops/alignment" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Team Workshops</Link></li>
+              <li><Link to="/shift-certified" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">SHIFT Certified Facilitator Programme</Link></li>
+              <li><Link to="/contact" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Leadership Advisory Retainer</Link></li>
+              <li><Link to="/contact" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Speaking Engagements</Link></li>
             </ul>
           </div>
 
-          {/* Assessments */}
+          {/* Diagnostics */}
           <div>
-            <h4 className="font-semibold text-foreground text-sm sm:text-base mb-3 sm:mb-4">Assessments</h4>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link to="/team-diagnostic" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Team Diagnostic</Link></li>
-              <li><Link to="/leadership-diagnostic" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Leadership Diagnostic</Link></li>
-              <li><Link to="/ai-readiness" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">AI Readiness</Link></li>
-              <li><Link to="/shift-diagnostic" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">SHIFT Diagnostic</Link></li>
+            <h4 className="font-semibold text-sm mb-4 text-accent">Diagnostics</h4>
+            <ul className="space-y-2">
+              <li><Link to="/leadership-diagnostic" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Leadership Diagnostic</Link></li>
+              <li><Link to="/team-diagnostic" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Team Diagnostic</Link></li>
+              <li><Link to="/shift-diagnostic" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">SHIFT Diagnostic</Link></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div>
-            <h4 className="font-semibold text-foreground text-sm sm:text-base mb-3 sm:mb-4">Resources</h4>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link to="/blog" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link></li>
-              <li><Link to="/podcast" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Podcast</Link></li>
-              <li><Link to="/case-studies" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Case Studies</Link></li>
-              <li><Link to="/resources" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Resource Library</Link></li>
-              <li><Link to="/book" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Book</Link></li>
-              <li><Link to="/products" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Products</Link></li>
-            </ul>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h4 className="font-semibold text-foreground text-sm sm:text-base mb-3 sm:mb-4">Connect</h4>
-            <ul className="space-y-1.5 sm:space-y-2">
-              <li><Link to="/about" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link></li>
-              <li><Link to="/contact" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Get in Touch</Link></li>
-              <li><Link to="/hellocoach" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">HelloCoach</Link></li>
+            <h4 className="font-semibold text-sm mb-4 text-accent">Resources</h4>
+            <ul className="space-y-2">
+              <li><Link to="/blog" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Blog</Link></li>
+              <li><Link to="/podcast" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Podcast</Link></li>
+              <li><Link to="/case-studies" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Case Studies</Link></li>
+              <li><Link to="/about" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">About Kevin</Link></li>
               <li>
-                <a href="https://valuesblueprint.online" target="_blank" rel="noopener noreferrer" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">Values Blueprint</a>
-              </li>
-              <li>
-                <a href="https://www.linkedin.com/in/kevinbritz-leadership/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-[#0A66C2] transition-colors">
-                  <Linkedin className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> LinkedIn
+                <a href="https://www.linkedin.com/in/kevinbritz-leadership/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                  <Linkedin className="w-3 h-3" /> LinkedIn
                 </a>
               </li>
             </ul>
           </div>
+
+          {/* Global Reach */}
+          <div>
+            <h4 className="font-semibold text-sm mb-4 text-accent">Global Reach</h4>
+            <ul className="space-y-2">
+              <li className="text-xs text-primary-foreground/70">South Africa</li>
+              <li className="text-xs text-primary-foreground/70">Sub-Saharan Africa</li>
+              <li className="text-xs text-primary-foreground/70">United Kingdom</li>
+              <li className="text-xs text-primary-foreground/70">Middle East</li>
+              <li><Link to="/contact" className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors">Enquire about your region →</Link></li>
+            </ul>
+          </div>
         </div>
 
-        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex items-center justify-center">
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Leadership by Design. All rights reserved.
+        <div className="border-t border-primary-foreground/10 mt-10 pt-8 text-center">
+          <p className="text-xs text-primary-foreground/50">
+            © {new Date().getFullYear()} Leadership by Design. All rights reserved. | SHIFT® is a registered methodology of Leadership by Design.
           </p>
         </div>
       </div>
