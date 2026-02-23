@@ -132,17 +132,6 @@ const Products = () => {
     features: ["Communication Rhythms", "Virtual 1-on-1 Frameworks", "Async Decision-Making", "Culture Across Time Zones"]
   }];
   const tier3Products = [{
-    id: "leadership-diagnostic",
-    title: "Leadership Diagnostic",
-    shortDesc: "Discover your leadership level",
-    price: "Free",
-    link: "/leader-assessment",
-    image: leadershipFeedback,
-    isExternal: false,
-    isBuilt: true,
-    isFree: true,
-    features: ["5-Minute Assessment", "Instant Results", "Personalized Insights", "Development Roadmap"]
-  }, {
     id: "leader-as-coach-programme",
     title: "Leader as Coach Programme",
     shortDesc: "10-month leadership transformation",
