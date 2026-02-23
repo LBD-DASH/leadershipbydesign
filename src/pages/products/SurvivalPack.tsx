@@ -55,7 +55,7 @@ const bonusItems = [
   },
   {
     icon: Headphones,
-    label: '"Calm Authority Reset" audio mention',
+    label: '"Calm Authority Reset" — 5-minute guided audio to reset your composure before tough conversations',
   },
 ];
 
