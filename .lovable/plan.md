@@ -1,103 +1,50 @@
 
 
-# Newsletter System: Contact Upload + Monthly Email Campaigns
+# Phase 1: Authority & Positioning — Adjusted Layout
 
-## What You Get
-A new "Newsletter" tab in your Marketing Dashboard where you can:
-1. Upload a CSV of contacts (bulk import)
-2. Compose and preview a newsletter email
-3. Send it to all contacts (or filtered segments) directly from the website
+Kevin's photo (in the CredibilityBlock) will NOT be near the top of the page. It will be placed **after Services**, so visitors first see the hero, Start Here paths, client logos, services — and only then scroll to the credibility block.
 
----
+## Updated Homepage Section Order
 
-## Part 1: Expand the Contact Database
+1. Header
+2. Hero (updated headline)
+3. StartHere
+4. ClientLogos
+5. **StatsBar** (new — numbers only, no photo)
+6. Services
+7. **CredibilityBlock** (new — Kevin's photo + bio, placed here, well below the fold)
+8. PartnerApps
+9. TestimonialSlider
+10. FloatingSocial
 
-Upgrade the existing `email_subscribers` table to support richer contact data and CSV imports.
+## All 4 Changes
 
-**New columns added to `email_subscribers`:**
-- `name` (text, optional) -- contact's name for personalization
-- `company` (text, optional) -- for segmenting by organization
-- `tags` (text array, optional) -- e.g. "imported", "diagnostic-lead", "newsletter"
-- `status` (text, default "active") -- active / unsubscribed / bounced
-- `unsubscribed_at` (timestamptz, optional)
+### 1. Hero Headline Update
+**File:** `src/components/Hero.tsx`
+Update the h1 text to: "South Africa's Leadership Partner for Organisations That Are Scaling, Transforming, or Leading Through Uncertainty"
 
-This keeps all contacts in one place -- both manually uploaded and those captured from the survival pack form, diagnostics, etc.
+### 2. StatsBar (no photo)
+**New file:** `src/components/StatsBar.tsx`
+Horizontal strip: "11 Years | 750+ Workshops | 4,000+ Leaders Impacted | 50+ Organisations | 6 Proprietary Methodologies"
+Placed between ClientLogos and Services — high on the page but photo-free.
 
----
+### 3. CredibilityBlock (with Kevin's photo — placed LOWER)
+**New file:** `src/components/CredibilityBlock.tsx`
+Two-column layout with photo, bio, credentials, and "Meet Kevin" CTA.
+Placed **after Services** so it's well below the fold.
 
-## Part 2: CSV Upload Interface
+### 4. Programmes Page StatsBar
+**File:** `src/pages/Programmes.tsx`
+Add the same StatsBar below the hero section. Add indicative pricing to programme cards.
 
-A new component in the Marketing Dashboard "Newsletter" tab that:
-- Accepts a CSV file (drag-and-drop or file picker)
-- Previews the first 5 rows so you can confirm column mapping (email, name, company)
-- Shows a count of new vs. duplicate contacts
-- Imports with a single click, tagging all as `source: "csv-import"` and `tags: ["imported"]`
-- Skips duplicates by email (no double entries)
+## Files Summary
 
-**Supported CSV format:**
-```
-email,name,company
-john@acme.co,John Smith,Acme Corp
-jane@startup.io,Jane Doe,StartupCo
-```
+| File | Action |
+|------|--------|
+| `src/components/Hero.tsx` | Update headline text |
+| `src/components/StatsBar.tsx` | New — stats strip (no photo) |
+| `src/components/CredibilityBlock.tsx` | New — Kevin bio block with photo |
+| `src/pages/Index.tsx` | Add StatsBar after ClientLogos; add CredibilityBlock after Services |
+| `src/pages/Programmes.tsx` | Add StatsBar; add indicative pricing |
 
-Minimum requirement: just an `email` column. Name and company are optional.
-
----
-
-## Part 3: Newsletter Composer
-
-A simple email composer with:
-- Subject line input
-- Rich text body editor (reusing the existing Quill editor already in the project)
-- Preview button (shows how the email will look)
-- "Send to All Active Contacts" button with a confirmation dialog showing the recipient count
-- Send progress indicator
-
----
-
-## Part 4: Newsletter Sending (Backend)
-
-A new backend function `send-newsletter` that:
-- Receives subject, HTML body, and optional tag filter
-- Fetches all active subscribers from the database
-- Sends via Resend API in batches (Resend supports batch sending up to 100 per call)
-- Logs each send in a new `newsletter_sends` table for tracking
-
-**New `newsletter_sends` table:**
-- `id` (UUID)
-- `subject` (text)
-- `body_html` (text)
-- `sent_at` (timestamptz)
-- `recipient_count` (integer)
-- `sent_by` (text)
-- `status` (text: draft / sending / sent / failed)
-
----
-
-## Part 5: Unsubscribe Handling
-
-Every newsletter email includes an unsubscribe link at the bottom. When clicked:
-- Sets the subscriber's `status` to "unsubscribed" and records `unsubscribed_at`
-- Shows a simple "You've been unsubscribed" confirmation page
-- That contact is automatically excluded from future sends
-
----
-
-## Technical Summary
-
-| Component | Details |
-|-----------|---------|
-| Database migration | Add columns to `email_subscribers`; create `newsletter_sends` table |
-| New edge function | `send-newsletter` -- batch sends via Resend API |
-| New edge function | `unsubscribe` -- handles unsubscribe link clicks |
-| UI components | CSV uploader, newsletter composer, send history (all in Marketing Dashboard) |
-| Files modified | `src/pages/MarketingDashboard.tsx` (new tab), new components in `src/components/marketing/` |
-| Dependencies | No new packages needed (Quill editor + file reader already available) |
-
-## Important Notes
-
-- **Resend free tier** supports 100 emails/day and 3,000/month. If your list is larger, you may need to upgrade your Resend plan.
-- **Domain verification**: Emails will send from `hello@leadershipbydesign.co` (already verified in Resend).
-- All contact data is protected by row-level security -- only authenticated admin users can view or manage contacts.
-
+No database changes. No new dependencies.
