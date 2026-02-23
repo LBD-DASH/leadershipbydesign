@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import PipelineFunnel from '@/components/marketing/PipelineFunnel';
 import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 import ContentEngine from '@/components/marketing/ContentEngine';
+import NewsletterTab from '@/components/marketing/NewsletterTab';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -152,7 +153,7 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-9 w-full max-w-5xl">
+              <TabsList className="grid grid-cols-10 w-full max-w-5xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
@@ -188,6 +189,10 @@ export default function MarketingDashboard() {
                 <TabsTrigger value="analytics" className="flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   <span className="hidden sm:inline">Pipeline</span>
+                </TabsTrigger>
+                <TabsTrigger value="newsletter" className="flex items-center gap-2">
+                  <Newspaper className="w-4 h-4" />
+                  <span className="hidden sm:inline">Newsletter</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -251,6 +256,10 @@ export default function MarketingDashboard() {
                     </p>
                   </div>
                 </div>
+              </TabsContent>
+
+              <TabsContent value="newsletter" className="mt-6">
+                <NewsletterTab />
               </TabsContent>
             </Tabs>
           </motion.div>

@@ -499,22 +499,37 @@ export type Database = {
       }
       email_subscribers: {
         Row: {
+          company: string | null
           created_at: string
           email: string
           id: string
+          name: string | null
           source: string | null
+          status: string | null
+          tags: string[] | null
+          unsubscribed_at: string | null
         }
         Insert: {
+          company?: string | null
           created_at?: string
           email: string
           id?: string
+          name?: string | null
           source?: string | null
+          status?: string | null
+          tags?: string[] | null
+          unsubscribed_at?: string | null
         }
         Update: {
+          company?: string | null
           created_at?: string
           email?: string
           id?: string
+          name?: string | null
           source?: string | null
+          status?: string | null
+          tags?: string[] | null
+          unsubscribed_at?: string | null
         }
         Relationships: []
       }
@@ -1178,6 +1193,42 @@ export type Database = {
           price_zar?: number
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      newsletter_sends: {
+        Row: {
+          body_html: string
+          created_at: string
+          id: string
+          recipient_count: number | null
+          sent_at: string | null
+          sent_by: string | null
+          status: string
+          subject: string
+          tag_filter: string | null
+        }
+        Insert: {
+          body_html: string
+          created_at?: string
+          id?: string
+          recipient_count?: number | null
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string
+          subject: string
+          tag_filter?: string | null
+        }
+        Update: {
+          body_html?: string
+          created_at?: string
+          id?: string
+          recipient_count?: number | null
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string
+          subject?: string
+          tag_filter?: string | null
         }
         Relationships: []
       }

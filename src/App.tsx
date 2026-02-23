@@ -76,6 +76,7 @@ import BespokeMeditations from "./pages/products/BespokeMeditations";
 import BespokeMeditationsSuccess from "./pages/products/BespokeMeditationsSuccess";
 import SurvivalPack from "./pages/products/SurvivalPack";
 import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
+import Unsubscribe from "./pages/Unsubscribe";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -155,6 +156,7 @@ const App = () => (
           <Route path="/admin/infographics" element={<AdminInfographicsLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
           <Route path="/marketing" element={<MarketingDashboard />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route
             path="/blog-admin"
             element={
