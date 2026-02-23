@@ -72,6 +72,7 @@ import FeedbackFormulaSuccess from "./pages/products/FeedbackFormulaSuccess";
 import LeaderAsCoachProgramme from "./pages/products/LeaderAsCoachProgramme";
 import LeaderAsCoachSuccess from "./pages/products/LeaderAsCoachSuccess";
 import CorporateMindReset from "./pages/CorporateMindReset";
+import LeadershipDevelopmentSales from "./pages/LeadershipDevelopmentSales";
 import BespokeMeditations from "./pages/products/BespokeMeditations";
 import BespokeMeditationsSuccess from "./pages/products/BespokeMeditationsSuccess";
 import SurvivalPack from "./pages/products/SurvivalPack";
@@ -133,6 +134,7 @@ const App = () => (
           <Route path="/leader-as-coach-programme" element={<LeaderAsCoachProgramme />} />
           <Route path="/leader-as-coach-programme/success" element={<LeaderAsCoachSuccess />} />
           <Route path="/corporate-mind-reset" element={<CorporateMindReset />} />
+          <Route path="/leadership-development" element={<LeadershipDevelopmentSales />} />
           <Route path="/bespoke-meditations" element={<BespokeMeditations />} />
           <Route path="/bespoke-meditations/success" element={<BespokeMeditationsSuccess />} />
           <Route path="/survival-pack" element={<SurvivalPack />} />
