@@ -33,7 +33,7 @@ export default function Hero() {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
-              South Africa's Leadership Partner for Organisations That Are Scaling, Transforming, or Leading Through Uncertainty
+              South Africa's Leadership Partner for Organisations Scaling, Transforming, or Navigating Uncertainty
             </motion.h1>
             
             <motion.p
@@ -42,7 +42,7 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
             >
-              90-Day Leadership System That Delivers 40% Productivity Gains
+              A 90-Day Leadership System Proven to Deliver Up to 40% Productivity Gains
             </motion.p>
             
             {/* Primary CTA - I'm Interested */}
