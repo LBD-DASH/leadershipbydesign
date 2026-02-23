@@ -161,6 +161,7 @@ export default function DifficultConversationsPlaybook() {
         productName="The Difficult Conversations Playbook"
         price={247}
         priceDisplay="R247"
+        successPath="/difficult-conversations/success"
       />
 
       {/* HERO SECTION */}
