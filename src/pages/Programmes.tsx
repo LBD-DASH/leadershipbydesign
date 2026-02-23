@@ -22,7 +22,7 @@ const programmes = [
     meta: "10 months • 5 phases",
     price: "From R45,000",
     image: leaderAsCoachImage,
-    link: "/contact",
+    link: "/leader-as-coach",
     tags: ["Trust Building", "Neuroscience", "Wellbeing"],
   },
   {
