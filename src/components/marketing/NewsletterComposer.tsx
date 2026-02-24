@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Send, Eye, Loader2, Users } from 'lucide-react';
+import { Send, Eye, Loader2, Users, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import RichTextEditor from '@/components/RichTextEditor';
+import NewsletterAdvertPicker from './NewsletterAdvertPicker';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 export default function NewsletterComposer() {
   const [subject, setSubject] = useState('');
@@ -25,6 +31,12 @@ export default function NewsletterComposer() {
   const [preview, setPreview] = useState(false);
   const [sending, setSending] = useState(false);
   const [activeCount, setActiveCount] = useState<number | null>(null);
+  const [advertsOpen, setAdvertsOpen] = useState(false);
+
+  const handleInsertAdvert = (html: string) => {
+    setBody(prev => prev + html);
+    toast({ title: 'Advert inserted', description: 'Scroll down to see it in the editor.' });
+  };
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -115,6 +127,19 @@ export default function NewsletterComposer() {
             </div>
           </div>
 
+          {/* Advert Inserter */}
+          <Collapsible open={advertsOpen} onOpenChange={setAdvertsOpen}>
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 w-full justify-start">
+                <Megaphone className="w-4 h-4" />
+                {advertsOpen ? 'Hide' : 'Insert'} Website Advert
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-3">
+              <NewsletterAdvertPicker onInsert={handleInsertAdvert} />
+            </CollapsibleContent>
+          </Collapsible>
+
           <div className="flex items-center gap-3 pt-2">
             <Button
               variant="outline"
@@ -124,7 +149,6 @@ export default function NewsletterComposer() {
               <Eye className="w-4 h-4" />
               {preview ? 'Hide Preview' : 'Preview'}
             </Button>
-
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button disabled={!subject.trim() || !body.trim() || sending} className="gap-2">
