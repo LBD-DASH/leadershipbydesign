@@ -172,7 +172,7 @@ export default function BundleSuccess() {
           </p>
           <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             <Link to="/leader-as-coach-programme">
-              Explore Leader as Coach — R2,497 →
+              Explore Leader as Coach →
             </Link>
           </Button>
         </div>

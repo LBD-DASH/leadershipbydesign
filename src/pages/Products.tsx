@@ -135,7 +135,7 @@ const Products = () => {
     id: "leader-as-coach-programme",
     title: "Leader as Coach Programme",
     shortDesc: "10-month leadership transformation",
-    price: "R2,497",
+    price: "Enquire",
     link: "/leader-as-coach-programme",
     image: leaderAsCoach,
     isExternal: false,

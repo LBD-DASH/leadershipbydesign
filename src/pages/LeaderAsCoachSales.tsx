@@ -162,7 +162,7 @@ export default function LeaderAsCoachSales() {
             A comprehensive 5-phase system built on the SHIFT Skills Framework and the People-Profit-Process model — embedding real coaching capability into your organisation's DNA.
           </motion.p>
           <motion.p variants={fadeUp} className="text-sm mb-10 font-medium" style={{ color: `${gold}cc` }}>
-            From R45,000 per cohort · 10 Months · Hybrid Delivery
+            10 Months · Hybrid Delivery · Customised per Organisation
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" onClick={() => setBookingOpen(true)} className="text-base font-semibold px-8 py-6" style={{ background: gold, color: navy }}>
@@ -372,28 +372,15 @@ export default function LeaderAsCoachSales() {
         </div>
       </motion.section>
 
-      {/* PRICING */}
+      {/* DELIVERY */}
       <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer} className="py-24 px-6" style={{ background: navy }}>
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2 variants={fadeUp} className="font-serif text-3xl md:text-4xl font-bold mb-6" style={{ color: cream }}>
-            Investment & <span style={{ color: gold }}>Delivery</span>
+            What's <span style={{ color: gold }}>Included</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="text-lg mb-12" style={{ color: `${cream}bb` }}>
-            Programmes are priced per cohort and fully customisable to your organisation's needs.
+            Programmes are fully customisable to your organisation's needs. Enquire for a tailored proposal.
           </motion.p>
-          <motion.div variants={fadeUp} className="grid sm:grid-cols-3 gap-6 mb-12">
-            {[
-              { label: "Single Cohort", price: "From R45,000", desc: "Up to 15 leaders, full 10-month programme" },
-              { label: "Multi-Cohort", price: "From R120,000", desc: "Multiple cohorts, staggered rollout" },
-              { label: "Enterprise", price: "Custom", desc: "Multi-site, blended delivery, executive sponsorship" },
-            ].map((tier) => (
-              <div key={tier.label} className="rounded-2xl p-8 border" style={{ background: navyLight, borderColor: `${gold}22` }}>
-                <p className="text-xs uppercase tracking-widest mb-2" style={{ color: `${gold}99` }}>{tier.label}</p>
-                <p className="font-serif text-3xl font-bold mb-2" style={{ color: cream }}>{tier.price}</p>
-                <p className="text-sm" style={{ color: `${cream}88` }}>{tier.desc}</p>
-              </div>
-            ))}
-          </motion.div>
           <motion.p variants={fadeUp} className="text-sm mb-8" style={{ color: `${cream}66` }}>
             All programmes include: Online LMS Portal · Hard Copy Materials · Online Coaching · 6 Professional Assessments · Progress Tracking
           </motion.p>
