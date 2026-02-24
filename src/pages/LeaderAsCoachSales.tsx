@@ -8,9 +8,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useUtmParams } from "@/hooks/useUtmParams";
+import { processLead } from "@/utils/notifications";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
@@ -96,26 +99,58 @@ const testimonials = [
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const utmParams = useUtmParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     try {
+      const structuredMessage = [
+        formData.message && `Message: ${formData.message}`,
+        formData.participants && `Team Size: ${formData.participants}`,
+        formData.timeline && `Timeline: ${formData.timeline}`,
+      ].filter(Boolean).join("\n") || "Leader as Coach Programme Enquiry";
+
       const { error } = await supabase.from("contact_form_submissions").insert({
         name: formData.name,
         email: formData.email,
         company: formData.company,
         phone: formData.phone,
-        message: formData.message || "Leader as Coach Programme Enquiry",
+        role: formData.role,
+        company_size: formData.participants,
+        urgency: formData.timeline,
+        message: structuredMessage,
         service_interest: "Leader as Coach Programme",
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_content: utmParams.utm_content,
+        utm_term: utmParams.utm_term,
       });
       if (error) throw error;
       toast.success("Enquiry submitted! We'll be in touch shortly.");
       setSubmitted(true);
-      setFormData({ name: "", company: "", email: "", phone: "", message: "" });
+      setFormData({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
+
+      // Send notification email
+      supabase.functions.invoke("send-contact-email", {
+        body: { name: formData.name, email: formData.email, company: formData.company, phone: formData.phone, serviceInterest: "Leader as Coach Programme", message: structuredMessage },
+      }).catch(console.error);
+
+      // Process lead scoring & AI analysis
+      processLead({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        company: formData.company,
+        organisation: formData.company,
+        message: structuredMessage,
+        source: "contact-form",
+      }).catch(console.error);
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -436,9 +471,28 @@ export default function LeaderAsCoachSales() {
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <Input placeholder="Full Name *" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ borderColor: `${gold}33` }} />
             <Input placeholder="Company *" required value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} style={{ borderColor: `${gold}33` }} />
+            <Input placeholder="Your Role (e.g. HR Director, L&D Manager) *" required value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} style={{ borderColor: `${gold}33` }} />
             <Input type="email" placeholder="Email *" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} style={{ borderColor: `${gold}33` }} />
             <Input type="tel" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} style={{ borderColor: `${gold}33` }} />
-            <Textarea placeholder="Tell us about your team size, challenges, and goals..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} style={{ borderColor: `${gold}33` }} />
+            <Select value={formData.participants} onValueChange={(v) => setFormData({ ...formData, participants: v })}>
+              <SelectTrigger style={{ borderColor: `${gold}33` }}><SelectValue placeholder="Number of Participants *" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5-10">5–10 participants</SelectItem>
+                <SelectItem value="11-20">11–20 participants</SelectItem>
+                <SelectItem value="21-50">21–50 participants</SelectItem>
+                <SelectItem value="50+">50+ participants</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={formData.timeline} onValueChange={(v) => setFormData({ ...formData, timeline: v })}>
+              <SelectTrigger style={{ borderColor: `${gold}33` }}><SelectValue placeholder="Preferred Start Date *" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Next month">Next month</SelectItem>
+                <SelectItem value="Next quarter">Next quarter</SelectItem>
+                <SelectItem value="Next 6 months">Next 6 months</SelectItem>
+                <SelectItem value="Just exploring">Just exploring</SelectItem>
+              </SelectContent>
+            </Select>
+            <Textarea placeholder="Tell us about your challenges and goals..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} style={{ borderColor: `${gold}33` }} />
             <Button type="submit" disabled={submitting} className="w-full font-semibold py-5" style={{ background: gold, color: navy }}>
               {submitting ? "Submitting..." : "Submit Enquiry"}
             </Button>
