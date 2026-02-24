@@ -20,7 +20,7 @@ const programmes = [
     title: "Leader as Coach",
     tagline: "Transform leaders into effective coaches",
     meta: "10 months • 5 phases",
-    price: "From R45,000",
+    price: "Enquire",
     image: leaderAsCoachImage,
     link: "/leader-as-coach",
     tags: ["Trust Building", "Neuroscience", "Wellbeing"],

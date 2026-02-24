@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X, Gift, CheckCircle, ArrowLeft, Zap, Clock, BookOpen, GraduationCap, Users, Brain, Target, Shield, Lightbulb, TrendingUp } from "lucide-react";
-import { CheckoutModal } from "@/components/products/CheckoutModal";
 import { motion } from "framer-motion";
-import { useGeoPricing } from "@/hooks/useGeoPricing";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import leaderAsCoach from "@/assets/leader-as-coach.jpg";
 import leadershipFeedback from "@/assets/leadership-feedback.jpg";
 import productTeamHandsAbove from "@/assets/product-team-hands-above.jpg";
-
-const PRICE_ZAR = 2497;
-const STRIKETHROUGH_ZAR = 4997;
 
 const featurePills = [
   "10-Month Programme",
@@ -140,7 +140,7 @@ const personas = [
   },
 ];
 
-const PricingCTA = ({ onCheckout, localPrice, strikethroughLocal, isLocal }: { onCheckout: () => void; localPrice: string; strikethroughLocal: string; isLocal: boolean }) => (
+const EnquiryCTA = ({ onEnquire }: { onEnquire: () => void }) => (
   <div className="text-center px-4">
     <div className="flex flex-wrap justify-center gap-3 mb-4">
       <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-1 text-xs md:text-sm text-white/80">
@@ -157,46 +157,48 @@ const PricingCTA = ({ onCheckout, localPrice, strikethroughLocal, isLocal }: { o
       </motion.span>
     </div>
 
-    <div className="mb-4">
-      <span className="text-white/60 line-through text-lg md:text-xl mr-2 md:mr-3">
-        {isLocal ? `R${STRIKETHROUGH_ZAR.toLocaleString()}` : strikethroughLocal}
-      </span>
-      <motion.span
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 10 }}
-        className="text-4xl md:text-5xl lg:text-6xl font-bold inline-block text-primary-foreground"
-      >
-        {isLocal ? `R${PRICE_ZAR.toLocaleString()}` : localPrice}
-      </motion.span>
-    </div>
-    {!isLocal && (
-      <p className="text-white/50 text-xs mb-1">
-        ≈ R{PRICE_ZAR.toLocaleString()} ZAR • Payment processed in ZAR
-      </p>
-    )}
-    <p className="text-white/70 text-xs md:text-sm mb-4 md:mb-6">
-      🔥 50% OFF • Limited enrolment
+    <p className="text-white/70 text-sm md:text-base mb-4 md:mb-6">
+      Customised to your organisation's needs. Get in touch for a tailored proposal.
     </p>
     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <Button
-        onClick={onCheckout}
+        onClick={onEnquire}
         size="lg"
         className="text-base md:text-lg px-6 md:px-8 py-6 md:py-7 font-bold transition-all duration-300 hover:shadow-lg w-full sm:w-auto min-h-[56px] bg-primary-foreground text-primary hover:bg-white"
       >
-        ENROL NOW →
+        ENQUIRE NOW →
       </Button>
     </motion.div>
-    <p className="text-white/50 text-xs mt-4">
-      ✓ Secure checkout • ✓ Instant access to Phase 1
-    </p>
   </div>
 );
 
 export default function LeaderAsCoachProgramme() {
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const geo = useGeoPricing(PRICE_ZAR);
-  const geoStrikethrough = useGeoPricing(STRIKETHROUGH_ZAR);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", message: "" });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("contact_form_submissions").insert({
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone,
+        message: formData.message || "Leader as Coach Programme Enquiry",
+        service_interest: "Leader as Coach Programme",
+      });
+      if (error) throw error;
+      toast.success("Enquiry submitted! We'll be in touch shortly.");
+      setEnquiryOpen(false);
+      setFormData({ name: "", company: "", email: "", phone: "", message: "" });
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen scroll-smooth">
@@ -208,14 +210,29 @@ export default function LeaderAsCoachProgramme() {
         keywords="leader as coach, leadership programme, coaching culture, SHIFT skills, leadership development, NLP coaching, emotional intelligence, team leadership"
       />
 
-      <CheckoutModal
-        open={checkoutOpen}
-        onOpenChange={setCheckoutOpen}
-        productName="Leader as Coach Programme"
-        price={PRICE_ZAR}
-        priceDisplay={`R${PRICE_ZAR.toLocaleString()}`}
-        successPath="/leader-as-coach-programme/success"
-      />
+      {/* ENQUIRY MODAL */}
+      <Dialog open={enquiryOpen} onOpenChange={setEnquiryOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl font-bold text-foreground">
+              Enquire About Leader as Coach
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Tell us about your team and we'll design the right programme for you.
+            </p>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+            <Input placeholder="Full Name *" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+            <Input placeholder="Company *" required value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
+            <Input type="email" placeholder="Email *" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+            <Input type="tel" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+            <Textarea placeholder="Tell us about your team size, challenges, and goals..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+            <Button type="submit" disabled={submitting} className="w-full font-semibold py-5">
+              {submitting ? "Submitting..." : "Submit Enquiry"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* HERO SECTION */}
       <section className="relative py-12 md:py-24 px-4 overflow-hidden bg-primary">
@@ -276,7 +293,7 @@ export default function LeaderAsCoachProgramme() {
             ))}
           </div>
 
-          <PricingCTA onCheckout={() => setCheckoutOpen(true)} localPrice={geo.localPrice} strikethroughLocal={geoStrikethrough.localPrice} isLocal={geo.isLocal} />
+          <EnquiryCTA onEnquire={() => setEnquiryOpen(true)} />
         </div>
       </section>
 
@@ -489,7 +506,7 @@ export default function LeaderAsCoachProgramme() {
           <p className="text-white/80 text-lg max-w-2xl mx-auto mb-10">
             Your leaders need more than a workshop. They need a system that builds coaching capability, installs behavioural standards, and creates lasting culture change — over 10 months, not 10 hours.
           </p>
-          <PricingCTA onCheckout={() => setCheckoutOpen(true)} localPrice={geo.localPrice} strikethroughLocal={geoStrikethrough.localPrice} isLocal={geo.isLocal} />
+          <EnquiryCTA onEnquire={() => setEnquiryOpen(true)} />
         </div>
       </section>
 
