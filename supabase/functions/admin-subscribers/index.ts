@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
     // LIST subscribers
     if (action === 'list') {
       const { search, tag, limit: rawLimit } = body;
-      const limit = rawLimit || 200;
+      const limit = rawLimit || 5000;
 
       let query = supabase
         .from('email_subscribers')
