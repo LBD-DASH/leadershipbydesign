@@ -1,97 +1,68 @@
 
 
-# Leader as Coach — "Request a Proposal" Funnel Build
+# Fix Newsletter Contact System -- Two Root Cause Fixes
 
-## Current State
+## What's Actually Broken
 
-The `/leader-as-coach` page (LeaderAsCoachSales.tsx) is already a well-built sales page with:
-- Problem/solution narrative, 5-phase structure, outcomes, testimonials, facilitator section
-- "Request a Proposal" enquiry modal capturing name, company, email, phone, message
-- Submissions go to `contact_form_submissions` table
-- No header/footer (distraction-free), sticky nav with CTA
+1. **CSV Import returns 409 for every contact** -- uses `insert` instead of `upsert`, so duplicate emails fail instead of merging
+2. **Contacts tab shows nothing** -- RLS requires Supabase Auth for SELECT, but admin uses client-side token auth (anon key), so reads are silently blocked
 
-The `/leader-as-coach-programme` page (LeaderAsCoachProgramme.tsx) is a more detailed product page with SHIFT framework, assessments, pain points, and personas.
+## Fix 1: CSV Uploader -- Use Upsert Instead of Insert
 
-**What's missing for a proper Google Ads funnel:**
-1. The enquiry form doesn't capture enough qualifying data (team size, timeline, budget authority)
-2. No lead notification email sent to the sales team when someone submits
-3. No confirmation email sent to the prospect
-4. No UTM tracking on form submissions
-5. No post-submission nurture trigger
+**File**: `src/components/marketing/CSVUploader.tsx`
 
-## The Plan
+Change the batch insert to use `.upsert()` with `onConflict: 'email'` and `ignoreDuplicates: true`. This tells the database to skip rows where the email already exists instead of throwing a 409 error.
 
-### 1. Upgrade the Enquiry Form (Both Pages)
+- Replace `.insert(rows)` with `.upsert(rows, { onConflict: 'email', ignoreDuplicates: true })`
+- Remove the individual fallback loop (no longer needed since upsert handles conflicts)
+- The upsert will insert new contacts and silently skip existing ones
 
-Add qualifying fields to both enquiry modals so you can prioritise hot leads:
+## Fix 2: Contacts Tab -- Add Edge Function for Admin Reads
 
-- **Number of Participants** (dropdown: 5-10, 11-20, 21-50, 50+)
-- **Preferred Start Date** (dropdown: Next month, Next quarter, Next 6 months, Just exploring)
-- **Role** (text input -- to confirm they're HR/L&D decision-makers)
+**Why the Contacts tab is empty**: The `SubscriberManager` component queries `email_subscribers` using the anon key. RLS only allows SELECT for `authenticated` users, but the admin isn't logged in via Supabase Auth -- they use a hardcoded token in sessionStorage. The anon key has no SELECT permission.
 
-These fields will be stored in the existing `contact_form_submissions` table using the `message` field (structured as a formatted string) and the `role` field.
+**Solution**: Create an `admin-subscribers` edge function (following the existing `admin-prospects` pattern) that:
+- Accepts the admin token via `x-admin-token` header
+- Validates it matches the master token
+- Uses the service role key to query `email_subscribers` (bypasses RLS)
+- Supports search, tag filtering, updates, and status toggles
 
-### 2. Add UTM Tracking
+**New file**: `supabase/functions/admin-subscribers/index.ts`
+- GET: Fetch subscribers with optional `search` and `tag` query params
+- PUT: Update subscriber name/company/tags
+- PATCH: Toggle subscriber status (active/unsubscribed)
 
-Both pages will capture UTM parameters from the URL and include them in the database submission. This lets you measure which Google Ads campaigns drive the most proposals.
+**Updated file**: `src/components/marketing/SubscriberManager.tsx`
+- Replace direct Supabase client calls with `supabase.functions.invoke('admin-subscribers', ...)`
+- Pass the admin token from sessionStorage in the request headers
+- All CRUD operations go through the edge function
 
-### 3. Trigger Lead Notification Email
+## Fix 3: Newsletter Composer Contact Count
 
-After form submission, invoke the existing `send-contact-email` edge function so Kevin and Lauren get an instant notification with the prospect's details, team size, and timeline -- enabling fast follow-up.
+**File**: `src/components/marketing/NewsletterComposer.tsx`
 
-### 4. Trigger Lead Scoring and AI Analysis
+The composer also queries `email_subscribers` directly to get active contact counts and tags. Update it to use the same `admin-subscribers` edge function for the count query.
 
-After submission, call `processLead()` from the existing lead scoring system to calculate lead temperature and trigger AI analysis, just like the contact form does.
+## Summary of Changes
 
-### 5. Send Confirmation Email to Prospect
+| File | Change |
+|------|--------|
+| `src/components/marketing/CSVUploader.tsx` | Replace `insert` with `upsert` using `onConflict: 'email'` |
+| `supabase/functions/admin-subscribers/index.ts` | New edge function for admin CRUD on subscribers |
+| `src/components/marketing/SubscriberManager.tsx` | Route all queries through edge function |
+| `src/components/marketing/NewsletterComposer.tsx` | Route count/tag queries through edge function |
 
-After form submission, trigger the `send-contact-email` function which already sends a confirmation to the prospect.
+## Why NOT a Full Rebuild
 
-## Technical Details
+Your existing system already has:
+- Subscriber database with proper schema
+- Newsletter composer with rich text editor
+- Send functionality via Resend
+- Unsubscribe flow
+- Tag-based segmentation
+- Draft saving and scheduling
+- CSV import UI
+- Send history
 
-### Modified Files
-
-**`src/pages/LeaderAsCoachSales.tsx`**
-- Add `useUtmParams()` hook
-- Add qualifying fields to the enquiry form (participants, timeline, role)
-- Include UTM params in the `contact_form_submissions` insert
-- Call `processLead()` after submission
-- Invoke `send-contact-email` edge function after submission
-
-**`src/pages/products/LeaderAsCoachProgramme.tsx`**
-- Same changes as above: UTM tracking, qualifying fields, lead processing, email trigger
-
-### No New Files Needed
-- The existing `send-contact-email` edge function handles both notification and confirmation
-- The existing `processLead()` handles scoring and AI analysis
-- The existing `contact_form_submissions` table has all needed columns (including UTM fields, role, lead_score, etc.)
-
-### No Database Changes Needed
-- All qualifying data fits into existing columns (`role`, `message`, `company_size` for participants, `urgency` for timeline)
-
-### Funnel Flow
-
-```text
-Google Ad ("leader as coach programme SA")
-        |
-        v
-  /leader-as-coach (Sales Landing Page)
-        |
-        v
-  "Request a Proposal" Modal
-  (Name, Company, Email, Phone, Role,
-   Team Size, Timeline, Message)
-        |
-        v
-  Database Insert + UTM Tracking
-  + Lead Score + AI Analysis
-  + Email to Kevin & Lauren
-  + Confirmation to Prospect
-        |
-        v
-  Kevin sends tailored proposal
-        |
-        v
-  Close the deal
-```
+It just has two bugs (insert vs upsert, and RLS blocking reads). Fixing those two issues makes everything work end-to-end.
 
