@@ -81,3 +81,12 @@ verify_jwt = false
 [functions.admin-subscribers]
 verify_jwt = false
 
+[functions.generate-ai-newsletter]
+verify_jwt = false
+
+[functions.approve-newsletter]
+verify_jwt = false
+
+[functions.track-newsletter]
+verify_jwt = false
+

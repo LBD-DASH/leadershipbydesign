@@ -1198,10 +1198,15 @@ export type Database = {
       }
       newsletter_sends: {
         Row: {
+          approval_status: string | null
+          approval_token: string | null
+          auto_generated: boolean | null
           body_html: string
           created_at: string
           id: string
           recipient_count: number | null
+          research_sources: Json | null
+          research_topic: string | null
           sent_at: string | null
           sent_by: string | null
           status: string
@@ -1209,10 +1214,15 @@ export type Database = {
           tag_filter: string | null
         }
         Insert: {
+          approval_status?: string | null
+          approval_token?: string | null
+          auto_generated?: boolean | null
           body_html: string
           created_at?: string
           id?: string
           recipient_count?: number | null
+          research_sources?: Json | null
+          research_topic?: string | null
           sent_at?: string | null
           sent_by?: string | null
           status?: string
@@ -1220,10 +1230,15 @@ export type Database = {
           tag_filter?: string | null
         }
         Update: {
+          approval_status?: string | null
+          approval_token?: string | null
+          auto_generated?: boolean | null
           body_html?: string
           created_at?: string
           id?: string
           recipient_count?: number | null
+          research_sources?: Json | null
+          research_topic?: string | null
           sent_at?: string | null
           sent_by?: string | null
           status?: string
@@ -1231,6 +1246,47 @@ export type Database = {
           tag_filter?: string | null
         }
         Relationships: []
+      }
+      newsletter_tracking: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          link_url: string | null
+          newsletter_id: string | null
+          recipient_email: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          newsletter_id?: string | null
+          recipient_email: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          newsletter_id?: string | null
+          recipient_email?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsletter_tracking_newsletter_id_fkey"
+            columns: ["newsletter_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_sends"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_purchases: {
         Row: {
