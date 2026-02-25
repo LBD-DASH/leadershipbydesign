@@ -58,23 +58,18 @@ Deno.serve(async (req) => {
       .update({ approval_status: 'approved', status: 'sending' })
       .eq('id', newsletter.id);
 
-    // Fetch active subscribers, respecting tag_filter if set
+    // Fetch ALL active subscribers — approved newsletters go to the entire contact list
     const PAGE_SIZE = 1000;
     let allSubscribers: { email: string; name: string | null }[] = [];
     let from = 0;
     let keepGoing = true;
 
     while (keepGoing) {
-      let query = supabase
+      const { data } = await supabase
         .from('email_subscribers')
         .select('email, name')
-        .eq('status', 'active');
-
-      if (newsletter.tag_filter) {
-        query = query.contains('tags', [newsletter.tag_filter]);
-      }
-
-      const { data } = await query.range(from, from + PAGE_SIZE - 1);
+        .eq('status', 'active')
+        .range(from, from + PAGE_SIZE - 1);
 
       allSubscribers = allSubscribers.concat(data || []);
       if (!data || data.length < PAGE_SIZE) keepGoing = false;
