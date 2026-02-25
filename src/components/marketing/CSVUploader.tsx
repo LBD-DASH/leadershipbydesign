@@ -101,7 +101,7 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
     let imported = 0;
     let skipped = 0;
 
-    // Process in batches of 50
+    // Process in batches of 50 using upsert to handle duplicates gracefully
     for (let i = 0; i < contacts.length; i += 50) {
       const batch = contacts.slice(i, i + 50);
       const rows = batch.map(c => ({
@@ -113,25 +113,18 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
         status: 'active',
       }));
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('email_subscribers')
-        .insert(rows);
+        .upsert(rows, { onConflict: 'email', ignoreDuplicates: true })
+        .select('id');
 
       if (error) {
-        // Duplicates will cause unique constraint errors - try one by one
-        console.warn('Batch insert had conflicts, inserting individually:', error.message);
-        for (const row of rows) {
-          const { error: singleErr } = await supabase
-            .from('email_subscribers')
-            .insert(row);
-          if (singleErr) {
-            skipped += 1;
-          } else {
-            imported += 1;
-          }
-        }
+        console.warn('Batch upsert error:', error.message);
+        skipped += batch.length;
       } else {
-        imported += batch.length;
+        const insertedCount = data?.length ?? 0;
+        imported += insertedCount;
+        skipped += batch.length - insertedCount;
       }
     }
 

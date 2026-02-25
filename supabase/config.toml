@@ -78,3 +78,6 @@ verify_jwt = false
 [functions.unsubscribe]
 verify_jwt = false
 
+[functions.admin-subscribers]
+verify_jwt = false
+

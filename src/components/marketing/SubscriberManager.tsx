@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Users, Search, Trash2, Edit2, Tag, Loader2, X, Check } from 'lucide-react';
+import { Users, Search, Edit2, Loader2, X, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,11 +9,8 @@ import { toast } from '@/hooks/use-toast';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { format } from 'date-fns';
+import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 
 interface Subscriber {
   id: string;
@@ -24,6 +21,17 @@ interface Subscriber {
   status: string | null;
   source: string | null;
   created_at: string;
+}
+
+async function adminInvoke(action: string, extra: Record<string, unknown> = {}) {
+  const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
+  const { data, error } = await supabase.functions.invoke('admin-subscribers', {
+    body: { action, ...extra },
+    headers: { 'x-admin-token': token },
+  });
+  if (error) throw error;
+  if (!data.success) throw new Error(data.error || 'Unknown error');
+  return data;
 }
 
 export default function SubscriberManager() {
@@ -39,28 +47,18 @@ export default function SubscriberManager() {
 
   const fetchSubscribers = useCallback(async () => {
     setLoading(true);
-    let query = supabase
-      .from('email_subscribers')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(200);
-
-    if (search) {
-      query = query.or(`email.ilike.%${search}%,name.ilike.%${search}%,company.ilike.%${search}%`);
-    }
-    if (tagFilter) {
-      query = query.contains('tags', [tagFilter]);
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      console.error('Fetch subscribers error:', error);
-    } else {
-      setSubscribers(data || []);
-      // Collect all unique tags
+    try {
+      const result = await adminInvoke('list', {
+        search: search || undefined,
+        tag: tagFilter || undefined,
+      });
+      const subs = result.data || [];
+      setSubscribers(subs);
       const tags = new Set<string>();
-      (data || []).forEach(s => s.tags?.forEach(t => tags.add(t)));
+      subs.forEach((s: Subscriber) => s.tags?.forEach((t: string) => tags.add(t)));
       setAllTags(Array.from(tags).sort());
+    } catch (err: any) {
+      console.error('Fetch subscribers error:', err);
     }
     setLoading(false);
   }, [search, tagFilter]);
@@ -78,35 +76,24 @@ export default function SubscriberManager() {
 
   const saveEdit = async (id: string) => {
     const tags = editTags.split(',').map(t => t.trim()).filter(Boolean);
-    const { error } = await supabase
-      .from('email_subscribers')
-      .update({ name: editName || null, company: editCompany || null, tags })
-      .eq('id', id);
-
-    if (error) {
-      toast({ title: 'Update failed', description: error.message, variant: 'destructive' });
-    } else {
+    try {
+      await adminInvoke('update', { id, name: editName || null, company: editCompany || null, tags });
       toast({ title: 'Subscriber updated' });
       setEditingId(null);
       fetchSubscribers();
+    } catch (err: any) {
+      toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
     }
   };
 
   const toggleStatus = async (sub: Subscriber) => {
     const newStatus = sub.status === 'active' ? 'unsubscribed' : 'active';
-    const { error } = await supabase
-      .from('email_subscribers')
-      .update({
-        status: newStatus,
-        unsubscribed_at: newStatus === 'unsubscribed' ? new Date().toISOString() : null,
-      })
-      .eq('id', sub.id);
-
-    if (error) {
-      toast({ title: 'Update failed', description: error.message, variant: 'destructive' });
-    } else {
+    try {
+      await adminInvoke('toggle_status', { id: sub.id, new_status: newStatus });
       toast({ title: `Contact ${newStatus === 'active' ? 'reactivated' : 'unsubscribed'}` });
       fetchSubscribers();
+    } catch (err: any) {
+      toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
     }
   };
 
@@ -127,7 +114,6 @@ export default function SubscriberManager() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
