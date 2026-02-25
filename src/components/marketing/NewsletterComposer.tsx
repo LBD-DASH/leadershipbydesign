@@ -94,6 +94,19 @@ export default function NewsletterComposer() {
         toast({ title: 'Save failed', description: result?.error || 'Unknown error', variant: 'destructive' });
       } else {
         toast({ title: 'Draft saved!' });
+        // Fire Slack notification to #newsletter-engine (non-blocking)
+        supabase.functions.invoke('slack-notify', {
+          body: {
+            eventType: 'newsletter_generated',
+            data: {
+              subject,
+              sourceCount: 0,
+              approveUrl: '',
+              rejectUrl: '',
+              manualDraft: true,
+            },
+          },
+        }).catch(() => {});
         const { data: draftResult } = await supabase.functions.invoke('admin-subscribers', {
           body: { action: 'list_drafts' },
           headers: { 'x-admin-token': getAdminToken() },
@@ -151,6 +164,13 @@ export default function NewsletterComposer() {
         title: 'Newsletter sent!',
         description: `Sent to ${data?.recipient_count || 0} contacts.`,
       });
+      // Notify Slack #mission-control + #newsletter-engine
+      supabase.functions.invoke('slack-notify', {
+        body: {
+          eventType: 'newsletter_approved',
+          data: { subject, recipientCount: data?.recipient_count || 0 },
+        },
+      }).catch(() => {});
       setSubject('');
       setBody('');
       setTagFilter('');
