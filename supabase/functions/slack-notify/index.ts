@@ -200,6 +200,40 @@ function buildSystemErrorBlocks(data: Record<string, any>) {
   ];
 }
 
+function buildDailyLeadsDigestBlocks(data: Record<string, any>) {
+  return [
+    { type: 'header', text: { type: 'plain_text', text: '📊 Daily Leads & Signups Digest', emoji: true } },
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*New Subscribers:*\n${data.subscribers}` },
+      { type: 'mrkdwn', text: `*Contact Forms:*\n${data.contacts}` },
+    ]},
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Diagnostics Completed:*\n${data.diagnostics}` },
+      { type: 'mrkdwn', text: `*Lead Magnets Downloaded:*\n${data.downloads}` },
+    ]},
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Purchases:*\n${data.purchases}` },
+      { type: 'mrkdwn', text: `*Prospects Discovered:*\n${data.prospects}` },
+    ]},
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Daily summary • ${sast()} SAST` }] },
+  ];
+}
+
+function buildDailyHealthCheckBlocks(data: Record<string, any>) {
+  return [
+    { type: 'header', text: { type: 'plain_text', text: '🩺 Daily System Health Check', emoji: true } },
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Active Sequences:*\n${data.activeSequences}` },
+      { type: 'mrkdwn', text: `*Outreach Sent Today:*\n${data.outreachSent}` },
+    ]},
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Engaged This Week:*\n${data.engaged}` },
+      { type: 'mrkdwn', text: `*Status:*\n✅ All systems operational` },
+    ]},
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Health check • ${sast()} SAST` }] },
+  ];
+}
+
 // ── Event → channel + format routing ──────────────────────
 
 const EVENT_CONFIG: Record<string, {
@@ -264,6 +298,20 @@ const EVENT_CONFIG: Record<string, {
     icon: ':warning:',
     buildBlocks: buildSystemErrorBlocks,
     text: (d) => `Error in ${d.function || 'unknown'}: ${(d.error || '').slice(0, 100)}`,
+  },
+  daily_leads_digest: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Daily Digest',
+    icon: ':bar_chart:',
+    buildBlocks: buildDailyLeadsDigestBlocks,
+    text: (d) => `Daily digest: ${d.subscribers} subscribers, ${d.contacts} contacts, ${d.diagnostics} diagnostics`,
+  },
+  daily_health_check: {
+    channels: ['system-health'],
+    username: 'LBD Health Check',
+    icon: ':stethoscope:',
+    buildBlocks: buildDailyHealthCheckBlocks,
+    text: (d) => `Health check: ${d.activeSequences} active sequences, ${d.outreachSent} outreach sent`,
   },
 };
 

@@ -310,6 +310,91 @@ Deno.serve(async (req) => {
 
     console.log('Daily digest sent successfully:', emailResult.id);
 
+    // ── Slack summaries (non-blocking) ──
+    try {
+      // Count today's leads & signups across all tables
+      const { count: newSubscribers } = await supabase
+        .from('email_subscribers')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newContacts } = await supabase
+        .from('contact_form_submissions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newDiagnostics } = await supabase
+        .from('diagnostic_submissions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newLeadershipDiag } = await supabase
+        .from('leadership_diagnostic_submissions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newAIDiag } = await supabase
+        .from('ai_readiness_submissions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newShiftDiag } = await supabase
+        .from('shift_diagnostic_submissions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newPurchases } = await supabase
+        .from('product_purchases')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: newDownloads } = await supabase
+        .from('lead_magnet_downloads')
+        .select('*', { count: 'exact', head: true })
+        .gte('downloaded_at', todayStart.toISOString());
+
+      const totalDiagnostics = (newDiagnostics || 0) + (newLeadershipDiag || 0) + (newAIDiag || 0) + (newShiftDiag || 0);
+
+      // Post to #leads-and-signups
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+        },
+        body: JSON.stringify({
+          eventType: 'daily_leads_digest',
+          data: {
+            subscribers: newSubscribers || 0,
+            contacts: newContacts || 0,
+            diagnostics: totalDiagnostics,
+            downloads: newDownloads || 0,
+            purchases: newPurchases || 0,
+            prospects: stats.discoveredToday,
+          },
+        }),
+      });
+
+      // Post to #system-health
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+        },
+        body: JSON.stringify({
+          eventType: 'daily_health_check',
+          data: {
+            activeSequences: stats.activeSequences,
+            outreachSent: stats.contactedToday,
+            engaged: stats.engagedThisWeek,
+          },
+        }),
+      });
+    } catch (slackErr) {
+      console.error('Slack digest error (non-fatal):', slackErr);
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true, 
