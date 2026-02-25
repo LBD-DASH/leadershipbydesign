@@ -182,6 +182,34 @@ Deno.serve(async (req) => {
       return json({ success: true, imported, skipped });
     }
 
+    // SAVE NEWSLETTER DRAFT or SCHEDULE
+    if (action === 'save_newsletter' || action === 'schedule_newsletter') {
+      const { subject, body_html, tag_filter } = body;
+      if (!subject || !body_html) return json({ success: false, error: 'subject and body_html required' }, 400);
+
+      const status = action === 'schedule_newsletter' ? 'scheduled' : 'draft';
+      const { data, error } = await supabase
+        .from('newsletter_sends')
+        .insert({ subject, body_html, tag_filter: tag_filter || null, status, sent_by: 'admin', recipient_count: 0 })
+        .select()
+        .single();
+
+      if (error) return json({ success: false, error: error.message }, 500);
+      return json({ success: true, data });
+    }
+
+    // LIST DRAFTS
+    if (action === 'list_drafts') {
+      const { data, error } = await supabase
+        .from('newsletter_sends')
+        .select('id, subject, body_html, tag_filter, created_at')
+        .eq('status', 'draft')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      if (error) return json({ success: false, error: error.message }, 500);
+      return json({ success: true, data: data || [] });
+    }
+
     return json({ success: false, error: 'Unknown action' }, 400);
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Unexpected error';

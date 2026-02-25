@@ -65,15 +65,16 @@ export default function NewsletterComposer() {
         console.error('Failed to fetch subscriber count:', err);
       }
 
-      // Drafts (newsletter_sends uses same RLS pattern - fetch via edge function too if needed)
-      // For now drafts use direct query since newsletter_sends may have different access
-      const { data: draftData } = await supabase
-        .from('newsletter_sends')
-        .select('id, subject, body_html, tag_filter, created_at')
-        .eq('status', 'draft')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      setDrafts((draftData as Draft[]) || []);
+      // Fetch drafts via edge function (bypasses RLS)
+      try {
+        const { data: draftResult } = await supabase.functions.invoke('admin-subscribers', {
+          body: { action: 'list_drafts' },
+          headers: { 'x-admin-token': getAdminToken() },
+        });
+        if (draftResult?.success) setDrafts((draftResult.data as Draft[]) || []);
+      } catch (err) {
+        console.error('Failed to fetch drafts:', err);
+      }
     };
     fetchData();
   }, [tagFilter]);
@@ -84,25 +85,23 @@ export default function NewsletterComposer() {
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from('newsletter_sends').insert({
-      subject,
-      body_html: body,
-      tag_filter: tagFilter || null,
-      status: 'draft',
-      sent_by: 'admin',
-      recipient_count: 0,
-    });
-    if (error) {
-      toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Draft saved!' });
-      const { data } = await supabase
-        .from('newsletter_sends')
-        .select('id, subject, body_html, tag_filter, created_at')
-        .eq('status', 'draft')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      setDrafts((data as Draft[]) || []);
+    try {
+      const { data: result } = await supabase.functions.invoke('admin-subscribers', {
+        body: { action: 'save_newsletter', subject, body_html: body, tag_filter: tagFilter || null },
+        headers: { 'x-admin-token': getAdminToken() },
+      });
+      if (!result?.success) {
+        toast({ title: 'Save failed', description: result?.error || 'Unknown error', variant: 'destructive' });
+      } else {
+        toast({ title: 'Draft saved!' });
+        const { data: draftResult } = await supabase.functions.invoke('admin-subscribers', {
+          body: { action: 'list_drafts' },
+          headers: { 'x-admin-token': getAdminToken() },
+        });
+        if (draftResult?.success) setDrafts((draftResult.data as Draft[]) || []);
+      }
+    } catch (err: any) {
+      toast({ title: 'Save failed', description: err.message, variant: 'destructive' });
     }
     setSaving(false);
   };
@@ -110,18 +109,18 @@ export default function NewsletterComposer() {
   const handleSchedule = async () => {
     if (!subject.trim() || !body.trim()) return;
     setSaving(true);
-    const { error } = await supabase.from('newsletter_sends').insert({
-      subject,
-      body_html: body,
-      tag_filter: tagFilter || null,
-      status: 'scheduled',
-      sent_by: 'admin',
-      recipient_count: 0,
-    });
-    if (error) {
-      toast({ title: 'Schedule failed', description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Newsletter scheduled!', description: 'It will be sent automatically every Monday at 8am.' });
+    try {
+      const { data: result } = await supabase.functions.invoke('admin-subscribers', {
+        body: { action: 'schedule_newsletter', subject, body_html: body, tag_filter: tagFilter || null },
+        headers: { 'x-admin-token': getAdminToken() },
+      });
+      if (!result?.success) {
+        toast({ title: 'Schedule failed', description: result?.error || 'Unknown error', variant: 'destructive' });
+      } else {
+        toast({ title: 'Newsletter scheduled!', description: 'It will be sent automatically every Monday at 8am.' });
+      }
+    } catch (err: any) {
+      toast({ title: 'Schedule failed', description: err.message, variant: 'destructive' });
     }
     setSaving(false);
   };
