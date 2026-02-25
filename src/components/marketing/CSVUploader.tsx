@@ -1,17 +1,14 @@
 import { useState, useCallback } from 'react';
-import { Upload, FileText, CheckCircle2, Loader2 } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, Loader2, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 
 interface ParsedContact {
@@ -25,6 +22,20 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
   const [contacts, setContacts] = useState<ParsedContact[]>([]);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<{ imported: number; skipped: number } | null>(null);
+  const [tagInput, setTagInput] = useState('');
+  const [importTags, setImportTags] = useState<string[]>([]);
+
+  const addTag = () => {
+    const tag = tagInput.trim().toLowerCase();
+    if (tag && !importTags.includes(tag)) {
+      setImportTags(prev => [...prev, tag]);
+    }
+    setTagInput('');
+  };
+
+  const removeTag = (tag: string) => {
+    setImportTags(prev => prev.filter(t => t !== tag));
+  };
 
   const parseCSV = useCallback((text: string): ParsedContact[] => {
     const normalized = text
@@ -99,12 +110,14 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
     if (!contacts.length) return;
     setImporting(true);
 
+    const tags = ['imported', ...importTags];
+
     const rows = contacts.map(c => ({
       email: c.email.toLowerCase().trim(),
       name: c.name || null,
       company: c.company || null,
       source: 'csv-import',
-      tags: ['imported'],
+      tags,
       status: 'active',
     }));
 
@@ -172,6 +185,45 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
             }}
           />
         </div>
+
+        {/* Tag on Import */}
+        {contacts.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Tag className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">Tag these contacts:</span>
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
+                placeholder="Type a tag and press Enter..."
+                className="flex-1"
+              />
+              <Button variant="outline" size="sm" onClick={addTag} disabled={!tagInput.trim()}>
+                Add
+              </Button>
+            </div>
+            {importTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {importTags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="gap-1 cursor-pointer hover:bg-destructive/10"
+                    onClick={() => removeTag(tag)}
+                  >
+                    {tag} ✕
+                  </Badge>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Tags will be appended to any existing tags for duplicate contacts. "imported" is added automatically.
+            </p>
+          </div>
+        )}
 
         {/* Preview */}
         {contacts.length > 0 && (
