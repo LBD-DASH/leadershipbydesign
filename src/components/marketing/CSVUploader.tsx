@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 import {
   Table,
   TableBody,
@@ -98,45 +99,43 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
     if (!contacts.length) return;
     setImporting(true);
 
-    let imported = 0;
-    let skipped = 0;
+    const rows = contacts.map(c => ({
+      email: c.email.toLowerCase().trim(),
+      name: c.name || null,
+      company: c.company || null,
+      source: 'csv-import',
+      tags: ['imported'],
+      status: 'active',
+    }));
 
-    // Process in batches of 50 using upsert to handle duplicates gracefully
-    for (let i = 0; i < contacts.length; i += 50) {
-      const batch = contacts.slice(i, i + 50);
-      const rows = batch.map(c => ({
-        email: c.email.toLowerCase().trim(),
-        name: c.name || null,
-        company: c.company || null,
-        source: 'csv-import',
-        tags: ['imported'],
-        status: 'active',
-      }));
+    const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
 
-      const { data, error } = await supabase
-        .from('email_subscribers')
-        .upsert(rows, { onConflict: 'email', ignoreDuplicates: true })
-        .select('id');
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-subscribers', {
+        body: { action: 'bulk_upsert', rows },
+        headers: { 'x-admin-token': token },
+      });
 
-      if (error) {
-        console.warn('Batch upsert error:', error.message);
-        skipped += batch.length;
-      } else {
-        const insertedCount = data?.length ?? 0;
-        imported += insertedCount;
-        skipped += batch.length - insertedCount;
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Import failed');
+
+      const imported = data.imported ?? 0;
+      const skipped = data.skipped ?? 0;
+
+      setResult({ imported, skipped });
+      toast({
+        title: 'Import complete',
+        description: `${imported} contacts imported, ${skipped} skipped (duplicates).`,
+      });
+      if (imported > 0) {
+        onImportComplete?.();
       }
+    } catch (err: any) {
+      console.error('Import error:', err);
+      toast({ title: 'Import failed', description: err.message, variant: 'destructive' });
     }
 
-    setResult({ imported, skipped });
     setImporting(false);
-    toast({
-      title: 'Import complete',
-      description: `${imported} contacts imported, ${skipped} skipped (duplicates or errors).`,
-    });
-    if (imported > 0) {
-      onImportComplete?.();
-    }
   };
 
   return (

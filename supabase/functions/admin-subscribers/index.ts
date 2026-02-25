@@ -112,6 +112,36 @@ Deno.serve(async (req) => {
       return json({ success: true });
     }
 
+    // BULK UPSERT (CSV import)
+    if (action === 'bulk_upsert') {
+      const { rows } = body;
+      if (!Array.isArray(rows) || rows.length === 0) {
+        return json({ success: false, error: 'rows array is required' }, 400);
+      }
+
+      let imported = 0;
+      let skipped = 0;
+
+      // Process in batches of 50
+      for (let i = 0; i < rows.length; i += 50) {
+        const batch = rows.slice(i, i + 50);
+        const { data, error } = await supabase
+          .from('email_subscribers')
+          .upsert(batch, { onConflict: 'email', ignoreDuplicates: true })
+          .select('id');
+
+        if (error) {
+          skipped += batch.length;
+        } else {
+          const insertedCount = data?.length ?? 0;
+          imported += insertedCount;
+          skipped += batch.length - insertedCount;
+        }
+      }
+
+      return json({ success: true, imported, skipped });
+    }
+
     return json({ success: false, error: 'Unknown action' }, 400);
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Unexpected error';
