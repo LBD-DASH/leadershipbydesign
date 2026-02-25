@@ -82,6 +82,7 @@ import SurvivalPack from "./pages/products/SurvivalPack";
 import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
 import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
+import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -165,6 +166,7 @@ const App = () => (
           <Route path="/admin/infographics" element={<AdminInfographicsLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
           <Route path="/marketing" element={<MarketingDashboard />} />
+          <Route path="/client-alignment-index" element={<ClientAlignmentIndex />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route
             path="/blog-admin"
