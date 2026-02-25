@@ -16,6 +16,7 @@ import {
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 
 interface Draft {
   id: string;
@@ -43,30 +44,29 @@ export default function NewsletterComposer() {
     toast({ title: 'Advert inserted', description: 'Scroll down to see it in the editor.' });
   };
 
-  // Fetch active count, tags, and drafts
+  const getAdminToken = () => {
+    return sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
+  };
+
+  // Fetch active count, tags via edge function, and drafts
   useEffect(() => {
     const fetchData = async () => {
-      // Active count
-      let countQuery = supabase
-        .from('email_subscribers')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'active');
-      if (tagFilter) {
-        countQuery = countQuery.contains('tags', [tagFilter]);
+      // Count + tags via admin-subscribers edge function
+      try {
+        const { data: countData } = await supabase.functions.invoke('admin-subscribers', {
+          body: { action: 'count', tag: tagFilter || undefined },
+          headers: { 'x-admin-token': getAdminToken() },
+        });
+        if (countData?.success) {
+          setActiveCount(countData.count ?? 0);
+          setAllTags(countData.allTags || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch subscriber count:', err);
       }
-      const { count } = await countQuery;
-      setActiveCount(count ?? 0);
 
-      // All tags
-      const { data: subs } = await supabase
-        .from('email_subscribers')
-        .select('tags')
-        .eq('status', 'active');
-      const tags = new Set<string>();
-      (subs || []).forEach(s => (s.tags as string[] | null)?.forEach(t => tags.add(t)));
-      setAllTags(Array.from(tags).sort());
-
-      // Drafts
+      // Drafts (newsletter_sends uses same RLS pattern - fetch via edge function too if needed)
+      // For now drafts use direct query since newsletter_sends may have different access
       const { data: draftData } = await supabase
         .from('newsletter_sends')
         .select('id, subject, body_html, tag_filter, created_at')
@@ -96,7 +96,6 @@ export default function NewsletterComposer() {
       toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Draft saved!' });
-      // Refresh drafts
       const { data } = await supabase
         .from('newsletter_sends')
         .select('id, subject, body_html, tag_filter, created_at')
@@ -156,12 +155,14 @@ export default function NewsletterComposer() {
       setSubject('');
       setBody('');
       setTagFilter('');
-      // Refresh count
-      const { count } = await supabase
-        .from('email_subscribers')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'active');
-      setActiveCount(count ?? 0);
+      // Refresh count via edge function
+      try {
+        const { data: countData } = await supabase.functions.invoke('admin-subscribers', {
+          body: { action: 'count' },
+          headers: { 'x-admin-token': getAdminToken() },
+        });
+        if (countData?.success) setActiveCount(countData.count ?? 0);
+      } catch {}
     } catch (err: any) {
       console.error('Send newsletter error:', err);
       toast({
