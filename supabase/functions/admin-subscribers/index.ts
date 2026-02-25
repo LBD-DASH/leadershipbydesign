@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
       return json({ success: true });
     }
 
-    // BULK UPSERT (CSV import)
+    // BULK UPSERT (CSV import) — appends tags for existing contacts
     if (action === 'bulk_upsert') {
       const { rows } = body;
       if (!Array.isArray(rows) || rows.length === 0) {
@@ -125,17 +125,42 @@ Deno.serve(async (req) => {
       // Process in batches of 50
       for (let i = 0; i < rows.length; i += 50) {
         const batch = rows.slice(i, i + 50);
-        const { data, error } = await supabase
-          .from('email_subscribers')
-          .upsert(batch, { onConflict: 'email', ignoreDuplicates: true })
-          .select('id');
 
-        if (error) {
-          skipped += batch.length;
-        } else {
-          const insertedCount = data?.length ?? 0;
-          imported += insertedCount;
-          skipped += batch.length - insertedCount;
+        for (const row of batch) {
+          // Check if contact already exists
+          const { data: existing } = await supabase
+            .from('email_subscribers')
+            .select('id, tags')
+            .eq('email', row.email)
+            .maybeSingle();
+
+          if (existing) {
+            // Append new tags to existing tags (deduplicated)
+            const existingTags: string[] = existing.tags || [];
+            const newTags: string[] = row.tags || [];
+            const mergedTags = Array.from(new Set([...existingTags, ...newTags]));
+
+            await supabase
+              .from('email_subscribers')
+              .update({
+                tags: mergedTags,
+                name: row.name || undefined,
+                company: row.company || undefined,
+              })
+              .eq('id', existing.id);
+
+            skipped += 1;
+          } else {
+            const { error: insertErr } = await supabase
+              .from('email_subscribers')
+              .insert(row);
+
+            if (insertErr) {
+              skipped += 1;
+            } else {
+              imported += 1;
+            }
+          }
         }
       }
 
