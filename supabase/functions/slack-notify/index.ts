@@ -146,13 +146,15 @@ function buildPurchaseBlocks(data: Record<string, any>) {
 }
 
 function buildNewsletterGeneratedBlocks(data: Record<string, any>) {
+  const isManual = data.manualDraft;
+  const headerText = isManual ? '✏️ Newsletter Draft Saved' : '📬 Newsletter Ready for Approval';
   const buttons: any[] = [];
-  if (data.approveUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '✅ Approve' }, url: data.approveUrl, style: 'primary' });
-  if (data.rejectUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '❌ Reject' }, url: data.rejectUrl, style: 'danger' });
+  if (!isManual && data.approveUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '✅ Approve' }, url: data.approveUrl, style: 'primary' });
+  if (!isManual && data.rejectUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '❌ Reject' }, url: data.rejectUrl, style: 'danger' });
 
   return [
-    { type: 'header', text: { type: 'plain_text', text: '📬 Newsletter Ready for Approval', emoji: true } },
-    { type: 'section', text: { type: 'mrkdwn', text: `*Subject:* "${data.subject || '—'}"\n*Topic:* ${data.topic || '—'}` } },
+    { type: 'header', text: { type: 'plain_text', text: headerText, emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*Subject:* "${data.subject || '—'}"${isManual ? '\n_Manually composed — ready for review_' : `\n*Topic:* ${data.topic || '—'}`}` } },
     ...(data.sourceCount ? [{ type: 'context', elements: [{ type: 'mrkdwn', text: `📚 ${data.sourceCount} sources analyzed` }] }] : []),
     ...(buttons.length ? [{ type: 'actions', elements: buttons }] : []),
     { type: 'context', elements: [{ type: 'mrkdwn', text: `${sast()} SAST` }] },
