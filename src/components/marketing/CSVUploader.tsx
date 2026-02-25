@@ -84,17 +84,26 @@ export default function CSVUploader() {
         status: 'active',
       }));
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('email_subscribers')
-        .upsert(rows, { onConflict: 'email', ignoreDuplicates: true })
+        .insert(rows)
         .select();
 
       if (error) {
-        console.error('Import batch error:', error);
-        skipped += batch.length;
+        // Duplicates will cause unique constraint errors - try one by one
+        console.warn('Batch insert had conflicts, inserting individually:', error.message);
+        for (const row of rows) {
+          const { error: singleErr } = await supabase
+            .from('email_subscribers')
+            .insert(row);
+          if (singleErr) {
+            skipped += 1;
+          } else {
+            imported += 1;
+          }
+        }
       } else {
-        imported += data?.length || 0;
-        skipped += batch.length - (data?.length || 0);
+        imported += batch.length;
       }
     }
 
