@@ -6,41 +6,44 @@ const corsHeaders = {
 };
 
 // Products/tools to embed as soft ads
+// CRITICAL: The ONLY correct domain is leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other variant
+const SITE_DOMAIN = 'https://www.leadershipbydesign.co';
+
 const PRODUCT_ADS = [
   {
     name: 'SHIFT Leadership Development',
     description: 'A 90-day system delivering 40% productivity gains through 5 core leadership skills.',
-    url: 'https://leadershipbydesign.lovable.app/shift-methodology',
+    url: `${SITE_DOMAIN}/shift-methodology`,
     cta: 'Explore SHIFT →',
   },
   {
     name: 'Leadership Index Diagnostic',
     description: 'Discover your leadership level with our free 5-minute assessment.',
-    url: 'https://leadershipbydesign.lovable.app/leadership-diagnostic',
+    url: `${SITE_DOMAIN}/leadership-diagnostic`,
     cta: 'Take the Free Diagnostic →',
   },
   {
     name: 'Executive Coaching',
     description: 'One-on-one strategic coaching for C-suite leaders ready to scale impact.',
-    url: 'https://leadershipbydesign.lovable.app/executive-coaching',
+    url: `${SITE_DOMAIN}/executive-coaching`,
     cta: 'Book a Discovery Call →',
   },
   {
     name: 'Contagious Identity Workbook',
     description: 'The executive workbook for building authentic leadership presence.',
-    url: 'https://leadershipbydesign.lovable.app/products/contagious-identity-workbook',
+    url: `${SITE_DOMAIN}/products/contagious-identity-workbook`,
     cta: 'Get the Workbook →',
   },
   {
     name: 'Team Alignment Workshop',
     description: 'Get your team rowing in the same direction with a focused half-day session.',
-    url: 'https://leadershipbydesign.lovable.app/workshops/alignment',
+    url: `${SITE_DOMAIN}/workshops/alignment`,
     cta: 'Learn More →',
   },
   {
     name: 'Feedback Formula',
     description: 'Master the art of giving feedback that drives performance without damaging trust.',
-    url: 'https://leadershipbydesign.lovable.app/products/feedback-formula',
+    url: `${SITE_DOMAIN}/products/feedback-formula`,
     cta: 'Get the Feedback Formula →',
   },
 ];
@@ -160,6 +163,8 @@ CRITICAL RULES:
 - The newsletter must be authoritative, practical, and position Kevin/Leadership by Design as the expert.
 - Include at least one actionable solution readers can use immediately.
 - Write in a confident, warm, executive tone — no fluff.
+- ABSOLUTELY CRITICAL: The ONLY correct website is www.leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other domain variant. If you mention the website, use ONLY www.leadershipbydesign.co.
+- Do NOT invent or hallucinate any URLs, programs, or offerings that don't exist.
 
 OUTPUT FORMAT (JSON):
 {
@@ -170,7 +175,7 @@ OUTPUT FORMAT (JSON):
   "why_it_matters": "1-2 paragraphs on urgency and relevance",
   "practical_solutions": ["Solution 1 with detail", "Solution 2 with detail", "Solution 3 with detail"],
   "strategic_insight": "One deeper insight connecting to leadership frameworks (SHIFT, Leadership Levels, etc.)",
-  "closing_cta": "Compelling call-to-action paragraph"
+  "closing_cta": "Compelling call-to-action paragraph — use www.leadershipbydesign.co if linking"
 }`,
         messages: [{
           role: 'user',
