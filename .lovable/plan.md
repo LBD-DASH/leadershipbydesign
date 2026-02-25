@@ -1,68 +1,189 @@
 
 
-# Fix Newsletter Contact System -- Two Root Cause Fixes
+# Slack Command Center -- Complete Build Plan
 
-## What's Actually Broken
+## Overview
+Build a multi-channel Slack notification system that turns your Slack workspace into a real-time command center for Leadership by Design. Every key business event fires a structured, rich Slack message to the right channel.
 
-1. **CSV Import returns 409 for every contact** -- uses `insert` instead of `upsert`, so duplicate emails fail instead of merging
-2. **Contacts tab shows nothing** -- RLS requires Supabase Auth for SELECT, but admin uses client-side token auth (anon key), so reads are silently blocked
+## Prerequisites (Already Done)
+- Slack bot connector is linked to the project
+- `SLACK_API_KEY` and `LOVABLE_API_KEY` are available as environment variables
+- Bot has `chat:write`, `chat:write.customize` scopes (confirmed)
 
-## Fix 1: CSV Uploader -- Use Upsert Instead of Insert
+## Step 1: Create Your Slack Channels
 
-**File**: `src/components/marketing/CSVUploader.tsx`
+Before we deploy, you need to create these 4 channels in Slack (the bot can post to any public channel automatically):
 
-Change the batch insert to use `.upsert()` with `onConflict: 'email'` and `ignoreDuplicates: true`. This tells the database to skip rows where the email already exists instead of throwing a 409 error.
+| Channel | Purpose |
+|---|---|
+| `#mission-control` | Critical alerts only: purchases, newsletter sent, traction spikes |
+| `#newsletter-engine` | Newsletter lifecycle: drafted, approval needed, approved, rejected, performance |
+| `#leads-and-signups` | New subscribers, contact forms, coaching inquiries, diagnostic completions |
+| `#system-health` | Errors, failures, technical issues |
 
-- Replace `.insert(rows)` with `.upsert(rows, { onConflict: 'email', ignoreDuplicates: true })`
-- Remove the individual fallback loop (no longer needed since upsert handles conflicts)
-- The upsert will insert new contacts and silently skip existing ones
+Products/revenue events go to `#mission-control` to keep signal density high. Analytics intelligence will be added as a Phase 2 feature.
 
-## Fix 2: Contacts Tab -- Add Edge Function for Admin Reads
+## Step 2: Create `slack-notify` Edge Function
 
-**Why the Contacts tab is empty**: The `SubscriberManager` component queries `email_subscribers` using the anon key. RLS only allows SELECT for `authenticated` users, but the admin isn't logged in via Supabase Auth -- they use a hardcoded token in sessionStorage. The anon key has no SELECT permission.
+A single, centralized backend function that all other functions call to post Slack messages.
 
-**Solution**: Create an `admin-subscribers` edge function (following the existing `admin-prospects` pattern) that:
-- Accepts the admin token via `x-admin-token` header
-- Validates it matches the master token
-- Uses the service role key to query `email_subscribers` (bypasses RLS)
-- Supports search, tag filtering, updates, and status toggles
+**How it works:**
+- Accepts a JSON payload with `eventType`, `channel`, and `data`
+- Formats a rich Slack Block Kit message based on the event type
+- Posts via the Slack connector gateway at `https://connector-gateway.lovable.dev/slack/api/chat.postMessage`
+- Uses `chat:write.customize` to set contextual bot names and icons per event type
 
-**New file**: `supabase/functions/admin-subscribers/index.ts`
-- GET: Fetch subscribers with optional `search` and `tag` query params
-- PUT: Update subscriber name/company/tags
-- PATCH: Toggle subscriber status (active/unsubscribed)
+**Supported event types and their channels:**
 
-**Updated file**: `src/components/marketing/SubscriberManager.tsx`
-- Replace direct Supabase client calls with `supabase.functions.invoke('admin-subscribers', ...)`
-- Pass the admin token from sessionStorage in the request headers
-- All CRUD operations go through the edge function
+| Event | Channel | Bot Name | Icon |
+|---|---|---|---|
+| `new_lead` | `#leads-and-signups` | LBD Lead Alert | Depends on temperature |
+| `new_signup` | `#leads-and-signups` | LBD Growth | Envelope emoji |
+| `purchase` | `#mission-control` | LBD Revenue | Money emoji |
+| `newsletter_generated` | `#newsletter-engine` | LBD Newsletter | Newspaper emoji |
+| `newsletter_approved` | `#mission-control` + `#newsletter-engine` | LBD Newsletter | Checkmark emoji |
+| `newsletter_rejected` | `#newsletter-engine` | LBD Newsletter | X emoji |
+| `traction_alert` | `#mission-control` | LBD Traction | Fire emoji |
+| `system_error` | `#system-health` | LBD System | Warning emoji |
 
-## Fix 3: Newsletter Composer Contact Count
+**Security:** Internal function-to-function calls use `SUPABASE_SERVICE_ROLE_KEY`. External apps use `x-admin-token` header validation.
 
-**File**: `src/components/marketing/NewsletterComposer.tsx`
+**Channel resolution:** The function will look up channel IDs by name using `conversations.list` and cache them in memory for the function's lifecycle.
 
-The composer also queries `email_subscribers` directly to get active contact counts and tags. Update it to use the same `admin-subscribers` edge function for the count query.
+## Step 3: Wire Into Existing Edge Functions
 
-## Summary of Changes
+### 3a. `send-lead-notification` (leads and coaching inquiries)
+After sending the existing email alerts, add a non-blocking call to `slack-notify` with:
+- Lead name, email, company, score, temperature
+- AI recommendation summary
+- Source (diagnostic, contact form, coaching inquiry)
+- Hot leads also post to `#mission-control`
+
+### 3b. `generate-ai-newsletter` (newsletter drafted)
+After saving the draft and sending the approval email to Kevin, fire a `newsletter_generated` event with:
+- Topic and subject line
+- Direct approve/reject links (same ones in the email)
+- Number of sources analyzed
+
+### 3c. `approve-newsletter` (newsletter approved or rejected)
+After processing the action, fire either `newsletter_approved` or `newsletter_rejected`:
+- Approved: subject, recipient count, sent timestamp -- posts to both `#mission-control` and `#newsletter-engine`
+- Rejected: subject only -- posts to `#newsletter-engine`
+
+### 3d. `send-purchase-email` (product sale)
+After sending buyer and admin emails, fire a `purchase` event to `#mission-control`:
+- Product name, buyer name/email, payment reference
+- Timestamp in SAST
+
+### 3e. `ExitIntentPopup.tsx` (new signup from frontend)
+After successful subscriber insert, call the `slack-notify` function directly from the frontend via `supabase.functions.invoke()`:
+- Subscriber name, email, source
+- This goes to `#leads-and-signups`
+
+## Step 4: Newsletter Traction Alerts
+
+Add threshold-based alerting to the `track-newsletter` function:
+
+- After recording each open/click event, count total opens and clicks for that newsletter
+- Query `newsletter_sends` for `recipient_count`
+- If open rate exceeds 40% and no alert has been sent yet, fire a `traction_alert` to `#mission-control`
+- If click count exceeds 50 and no alert has been sent yet, fire a `traction_alert`
+
+**Database change:** Add two boolean columns to `newsletter_sends`:
+- `slack_open_alert_sent` (default false)
+- `slack_click_alert_sent` (default false)
+
+These prevent duplicate alerts for the same campaign.
+
+## Step 5: Error Handling as Signal
+
+All `slack-notify` calls are non-blocking (fire-and-forget). If Slack posting fails, it logs to console but never breaks the primary business logic (email sending, purchase processing, etc.).
+
+If the `slack-notify` function itself encounters a critical error (missing API keys, gateway down), it posts to `#system-health` as a fallback or simply logs.
+
+## Example Slack Messages
+
+**Hot Lead (Block Kit):**
+```text
++----------------------------------+
+| HOT LEAD ALERT                   |
+| Score: 87/100                    |
+|                                  |
+| Name:    Sarah van der Berg      |
+| Email:   sarah@bigcorp.co.za     |
+| Company: BigCorp (Enterprise)    |
+| Source:  Leadership Diagnostic   |
+|                                  |
+| AI: Decision-maker showing       |
+| urgency. Call within 2 hours.    |
++----------------------------------+
+```
+
+**Newsletter Ready:**
+```text
++----------------------------------+
+| NEWSLETTER READY FOR APPROVAL    |
+|                                  |
+| "Why Leaders Are Struggling      |
+| with Decision Fatigue"           |
+|                                  |
+| Sources: 7 analyzed              |
+|                                  |
+| [ Approve ]  [ Reject ]         |
++----------------------------------+
+```
+
+**New Sale:**
+```text
++----------------------------------+
+| NEW SALE                         |
+|                                  |
+| Product:   New Manager Kit       |
+| Buyer:     John Smith            |
+| Amount:    R497                  |
+| Reference: PAY-abc123           |
+| Time:      14:03 SAST           |
++----------------------------------+
+```
+
+**Traction Alert:**
+```text
++----------------------------------+
+| TRACTION ALERT                   |
+|                                  |
+| Campaign: "CEOs cite             |
+| uncertainty..."                  |
+| Open Rate: 48% (target: 40%)    |
+| Recipients: 36                   |
++----------------------------------+
+```
+
+## Files to Create
+
+| File | Purpose |
+|---|---|
+| `supabase/functions/slack-notify/index.ts` | Core notification engine |
+
+## Files to Modify
 
 | File | Change |
-|------|--------|
-| `src/components/marketing/CSVUploader.tsx` | Replace `insert` with `upsert` using `onConflict: 'email'` |
-| `supabase/functions/admin-subscribers/index.ts` | New edge function for admin CRUD on subscribers |
-| `src/components/marketing/SubscriberManager.tsx` | Route all queries through edge function |
-| `src/components/marketing/NewsletterComposer.tsx` | Route count/tag queries through edge function |
+|---|---|
+| `supabase/functions/send-lead-notification/index.ts` | Add Slack call after email send |
+| `supabase/functions/generate-ai-newsletter/index.ts` | Add Slack call after draft saved |
+| `supabase/functions/approve-newsletter/index.ts` | Add Slack call on approve/reject |
+| `supabase/functions/send-purchase-email/index.ts` | Add Slack call after purchase emails |
+| `supabase/functions/track-newsletter/index.ts` | Add threshold check + Slack traction alert |
+| `src/components/ExitIntentPopup.tsx` | Add Slack call after signup |
 
-## Why NOT a Full Rebuild
+## Database Migration
 
-Your existing system already has:
-- Subscriber database with proper schema
-- Newsletter composer with rich text editor
-- Send functionality via Resend
-- Unsubscribe flow
-- Tag-based segmentation
-- Draft saving and scheduling
-- CSV import UI
-- Send history
+```text
+ALTER TABLE newsletter_sends
+  ADD COLUMN slack_open_alert_sent boolean DEFAULT false,
+  ADD COLUMN slack_click_alert_sent boolean DEFAULT false;
+```
 
-It just has two bugs (insert vs upsert, and RLS blocking reads). Fixing those two issues makes everything work end-to-end.
+## Multi-App Support (Built In)
+
+The `slack-notify` function accepts a `sourceApp` field. Any future app (SHIFT, Startup SA) can POST to it with an `x-admin-token` header and a valid payload to send alerts to the same channels. No additional setup needed.
 
