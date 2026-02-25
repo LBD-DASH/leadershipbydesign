@@ -3,7 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CSVUploader from './CSVUploader';
 import NewsletterComposer from './NewsletterComposer';
 import NewsletterHistory from './NewsletterHistory';
-import { Upload, PenTool, History } from 'lucide-react';
+import SubscriberManager from './SubscriberManager';
+import { Upload, PenTool, History, Users } from 'lucide-react';
 
 export default function NewsletterTab() {
   const [subTab, setSubTab] = useState('compose');
@@ -16,18 +17,25 @@ export default function NewsletterTab() {
             <PenTool className="w-4 h-4" />
             Compose
           </TabsTrigger>
+          <TabsTrigger value="contacts" className="gap-2">
+            <Users className="w-4 h-4" />
+            Contacts
+          </TabsTrigger>
           <TabsTrigger value="upload" className="gap-2">
             <Upload className="w-4 h-4" />
-            Upload Contacts
+            Upload
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2">
             <History className="w-4 h-4" />
-            Send History
+            History
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="compose">
           <NewsletterComposer />
+        </TabsContent>
+        <TabsContent value="contacts">
+          <SubscriberManager />
         </TabsContent>
         <TabsContent value="upload">
           <CSVUploader />
