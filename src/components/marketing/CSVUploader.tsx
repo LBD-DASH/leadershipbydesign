@@ -86,8 +86,7 @@ export default function CSVUploader() {
 
       const { error } = await supabase
         .from('email_subscribers')
-        .insert(rows)
-        .select();
+        .insert(rows);
 
       if (error) {
         // Duplicates will cause unique constraint errors - try one by one
