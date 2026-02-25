@@ -19,7 +19,7 @@ interface ParsedContact {
   company?: string;
 }
 
-export default function CSVUploader() {
+export default function CSVUploader({ onImportComplete }: { onImportComplete?: () => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [contacts, setContacts] = useState<ParsedContact[]>([]);
   const [importing, setImporting] = useState(false);
@@ -141,6 +141,9 @@ export default function CSVUploader() {
       title: 'Import complete',
       description: `${imported} contacts imported, ${skipped} skipped (duplicates or errors).`,
     });
+    if (imported > 0) {
+      onImportComplete?.();
+    }
   };
 
   return (

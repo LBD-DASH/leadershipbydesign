@@ -38,7 +38,7 @@ export default function NewsletterTab() {
           <SubscriberManager />
         </TabsContent>
         <TabsContent value="upload">
-          <CSVUploader />
+          <CSVUploader onImportComplete={() => setSubTab('contacts')} />
         </TabsContent>
         <TabsContent value="history">
           <NewsletterHistory />
