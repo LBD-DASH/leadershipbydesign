@@ -60,6 +60,17 @@ async function postSlack(
     return;
   }
 
+  // Auto-join the channel before posting
+  try {
+    await fetch(`${GATEWAY_URL}/conversations.join`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ channel: channelId }),
+    });
+  } catch (e) {
+    // Non-fatal — bot may already be in channel
+  }
+
   const body: Record<string, any> = { channel: channelId, blocks, text };
   if (username) body.username = username;
   if (iconEmoji) body.icon_emoji = iconEmoji;
