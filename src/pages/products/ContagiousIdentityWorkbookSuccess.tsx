@@ -112,8 +112,8 @@ export default function ContagiousIdentityWorkbookSuccess() {
                 <h2 className="text-xl font-semibold">Ready for Guided Coaching?</h2>
               </div>
               <p className="text-muted-foreground mb-6">
-                Your R697 workbook purchase is fully credited if you upgrade to our 
-                Executive Coaching programme within 90 days. Walk through the workbook 
+                Your R2,700 programme purchase is fully credited if you upgrade to our 
+                Executive Coaching package within 90 days. Walk through the programme 
                 with an experienced coach and accelerate your identity transformation.
               </p>
               <Button asChild variant="outline" className="w-full">

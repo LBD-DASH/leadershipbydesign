@@ -574,10 +574,10 @@ export default function ContagiousIdentityCoaching() {
                   <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-semibold text-lg">Buy Standalone</h3>
-                      <span className="text-2xl font-bold text-primary">R697</span>
+                      <span className="text-2xl font-bold text-primary">R2,700</span>
                     </div>
                     <p className="text-sm text-gray-400 mb-4">
-                      Work through the material at your own pace. Upgrade to coaching within 90 days and get the R697 credited.
+                      Work through the 10-module programme at your own pace. Upgrade to coaching within 90 days and get the R2,700 credited.
                     </p>
                     <Button asChild className="w-full">
                       <a href="/contagious-identity-workbook">

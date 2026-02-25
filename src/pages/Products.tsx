@@ -92,9 +92,9 @@ const Products = () => {
     features: ["30-60-90 Day Roadmap", "Team Assessment Tools", "Weekly Reflection Templates", "Quick-Win Strategies"]
   }, {
     id: "contagious-identity-workbook",
-    title: "Contagious Identity Workbook",
-    shortDesc: "Build your leadership identity",
-    price: "R697",
+    title: "Contagious Identity™ Programme",
+    shortDesc: "10-module self-paced executive leadership system",
+    price: "R2,700",
     link: "/contagious-identity-workbook",
     image: contagiousIdentityHero,
     isExternal: false,
