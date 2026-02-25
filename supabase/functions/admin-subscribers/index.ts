@@ -36,25 +36,40 @@ Deno.serve(async (req) => {
 
     // LIST subscribers
     if (action === 'list') {
-      const { search, tag, limit: rawLimit } = body;
-      const limit = rawLimit || 5000;
+      const { search, tag } = body;
 
-      let query = supabase
-        .from('email_subscribers')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(limit);
+      // Paginate to overcome Supabase 1000-row default limit
+      const PAGE_SIZE = 1000;
+      let allRows: unknown[] = [];
+      let from = 0;
+      let keepGoing = true;
 
-      if (search) {
-        query = query.or(`email.ilike.%${search}%,name.ilike.%${search}%,company.ilike.%${search}%`);
+      while (keepGoing) {
+        let query = supabase
+          .from('email_subscribers')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .range(from, from + PAGE_SIZE - 1);
+
+        if (search) {
+          query = query.or(`email.ilike.%${search}%,name.ilike.%${search}%,company.ilike.%${search}%`);
+        }
+        if (tag) {
+          query = query.contains('tags', [tag]);
+        }
+
+        const { data, error } = await query;
+        if (error) return json({ success: false, error: error.message }, 500);
+
+        allRows = allRows.concat(data || []);
+        if (!data || data.length < PAGE_SIZE) {
+          keepGoing = false;
+        } else {
+          from += PAGE_SIZE;
+        }
       }
-      if (tag) {
-        query = query.contains('tags', [tag]);
-      }
 
-      const { data, error } = await query;
-      if (error) return json({ success: false, error: error.message }, 500);
-      return json({ success: true, data });
+      return json({ success: true, data: allRows });
     }
 
     // COUNT active subscribers (for composer)
