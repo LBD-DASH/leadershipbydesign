@@ -432,6 +432,31 @@ serve(async (req: Request): Promise<Response> => {
 
     console.log(`Lead notification sent for ${leadData.name} (${leadScore.temperature}) to: ${emailsSent.join(', ')}`);
 
+    // Fire Slack notification (non-blocking)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (supabaseUrl && serviceKey) {
+      fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${serviceKey}`,
+        },
+        body: JSON.stringify({
+          eventType: 'new_lead',
+          data: {
+            name: leadData.name,
+            email: leadData.email,
+            company: companyName,
+            score: leadScore.score,
+            temperature: leadScore.temperature,
+            source: leadData.source,
+            aiSummary: data.aiAnalysis?.slice(0, 200) || '',
+          },
+        }),
+      }).catch(e => console.error('Slack notify error:', e));
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true, 

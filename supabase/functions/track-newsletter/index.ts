@@ -43,6 +43,63 @@ Deno.serve(async (req) => {
         if (error) console.error('Tracking insert error:', error.message);
       });
 
+    // Traction threshold check (non-blocking)
+    if (newsletterId) {
+      (async () => {
+        try {
+          const { data: newsletter } = await supabase
+            .from('newsletter_sends')
+            .select('subject, recipient_count, slack_open_alert_sent, slack_click_alert_sent')
+            .eq('id', newsletterId)
+            .single();
+
+          if (!newsletter || !newsletter.recipient_count) return;
+
+          const { count: openCount } = await supabase
+            .from('newsletter_tracking')
+            .select('*', { count: 'exact', head: true })
+            .eq('newsletter_id', newsletterId)
+            .eq('event_type', 'open');
+
+          const { count: clickCount } = await supabase
+            .from('newsletter_tracking')
+            .select('*', { count: 'exact', head: true })
+            .eq('newsletter_id', newsletterId)
+            .eq('event_type', 'click');
+
+          const openRate = Math.round(((openCount || 0) / newsletter.recipient_count) * 100);
+
+          // Open rate threshold: 40%
+          if (openRate >= 40 && !newsletter.slack_open_alert_sent) {
+            await supabase.from('newsletter_sends').update({ slack_open_alert_sent: true }).eq('id', newsletterId);
+            fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
+              body: JSON.stringify({
+                eventType: 'traction_alert',
+                data: { subject: newsletter.subject, metric: 'Open Rate', value: `${openRate}%`, recipients: newsletter.recipient_count },
+              }),
+            }).catch(e => console.error('Slack traction error:', e));
+          }
+
+          // Click threshold: 50
+          if ((clickCount || 0) >= 50 && !newsletter.slack_click_alert_sent) {
+            await supabase.from('newsletter_sends').update({ slack_click_alert_sent: true }).eq('id', newsletterId);
+            fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
+              body: JSON.stringify({
+                eventType: 'traction_alert',
+                data: { subject: newsletter.subject, metric: 'Click Count', value: `${clickCount} clicks`, recipients: newsletter.recipient_count },
+              }),
+            }).catch(e => console.error('Slack traction error:', e));
+          }
+        } catch (e) {
+          console.error('Traction check error:', e);
+        }
+      })();
+    }
+
     // Click → redirect to destination
     if (event === 'click' && redirectUrl) {
       return Response.redirect(redirectUrl, 302);

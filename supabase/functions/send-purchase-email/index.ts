@@ -157,6 +157,27 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Purchase emails sent successfully");
 
+    // Fire Slack notification (non-blocking)
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (supabaseUrl && serviceKey) {
+      const amounts: Record<string, number> = { "survival-pack": 197, "new-manager-kit": 497, "bundle": 597 };
+      fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${serviceKey}` },
+        body: JSON.stringify({
+          eventType: 'purchase',
+          data: {
+            product: product,
+            name: displayName,
+            email,
+            amount: amounts[product] || 0,
+            reference: paymentReference || 'N/A',
+          },
+        }),
+      }).catch(e => console.error('Slack notify error:', e));
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -44,6 +44,13 @@ Deno.serve(async (req) => {
         .update({ approval_status: 'rejected', status: 'rejected' })
         .eq('id', newsletter.id);
 
+      // Slack notify (non-blocking)
+      fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
+        body: JSON.stringify({ eventType: 'newsletter_rejected', data: { subject: newsletter.subject } }),
+      }).catch(e => console.error('Slack notify error:', e));
+
       return new Response(htmlPage('Newsletter Rejected ❌', 'The newsletter has been rejected and will not be sent.'), {
         status: 200,
         headers: { 'Content-Type': 'text/html' },
@@ -143,6 +150,16 @@ Deno.serve(async (req) => {
       .eq('id', newsletter.id);
 
     console.log(`Newsletter sent to ${totalSent} subscribers.`);
+
+    // Slack notify (non-blocking)
+    fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
+      body: JSON.stringify({
+        eventType: 'newsletter_approved',
+        data: { subject: newsletter.subject, recipientCount: totalSent },
+      }),
+    }).catch(e => console.error('Slack notify error:', e));
 
     return new Response(htmlPage(
       'Newsletter Approved & Sent ✅',

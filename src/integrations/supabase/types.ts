@@ -1209,6 +1209,8 @@ export type Database = {
           research_topic: string | null
           sent_at: string | null
           sent_by: string | null
+          slack_click_alert_sent: boolean | null
+          slack_open_alert_sent: boolean | null
           status: string
           subject: string
           tag_filter: string | null
@@ -1225,6 +1227,8 @@ export type Database = {
           research_topic?: string | null
           sent_at?: string | null
           sent_by?: string | null
+          slack_click_alert_sent?: boolean | null
+          slack_open_alert_sent?: boolean | null
           status?: string
           subject: string
           tag_filter?: string | null
@@ -1241,6 +1245,8 @@ export type Database = {
           research_topic?: string | null
           sent_at?: string | null
           sent_by?: string | null
+          slack_click_alert_sent?: boolean | null
+          slack_open_alert_sent?: boolean | null
           status?: string
           subject?: string
           tag_filter?: string | null

@@ -354,6 +354,22 @@ OUTPUT FORMAT (JSON):
 
     console.log('Done! Newsletter generated and approval email sent.');
 
+    // Slack notify (non-blocking)
+    fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
+      body: JSON.stringify({
+        eventType: 'newsletter_generated',
+        data: {
+          subject: newsletter.subject_line,
+          topic: newsletter.topic,
+          sourceCount: sources.length,
+          approveUrl: approveUrl,
+          rejectUrl: rejectUrl,
+        },
+      }),
+    }).catch(e => console.error('Slack notify error:', e));
+
     return new Response(JSON.stringify({
       success: true,
       newsletter_id: savedNewsletter.id,
