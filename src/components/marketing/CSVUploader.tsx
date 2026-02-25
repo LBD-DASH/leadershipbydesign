@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Upload, FileText, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,24 +26,44 @@ export default function CSVUploader() {
   const [result, setResult] = useState<{ imported: number; skipped: number } | null>(null);
 
   const parseCSV = useCallback((text: string): ParsedContact[] => {
-    const lines = text.trim().split('\n');
+    const normalized = text
+      .replace(/^\uFEFF/, '')
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .trim();
+
+    const lines = normalized.split('\n').filter(Boolean);
     if (lines.length < 2) return [];
 
-    const headers = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g, ''));
-    const emailIdx = headers.indexOf('email');
+    const headerLine = lines[0].replace(/^\uFEFF/, '');
+    const delimiter = [',', ';', '\t']
+      .map((candidate) => ({
+        candidate,
+        count: (headerLine.match(new RegExp(`\\${candidate}`, 'g')) || []).length,
+      }))
+      .sort((a, b) => b.count - a.count)[0].candidate;
+
+    const splitRow = (row: string) =>
+      row.split(delimiter).map((cell) => cell.trim().replace(/^"|"$/g, ''));
+
+    const headers = splitRow(headerLine).map((h) => h.toLowerCase().replace(/^\uFEFF/, ''));
+    const emailIdx = headers.findIndex((h) => h.includes('email'));
     if (emailIdx === -1) return [];
 
     const nameIdx = headers.indexOf('name');
     const companyIdx = headers.indexOf('company');
 
-    return lines.slice(1).map(line => {
-      const cols = line.split(',').map(c => c.trim().replace(/"/g, ''));
-      return {
-        email: cols[emailIdx] || '',
-        name: nameIdx >= 0 ? cols[nameIdx] : undefined,
-        company: companyIdx >= 0 ? cols[companyIdx] : undefined,
-      };
-    }).filter(c => c.email && c.email.includes('@'));
+    return lines
+      .slice(1)
+      .map((line) => {
+        const cols = splitRow(line);
+        return {
+          email: cols[emailIdx] || '',
+          name: nameIdx >= 0 ? cols[nameIdx] : undefined,
+          company: companyIdx >= 0 ? cols[companyIdx] : undefined,
+        };
+      })
+      .filter((c) => /\S+@\S+\.\S+/.test(c.email));
   }, []);
 
   const handleFile = useCallback((f: File) => {
@@ -52,7 +72,16 @@ export default function CSVUploader() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      setContacts(parseCSV(text));
+      const parsed = parseCSV(text);
+      setContacts(parsed);
+
+      if (parsed.length === 0) {
+        toast({
+          title: 'Could not read contacts',
+          description: 'Please use a CSV with an Email column (name and company are optional).',
+          variant: 'destructive',
+        });
+      }
     };
     reader.readAsText(f);
   }, [parseCSV]);
