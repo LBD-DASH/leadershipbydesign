@@ -58,6 +58,7 @@ import LifeOSAuth from "./pages/LifeOSAuth";
 import Podcast from "./pages/Podcast";
 import PodcastEpisode from "./pages/PodcastEpisode";
 import ChatWidget from "./components/chat/ChatWidget";
+import ExitIntentPopup from "./components/ExitIntentPopup";
 import NewManagerKit from "./pages/products/NewManagerKit";
 import NewManagerKitSuccess from "./pages/products/NewManagerKitSuccess";
 import DifficultConversationsPlaybook from "./pages/products/DifficultConversationsPlaybook";
@@ -185,6 +186,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatWidget />
+        <ExitIntentPopup />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
