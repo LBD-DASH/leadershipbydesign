@@ -299,6 +299,7 @@ OUTPUT FORMAT (JSON):
         research_topic: newsletter.topic,
         research_sources: sources,
         sent_by: 'ai-auto',
+        tag_filter: 'entrecontact',
       })
       .select()
       .single();
