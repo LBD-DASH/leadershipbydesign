@@ -90,3 +90,6 @@ verify_jwt = false
 [functions.track-newsletter]
 verify_jwt = false
 
+[functions.slack-notify]
+verify_jwt = false
+

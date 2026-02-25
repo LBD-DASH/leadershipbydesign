@@ -72,6 +72,11 @@ export default function ExitIntentPopup() {
       } else {
         setSubmitted(true);
         toast({ title: 'Welcome aboard!', description: 'You\'ll hear from us soon.' });
+
+        // Slack notify (non-blocking)
+        supabase.functions.invoke('slack-notify', {
+          body: { eventType: 'new_signup', data: { name: name.trim() || '—', email: email.trim(), source: 'exit-intent' } },
+        }).catch(() => {});
       }
     } catch (err: any) {
       toast({ title: 'Something went wrong', description: err.message, variant: 'destructive' });
