@@ -672,10 +672,9 @@ export default function LeaderAsCoachSales() {
           </DialogHeader>
           <div className="w-full h-[600px]">
             <iframe
-              src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0vWqLCEuTZ8X0zT7aHrJg6Y0jlCkOZzYlKsX-eCHb5KB1PwGzJhQ6?gv=true"
+              src="https://calendar.app.google/seCHb5KB1PwGzJhQ6"
               className="w-full h-full border-0"
               title="Book a strategy call"
-              allow="camera; microphone"
             />
           </div>
         </DialogContent>
