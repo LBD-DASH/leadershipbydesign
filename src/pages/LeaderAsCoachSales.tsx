@@ -594,7 +594,7 @@ export default function LeaderAsCoachSales() {
           </DialogHeader>
           <div className="w-full h-[600px]">
             <iframe
-              src="https://calendar.app.google/seCHb5KB1PwGzJhQ6"
+              src="https://calendar.app.google/QvjXmUfXbfjrmrH78"
               className="w-full h-full border-0"
               title="Book a strategy call"
             />
