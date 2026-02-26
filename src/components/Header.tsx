@@ -13,7 +13,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology", "/contagious-identity", "/corporate-mind-reset"].some(
+  const isProgrammesActive = ["/leadership-diagnostic", "/team-diagnostic", "/programmes", "/workshops/alignment", "/workshops/motivation", "/workshops/leadership", "/shift-methodology", "/contagious-identity", "/corporate-mind-reset", "/leader-as-coach"].some(
     path => location.pathname.startsWith(path)
   );
 
@@ -88,6 +88,12 @@ const Header = () => {
                     className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     Corporate Mind Reset
+                  </Link>
+                  <Link 
+                    to="/leader-as-coach" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Leader as Coach
                   </Link>
                   <div className="border-t border-border my-1"></div>
                   <Link 
@@ -342,6 +348,13 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Corporate Mind Reset
+              </Link>
+              <Link 
+                to="/leader-as-coach" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Leader as Coach
               </Link>
               <Link 
                 to="/programmes" 
