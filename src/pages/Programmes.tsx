@@ -15,15 +15,15 @@ import StatsBar from "@/components/StatsBar";
 // --- Programme Card Data ---
 const programmes = [
   {
-    id: "leader-as-coach",
-    icon: MessageCircle,
-    title: "Leader as Coach",
-    tagline: "Transform leaders into effective coaches",
-    meta: "10 months • 5 phases",
-    price: "Enquire",
-    image: leaderAsCoachImage,
-    link: "/leader-as-coach",
-    tags: ["Trust Building", "Neuroscience", "Wellbeing"],
+    id: "ai-era",
+    icon: Bot,
+    title: "Leading in the AI Era",
+    tagline: "Move from AI uncertainty to confident integration",
+    meta: "6 weeks • Online + Coaching",
+    price: "From R35,000",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+    link: "/contact",
+    tags: ["AI Capabilities", "Human Edge", "Change Management"],
   },
   {
     id: "leadership-levels",
@@ -207,12 +207,12 @@ export default function Programmes() {
         <Header />
 
         <main className="pt-24 pb-16">
-          {/* Hero Offer — Leading in the AI Era */}
+          {/* Hero Offer — Leader as Coach */}
           <section className="relative overflow-hidden mb-0">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: `linear-gradient(135deg, hsla(200, 70%, 25%, 0.92) 0%, hsla(200, 60%, 35%, 0.85) 100%), url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80')`,
+                backgroundImage: `linear-gradient(135deg, hsl(var(--primary) / 0.92) 0%, hsl(var(--primary) / 0.78) 100%), url(${leaderAsCoachImage})`,
               }}
             />
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
@@ -223,32 +223,32 @@ export default function Programmes() {
                 className="grid md:grid-cols-2 gap-8 md:gap-12 items-center"
               >
                 <div>
-                  <span className="inline-block bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20">
+                  <span className="inline-block bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/20">
                     Featured Programme
                   </span>
-                  <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                    Leading in the AI Era
+                  <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4 leading-tight">
+                    Leader as Coach
                   </h1>
-                  <p className="text-white/80 text-base sm:text-lg mb-6 leading-relaxed">
-                    Move from AI uncertainty to confident integration in 6 weeks. Protect your Human Edge and build augmented workflows that enhance—not replace—human judgment.
+                  <p className="text-primary-foreground/80 text-base sm:text-lg mb-6 leading-relaxed">
+                    Turn your managers into coaching leaders in 90 days. Equip technical and operational managers with practical coaching tools that improve accountability, performance conversations, and team results.
                   </p>
-                  <div className="flex flex-wrap gap-3 mb-8 text-sm text-white/70">
-                    <span>6 weeks</span>
-                    <span className="text-white/30">•</span>
-                    <span>Online + Coaching</span>
-                    <span className="text-white/30">•</span>
-                    <span className="text-white font-semibold">From R35,000 per cohort</span>
+                  <div className="flex flex-wrap gap-3 mb-8 text-sm text-primary-foreground/70">
+                    <span>90-Day Accelerator</span>
+                    <span className="text-primary-foreground/30">•</span>
+                    <span>Hybrid Delivery</span>
+                    <span className="text-primary-foreground/30">•</span>
+                    <span className="text-primary-foreground font-semibold">Enquire for Pricing</span>
                   </div>
-                  <Link to="/contact">
+                  <Link to="/leader-as-coach">
                     <Button size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group">
-                      Get a Custom Quote
+                      Learn More
                       <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                 </div>
                 <div className="hidden md:flex flex-wrap gap-2 justify-end">
-                  {["AI Capabilities", "Human Edge", "POPI Act", "Augmented Workflows", "Change Management"].map((tag) => (
-                    <span key={tag} className="bg-white/10 text-white/90 text-xs px-3 py-1.5 rounded-full border border-white/10">
+                  {["Coaching Culture", "Accountability", "Performance Conversations", "Behaviour Change", "Needs-Based Coaching"].map((tag) => (
+                    <span key={tag} className="bg-white/10 text-primary-foreground/90 text-xs px-3 py-1.5 rounded-full border border-white/10">
                       {tag}
                     </span>
                   ))}
