@@ -1,113 +1,189 @@
 
 
-# Conversion Optimisation Plan: Leader as Coach Sales Page
+# Slack Command Center -- Complete Build Plan
 
-## Summary of Changes
+## Overview
+Build a multi-channel Slack notification system that turns your Slack workspace into a real-time command center for Leadership by Design. Every key business event fires a structured, rich Slack message to the right channel.
 
-### 1. Tighten Headline (Industry-Specific, Outcome-Driven)
+## Prerequisites (Already Done)
+- Slack bot connector is linked to the project
+- `SLACK_API_KEY` and `LOVABLE_API_KEY` are available as environment variables
+- Bot has `chat:write`, `chat:write.customize` scopes (confirmed)
 
-**Current:** "Turn Managers Into Leaders Who Can Coach and Drive Productivity in 90 Days"
+## Step 1: Create Your Slack Channels
 
-**New:** "Reduce Escalations, Improve Accountability, and Build Manager Coaching Capability in 90 Days — For Financial Services and Insurance Teams"
+Before we deploy, you need to create these 4 channels in Slack (the bot can post to any public channel automatically):
 
-**Subheadline updated to:** "A structured 90-day programme that equips promoted managers with the coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity."
+| Channel | Purpose |
+|---|---|
+| `#mission-control` | Critical alerts only: purchases, newsletter sent, traction spikes |
+| `#newsletter-engine` | Newsletter lifecycle: drafted, approval needed, approved, rejected, performance |
+| `#leads-and-signups` | New subscribers, contact forms, coaching inquiries, diagnostic completions |
+| `#system-health` | Errors, failures, technical issues |
 
-### 2. Remove Generic Language + Strengthen Pain Section
+Products/revenue events go to `#mission-control` to keep signal density high. Analytics intelligence will be added as a Phase 2 feature.
 
-Replace the `problemItems` array with concrete operational symptoms specific to the target buyer:
-- "Promoted managers avoiding difficult performance conversations — issues fester for months"
-- "Underperformance escalated to HR instead of coached directly by the line manager"
-- "Managers defaulting to micromanagement because they lack coaching frameworks"
-- "HR spending 40%+ of time on people issues that should be handled at manager level"
-- "New leaders promoted for technical skill but never trained to lead people"
-- "Exit interviews citing 'my manager' as the primary reason for leaving"
+## Step 2: Create `slack-notify` Edge Function
 
-### 3. Add Credibility Anchors (New Section After Problem)
+A single, centralized backend function that all other functions call to post Slack messages.
 
-Insert a **Social Proof / Results** section between the Problem and Promise sections with anonymised case-style outcomes:
+**How it works:**
+- Accepts a JSON payload with `eventType`, `channel`, and `data`
+- Formats a rich Slack Block Kit message based on the event type
+- Posts via the Slack connector gateway at `https://connector-gateway.lovable.dev/slack/api/chat.postMessage`
+- Uses `chat:write.customize` to set contextual bot names and icons per event type
 
-- **Financial Services Firm (800+ employees):** "Manager-led performance conversations increased from 20% to 85% within 90 days. HR escalations dropped 47%."
-- **Insurance Group (1,200 employees):** "Internal promotion rate for leadership roles rose from 12% to 68% within 12 months of programme completion."
-- **Mid-size Corporate (350 employees):** "Staff turnover in coached divisions reduced from 32% to 14%. Estimated saving: R2.4M annually."
+**Supported event types and their channels:**
 
-Plus authority signals: "750+ workshops delivered | 4,000+ leaders developed | Trusted by Discovery, FNB, and 50+ organisations | Business School Faculty"
+| Event | Channel | Bot Name | Icon |
+|---|---|---|---|
+| `new_lead` | `#leads-and-signups` | LBD Lead Alert | Depends on temperature |
+| `new_signup` | `#leads-and-signups` | LBD Growth | Envelope emoji |
+| `purchase` | `#mission-control` | LBD Revenue | Money emoji |
+| `newsletter_generated` | `#newsletter-engine` | LBD Newsletter | Newspaper emoji |
+| `newsletter_approved` | `#mission-control` + `#newsletter-engine` | LBD Newsletter | Checkmark emoji |
+| `newsletter_rejected` | `#newsletter-engine` | LBD Newsletter | X emoji |
+| `traction_alert` | `#mission-control` | LBD Traction | Fire emoji |
+| `system_error` | `#system-health` | LBD System | Warning emoji |
 
-### 4. Simplify SHIFT Framework Section
+**Security:** Internal function-to-function calls use `SUPABASE_SERVICE_ROLE_KEY`. External apps use `x-admin-token` header validation.
 
-Reduce cognitive load — keep the 5-skill grid but remove the descriptions on mobile and remove the "AI Edge" sub-banner (it's off-topic for the conversion goal and adds noise).
+**Channel resolution:** The function will look up channel IDs by name using `conversations.list` and cache them in memory for the function's lifecycle.
 
-### 5. Clarify 3-Phase Process
+## Step 3: Wire Into Existing Edge Functions
 
-Simplify phase descriptions to single-line bullets. Remove the detailed topics list from Phase 2 (it adds cognitive load). Keep it scannable:
-- **Phase 01 — Diagnostic:** Leadership Index assessment + behavioural baseline mapping
-- **Phase 02 — Skills Installation:** 6 live coaching sessions: performance conversations, accountability, conflict, identity shift
-- **Phase 03 — Application & Reporting:** Real-case coaching practice, measurement, executive summary with ROI data
+### 3a. `send-lead-notification` (leads and coaching inquiries)
+After sending the existing email alerts, add a non-blocking call to `slack-notify` with:
+- Lead name, email, company, score, temperature
+- AI recommendation summary
+- Source (diagnostic, contact form, coaching inquiry)
+- Hot leads also post to `#mission-control`
 
-### 6. Strengthen CTA Copy + Add Urgency
+### 3b. `generate-ai-newsletter` (newsletter drafted)
+After saving the draft and sending the approval email to Kevin, fire a `newsletter_generated` event with:
+- Topic and subject line
+- Direct approve/reject links (same ones in the email)
+- Number of sources analyzed
 
-**Primary CTA:** "Book a 30-Minute Manager Capability Strategy Call"
+### 3c. `approve-newsletter` (newsletter approved or rejected)
+After processing the action, fire either `newsletter_approved` or `newsletter_rejected`:
+- Approved: subject, recipient count, sent timestamp -- posts to both `#mission-control` and `#newsletter-engine`
+- Rejected: subject only -- posts to `#newsletter-engine`
 
-**Add urgency strip** below hero CTAs:
-- "Limited to 4 cohorts per quarter | Next intake: Q2 2026 | 3 spots remaining"
+### 3d. `send-purchase-email` (product sale)
+After sending buyer and admin emails, fire a `purchase` event to `#mission-control`:
+- Product name, buyer name/email, payment reference
+- Timestamp in SAST
 
-**Final CTA section** updated headline: "Your Managers Won't Coach Themselves. Let's Fix That in 90 Days."
-Add sub-line: "Limited quarterly intake. Book now to secure your Q2 cohort spot."
+### 3e. `ExitIntentPopup.tsx` (new signup from frontend)
+After successful subscriber insert, call the `slack-notify` function directly from the frontend via `supabase.functions.invoke()`:
+- Subscriber name, email, source
+- This goes to `#leads-and-signups`
 
-### 7. Reduce Cognitive Load
+## Step 4: Newsletter Traction Alerts
 
-- Remove the **Assessments section** (section 7) as a standalone block — fold it into a single line under Phase 1 ("Includes 6 professional assessments: DISC, Values Blueprint, 360-Degree Feedback, and more")
-- Remove the **People-Profit-Process section** (section 8) entirely — it adds depth but not conversion value
-- Remove the **Personas section** (section 9) — fold "ideal industries" into the hero badges
-- Keep the **Guarantee** and **Facilitator** sections but make them more compact
-- Overall page goes from 12 sections down to ~8 tighter sections
+Add threshold-based alerting to the `track-newsletter` function:
 
-### 8. Add Mid-Page CTA
+- After recording each open/click event, count total opens and clicks for that newsletter
+- Query `newsletter_sends` for `recipient_count`
+- If open rate exceeds 40% and no alert has been sent yet, fire a `traction_alert` to `#mission-control`
+- If click count exceeds 50 and no alert has been sent yet, fire a `traction_alert`
 
-Insert a sticky/inline CTA after the outcomes section (section 5) to catch scrollers: "Ready to upgrade your managers? Book a strategy call" — preventing drop-off before reaching the bottom.
+**Database change:** Add two boolean columns to `newsletter_sends`:
+- `slack_open_alert_sent` (default false)
+- `slack_click_alert_sent` (default false)
 
----
+These prevent duplicate alerts for the same campaign.
 
-## Revised Page Structure
+## Step 5: Error Handling as Signal
 
-1. **Hero** — Tight headline, specific subheadline, urgency strip, dual CTAs
-2. **Problem** — 6 concrete operational symptoms with cost badges
-3. **Social Proof** — 3 anonymised case results + authority signals (NEW)
-4. **Promise** — "Behaviour change, not theory" (kept compact)
-5. **Outcomes** — What managers walk away with + executive reporting
-6. **Mid-page CTA** — Inline conversion point (NEW)
-7. **How It Works** — 3 phases, simplified
-8. **Guarantee** — Compact risk reversal
-9. **Facilitator** — Kevin Britz credentials (compact)
-10. **Final CTA** — Urgency-driven close
+All `slack-notify` calls are non-blocking (fire-and-forget). If Slack posting fails, it logs to console but never breaks the primary business logic (email sending, purchase processing, etc.).
 
----
+If the `slack-notify` function itself encounters a critical error (missing API keys, gateway down), it posts to `#system-health` as a fallback or simply logs.
 
-## Technical Details
+## Example Slack Messages
 
-**File modified:** `src/pages/LeaderAsCoachSales.tsx`
+**Hot Lead (Block Kit):**
+```text
++----------------------------------+
+| HOT LEAD ALERT                   |
+| Score: 87/100                    |
+|                                  |
+| Name:    Sarah van der Berg      |
+| Email:   sarah@bigcorp.co.za     |
+| Company: BigCorp (Enterprise)    |
+| Source:  Leadership Diagnostic   |
+|                                  |
+| AI: Decision-maker showing       |
+| urgency. Call within 2 hours.    |
++----------------------------------+
+```
 
-Key data changes:
-- Rewrite `problemItems` array with 6 operational-specific symptoms
-- Add `caseResults` array with 3 anonymised before/after data points
-- Update hero headline, subheadline, and badge text
-- Add urgency strip component below hero CTAs
-- Remove `assessments`, `personas`, `idealFor` arrays and their sections
-- Remove People-Profit-Process section
-- Simplify `phases` array descriptions
-- Add mid-page CTA section
-- Update all CTA button text to "Book a 30-Minute Manager Capability Strategy Call"
-- Update SEO title/description to match new headline
+**Newsletter Ready:**
+```text
++----------------------------------+
+| NEWSLETTER READY FOR APPROVAL    |
+|                                  |
+| "Why Leaders Are Struggling      |
+| with Decision Fatigue"           |
+|                                  |
+| Sources: 7 analyzed              |
+|                                  |
+| [ Approve ]  [ Reject ]         |
++----------------------------------+
+```
 
-**Estimated Psychological Impact:**
-- Headline specificity increases relevance signal for target buyer (+15-25% engagement)
-- Pain section with operational symptoms triggers loss aversion
-- Case results provide social proof and reduce perceived risk
-- Urgency language (limited cohorts) creates scarcity
-- Reduced page length improves completion rate and CTA visibility
-- Mid-page CTA captures high-intent scrollers who won't reach bottom
+**New Sale:**
+```text
++----------------------------------+
+| NEW SALE                         |
+|                                  |
+| Product:   New Manager Kit       |
+| Buyer:     John Smith            |
+| Amount:    R497                  |
+| Reference: PAY-abc123           |
+| Time:      14:03 SAST           |
++----------------------------------+
+```
 
-**Suggested A/B Test Variations:**
-- A: Current page vs B: Optimised page (full test)
-- Headline test: Industry-specific vs role-specific ("For HR Directors and L&D Leaders")
-- CTA test: "Strategy Call" vs "Manager Capability Assessment"
+**Traction Alert:**
+```text
++----------------------------------+
+| TRACTION ALERT                   |
+|                                  |
+| Campaign: "CEOs cite             |
+| uncertainty..."                  |
+| Open Rate: 48% (target: 40%)    |
+| Recipients: 36                   |
++----------------------------------+
+```
+
+## Files to Create
+
+| File | Purpose |
+|---|---|
+| `supabase/functions/slack-notify/index.ts` | Core notification engine |
+
+## Files to Modify
+
+| File | Change |
+|---|---|
+| `supabase/functions/send-lead-notification/index.ts` | Add Slack call after email send |
+| `supabase/functions/generate-ai-newsletter/index.ts` | Add Slack call after draft saved |
+| `supabase/functions/approve-newsletter/index.ts` | Add Slack call on approve/reject |
+| `supabase/functions/send-purchase-email/index.ts` | Add Slack call after purchase emails |
+| `supabase/functions/track-newsletter/index.ts` | Add threshold check + Slack traction alert |
+| `src/components/ExitIntentPopup.tsx` | Add Slack call after signup |
+
+## Database Migration
+
+```text
+ALTER TABLE newsletter_sends
+  ADD COLUMN slack_open_alert_sent boolean DEFAULT false,
+  ADD COLUMN slack_click_alert_sent boolean DEFAULT false;
+```
+
+## Multi-App Support (Built In)
+
+The `slack-notify` function accepts a `sourceApp` field. Any future app (SHIFT, Startup SA) can POST to it with an `x-admin-token` header and a valid payload to send alerts to the same channels. No additional setup needed.
 
