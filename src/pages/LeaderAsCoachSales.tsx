@@ -133,6 +133,7 @@ const idealFor = [
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
