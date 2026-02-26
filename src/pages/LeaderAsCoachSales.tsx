@@ -658,6 +658,28 @@ export default function LeaderAsCoachSales() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* CALENDAR POPUP */}
+      <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="font-serif text-2xl font-bold">
+              Book a 30-Minute Strategy Call
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Choose a time that works for you — no commitment required.
+            </p>
+          </DialogHeader>
+          <div className="w-full h-[600px]">
+            <iframe
+              src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0vWqLCEuTZ8X0zT7aHrJg6Y0jlCkOZzYlKsX-eCHb5KB1PwGzJhQ6?gv=true"
+              className="w-full h-full border-0"
+              title="Book a strategy call"
+              allow="camera; microphone"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
