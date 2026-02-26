@@ -350,6 +350,13 @@ const Header = () => {
                 Corporate Mind Reset
               </Link>
               <Link 
+                to="/leader-as-coach" 
+                className="block text-sm text-muted-foreground hover:text-foreground pl-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Leader as Coach
+              </Link>
+              <Link 
                 to="/programmes" 
                 className="block text-sm text-muted-foreground hover:text-foreground pl-3"
                 onClick={() => setMobileMenuOpen(false)}
