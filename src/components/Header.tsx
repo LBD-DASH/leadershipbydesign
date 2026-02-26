@@ -89,6 +89,12 @@ const Header = () => {
                   >
                     Corporate Mind Reset
                   </Link>
+                  <Link 
+                    to="/leader-as-coach" 
+                    className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    Leader as Coach
+                  </Link>
                   <div className="border-t border-border my-1"></div>
                   <Link 
                     to="/programmes" 
