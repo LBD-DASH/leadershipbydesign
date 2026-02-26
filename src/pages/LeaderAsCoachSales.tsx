@@ -590,12 +590,14 @@ export default function LeaderAsCoachSales() {
               Not "learn more." Not "download." A direct conversation about whether this is the right solution for your team.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Link to="https://calendar.app.google/seCHb5KB1PwGzJhQ6" target="_blank">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]">
-                  Book a Strategy Call
-                  <Calendar className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
+                onClick={() => setCalendarOpen(true)}
+              >
+                Book a Strategy Call
+                <Calendar className="ml-2 w-5 h-5" />
+              </Button>
               <Button
                 size="lg"
                 variant="outline"
