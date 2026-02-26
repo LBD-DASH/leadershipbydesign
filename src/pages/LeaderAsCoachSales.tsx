@@ -162,8 +162,7 @@ export default function LeaderAsCoachSales() {
               90-Day Leadership Accelerator
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-5 leading-tight">
-              Turn Your Managers Into Coaching Leaders in 90 Days —{" "}
-              <span className="opacity-80">Without Sending Them Back to Business School</span>
+              Turn Managers Into Leaders Who Can Coach and Drive Productivity in 90 Days
             </h1>
             <p className="text-primary-foreground/80 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
               Equip technical and operational managers with practical coaching tools that improve accountability, performance conversations, and team results.
