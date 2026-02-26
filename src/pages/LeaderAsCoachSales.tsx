@@ -133,6 +133,7 @@ const idealFor = [
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -227,12 +228,14 @@ export default function LeaderAsCoachSales() {
               Equip technical and operational managers with practical coaching tools that improve accountability, performance conversations, and team results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Link to="https://calendar.app.google/seCHb5KB1PwGzJhQ6" target="_blank">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]">
-                  Book a 30-Minute Strategy Call
-                  <Calendar className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
+                onClick={() => setCalendarOpen(true)}
+              >
+                Book a 30-Minute Strategy Call
+                <Calendar className="ml-2 w-5 h-5" />
+              </Button>
               <Button
                 size="lg"
                 variant="outline"
@@ -587,12 +590,14 @@ export default function LeaderAsCoachSales() {
               Not "learn more." Not "download." A direct conversation about whether this is the right solution for your team.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Link to="https://calendar.app.google/seCHb5KB1PwGzJhQ6" target="_blank">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]">
-                  Book a Strategy Call
-                  <Calendar className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
+                onClick={() => setCalendarOpen(true)}
+              >
+                Book a Strategy Call
+                <Calendar className="ml-2 w-5 h-5" />
+              </Button>
               <Button
                 size="lg"
                 variant="outline"
@@ -651,6 +656,27 @@ export default function LeaderAsCoachSales() {
               {submitting ? "Submitting..." : "Submit Enquiry"}
             </Button>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* CALENDAR POPUP */}
+      <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="font-serif text-2xl font-bold">
+              Book a 30-Minute Strategy Call
+            </DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              Choose a time that works for you — no commitment required.
+            </p>
+          </DialogHeader>
+          <div className="w-full h-[600px]">
+            <iframe
+              src="https://calendar.app.google/seCHb5KB1PwGzJhQ6"
+              className="w-full h-full border-0"
+              title="Book a strategy call"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>
