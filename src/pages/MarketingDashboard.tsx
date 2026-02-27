@@ -20,6 +20,7 @@ import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 import ContentEngine from '@/components/marketing/ContentEngine';
 import NewsletterTab from '@/components/marketing/NewsletterTab';
+import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
