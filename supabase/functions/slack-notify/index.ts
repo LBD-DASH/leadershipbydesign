@@ -219,6 +219,26 @@ function buildDailyLeadsDigestBlocks(data: Record<string, any>) {
   ];
 }
 
+function buildCadenceReminderBlocks(data: Record<string, any>) {
+  const buttons: any[] = [];
+  if (data.contactedUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '📞 Contacted' }, url: data.contactedUrl });
+  if (data.engagedUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '🤝 Engaged' }, url: data.engagedUrl, style: 'primary' });
+  if (data.bookedUrl) buttons.push({ type: 'button', text: { type: 'plain_text', text: '📅 Booked' }, url: data.bookedUrl, style: 'primary' });
+
+  return [
+    { type: 'header', text: { type: 'plain_text', text: `⏰ ${data.dayLabel} Follow-Up Due`, emoji: true } },
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Lead:*\n${data.leadName || '—'}` },
+      { type: 'mrkdwn', text: `*Company:*\n${data.leadCompany || '—'}` },
+    ]},
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Email:*\n${data.leadEmail || '—'}` },
+    ]},
+    ...(buttons.length ? [{ type: 'actions', elements: buttons }] : []),
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Warm Lead Cadence • ${sast()} SAST` }] },
+  ];
+}
+
 function buildDailyHealthCheckBlocks(data: Record<string, any>) {
   return [
     { type: 'header', text: { type: 'plain_text', text: '🩺 Daily System Health Check', emoji: true } },
@@ -312,6 +332,13 @@ const EVENT_CONFIG: Record<string, {
     icon: ':stethoscope:',
     buildBlocks: buildDailyHealthCheckBlocks,
     text: (d) => `Health check: ${d.activeSequences} active sequences, ${d.outreachSent} outreach sent`,
+  },
+  cadence_reminder: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Cadence',
+    icon: ':alarm_clock:',
+    buildBlocks: buildCadenceReminderBlocks,
+    text: (d) => `${d.dayLabel} follow-up due: ${d.leadName || 'Unknown'}`,
   },
 };
 
