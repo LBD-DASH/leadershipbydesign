@@ -1,169 +1,189 @@
 
 
-# Warm Lead 2-5-10 Follow-Up Cadence
+# Slack Command Center -- Complete Build Plan
 
-## What This Builds
+## Overview
+Build a multi-channel Slack notification system that turns your Slack workspace into a real-time command center for Leadership by Design. Every key business event fires a structured, rich Slack message to the right channel.
 
-An automated accountability system that tracks warm leads through a structured follow-up cadence. Kevin stays the sender -- the system enforces the discipline by sending reminder emails at Day 2, Day 5, and Day 10 if the prospect hasn't responded.
+## Prerequisites (Already Done)
+- Slack bot connector is linked to the project
+- `SLACK_API_KEY` and `LOVABLE_API_KEY` are available as environment variables
+- Bot has `chat:write`, `chat:write.customize` scopes (confirmed)
 
-## How It Works
+## Step 1: Create Your Slack Channels
 
+Before we deploy, you need to create these 4 channels in Slack (the bot can post to any public channel automatically):
+
+| Channel | Purpose |
+|---|---|
+| `#mission-control` | Critical alerts only: purchases, newsletter sent, traction spikes |
+| `#newsletter-engine` | Newsletter lifecycle: drafted, approval needed, approved, rejected, performance |
+| `#leads-and-signups` | New subscribers, contact forms, coaching inquiries, diagnostic completions |
+| `#system-health` | Errors, failures, technical issues |
+
+Products/revenue events go to `#mission-control` to keep signal density high. Analytics intelligence will be added as a Phase 2 feature.
+
+## Step 2: Create `slack-notify` Edge Function
+
+A single, centralized backend function that all other functions call to post Slack messages.
+
+**How it works:**
+- Accepts a JSON payload with `eventType`, `channel`, and `data`
+- Formats a rich Slack Block Kit message based on the event type
+- Posts via the Slack connector gateway at `https://connector-gateway.lovable.dev/slack/api/chat.postMessage`
+- Uses `chat:write.customize` to set contextual bot names and icons per event type
+
+**Supported event types and their channels:**
+
+| Event | Channel | Bot Name | Icon |
+|---|---|---|---|
+| `new_lead` | `#leads-and-signups` | LBD Lead Alert | Depends on temperature |
+| `new_signup` | `#leads-and-signups` | LBD Growth | Envelope emoji |
+| `purchase` | `#mission-control` | LBD Revenue | Money emoji |
+| `newsletter_generated` | `#newsletter-engine` | LBD Newsletter | Newspaper emoji |
+| `newsletter_approved` | `#mission-control` + `#newsletter-engine` | LBD Newsletter | Checkmark emoji |
+| `newsletter_rejected` | `#newsletter-engine` | LBD Newsletter | X emoji |
+| `traction_alert` | `#mission-control` | LBD Traction | Fire emoji |
+| `system_error` | `#system-health` | LBD System | Warning emoji |
+
+**Security:** Internal function-to-function calls use `SUPABASE_SERVICE_ROLE_KEY`. External apps use `x-admin-token` header validation.
+
+**Channel resolution:** The function will look up channel IDs by name using `conversations.list` and cache them in memory for the function's lifecycle.
+
+## Step 3: Wire Into Existing Edge Functions
+
+### 3a. `send-lead-notification` (leads and coaching inquiries)
+After sending the existing email alerts, add a non-blocking call to `slack-notify` with:
+- Lead name, email, company, score, temperature
+- AI recommendation summary
+- Source (diagnostic, contact form, coaching inquiry)
+- Hot leads also post to `#mission-control`
+
+### 3b. `generate-ai-newsletter` (newsletter drafted)
+After saving the draft and sending the approval email to Kevin, fire a `newsletter_generated` event with:
+- Topic and subject line
+- Direct approve/reject links (same ones in the email)
+- Number of sources analyzed
+
+### 3c. `approve-newsletter` (newsletter approved or rejected)
+After processing the action, fire either `newsletter_approved` or `newsletter_rejected`:
+- Approved: subject, recipient count, sent timestamp -- posts to both `#mission-control` and `#newsletter-engine`
+- Rejected: subject only -- posts to `#newsletter-engine`
+
+### 3d. `send-purchase-email` (product sale)
+After sending buyer and admin emails, fire a `purchase` event to `#mission-control`:
+- Product name, buyer name/email, payment reference
+- Timestamp in SAST
+
+### 3e. `ExitIntentPopup.tsx` (new signup from frontend)
+After successful subscriber insert, call the `slack-notify` function directly from the frontend via `supabase.functions.invoke()`:
+- Subscriber name, email, source
+- This goes to `#leads-and-signups`
+
+## Step 4: Newsletter Traction Alerts
+
+Add threshold-based alerting to the `track-newsletter` function:
+
+- After recording each open/click event, count total opens and clicks for that newsletter
+- Query `newsletter_sends` for `recipient_count`
+- If open rate exceeds 40% and no alert has been sent yet, fire a `traction_alert` to `#mission-control`
+- If click count exceeds 50 and no alert has been sent yet, fire a `traction_alert`
+
+**Database change:** Add two boolean columns to `newsletter_sends`:
+- `slack_open_alert_sent` (default false)
+- `slack_click_alert_sent` (default false)
+
+These prevent duplicate alerts for the same campaign.
+
+## Step 5: Error Handling as Signal
+
+All `slack-notify` calls are non-blocking (fire-and-forget). If Slack posting fails, it logs to console but never breaks the primary business logic (email sending, purchase processing, etc.).
+
+If the `slack-notify` function itself encounters a critical error (missing API keys, gateway down), it posts to `#system-health` as a fallback or simply logs.
+
+## Example Slack Messages
+
+**Hot Lead (Block Kit):**
 ```text
-Lead enters as "warm"
-       |
-       v
-+------------------+
-| Instant alert    |  --> Kevin gets notification email + Slack
-| to Kevin         |
-+------------------+
-       |
-       v
-  Kevin sends first reply (marks lead as "contacted")
-       |
-       v
-  Start 2-5-10 timer
-       |
-  Day 2: No reply? --> Reminder email to Kevin with follow-up template
-  Day 5: No reply? --> Reminder email to Kevin
-  Day 10: No reply? --> Final reminder email to Kevin
-       |
-  If prospect replies --> Status = "Engaged", stop sequence
-  If call booked     --> Status = "Booked Call", stop sequence
-  If Day 10 passes   --> Status = "Dormant", move to nurture
++----------------------------------+
+| HOT LEAD ALERT                   |
+| Score: 87/100                    |
+|                                  |
+| Name:    Sarah van der Berg      |
+| Email:   sarah@bigcorp.co.za     |
+| Company: BigCorp (Enterprise)    |
+| Source:  Leadership Diagnostic   |
+|                                  |
+| AI: Decision-maker showing       |
+| urgency. Call within 2 hours.    |
++----------------------------------+
 ```
 
-## Database Changes
+**Newsletter Ready:**
+```text
++----------------------------------+
+| NEWSLETTER READY FOR APPROVAL    |
+|                                  |
+| "Why Leaders Are Struggling      |
+| with Decision Fatigue"           |
+|                                  |
+| Sources: 7 analyzed              |
+|                                  |
+| [ Approve ]  [ Reject ]         |
++----------------------------------+
+```
 
-### New Table: `warm_lead_sequences`
+**New Sale:**
+```text
++----------------------------------+
+| NEW SALE                         |
+|                                  |
+| Product:   New Manager Kit       |
+| Buyer:     John Smith            |
+| Amount:    R497                  |
+| Reference: PAY-abc123           |
+| Time:      14:03 SAST           |
++----------------------------------+
+```
 
-Tracks each warm lead through the 2-5-10 cadence:
-
-| Column | Type | Purpose |
-|---|---|---|
-| id | uuid | Primary key |
-| lead_source_table | text | Which table the lead came from (contact_form_submissions, leadership_diagnostic, etc.) |
-| lead_source_id | uuid | ID of the original submission |
-| lead_name | text | Prospect name |
-| lead_email | text | Prospect email |
-| lead_company | text | Company name |
-| lead_phone | text | Phone if available |
-| lead_source_type | text | Source label (contact-form, leadership-diagnostic, etc.) |
-| lead_score | integer | Score at time of entry |
-| lead_temperature | text | Temperature at entry |
-| status | text | Current status: awaiting_first_contact, contacted, day_2_sent, day_5_sent, day_10_sent, engaged, booked_call, dormant |
-| contacted_at | timestamptz | When Kevin first reached out |
-| next_reminder_at | timestamptz | When next reminder should fire |
-| engaged_at | timestamptz | When prospect replied |
-| booked_at | timestamptz | When call was booked |
-| dormant_at | timestamptz | When moved to dormant |
-| notes | text | Kevin's notes |
-| created_at | timestamptz | Entry timestamp |
-| updated_at | timestamptz | Last update |
-
-RLS: Public INSERT (leads come from edge functions using service role), authenticated SELECT/UPDATE for admin dashboard access.
-
-## Backend Functions
-
-### 1. New: `create-warm-lead-sequence` edge function
-
-Called automatically by `send-lead-notification` when a warm or hot lead is detected.
-
-- Inserts a row into `warm_lead_sequences` with status `awaiting_first_contact`
-- Sets `next_reminder_at` to now (immediate -- Kevin should act fast)
-- Sends the initial notification (already happens via existing flow)
-- Fires Slack notification to `#leads-and-signups`
-
-### 2. New: `process-warm-lead-reminders` edge function
-
-Runs on a cron schedule (every hour, checks for due reminders):
-
-- Queries `warm_lead_sequences` where `next_reminder_at <= now()` and status is in the active states
-- For each due reminder:
-  - **Status "contacted" + Day 2 due**: Send Kevin a reminder email with a pre-drafted follow-up template. Update status to `day_2_sent`, set next reminder to Day 5.
-  - **Status "day_2_sent" + Day 5 due**: Send Kevin reminder. Update to `day_5_sent`, set next to Day 10.
-  - **Status "day_5_sent" + Day 10 due**: Send Kevin final reminder. Update to `day_10_sent`. Set next reminder to Day 11 for auto-dormant.
-  - **Status "day_10_sent" + Day 11**: Auto-mark as `dormant`. No more reminders.
-
-Reminder emails go to kevin@kevinbritz.com from `alerts@leadershipbydesign.co`, include lead details and a pre-written follow-up template for copy-paste.
-
-### 3. Modify: `send-lead-notification/index.ts`
-
-After sending the existing notification emails, add a call to `create-warm-lead-sequence` for warm and hot leads. Non-blocking, fire-and-forget.
-
-### 4. Cron Job
-
-Schedule `process-warm-lead-reminders` to run every hour using `pg_cron` + `pg_net`. This checks for due reminders and processes them.
-
-## Frontend: Warm Lead Dashboard Widget
-
-### New component: `WarmLeadCadence.tsx`
-
-Added as a new sub-tab or card within the existing Marketing Dashboard Leads tab. Shows:
-
-- **Summary cards**: Total warm leads this month | % responded within 2 hours | Currently in 2-5-10 sequence | Booked calls from warm leads | Conversion rate (warm to booked)
-- **Active sequence list**: Each lead with current status, days since contact, next reminder due, and action buttons:
-  - "Mark as Contacted" (starts the timer)
-  - "Mark as Engaged" (prospect replied -- stops sequence)
-  - "Mark as Booked" (call scheduled -- stops sequence)
-  - "Add Notes"
-- Colour-coded status badges (green = engaged/booked, yellow = in sequence, red = overdue, grey = dormant)
-
-### Integration into Marketing Dashboard
-
-Add a "Cadence" sub-section within the existing "Leads" tab in `SubmissionsPanel.tsx`, or as a new top-level tab. The widget queries `warm_lead_sequences` and provides the live view.
+**Traction Alert:**
+```text
++----------------------------------+
+| TRACTION ALERT                   |
+|                                  |
+| Campaign: "CEOs cite             |
+| uncertainty..."                  |
+| Open Rate: 48% (target: 40%)    |
+| Recipients: 36                   |
++----------------------------------+
+```
 
 ## Files to Create
 
 | File | Purpose |
 |---|---|
-| `supabase/functions/create-warm-lead-sequence/index.ts` | Creates sequence entry for warm/hot leads |
-| `supabase/functions/process-warm-lead-reminders/index.ts` | Hourly cron -- sends Kevin reminders at Day 2/5/10 |
-| `src/components/marketing/WarmLeadCadence.tsx` | Dashboard widget showing cadence status + actions |
+| `supabase/functions/slack-notify/index.ts` | Core notification engine |
 
 ## Files to Modify
 
 | File | Change |
 |---|---|
-| `supabase/functions/send-lead-notification/index.ts` | Add call to create-warm-lead-sequence for warm/hot leads |
-| `src/pages/MarketingDashboard.tsx` | Add Cadence tab or integrate into Leads tab |
+| `supabase/functions/send-lead-notification/index.ts` | Add Slack call after email send |
+| `supabase/functions/generate-ai-newsletter/index.ts` | Add Slack call after draft saved |
+| `supabase/functions/approve-newsletter/index.ts` | Add Slack call on approve/reject |
+| `supabase/functions/send-purchase-email/index.ts` | Add Slack call after purchase emails |
+| `supabase/functions/track-newsletter/index.ts` | Add threshold check + Slack traction alert |
+| `src/components/ExitIntentPopup.tsx` | Add Slack call after signup |
 
-## Reminder Email Templates
+## Database Migration
 
-**Day 2 reminder to Kevin:**
-> Subject: Day 2 Follow-Up Due: [Name] from [Company]
->
-> No reply yet from [Name] at [Company].
->
-> Here's a ready-to-send follow-up:
->
-> ---
-> Hi [Name],
->
-> Just circling back on my note from Monday. I know things move fast -- if now isn't right, happy to send a short overview you can review when it suits.
->
-> Kevin
-> ---
+```text
+ALTER TABLE newsletter_sends
+  ADD COLUMN slack_open_alert_sent boolean DEFAULT false,
+  ADD COLUMN slack_click_alert_sent boolean DEFAULT false;
+```
 
-**Day 5 reminder to Kevin:**
-> Subject: Day 5 — [Name] still hasn't replied
->
-> [Name] from [Company] hasn't responded. This is the mid-point nudge.
->
-> Consider a different angle: share a relevant case study or diagnostic link.
+## Multi-App Support (Built In)
 
-**Day 10 reminder to Kevin:**
-> Subject: Final Follow-Up Due: [Name] from [Company]
->
-> This is the last structured touchpoint for [Name]. After this, they move to long-term nurture.
->
-> Suggested final message: a brief, no-pressure close with an open door.
-
-## Sequence Logic Summary
-
-- Warm/hot lead detected --> sequence created automatically
-- Kevin marks "contacted" --> Day 0 starts, Day 2 reminder scheduled
-- Each reminder fires only if status hasn't changed to engaged/booked
-- Prospect replies --> Kevin clicks "Engaged" --> sequence stops
-- Call booked --> Kevin clicks "Booked" --> sequence stops
-- Day 10 passes with no action --> auto-dormant after 24 hours
+The `slack-notify` function accepts a `sourceApp` field. Any future app (SHIFT, Startup SA) can POST to it with an `x-admin-token` header and a valid payload to send alerts to the same channels. No additional setup needed.
 

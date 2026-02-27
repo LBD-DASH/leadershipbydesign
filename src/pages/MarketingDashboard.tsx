@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import SequenceStatusView from '@/components/marketing/SequenceStatusView';
 import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 import ContentEngine from '@/components/marketing/ContentEngine';
 import NewsletterTab from '@/components/marketing/NewsletterTab';
+import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -153,10 +154,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-10 w-full max-w-5xl">
+              <TabsList className="grid grid-cols-11 w-full max-w-6xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
+                </TabsTrigger>
+                <TabsTrigger value="cadence" className="flex items-center gap-2">
+                  <Flame className="w-4 h-4" />
+                  <span className="hidden sm:inline">Cadence</span>
                 </TabsTrigger>
                 <TabsTrigger value="prospects" className="flex items-center gap-2">
                   <Users className="w-4 h-4" />
@@ -198,6 +203,10 @@ export default function MarketingDashboard() {
 
               <TabsContent value="submissions" className="mt-6">
                 <SubmissionsPanel />
+              </TabsContent>
+
+              <TabsContent value="cadence" className="mt-6">
+                <WarmLeadCadence />
               </TabsContent>
 
               <TabsContent value="prospects" className="mt-6">
