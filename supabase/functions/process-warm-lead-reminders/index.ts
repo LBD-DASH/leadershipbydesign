@@ -11,12 +11,44 @@ function addDays(date: Date, days: number): Date {
   return d;
 }
 
+// Simple token generator (must match update-lead-status)
+function generateToken(sequenceId: string, action: string, secret: string): string {
+  let hash = 0;
+  const combined = `${sequenceId}:${action}:${secret}`;
+  for (let i = 0; i < combined.length; i++) {
+    const char = combined.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function buildStatusUrl(baseUrl: string, sequenceId: string, action: string, secret: string): string {
+  const token = generateToken(sequenceId, action, secret);
+  return `${baseUrl}/functions/v1/update-lead-status?id=${sequenceId}&action=${action}&token=${token}`;
+}
+
+function buildStatusButtons(baseUrl: string, sequenceId: string, secret: string): string {
+  const contactedUrl = buildStatusUrl(baseUrl, sequenceId, 'contacted', secret);
+  const engagedUrl = buildStatusUrl(baseUrl, sequenceId, 'engaged', secret);
+  const bookedUrl = buildStatusUrl(baseUrl, sequenceId, 'booked_call', secret);
+
+  return `
+  <div style="margin: 20px 0; text-align: center;">
+    <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Quick Status Update</p>
+    <a href="${contactedUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; margin: 4px;">📞 Contacted</a>
+    <a href="${engagedUrl}" style="display: inline-block; background: #10b981; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; margin: 4px;">🤝 Engaged</a>
+    <a href="${bookedUrl}" style="display: inline-block; background: #8b5cf6; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; margin: 4px;">📅 Booked</a>
+  </div>`;
+}
+
 function buildReminderEmail(
   leadName: string,
   leadCompany: string,
   leadEmail: string,
   leadPhone: string | null,
   stage: 'day_2' | 'day_5' | 'day_10',
+  statusButtons: string,
 ): { subject: string; html: string } {
   const company = leadCompany || 'their company';
 
@@ -32,6 +64,8 @@ function buildReminderEmail(
     <p style="margin: 0; color: #78350f;">No reply yet from <strong>${leadName}</strong> at <strong>${company}</strong>.</p>
   </div>
   
+  ${statusButtons}
+
   <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
     <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Contact Details</p>
     <p style="margin: 0;">📧 <a href="mailto:${leadEmail}">${leadEmail}</a></p>
@@ -71,6 +105,8 @@ function buildReminderEmail(
     <p style="margin: 0; color: #7c2d12;"><strong>${leadName}</strong> from <strong>${company}</strong> hasn't responded.</p>
   </div>
 
+  ${statusButtons}
+
   <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
     <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Contact Details</p>
     <p style="margin: 0;">📧 <a href="mailto:${leadEmail}">${leadEmail}</a></p>
@@ -107,6 +143,8 @@ function buildReminderEmail(
     <h2 style="margin: 0 0 8px 0; color: #991b1b;">🚨 Day 10 — Final Follow-Up</h2>
     <p style="margin: 0; color: #7f1d1d;">This is the last structured touchpoint for <strong>${leadName}</strong>. After this, they move to long-term nurture.</p>
   </div>
+
+  ${statusButtons}
 
   <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
     <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px; text-transform: uppercase;">Contact Details</p>
@@ -169,10 +207,22 @@ Deno.serve(async (req) => {
 
     for (const seq of dueSequences) {
       try {
+        // Build one-click status buttons for this sequence
+        const statusBtns = buildStatusButtons(supabaseUrl, seq.id, serviceKey);
+
+        // Build Slack action links
+        const contactedUrl = buildStatusUrl(supabaseUrl, seq.id, 'contacted', serviceKey);
+        const engagedUrl = buildStatusUrl(supabaseUrl, seq.id, 'engaged', serviceKey);
+        const bookedUrl = buildStatusUrl(supabaseUrl, seq.id, 'booked_call', serviceKey);
+
         if (seq.status === 'contacted') {
           // Day 2 reminder
-          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_2');
+          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_2', statusBtns);
           await sendEmail(RESEND_API_KEY, email.subject, email.html);
+          
+          // Slack reminder
+          await sendSlackReminder(supabaseUrl, serviceKey, seq, 'Day 2', contactedUrl, engagedUrl, bookedUrl);
+          
           await supabase.from('warm_lead_sequences').update({
             status: 'day_2_sent',
             next_reminder_at: addDays(new Date(seq.contacted_at), 5).toISOString(),
@@ -180,8 +230,11 @@ Deno.serve(async (req) => {
 
         } else if (seq.status === 'day_2_sent') {
           // Day 5 reminder
-          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_5');
+          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_5', statusBtns);
           await sendEmail(RESEND_API_KEY, email.subject, email.html);
+          
+          await sendSlackReminder(supabaseUrl, serviceKey, seq, 'Day 5', contactedUrl, engagedUrl, bookedUrl);
+          
           await supabase.from('warm_lead_sequences').update({
             status: 'day_5_sent',
             next_reminder_at: addDays(new Date(seq.contacted_at), 10).toISOString(),
@@ -189,8 +242,11 @@ Deno.serve(async (req) => {
 
         } else if (seq.status === 'day_5_sent') {
           // Day 10 reminder
-          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_10');
+          const email = buildReminderEmail(seq.lead_name, seq.lead_company, seq.lead_email, seq.lead_phone, 'day_10', statusBtns);
           await sendEmail(RESEND_API_KEY, email.subject, email.html);
+          
+          await sendSlackReminder(supabaseUrl, serviceKey, seq, 'Day 10 — FINAL', contactedUrl, engagedUrl, bookedUrl);
+          
           await supabase.from('warm_lead_sequences').update({
             status: 'day_10_sent',
             next_reminder_at: addDays(new Date(seq.contacted_at), 11).toISOString(),
@@ -243,5 +299,39 @@ async function sendEmail(apiKey: string, subject: string, html: string) {
     const errText = await res.text();
     console.error('Resend error:', res.status, errText);
     throw new Error(`Resend failed: ${res.status}`);
+  }
+}
+
+async function sendSlackReminder(
+  supabaseUrl: string,
+  serviceKey: string,
+  seq: any,
+  dayLabel: string,
+  contactedUrl: string,
+  engagedUrl: string,
+  bookedUrl: string,
+) {
+  try {
+    await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${serviceKey}`,
+      },
+      body: JSON.stringify({
+        eventType: 'cadence_reminder',
+        data: {
+          leadName: seq.lead_name,
+          leadCompany: seq.lead_company || 'Unknown',
+          leadEmail: seq.lead_email,
+          dayLabel,
+          contactedUrl,
+          engagedUrl,
+          bookedUrl,
+        },
+      }),
+    });
+  } catch (e) {
+    console.error('Slack cadence reminder failed (non-blocking):', e);
   }
 }
