@@ -205,6 +205,10 @@ export default function MarketingDashboard() {
                 <SubmissionsPanel />
               </TabsContent>
 
+              <TabsContent value="cadence" className="mt-6">
+                <WarmLeadCadence />
+              </TabsContent>
+
               <TabsContent value="prospects" className="mt-6">
                 <Tabs value={prospectsSubTab} onValueChange={setProspectsSubTab} className="w-full">
                   <TabsList className="mb-4">

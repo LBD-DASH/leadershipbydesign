@@ -455,6 +455,28 @@ serve(async (req: Request): Promise<Response> => {
           },
         }),
       }).catch(e => console.error('Slack notify error:', e));
+
+      // Create warm lead follow-up sequence for warm/hot leads (non-blocking)
+      if (leadScore.temperature === 'warm' || leadScore.temperature === 'hot') {
+        fetch(`${supabaseUrl}/functions/v1/create-warm-lead-sequence`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${serviceKey}`,
+          },
+          body: JSON.stringify({
+            lead_source_table: leadData.source.includes('diagnostic') ? `${leadData.source.replace(/-/g, '_')}_submissions` : 'contact_form_submissions',
+            lead_source_id: crypto.randomUUID(),
+            lead_name: leadData.name,
+            lead_email: leadData.email,
+            lead_company: companyName,
+            lead_phone: leadData.phone || null,
+            lead_source_type: leadData.source,
+            lead_score: leadScore.score,
+            lead_temperature: leadScore.temperature,
+          }),
+        }).catch(e => console.error('Warm lead sequence error:', e));
+      }
     }
 
     return new Response(
