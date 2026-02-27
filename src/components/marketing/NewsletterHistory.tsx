@@ -34,13 +34,21 @@ export default function NewsletterHistory() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase
-        .from('newsletter_sends')
-        .select('id, subject, body_html, recipient_count, status, approval_status, auto_generated, research_topic, tag_filter, sent_at, created_at')
-        .order('created_at', { ascending: false })
-        .limit(50);
-      setSends((data as NewsletterSend[]) || []);
-      setLoading(false);
+      try {
+        const adminToken = sessionStorage.getItem('admin_token') || '';
+        const { data } = await supabase.functions.invoke('admin-newsletters', {
+          body: { action: 'list' },
+          headers: { 'x-admin-token': adminToken },
+        });
+
+        if (data?.success && data.data) {
+          setSends(data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch newsletter history:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
