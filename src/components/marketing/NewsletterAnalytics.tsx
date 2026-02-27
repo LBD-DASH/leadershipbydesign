@@ -20,14 +20,14 @@ export default function NewsletterAnalytics() {
 
   useEffect(() => {
     const fetchAnalytics = async () => {
-      // Fetch sent newsletters
-      const { data: newsletters } = await supabase
-        .from('newsletter_sends')
-        .select('id, subject, sent_at, recipient_count, auto_generated')
-        .eq('status', 'sent')
-        .order('sent_at', { ascending: false })
-        .limit(20);
+      // Fetch sent newsletters via admin edge function (bypasses RLS)
+      const adminToken = sessionStorage.getItem('admin_token') || '';
+      const { data: result } = await supabase.functions.invoke('admin-newsletters', {
+        body: { action: 'sent_history' },
+        headers: { 'x-admin-token': adminToken },
+      });
 
+      const newsletters = result?.data;
       if (!newsletters || newsletters.length === 0) {
         setLoading(false);
         return;
