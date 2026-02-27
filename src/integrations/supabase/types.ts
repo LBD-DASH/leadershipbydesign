@@ -1751,6 +1751,72 @@ export type Database = {
         }
         Relationships: []
       }
+      warm_lead_sequences: {
+        Row: {
+          booked_at: string | null
+          contacted_at: string | null
+          created_at: string
+          dormant_at: string | null
+          engaged_at: string | null
+          id: string
+          lead_company: string | null
+          lead_email: string | null
+          lead_name: string | null
+          lead_phone: string | null
+          lead_score: number | null
+          lead_source_id: string
+          lead_source_table: string
+          lead_source_type: string | null
+          lead_temperature: string | null
+          next_reminder_at: string | null
+          notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          booked_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          dormant_at?: string | null
+          engaged_at?: string | null
+          id?: string
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_score?: number | null
+          lead_source_id: string
+          lead_source_table: string
+          lead_source_type?: string | null
+          lead_temperature?: string | null
+          next_reminder_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          booked_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          dormant_at?: string | null
+          engaged_at?: string | null
+          id?: string
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_score?: number | null
+          lead_source_id?: string
+          lead_source_table?: string
+          lead_source_type?: string | null
+          lead_temperature?: string | null
+          next_reminder_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       workshop_downloads: {
         Row: {
           created_at: string
