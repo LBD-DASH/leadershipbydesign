@@ -333,6 +333,13 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildDailyHealthCheckBlocks,
     text: (d) => `Health check: ${d.activeSequences} active sequences, ${d.outreachSent} outreach sent`,
   },
+  cadence_reminder: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Cadence',
+    icon: ':alarm_clock:',
+    buildBlocks: buildCadenceReminderBlocks,
+    text: (d) => `${d.dayLabel} follow-up due: ${d.leadName || 'Unknown'}`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────
