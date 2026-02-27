@@ -26,19 +26,31 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Fetch active subscribers
-    let query = supabase
-      .from('email_subscribers')
-      .select('email, name')
-      .eq('status', 'active');
+    // Fetch ALL active subscribers with pagination
+    const PAGE_SIZE = 1000;
+    let subscribers: { email: string; name: string | null }[] = [];
+    let from = 0;
+    let keepGoing = true;
 
-    if (tag_filter) {
-      query = query.contains('tags', [tag_filter]);
+    while (keepGoing) {
+      let query = supabase
+        .from('email_subscribers')
+        .select('email, name')
+        .eq('status', 'active')
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (tag_filter) {
+        query = query.contains('tags', [tag_filter]);
+      }
+
+      const { data, error: fetchError } = await query;
+      if (fetchError) throw fetchError;
+      subscribers = subscribers.concat(data || []);
+      if (!data || data.length < PAGE_SIZE) keepGoing = false;
+      else from += PAGE_SIZE;
     }
 
-    const { data: subscribers, error: fetchError } = await query;
-    if (fetchError) throw fetchError;
-    if (!subscribers || subscribers.length === 0) {
+    if (subscribers.length === 0) {
       return new Response(JSON.stringify({ error: 'No active subscribers found' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
