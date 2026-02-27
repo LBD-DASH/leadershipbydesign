@@ -36,19 +36,31 @@ Deno.serve(async (req) => {
 
     const { subject, body_html, tag_filter } = draft;
 
-    // Fetch active subscribers
-    let query = supabase
-      .from('email_subscribers')
-      .select('email, name')
-      .eq('status', 'active');
+    // Fetch ALL active subscribers with pagination
+    const PAGE_SIZE = 1000;
+    let subscribers: { email: string; name: string | null }[] = [];
+    let from = 0;
+    let keepGoing = true;
 
-    if (tag_filter) {
-      query = query.contains('tags', [tag_filter]);
+    while (keepGoing) {
+      let query = supabase
+        .from('email_subscribers')
+        .select('email, name')
+        .eq('status', 'active')
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (tag_filter) {
+        query = query.contains('tags', [tag_filter]);
+      }
+
+      const { data, error: fetchError } = await query;
+      if (fetchError) throw fetchError;
+      subscribers = subscribers.concat(data || []);
+      if (!data || data.length < PAGE_SIZE) keepGoing = false;
+      else from += PAGE_SIZE;
     }
 
-    const { data: subscribers, error: fetchError } = await query;
-    if (fetchError) throw fetchError;
-    if (!subscribers || subscribers.length === 0) {
+    if (subscribers.length === 0) {
       await supabase
         .from('newsletter_sends')
         .update({ status: 'failed' })
@@ -58,6 +70,8 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log(`Fetched ${subscribers.length} active subscribers for weekly newsletter`);
 
     // Update status to sending
     await supabase
