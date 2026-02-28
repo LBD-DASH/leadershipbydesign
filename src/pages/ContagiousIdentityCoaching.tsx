@@ -74,28 +74,28 @@ const painPoints = [
 const coachingPhases = [
   {
     phase: "01",
-    title: "Discovery",
+    title: "Agreement",
     duration: "Weeks 1-2",
     description: "Mapping your current identity landscape—how you see yourself vs. how others experience you.",
     activities: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
   },
   {
     phase: "02",
-    title: "Foundation",
+    title: "Awareness",
     duration: "Weeks 3-6",
     description: "Defining the identity you want to transmit and identifying the gaps.",
     activities: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
   },
   {
     phase: "03",
-    title: "Application",
+    title: "Action",
     duration: "Weeks 7-10",
     description: "Practising identity-congruent leadership in real situations.",
     activities: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
   },
   {
     phase: "04",
-    title: "Integration",
+    title: "Accountability",
     duration: "Weeks 11-12",
     description: "Embedding your contagious identity into systems and succession.",
     activities: ["System Integration", "Succession Planning", "Legacy Mapping"],
