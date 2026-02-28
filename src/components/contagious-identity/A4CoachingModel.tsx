@@ -301,7 +301,6 @@ function DesktopLayout() {
               boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
             }}
           >
-            <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
             <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
             <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
               SHIFT Skills
