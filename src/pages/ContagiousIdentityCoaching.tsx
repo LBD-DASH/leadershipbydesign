@@ -383,6 +383,9 @@ export default function ContagiousIdentityCoaching() {
       </section>
 
 
+      {/* A4 Coaching Model */}
+      <A4CoachingModel />
+
       {/* Pain Points Section */}
       <section className="py-20 md:py-28 bg-background">
         <div className="container mx-auto px-4">
