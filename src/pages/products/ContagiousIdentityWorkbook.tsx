@@ -272,6 +272,9 @@ export default function ContagiousIdentityWorkbook() {
           </div>
         </section>
 
+        {/* A4 Coaching Model */}
+        <A4CoachingModel />
+
         {/* Programme Structure */}
         <section className="py-16 sm:py-24 bg-background">
           <div className="container mx-auto px-4">
