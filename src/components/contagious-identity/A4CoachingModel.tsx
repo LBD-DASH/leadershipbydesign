@@ -120,19 +120,18 @@ export default function A4CoachingModel() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: q.delay }}
-                  className="bg-gradient-to-br from-primary/90 to-primary flex flex-col items-center justify-start text-center relative overflow-hidden hover:from-primary/70 hover:to-primary/80 transition-all duration-300 cursor-default"
-                  style={{ padding: '44px 22px 28px' }}
+                  className={`bg-gradient-to-br from-primary/90 to-primary flex flex-col relative overflow-hidden hover:from-primary/70 hover:to-primary/80 transition-all duration-300 cursor-default ${q.align} ${q.padding}`}
                 >
                   {/* Subtle radial glow */}
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03)_0%,_transparent_70%)] hover:bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_70%)] transition-opacity" />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03)_0%,_transparent_70%)] transition-opacity" />
 
                   <h3 className="font-serif font-bold text-[18px] sm:text-[22px] text-primary-foreground mb-1.5 relative z-[1]">
                     {q.title}
                   </h3>
-                  <p className="font-sans text-[10.5px] sm:text-[11.5px] text-primary-foreground/60 text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1]">
+                  <p className="font-sans text-[10.5px] sm:text-[11.5px] text-primary-foreground/60 leading-[1.55] max-w-[210px] mb-3.5 relative z-[1]">
                     {q.description}
                   </p>
-                  <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+                  <div className={`flex flex-wrap gap-[5px] relative z-[1] ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                     {q.tags.map((tag) => (
                       <span
                         key={tag}
