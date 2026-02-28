@@ -200,7 +200,7 @@ export default function A4CoachingModel() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.7, type: "spring", stiffness: 200, damping: 15 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[170px] h-[170px] sm:w-[210px] sm:h-[210px] rounded-full flex flex-col items-center justify-center text-center p-4"
+                className="absolute inset-0 m-auto z-10 w-[170px] h-[170px] sm:w-[210px] sm:h-[210px] rounded-full flex flex-col items-center justify-center text-center p-4"
                 style={{
                   background: '#0B1D3A',
                   border: '2px solid #C8A84E',
