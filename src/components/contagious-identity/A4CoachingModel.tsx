@@ -14,6 +14,351 @@ const foundations = [
   "Facilitates Client Growth",
 ];
 
+const quadrants = [
+  {
+    num: "01",
+    title: "Agreement",
+    desc: "Mapping your current identity landscape — how you see yourself vs. how others experience you.",
+    tags: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
+  },
+  {
+    num: "02",
+    title: "Awareness",
+    desc: "Defining the identity you want to transmit and identifying the gaps.",
+    tags: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
+  },
+  {
+    num: "03",
+    title: "Action",
+    desc: "Practising identity-congruent leadership in real situations.",
+    tags: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
+  },
+  {
+    num: "04",
+    title: "Accountability",
+    desc: "Embedding your contagious identity into systems and succession.",
+    tags: ["System Integration", "Succession Planning", "Legacy Mapping"],
+  },
+];
+
+function MobileLayout() {
+  return (
+    <div className="block md:hidden">
+      {/* Center Badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
+        className="w-[180px] h-[180px] mx-auto mb-8 rounded-full flex flex-col items-center justify-center text-center p-4"
+        style={{
+          background: 'hsl(200, 70%, 35%)',
+          border: '2px solid hsl(200, 70%, 70%)',
+          boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
+        }}
+      >
+        <span className="font-sans font-semibold text-[8px] tracking-[3px] uppercase mb-0.5 text-primary-foreground/70">
+          LBD's
+        </span>
+        <span className="font-serif font-extrabold text-[15px] leading-tight mb-1.5 text-primary-foreground">
+          <span className="text-primary-foreground/90">A4</span> Model
+        </span>
+        <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
+        <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
+          SHIFT Skills
+        </span>
+        <ul className="list-none p-0 m-0">
+          {shiftSkills.map((s) => (
+            <li key={s.initial} className="font-sans font-medium text-[9px] leading-[1.7] tracking-wider text-primary-foreground/80">
+              <span className="font-bold text-[10px] inline-block w-2.5 text-primary-foreground">
+                {s.initial}
+              </span>
+              {s.label}
+            </li>
+          ))}
+        </ul>
+      </motion.div>
+
+      {/* Quadrants stacked */}
+      <div className="space-y-3">
+        {quadrants.map((q, i) => (
+          <motion.div
+            key={q.num}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 * i }}
+            className="rounded-xl p-5 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
+            }}
+          >
+            <div className="flex items-start gap-4">
+              <span className="font-serif font-bold text-[32px] text-primary-foreground/15 leading-none shrink-0">
+                {q.num}
+              </span>
+              <div className="flex-1">
+                <h3 className="font-serif font-bold text-lg text-primary-foreground mb-1">
+                  {q.title}
+                </h3>
+                <p className="font-sans text-[11.5px] leading-[1.55] text-primary-foreground/75 mb-3">
+                  {q.desc}
+                </p>
+                <div className="flex flex-wrap gap-[5px]">
+                  {q.tags.map((tag) => (
+                    <span key={tag} className="font-sans font-semibold text-[8px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Axes labels */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5 }}
+        className="mt-6 flex flex-wrap justify-center gap-2"
+      >
+        {["Active Listening", "Powerful Questioning", "Direct Communication", "Facilitates Client Growth"].map((label) => (
+          <span key={label} className="font-serif font-bold text-[12px] text-primary-foreground/60 px-3 py-1 rounded-full border border-primary-foreground/15">
+            {label}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function DesktopLayout() {
+  return (
+    <div className="hidden md:block">
+      {/* Top Axis */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="flex items-center justify-center mb-3.5"
+      >
+        <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%))' }} />
+        <span className="font-serif font-bold text-[15px] px-5 whitespace-nowrap text-primary-foreground">
+          Active Listening
+        </span>
+        <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, hsl(200, 70%, 70%), transparent)' }} />
+      </motion.div>
+
+      {/* Main Model */}
+      <div className="flex items-stretch">
+        {/* Left Side Label */}
+        <div className="flex items-center justify-center w-[46px] shrink-0">
+          <span
+            className="font-serif font-bold text-[13px] tracking-wider whitespace-nowrap -rotate-90 text-primary-foreground"
+            style={{ letterSpacing: '2px' }}
+          >
+            <span className="font-extrabold text-primary-foreground/90">Powerful</span> Questioning
+          </span>
+        </div>
+
+        {/* Grid Container */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.35, duration: 0.7 }}
+          className="flex-1 grid grid-cols-2 grid-rows-2 gap-[2px] rounded-2xl overflow-hidden relative"
+          style={{
+            minHeight: 580,
+            border: '2px solid hsl(200, 70%, 70%)',
+            background: 'hsl(200, 70%, 35%)',
+          }}
+        >
+          {/* Quadrant 1 - Agreement (top-left) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col items-center text-center relative overflow-hidden cursor-default"
+            style={{
+              background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
+              padding: '44px 22px 28px',
+            }}
+          >
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
+            <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute top-3 left-4 z-[1]">01</span>
+            <h3 className="font-serif font-bold text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
+              Agreement
+            </h3>
+            <p className="font-sans text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
+              Mapping your current identity landscape — how you see yourself vs. how others experience you.
+            </p>
+            <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+              {["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"].map((tag) => (
+                <span key={tag} className="font-sans font-semibold text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Quadrant 2 - Awareness (top-right) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.65 }}
+            className="flex flex-col items-center text-center relative overflow-hidden cursor-default"
+            style={{
+              background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
+              padding: '44px 22px 28px',
+            }}
+          >
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
+            <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute top-3 right-4 z-[1]">02</span>
+            <h3 className="font-serif font-bold text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
+              Awareness
+            </h3>
+            <p className="font-sans text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
+              Defining the identity you want to transmit and identifying the gaps.
+            </p>
+            <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+              {["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"].map((tag) => (
+                <span key={tag} className="font-sans font-semibold text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Quadrant 3 - Action (bottom-left) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.8 }}
+            className="flex flex-col items-center justify-end text-center relative overflow-hidden cursor-default"
+            style={{
+              background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
+              padding: '28px 22px 44px',
+            }}
+          >
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
+            <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute bottom-3 left-4 z-[1]">03</span>
+            <h3 className="font-serif font-bold text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
+              Action
+            </h3>
+            <p className="font-sans text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
+              Practising identity-congruent leadership in real situations.
+            </p>
+            <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+              {["Scenario Practice", "Real-time Application", "Feedback Integration"].map((tag) => (
+                <span key={tag} className="font-sans font-semibold text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Quadrant 4 - Accountability (bottom-right) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.95 }}
+            className="flex flex-col items-center justify-end text-center relative overflow-hidden cursor-default"
+            style={{
+              background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
+              padding: '28px 22px 44px',
+            }}
+          >
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
+            <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute bottom-3 right-4 z-[1]">04</span>
+            <h3 className="font-serif font-bold text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
+              Accountability
+            </h3>
+            <p className="font-sans text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
+              Embedding your contagious identity into systems and succession.
+            </p>
+            <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+              {["System Integration", "Succession Planning", "Legacy Mapping"].map((tag) => (
+                <span key={tag} className="font-sans font-semibold text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Center Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.65 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.7, type: "spring", stiffness: 200, damping: 15 }}
+            className="absolute inset-0 m-auto z-10 w-[210px] h-[210px] rounded-full flex flex-col items-center justify-center text-center p-4"
+            style={{
+              background: 'hsl(200, 70%, 35%)',
+              border: '2px solid hsl(200, 70%, 70%)',
+              boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
+            }}
+          >
+            <span className="font-sans font-semibold text-[8px] tracking-[3px] uppercase mb-0.5 text-primary-foreground/70">
+              LBD's
+            </span>
+            <span className="font-serif font-extrabold text-[17px] leading-tight mb-1.5 text-primary-foreground">
+              <span className="text-primary-foreground/90">A4</span> Model
+            </span>
+            <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
+            <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
+              SHIFT Skills
+            </span>
+            <ul className="list-none p-0 m-0">
+              {shiftSkills.map((s) => (
+                <li key={s.initial} className="font-sans font-medium text-[9px] leading-[1.7] tracking-wider text-primary-foreground/80">
+                  <span className="font-bold text-[10px] inline-block w-2.5 text-primary-foreground">
+                    {s.initial}
+                  </span>
+                  {s.label}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </motion.div>
+
+        {/* Right Side Label */}
+        <div className="flex items-center justify-center w-[46px] shrink-0">
+          <span
+            className="font-serif font-bold text-[13px] tracking-wider whitespace-nowrap rotate-90 text-primary-foreground"
+            style={{ letterSpacing: '2px' }}
+          >
+            <span className="font-extrabold text-primary-foreground/90">Direct</span> Communication
+          </span>
+        </div>
+      </div>
+
+      {/* Bottom Axis */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.9 }}
+        className="flex items-center justify-center mt-3.5"
+      >
+        <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%))' }} />
+        <span className="font-serif font-bold text-[15px] px-5 whitespace-nowrap text-primary-foreground">
+          Facilitates Client Growth
+        </span>
+        <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, hsl(200, 70%, 70%), transparent)' }} />
+      </motion.div>
+    </div>
+  );
+}
+
 export default function A4CoachingModel() {
   return (
     <section className="py-16 sm:py-24 overflow-hidden bg-primary">
@@ -39,223 +384,11 @@ export default function A4CoachingModel() {
             />
           </motion.div>
 
-          {/* Top Axis */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="flex items-center justify-center mb-3.5"
-          >
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%))' }} />
-            <span className="font-serif font-bold text-[15px] px-5 whitespace-nowrap text-primary-foreground">
-              Active Listening
-            </span>
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, hsl(200, 70%, 70%), transparent)' }} />
-          </motion.div>
+          {/* Mobile Layout */}
+          <MobileLayout />
 
-          {/* Main Model */}
-          <div className="flex items-stretch">
-            {/* Left Side Label */}
-            <div className="flex items-center justify-center w-[34px] sm:w-[46px] shrink-0">
-              <span
-                className="font-serif font-bold text-[11px] sm:text-[13px] tracking-wider whitespace-nowrap -rotate-90 text-primary-foreground"
-                style={{ letterSpacing: '2px' }}
-              >
-                <span className="font-extrabold text-primary-foreground/90">Powerful</span> Questioning
-              </span>
-            </div>
-
-            {/* Grid Container */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.35, duration: 0.7 }}
-              className="flex-1 grid grid-cols-2 grid-rows-2 gap-[2px] rounded-2xl overflow-hidden relative"
-              style={{
-                minHeight: 580,
-                border: '2px solid hsl(200, 70%, 70%)',
-                background: 'hsl(200, 70%, 35%)',
-              }}
-            >
-              {/* Quadrant 1 - Agreement (top-left) */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col items-center text-center relative overflow-hidden cursor-default"
-                style={{
-                  background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
-                  padding: '44px 22px 28px',
-                }}
-              >
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
-                <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute top-3 left-4 z-[1]">01</span>
-                <h3 className="font-serif font-bold text-[18px] sm:text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
-                  Agreement
-                </h3>
-                <p className="font-sans text-[10.5px] sm:text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
-                  Mapping your current identity landscape — how you see yourself vs. how others experience you.
-                </p>
-                <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
-                  {["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"].map((tag) => (
-                    <span key={tag} className="font-sans font-semibold text-[8px] sm:text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Quadrant 2 - Awareness (top-right) */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.65 }}
-                className="flex flex-col items-center text-center relative overflow-hidden cursor-default"
-                style={{
-                  background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
-                  padding: '44px 22px 28px',
-                }}
-              >
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
-                <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute top-3 right-4 z-[1]">02</span>
-                <h3 className="font-serif font-bold text-[18px] sm:text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
-                  Awareness
-                </h3>
-                <p className="font-sans text-[10.5px] sm:text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
-                  Defining the identity you want to transmit and identifying the gaps.
-                </p>
-                <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
-                  {["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"].map((tag) => (
-                    <span key={tag} className="font-sans font-semibold text-[8px] sm:text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Quadrant 3 - Action (bottom-left) */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.8 }}
-                className="flex flex-col items-center justify-end text-center relative overflow-hidden cursor-default"
-                style={{
-                  background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
-                  padding: '28px 22px 44px',
-                }}
-              >
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
-                <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute bottom-3 left-4 z-[1]">03</span>
-                <h3 className="font-serif font-bold text-[18px] sm:text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
-                  Action
-                </h3>
-                <p className="font-sans text-[10.5px] sm:text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
-                  Practising identity-congruent leadership in real situations.
-                </p>
-                <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
-                  {["Scenario Practice", "Real-time Application", "Feedback Integration"].map((tag) => (
-                    <span key={tag} className="font-sans font-semibold text-[8px] sm:text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Quadrant 4 - Accountability (bottom-right) */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.95 }}
-                className="flex flex-col items-center justify-end text-center relative overflow-hidden cursor-default"
-                style={{
-                  background: 'linear-gradient(145deg, hsl(200, 70%, 45%), hsl(200, 70%, 35%))',
-                  padding: '28px 22px 44px',
-                }}
-              >
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
-                <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute bottom-3 right-4 z-[1]">04</span>
-                <h3 className="font-serif font-bold text-[18px] sm:text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
-                  Accountability
-                </h3>
-                <p className="font-sans text-[10.5px] sm:text-[11.5px] text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1] text-primary-foreground/80">
-                  Embedding your contagious identity into systems and succession.
-                </p>
-                <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
-                  {["System Integration", "Succession Planning", "Legacy Mapping"].map((tag) => (
-                    <span key={tag} className="font-sans font-semibold text-[8px] sm:text-[9px] tracking-wider uppercase rounded-full px-2.5 py-1 whitespace-nowrap transition-all text-primary-foreground/80 border border-primary-foreground/20 bg-primary-foreground/5">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Center Badge */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.65 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.7, type: "spring", stiffness: 200, damping: 15 }}
-                className="absolute inset-0 m-auto z-10 w-[170px] h-[170px] sm:w-[210px] sm:h-[210px] rounded-full flex flex-col items-center justify-center text-center p-4"
-                style={{
-                  background: 'hsl(200, 70%, 35%)',
-                  border: '2px solid hsl(200, 70%, 70%)',
-                  boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
-                }}
-              >
-                <span className="font-sans font-semibold text-[8px] tracking-[3px] uppercase mb-0.5 text-primary-foreground/70">
-                  LBD's
-                </span>
-                <span className="font-serif font-extrabold text-[14px] sm:text-[17px] leading-tight mb-1.5 text-primary-foreground">
-                  <span className="text-primary-foreground/90">A4</span> Model
-                </span>
-                <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
-                <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
-                  SHIFT Skills
-                </span>
-                <ul className="list-none p-0 m-0">
-                  {shiftSkills.map((s) => (
-                    <li key={s.initial} className="font-sans font-medium text-[8px] sm:text-[9px] leading-[1.7] tracking-wider text-primary-foreground/80">
-                      <span className="font-bold text-[9px] sm:text-[10px] inline-block w-2.5 text-primary-foreground">
-                        {s.initial}
-                      </span>
-                      {s.label}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Side Label */}
-            <div className="flex items-center justify-center w-[34px] sm:w-[46px] shrink-0">
-              <span
-                className="font-serif font-bold text-[11px] sm:text-[13px] tracking-wider whitespace-nowrap rotate-90 text-primary-foreground"
-                style={{ letterSpacing: '2px' }}
-              >
-                <span className="font-extrabold text-primary-foreground/90">Direct</span> Communication
-              </span>
-            </div>
-          </div>
-
-          {/* Bottom Axis */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.9 }}
-            className="flex items-center justify-center mt-3.5"
-          >
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%))' }} />
-            <span className="font-serif font-bold text-[15px] px-5 whitespace-nowrap text-primary-foreground">
-              Facilitates Client Growth
-            </span>
-            <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, hsl(200, 70%, 70%), transparent)' }} />
-          </motion.div>
+          {/* Desktop Layout */}
+          <DesktopLayout />
 
           {/* Foundation */}
           <motion.div
