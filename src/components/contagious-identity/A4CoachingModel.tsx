@@ -6,8 +6,8 @@ const quadrants = [
     description: "Mapping your current identity landscape — how you see yourself vs. how others experience you.",
     tags: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
     delay: 0.5,
-  },
-  {
+    align: "items-start text-left",
+    padding: "pt-10 sm:pt-12 pb-32 sm:pb-36 pl-6 sm:pl-8 pr-20 sm:pr-28",
     title: "Awareness",
     description: "Defining the identity you want to transmit and identifying the gaps.",
     tags: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
