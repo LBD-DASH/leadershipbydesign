@@ -121,6 +121,7 @@ export default function A4CoachingModel() {
                 }}
               >
                 <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, hsla(200, 70%, 80%, 0.08) 0%, transparent 70%)' }} />
+                <span className="font-serif font-bold text-[28px] text-primary-foreground/20 absolute top-3 right-4 z-[1]">02</span>
                 <h3 className="font-serif font-bold text-[18px] sm:text-[22px] mb-1.5 relative z-[1] text-primary-foreground">
                   Awareness
                 </h3>
