@@ -6,24 +6,32 @@ const quadrants = [
     description: "Mapping your current identity landscape — how you see yourself vs. how others experience you.",
     tags: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
     delay: 0,
+    // top-left: push content to top-left, away from center
+    align: "items-start text-left pt-8 sm:pt-10 pb-28 sm:pb-32 pl-5 sm:pl-8 pr-16 sm:pr-24",
   },
   {
     title: "Awareness",
     description: "Defining the identity you want to transmit and identifying the gaps.",
     tags: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
     delay: 0.1,
+    // top-right: push content to top-right
+    align: "items-end text-right pt-8 sm:pt-10 pb-28 sm:pb-32 pr-5 sm:pr-8 pl-16 sm:pl-24",
   },
   {
     title: "Action",
     description: "Practising identity-congruent leadership in real situations.",
     tags: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
     delay: 0.2,
+    // bottom-left: push content to bottom-left
+    align: "items-start text-left pb-8 sm:pb-10 pt-28 sm:pt-32 pl-5 sm:pl-8 pr-16 sm:pr-24 justify-end",
   },
   {
     title: "Accountability",
     description: "Embedding your contagious identity into systems and succession.",
     tags: ["System Integration", "Succession Planning", "Legacy Mapping"],
     delay: 0.3,
+    // bottom-right: push content to bottom-right
+    align: "items-end text-right pb-8 sm:pb-10 pt-28 sm:pt-32 pr-5 sm:pr-8 pl-16 sm:pl-24 justify-end",
   },
 ];
 
@@ -43,7 +51,7 @@ const foundations = [
 
 export default function A4CoachingModel() {
   return (
-    <section className="py-16 sm:py-24 bg-primary">
+    <section className="py-16 sm:py-24 bg-primary overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="max-w-[960px] mx-auto">
           {/* Title */}
@@ -87,13 +95,14 @@ export default function A4CoachingModel() {
               </span>
             </div>
 
-            {/* Grid */}
+            {/* Grid Container */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.7 }}
-              className="flex-1 grid grid-cols-2 grid-rows-2 gap-0.5 bg-primary rounded-2xl border-2 border-primary-foreground/30 overflow-hidden relative min-h-[500px] sm:min-h-[560px]"
+              className="flex-1 grid grid-cols-2 grid-rows-2 gap-[2px] rounded-2xl border-2 border-primary-foreground/20 overflow-hidden relative"
+              style={{ minHeight: 560 }}
             >
               {quadrants.map((q, i) => (
                 <motion.div
@@ -102,27 +111,15 @@ export default function A4CoachingModel() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + q.delay }}
-                  className="bg-gradient-to-br from-primary/80 to-primary flex flex-col items-center justify-start pt-9 sm:pt-11 px-3 sm:px-5 pb-5 relative overflow-hidden group hover:from-primary/60 transition-all duration-300"
+                  className={`bg-primary/80 flex flex-col relative overflow-hidden hover:bg-primary/70 transition-colors duration-300 ${q.align}`}
                 >
-                  {/* Phase number in corner */}
-                  <span className="absolute font-serif font-black text-[28px] text-primary-foreground/20 leading-none pointer-events-none"
-                    style={{
-                      top: i < 2 ? '-38px' : undefined,
-                      bottom: i >= 2 ? '-38px' : undefined,
-                      left: i % 2 === 0 ? '8px' : undefined,
-                      right: i % 2 === 1 ? '8px' : undefined,
-                    }}
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-
                   <h3 className="font-serif font-bold text-lg sm:text-[22px] text-primary-foreground mb-1.5 relative z-[1]">
                     {q.title}
                   </h3>
-                  <p className="text-[10.5px] sm:text-[11.5px] text-primary-foreground/70 text-center leading-relaxed max-w-[210px] mb-3.5 relative z-[1]">
+                  <p className="text-[10.5px] sm:text-[11.5px] text-primary-foreground/70 leading-relaxed max-w-[220px] mb-3 relative z-[1]">
                     {q.description}
                   </p>
-                  <div className="flex flex-wrap gap-1.5 justify-center relative z-[1]">
+                  <div className={`flex flex-wrap gap-1.5 relative z-[1] ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                     {q.tags.map((tag) => (
                       <span
                         key={tag}
@@ -141,22 +138,25 @@ export default function A4CoachingModel() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8, type: "spring", stiffness: 200, damping: 15 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[170px] h-[170px] sm:w-[210px] sm:h-[210px] bg-primary border-2 border-primary-foreground/30 rounded-full flex flex-col items-center justify-center text-center p-4 shadow-[0_0_0_6px_hsl(var(--primary)),0_0_40px_rgba(255,255,255,0.08),0_10px_40px_rgba(0,0,0,0.3)]"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[160px] h-[160px] sm:w-[210px] sm:h-[210px] bg-primary border-2 border-primary-foreground/25 rounded-full flex flex-col items-center justify-center text-center p-3 sm:p-4"
+                style={{
+                  boxShadow: '0 0 0 6px hsl(var(--primary)), 0 0 40px rgba(255,255,255,0.06), 0 10px 40px rgba(0,0,0,0.3)',
+                }}
               >
-                <span className="text-[8px] font-semibold tracking-[3px] uppercase text-primary-foreground/70 mb-0.5">
+                <span className="text-[7px] sm:text-[8px] font-semibold tracking-[3px] uppercase text-primary-foreground/70 mb-0.5">
                   LBD's
                 </span>
-                <span className="font-serif font-extrabold text-sm sm:text-[17px] text-primary-foreground leading-tight mb-1.5">
+                <span className="font-serif font-extrabold text-[14px] sm:text-[17px] text-primary-foreground leading-tight mb-1">
                   <span className="text-white/90">A4</span> Model
                 </span>
-                <div className="w-9 h-px bg-gradient-to-r from-transparent via-primary-foreground/40 to-transparent mb-2" />
-                <span className="text-[9px] font-bold tracking-[3px] uppercase text-primary-foreground/70 mb-1">
+                <div className="w-8 h-px bg-gradient-to-r from-transparent via-primary-foreground/40 to-transparent mb-1.5" />
+                <span className="text-[8px] sm:text-[9px] font-bold tracking-[3px] uppercase text-primary-foreground/70 mb-1">
                   SHIFT Skills
                 </span>
                 <ul className="list-none p-0 m-0">
                   {shiftSkills.map((s) => (
-                    <li key={s.initial} className="text-[8px] sm:text-[9px] text-primary-foreground/60 leading-[1.7] tracking-wider">
-                      <span className="text-white font-bold text-[9px] sm:text-[10px] inline-block w-2.5">
+                    <li key={s.initial} className="text-[7.5px] sm:text-[9px] text-primary-foreground/60 leading-[1.7] tracking-wider">
+                      <span className="text-white font-bold text-[8px] sm:text-[10px] inline-block w-2.5">
                         {s.initial}
                       </span>
                       {s.label}
