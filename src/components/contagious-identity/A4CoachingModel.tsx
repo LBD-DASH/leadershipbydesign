@@ -6,24 +6,32 @@ const quadrants = [
     description: "Mapping your current identity landscape — how you see yourself vs. how others experience you.",
     tags: ["360° Identity Assessment", "Values Excavation", "Stakeholder Perception Mapping"],
     delay: 0.5,
+    align: "items-start text-left",
+    padding: "pt-10 sm:pt-12 pb-32 sm:pb-36 pl-6 sm:pl-8 pr-20 sm:pr-28",
   },
   {
     title: "Awareness",
     description: "Defining the identity you want to transmit and identifying the gaps.",
     tags: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
     delay: 0.65,
+    align: "items-end text-right",
+    padding: "pt-10 sm:pt-12 pb-32 sm:pb-36 pr-6 sm:pr-8 pl-20 sm:pl-28",
   },
   {
     title: "Action",
     description: "Practising identity-congruent leadership in real situations.",
     tags: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
     delay: 0.8,
+    align: "items-start text-left justify-end",
+    padding: "pb-10 sm:pb-12 pt-32 sm:pt-36 pl-6 sm:pl-8 pr-20 sm:pr-28",
   },
   {
     title: "Accountability",
     description: "Embedding your contagious identity into systems and succession.",
     tags: ["System Integration", "Succession Planning", "Legacy Mapping"],
     delay: 0.95,
+    align: "items-end text-right justify-end",
+    padding: "pb-10 sm:pb-12 pt-32 sm:pt-36 pr-6 sm:pr-8 pl-20 sm:pl-28",
   },
 ];
 
@@ -97,7 +105,7 @@ export default function A4CoachingModel() {
               viewport={{ once: true }}
               transition={{ delay: 0.35, duration: 0.7 }}
               className="flex-1 grid grid-cols-2 grid-rows-2 gap-[2px] bg-primary rounded-2xl border-2 border-primary-foreground/25 overflow-hidden relative"
-              style={{ minHeight: 500 }}
+              style={{ minHeight: 580 }}
             >
               {/* Phase Numbers - positioned outside corners */}
               <span className="absolute -top-9 left-2 font-serif font-black text-[28px] text-primary-foreground/60 pointer-events-none z-[5] hidden sm:block">01</span>
@@ -112,19 +120,18 @@ export default function A4CoachingModel() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: q.delay }}
-                  className="bg-gradient-to-br from-primary/90 to-primary flex flex-col items-center justify-start text-center relative overflow-hidden hover:from-primary/70 hover:to-primary/80 transition-all duration-300 cursor-default"
-                  style={{ padding: '44px 22px 28px' }}
+                  className={`bg-gradient-to-br from-primary/90 to-primary flex flex-col relative overflow-hidden hover:from-primary/70 hover:to-primary/80 transition-all duration-300 cursor-default ${q.align} ${q.padding}`}
                 >
                   {/* Subtle radial glow */}
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03)_0%,_transparent_70%)] hover:bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_70%)] transition-opacity" />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03)_0%,_transparent_70%)] transition-opacity" />
 
                   <h3 className="font-serif font-bold text-[18px] sm:text-[22px] text-primary-foreground mb-1.5 relative z-[1]">
                     {q.title}
                   </h3>
-                  <p className="font-sans text-[10.5px] sm:text-[11.5px] text-primary-foreground/60 text-center leading-[1.55] max-w-[210px] mb-3.5 relative z-[1]">
+                  <p className="font-sans text-[10.5px] sm:text-[11.5px] text-primary-foreground/60 leading-[1.55] max-w-[210px] mb-3.5 relative z-[1]">
                     {q.description}
                   </p>
-                  <div className="flex flex-wrap gap-[5px] justify-center relative z-[1]">
+                  <div className={`flex flex-wrap gap-[5px] relative z-[1] ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                     {q.tags.map((tag) => (
                       <span
                         key={tag}
