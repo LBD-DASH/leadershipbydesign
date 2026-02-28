@@ -50,7 +50,7 @@ const painPoints = [
     description: "You know what you stand for, but your team isn't reflecting it consistently.",
   },
   {
-    title: "Identity Confusion",
+    title: "Identity Shifts",
     description: "Different stakeholders see different versions of your leadership.",
   },
   {
