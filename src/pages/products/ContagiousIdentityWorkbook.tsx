@@ -28,6 +28,7 @@ import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { CheckoutModal } from "@/components/products/CheckoutModal";
 import contagiousHero from "@/assets/contagious-identity-coaching-hero.jpg";
+import A4CoachingModel from "@/components/contagious-identity/A4CoachingModel";
 
 const PRICE = 2700;
 const PRICE_DISPLAY = "R2,700";
@@ -270,6 +271,9 @@ export default function ContagiousIdentityWorkbook() {
             </p>
           </div>
         </section>
+
+        {/* A4 Coaching Model */}
+        <A4CoachingModel />
 
         {/* Programme Structure */}
         <section className="py-16 sm:py-24 bg-background">
