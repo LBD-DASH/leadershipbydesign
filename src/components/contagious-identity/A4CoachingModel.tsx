@@ -4,7 +4,7 @@ const shiftSkills = [
   { initial: "S", label: "elf-Management" },
   { initial: "H", label: "uman Intelligence" },
   { initial: "I", label: "nnovation" },
-  { initial: "F", label: "ocus" },
+  { initial: "F", label: "ocused Attention" },
   { initial: "T", label: "hinking Creatively" },
 ];
 
