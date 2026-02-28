@@ -57,12 +57,6 @@ function MobileLayout() {
           boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
         }}
       >
-        <span className="font-sans font-semibold text-[8px] tracking-[3px] uppercase mb-0.5 text-primary-foreground/70">
-          LBD's
-        </span>
-        <span className="font-serif font-extrabold text-[15px] leading-tight mb-1.5 text-primary-foreground">
-          <span className="text-primary-foreground/90">A4</span> Model
-        </span>
         <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
         <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
           SHIFT Skills
@@ -307,12 +301,6 @@ function DesktopLayout() {
               boxShadow: '0 0 0 6px hsl(200, 70%, 35%), 0 0 40px hsla(200, 70%, 70%, 0.18), 0 10px 40px rgba(0,0,0,0.45)',
             }}
           >
-            <span className="font-sans font-semibold text-[8px] tracking-[3px] uppercase mb-0.5 text-primary-foreground/70">
-              LBD's
-            </span>
-            <span className="font-serif font-extrabold text-[17px] leading-tight mb-1.5 text-primary-foreground">
-              <span className="text-primary-foreground/90">A4</span> Model
-            </span>
             <div className="w-9 h-px mb-2" style={{ background: 'linear-gradient(90deg, transparent, hsl(200, 70%, 70%), transparent)' }} />
             <span className="font-sans font-bold text-[9px] tracking-[3px] uppercase mb-1 text-primary-foreground/70">
               SHIFT Skills
