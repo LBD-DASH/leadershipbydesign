@@ -97,7 +97,7 @@ export default function A4CoachingModel() {
               viewport={{ once: true }}
               transition={{ delay: 0.35, duration: 0.7 }}
               className="flex-1 grid grid-cols-2 grid-rows-2 gap-[2px] bg-primary rounded-2xl border-2 border-primary-foreground/25 overflow-hidden relative"
-              style={{ minHeight: 500 }}
+              style={{ minHeight: 580 }}
             >
               {/* Phase Numbers - positioned outside corners */}
               <span className="absolute -top-9 left-2 font-serif font-black text-[28px] text-primary-foreground/60 pointer-events-none z-[5] hidden sm:block">01</span>
