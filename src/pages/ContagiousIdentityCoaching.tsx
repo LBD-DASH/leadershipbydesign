@@ -22,6 +22,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import InterestForm from "@/components/contagious-identity/InterestForm";
+import A4CoachingModel from "@/components/contagious-identity/A4CoachingModel";
 
 // Images
 import heroImage from "@/assets/contagious-identity-coaching-hero.jpg";
@@ -381,6 +382,9 @@ export default function ContagiousIdentityCoaching() {
         </div>
       </section>
 
+
+      {/* A4 Coaching Model */}
+      <A4CoachingModel />
 
       {/* Pain Points Section */}
       <section className="py-20 md:py-28 bg-background">
