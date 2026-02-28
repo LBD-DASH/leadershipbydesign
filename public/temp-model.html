@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership by Design – A4 Mentoring & Coaching Model</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1D3A;
+    --navy-mid: #132B52;
+    --navy-light: #1A3A6B;
+    --gold: #C8A84E;
+    --gold-light: #D4BA6A;
+    --gold-dim: rgba(200,168,78,0.4);
+    --cream: #F5F0E6;
+    --cream-dark: #E8E0D0;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Raleway', sans-serif;
+    padding: 40px 20px;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 960px;
+    position: relative;
+  }
+
+  /* ── Title ── */
+  .title-section {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .brand-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    opacity: 0;
+    animation: fadeDown .6s ease .2s forwards;
+  }
+
+  .model-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--cream);
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeDown .6s ease .35s forwards;
+  }
+  .model-title span { color: var(--gold); }
+
+  .title-divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 10px auto 0;
+    opacity: 0;
+    animation: fadeIn .8s ease .5s forwards;
+  }
+
+  /* ── Axis Bars ── */
+  .axis-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+  }
+  .axis-bar.top  { margin-bottom: 14px; animation: fadeDown .5s ease .6s forwards; }
+  .axis-bar.bottom { margin-top: 14px; animation: fadeUp .5s ease 1.6s forwards; }
+
+  .axis-bar .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-light));
+  }
+  .axis-bar .line:last-child {
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+  }
+  .axis-bar .label {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--cream);
+    padding: 0 22px;
+    white-space: nowrap;
+  }
+
+  /* ── Main wrapper ── */
+  .model-wrapper {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* Side labels */
+  .side-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+  }
+  .side-label .text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--cream);
+    white-space: nowrap;
+    letter-spacing: 2px;
+  }
+  .side-label.left .text  { transform: rotate(-90deg); }
+  .side-label.right .text { transform: rotate(90deg); }
+  .side-label .accent { color: var(--gold); font-weight: 800; }
+
+  /* ── Grid ── */
+  .grid-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    background: var(--navy);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    min-height: 560px;
+    opacity: 0;
+    animation: scaleIn .7s ease .7s forwards;
+  }
+
+  /* Quadrants */
+  .quadrant {
+    background: linear-gradient(145deg, var(--navy-mid), var(--navy));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 44px 22px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: background .35s ease;
+    cursor: default;
+  }
+  .quadrant::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,168,78,.05) 0%, transparent 70%);
+    transition: opacity .35s ease;
+  }
+  .quadrant:hover { background: linear-gradient(145deg, var(--navy-light), var(--navy-mid)); }
+  .quadrant:hover::before {
+    background: radial-gradient(ellipse at center, rgba(200,168,78,.1) 0%, transparent 70%);
+  }
+
+  /* Phase numbers — outside corners */
+  .phase-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--gold);
+    opacity: .6;
+    position: absolute;
+    line-height: 1;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .phase-num-01 { top: -38px; left: 8px; }
+  .phase-num-02 { top: -38px; right: 8px; }
+  .phase-num-03 { bottom: -38px; left: 8px; }
+  .phase-num-04 { bottom: -38px; right: 8px; }
+
+  /* Quadrant heading */
+  .quadrant h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--cream);
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp .5s ease forwards;
+  }
+  .q1 h3 { animation-delay: 1.0s; }
+  .q2 h3 { animation-delay: 1.15s; }
+  .q3 h3 { animation-delay: 1.3s; }
+  .q4 h3 { animation-delay: 1.45s; }
+
+  /* Description */
+  .quadrant .desc {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--cream-dark);
+    text-align: center;
+    line-height: 1.55;
+    max-width: 210px;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp .5s ease forwards;
+  }
+  .q1 .desc { animation-delay: 1.05s; }
+  .q2 .desc { animation-delay: 1.2s; }
+  .q3 .desc { animation-delay: 1.35s; }
+  .q4 .desc { animation-delay: 1.5s; }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp .5s ease forwards;
+  }
+  .q1 .tags { animation-delay: 1.1s; }
+  .q2 .tags { animation-delay: 1.25s; }
+  .q3 .tags { animation-delay: 1.4s; }
+  .q4 .tags { animation-delay: 1.55s; }
+
+  .tag {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(200,168,78,.25);
+    border-radius: 100px;
+    padding: 4px 10px;
+    background: rgba(200,168,78,.04);
+    transition: all .3s ease;
+    white-space: nowrap;
+  }
+  .tag:hover {
+    background: rgba(200,168,78,.12);
+    border-color: var(--gold);
+  }
+
+  /* ── Center Badge ── */
+  .center-badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+    width: 210px;
+    height: 210px;
+    background: var(--navy);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+    box-shadow:
+      0 0 0 6px var(--navy),
+      0 0 40px rgba(200,168,78,.18),
+      0 10px 40px rgba(0,0,0,.45);
+    opacity: 0;
+    animation: badgePop .6s ease 1.2s forwards;
+  }
+
+  .badge-sub {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+
+  .badge-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 17px;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .badge-title span { color: var(--gold); }
+
+  .badge-divider {
+    width: 36px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 4px 0 8px;
+  }
+
+  .badge-shift-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 5px;
+  }
+
+  .shift-list {
+    list-style: none;
+    padding: 0;
+  }
+  .shift-list li {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 9px;
+    color: var(--cream-dark);
+    line-height: 1.7;
+    letter-spacing: .5px;
+  }
+  .shift-list li .initial {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 10px;
+    display: inline-block;
+    width: 10px;
+  }
+
+  /* ── Foundation ── */
+  .foundation {
+    margin-top: 24px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp .5s ease 1.7s forwards;
+  }
+  .foundation-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .foundation-item {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 7px 18px;
+    border: 1px solid rgba(200,168,78,.25);
+    border-radius: 100px;
+    background: rgba(200,168,78,.04);
+    transition: all .3s ease;
+  }
+  .foundation-item:hover {
+    background: rgba(200,168,78,.1);
+    border-color: var(--gold);
+  }
+  .foundation-dot {
+    color: var(--gold); opacity: .3; font-size: 16px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 24px;
+    opacity: 0;
+    animation: fadeIn .6s ease 1.9s forwards;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--cream);
+    letter-spacing: 2px;
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-url {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: rgba(200,168,78,.45);
+    letter-spacing: 2px;
+    margin-top: 3px;
+  }
+
+  /* ── Keyframes ── */
+  @keyframes fadeDown  { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp    { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn    { from{opacity:0} to{opacity:1} }
+  @keyframes scaleIn   { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+  @keyframes badgePop  {
+    0%  {opacity:0;transform:translate(-50%,-50%) scale(.65)}
+    60% {transform:translate(-50%,-50%) scale(1.04)}
+    100%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  }
+
+  /* ── Responsive ── */
+  @media(max-width:680px){
+    .grid-container{min-height:500px}
+    .quadrant{padding:36px 14px 22px}
+    .quadrant h3{font-size:18px}
+    .quadrant .desc{font-size:10.5px;max-width:160px}
+    .tag{font-size:8px;padding:3px 7px}
+    .center-badge{width:170px;height:170px}
+    .badge-title{font-size:14px}
+    .shift-list li{font-size:8px}
+    .side-label{width:34px}
+    .side-label .text{font-size:11px}
+    .model-title{font-size:22px}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Title -->
+  <div class="title-section">
+    <div class="brand-label">Leadership by Design</div>
+    <div class="model-title">The <span>Contagious Identity</span> Coaching Model</div>
+    <div class="title-divider"></div>
+  </div>
+
+  <!-- Top Axis -->
+  <div class="axis-bar top">
+    <div class="line"></div>
+    <div class="label">Active Listening</div>
+    <div class="line"></div>
+  </div>
+
+  <!-- Main Model -->
+  <div class="model-wrapper">
+
+    <div class="side-label left">
+      <span class="text"><span class="accent">Powerful</span> Questioning</span>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- Q1 — Agreement / Phase 1: Map -->
+      <div class="quadrant q1">
+        <h3>Agreement</h3>
+        <p class="desc">Mapping your current identity landscape — how you see yourself vs. how others experience you.</p>
+        <div class="tags">
+          <span class="tag">360° Identity Assessment</span>
+          <span class="tag">Values Excavation</span>
+          <span class="tag">Stakeholder Perception Mapping</span>
+        </div>
+      </div>
+
+      <!-- Q2 — Awareness / Phase 2: Define -->
+      <div class="quadrant q2">
+        <h3>Awareness</h3>
+        <p class="desc">Defining the identity you want to transmit and identifying the gaps.</p>
+        <div class="tags">
+          <span class="tag">Core Identity Definition</span>
+          <span class="tag">Behavioural Blueprint</span>
+          <span class="tag">Gap Analysis</span>
+        </div>
+      </div>
+
+      <!-- Q3 — Action / Phase 3: Practise -->
+      <div class="quadrant q3">
+        <h3>Action</h3>
+        <p class="desc">Practising identity-congruent leadership in real situations.</p>
+        <div class="tags">
+          <span class="tag">Scenario Practice</span>
+          <span class="tag">Real-time Application</span>
+          <span class="tag">Feedback Integration</span>
+        </div>
+      </div>
+
+      <!-- Q4 — Accountability / Phase 4: Embed -->
+      <div class="quadrant q4">
+        <h3>Accountability</h3>
+        <p class="desc">Embedding your contagious identity into systems and succession.</p>
+        <div class="tags">
+          <span class="tag">System Integration</span>
+          <span class="tag">Succession Planning</span>
+          <span class="tag">Legacy Mapping</span>
+        </div>
+      </div>
+
+      <!-- Phase Numbers — outer corners -->
+      <div class="phase-num phase-num-01">01</div>
+      <div class="phase-num phase-num-02">02</div>
+      <div class="phase-num phase-num-03">03</div>
+      <div class="phase-num phase-num-04">04</div>
+
+      <!-- Center Badge with SHIFT Skills -->
+      <div class="center-badge">
+        <div class="badge-sub">LBD's</div>
+        <div class="badge-title"><span>A4</span> Model</div>
+        <div class="badge-divider"></div>
+        <div class="badge-shift-label">SHIFT Skills</div>
+        <ul class="shift-list">
+          <li><span class="initial">S</span>elf-Management</li>
+          <li><span class="initial">H</span>uman Intelligence</li>
+          <li><span class="initial">I</span>nnovation</li>
+          <li><span class="initial">F</span>ocus</li>
+          <li><span class="initial">T</span>hinking Creatively</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="side-label right">
+      <span class="text"><span class="accent">Direct</span> Communication</span>
+    </div>
+
+  </div>
+
+  <!-- Bottom Axis -->
+  <div class="axis-bar bottom">
+    <div class="line"></div>
+    <div class="label">Facilitates Client Growth</div>
+    <div class="line"></div>
+  </div>
+
+  <!-- Foundation -->
+  <div class="foundation">
+    <div class="foundation-items">
+      <span class="foundation-item">Cultivates Trust & Safety</span>
+      <span class="foundation-dot">·</span>
+      <span class="foundation-item">Maintains Presence</span>
+      <span class="foundation-dot">·</span>
+      <span class="foundation-item">Facilitates Client Growth</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-logo">Leadership <span>by</span> Design</div>
+    <div class="footer-url">leadershipbydesign.co</div>
+  </div>
+
+</div>
+
+</body>
+</html>
