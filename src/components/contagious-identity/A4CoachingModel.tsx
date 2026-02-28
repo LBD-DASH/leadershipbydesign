@@ -8,22 +8,30 @@ const quadrants = [
     delay: 0.5,
     align: "items-start text-left",
     padding: "pt-10 sm:pt-12 pb-32 sm:pb-36 pl-6 sm:pl-8 pr-20 sm:pr-28",
+  },
+  {
     title: "Awareness",
     description: "Defining the identity you want to transmit and identifying the gaps.",
     tags: ["Core Identity Definition", "Behavioural Blueprint", "Gap Analysis"],
     delay: 0.65,
+    align: "items-end text-right",
+    padding: "pt-10 sm:pt-12 pb-32 sm:pb-36 pr-6 sm:pr-8 pl-20 sm:pl-28",
   },
   {
     title: "Action",
     description: "Practising identity-congruent leadership in real situations.",
     tags: ["Scenario Practice", "Real-time Application", "Feedback Integration"],
     delay: 0.8,
+    align: "items-start text-left justify-end",
+    padding: "pb-10 sm:pb-12 pt-32 sm:pt-36 pl-6 sm:pl-8 pr-20 sm:pr-28",
   },
   {
     title: "Accountability",
     description: "Embedding your contagious identity into systems and succession.",
     tags: ["System Integration", "Succession Planning", "Legacy Mapping"],
     delay: 0.95,
+    align: "items-end text-right justify-end",
+    padding: "pb-10 sm:pb-12 pt-32 sm:pt-36 pr-6 sm:pr-8 pl-20 sm:pl-28",
   },
 ];
 
