@@ -5,7 +5,8 @@ import NewsletterComposer from './NewsletterComposer';
 import NewsletterHistory from './NewsletterHistory';
 import NewsletterAnalytics from './NewsletterAnalytics';
 import SubscriberManager from './SubscriberManager';
-import { Upload, PenTool, History, Users, BarChart3 } from 'lucide-react';
+import NewsletterThemeManager from './NewsletterThemeManager';
+import { Upload, PenTool, History, Users, BarChart3, Calendar } from 'lucide-react';
 
 export default function NewsletterTab() {
   const [subTab, setSubTab] = useState('compose');
@@ -17,6 +18,10 @@ export default function NewsletterTab() {
           <TabsTrigger value="compose" className="gap-2">
             <PenTool className="w-4 h-4" />
             Compose
+          </TabsTrigger>
+          <TabsTrigger value="themes" className="gap-2">
+            <Calendar className="w-4 h-4" />
+            Themes
           </TabsTrigger>
           <TabsTrigger value="contacts" className="gap-2">
             <Users className="w-4 h-4" />
@@ -38,6 +43,9 @@ export default function NewsletterTab() {
 
         <TabsContent value="compose">
           <NewsletterComposer />
+        </TabsContent>
+        <TabsContent value="themes">
+          <NewsletterThemeManager />
         </TabsContent>
         <TabsContent value="contacts">
           <SubscriberManager />
