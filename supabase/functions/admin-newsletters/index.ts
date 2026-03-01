@@ -53,6 +53,62 @@ Deno.serve(async (req) => {
       return json({ success: true, data });
     }
 
+    // --- Newsletter Themes CRUD ---
+    if (action === 'list_themes') {
+      const { data, error } = await supabase
+        .from('newsletter_themes')
+        .select('*')
+        .order('year', { ascending: true })
+        .order('month', { ascending: true });
+
+      if (error) throw error;
+      return json({ themes: data });
+    }
+
+    if (action === 'create_theme') {
+      const { year, month, theme, pain_point_cluster, featured_products } = body as any;
+      if (!year || !month || !theme || !pain_point_cluster) {
+        return json({ error: 'year, month, theme, and pain_point_cluster are required' }, 400);
+      }
+      const { data, error } = await supabase
+        .from('newsletter_themes')
+        .insert({ year, month, theme, pain_point_cluster, featured_products: featured_products || [] })
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === '23505') return json({ error: `A theme already exists for ${month}/${year}` }, 409);
+        throw error;
+      }
+      return json({ success: true, theme: data });
+    }
+
+    if (action === 'update_theme') {
+      const { id, year, month, theme, pain_point_cluster, featured_products } = body as any;
+      if (!id) return json({ error: 'id is required' }, 400);
+      const { data, error } = await supabase
+        .from('newsletter_themes')
+        .update({ year, month, theme, pain_point_cluster, featured_products })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return json({ success: true, theme: data });
+    }
+
+    if (action === 'delete_theme') {
+      const { id } = body as any;
+      if (!id) return json({ error: 'id is required' }, 400);
+      const { error } = await supabase
+        .from('newsletter_themes')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return json({ success: true });
+    }
+
     return json({ error: 'Unknown action' }, 400);
   } catch (error) {
     console.error('admin-newsletters error:', error);
