@@ -5,8 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Products/tools to embed as soft ads
-// CRITICAL: The ONLY correct domain is leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other variant
+// CRITICAL: The ONLY correct domain is leadershipbydesign.co
 const SITE_DOMAIN = 'https://www.leadershipbydesign.co';
 
 const PRODUCT_ADS = [
@@ -48,15 +47,24 @@ const PRODUCT_ADS = [
   },
 ];
 
-function selectRelevantAds(topic: string): typeof PRODUCT_ADS {
-  // Simple keyword matching — pick up to 3 relevant ads
+function selectRelevantAds(topic: string, featuredProducts?: string[]): typeof PRODUCT_ADS {
+  // If theme has featured products, prioritize those
+  if (featuredProducts && featuredProducts.length > 0) {
+    const featured = PRODUCT_ADS.filter(ad => featuredProducts.includes(ad.name));
+    // Fill remaining slots with keyword matching
+    if (featured.length >= 3) return featured.slice(0, 3);
+    const remaining = PRODUCT_ADS.filter(ad => !featuredProducts.includes(ad.name));
+    return [...featured, ...remaining].slice(0, 3);
+  }
+
+  // Fallback: keyword matching
   const keywords: Record<string, string[]> = {
-    'SHIFT Leadership Development': ['productivity', 'performance', 'skills', 'development', 'growth', 'shift'],
+    'SHIFT Leadership Development': ['productivity', 'performance', 'skills', 'development', 'growth', 'shift', 'accountability', 'execution'],
     'Leadership Index Diagnostic': ['leadership', 'level', 'assessment', 'diagnostic', 'style'],
-    'Executive Coaching': ['executive', 'ceo', 'c-suite', 'strategic', 'coaching', 'burnout'],
+    'Executive Coaching': ['executive', 'ceo', 'c-suite', 'strategic', 'coaching', 'burnout', 'delegation', 'presence'],
     'Contagious Identity Workbook': ['identity', 'presence', 'authentic', 'influence', 'personal brand'],
-    'Team Alignment Workshop': ['team', 'alignment', 'collaboration', 'communication', 'culture'],
-    'Feedback Formula': ['feedback', 'conversation', 'difficult', 'trust', 'conflict'],
+    'Team Alignment Workshop': ['team', 'alignment', 'collaboration', 'communication', 'culture', 'clarity'],
+    'Feedback Formula': ['feedback', 'conversation', 'difficult', 'trust', 'conflict', 'accountability'],
   };
 
   const topicLower = topic.toLowerCase();
@@ -67,7 +75,6 @@ function selectRelevantAds(topic: string): typeof PRODUCT_ADS {
   });
 
   scored.sort((a, b) => b.score - a.score);
-  // Always include at least Leadership Index (free diagnostic) + top 2 matches
   const selected = scored.slice(0, 3).map(s => s.ad);
   if (!selected.find(a => a.name === 'Leadership Index Diagnostic')) {
     selected[2] = PRODUCT_ADS.find(a => a.name === 'Leadership Index Diagnostic')!;
@@ -106,9 +113,34 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log('Step 1: Searching for trending leadership concerns via Firecrawl...');
+    // Step 0: Look up this month's theme
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
 
-    // Step 1: Use Firecrawl search to find trending leadership concerns
+    const { data: themeData } = await supabase
+      .from('newsletter_themes')
+      .select('*')
+      .eq('year', currentYear)
+      .eq('month', currentMonth)
+      .single();
+
+    const hasTheme = !!themeData;
+    const monthlyTheme = themeData?.theme || '';
+    const painPointCluster = themeData?.pain_point_cluster || '';
+    const featuredProducts = themeData?.featured_products || [];
+
+    console.log(hasTheme
+      ? `Theme found: "${monthlyTheme}" | Pain cluster: "${painPointCluster}"`
+      : 'No theme configured for this month — using generic approach');
+
+    // Step 1: Theme-aware Firecrawl search
+    const searchQuery = hasTheme
+      ? `leadership ${monthlyTheme.toLowerCase()} challenge concern trending this week ${currentYear} CEO executive manager`
+      : `biggest leadership challenge concern trending this week ${currentYear} CEO executive manager`;
+
+    console.log(`Step 1: Searching via Firecrawl: "${searchQuery}"`);
+
     const searchResponse = await fetch('https://api.firecrawl.dev/v1/search', {
       method: 'POST',
       headers: {
@@ -116,7 +148,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: 'biggest leadership challenge concern trending this week 2025 2026 CEO executive manager',
+        query: searchQuery,
         limit: 8,
         scrapeOptions: { formats: ['markdown'] },
       }),
@@ -131,8 +163,7 @@ Deno.serve(async (req) => {
     const searchData = await searchResponse.json();
     const searchResults = searchData.data || [];
 
-    // Compile research context
-    const researchContext = searchResults.map((r: any, i: number) => 
+    const researchContext = searchResults.map((r: any, i: number) =>
       `Source ${i + 1}: ${r.title || 'Untitled'}\nURL: ${r.url}\n${(r.markdown || r.description || '').slice(0, 1500)}`
     ).join('\n\n---\n\n');
 
@@ -143,7 +174,70 @@ Deno.serve(async (req) => {
 
     console.log(`Step 2: Found ${searchResults.length} sources. Generating newsletter with Claude...`);
 
-    // Step 2: Use Claude to extract ONE leadership topic and generate the newsletter
+    // Step 2: Build the Claude system prompt — theme-locked or generic
+    const systemPrompt = hasTheme
+      ? `You are Kevin Britz's AI content strategist for Leadership by Design (www.leadershipbydesign.co), a premium leadership development consultancy in South Africa.
+
+THIS MONTH'S THEME: "${monthlyTheme}"
+PAIN POINT CLUSTER: ${painPointCluster}
+
+Your job: Generate a newsletter that is LOCKED to this month's theme. Every element must ladder up to "${monthlyTheme}".
+
+CRITICAL RULES:
+1. PAIN POINT ANCHOR (Required): The newsletter MUST open with ONE specific, published leader pain point in the first 2 sentences. Name it explicitly. Source it from the research below AND filter through the monthly theme "${monthlyTheme}".
+2. SOLUTION BRIDGE (Required): After the pain point, bridge directly to a specific Leadership by Design product/service. Map: Pain Point → Why It Happens → How our specific product solves it.
+3. The topic MUST connect to "${monthlyTheme}" — not general business, not politics, not technology unless it directly impacts how leaders lead within this theme.
+4. ABSOLUTELY CRITICAL: The ONLY correct website is www.leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other domain variant.
+5. Do NOT invent or hallucinate any URLs, programs, or offerings that don't exist.
+6. Tone: Authoritative but empathetic. Speak directly to mid-to-senior leaders (Heads of, Directors, C-suite). No generic motivational language. Be specific and practical.
+
+AVAILABLE PRODUCTS/SERVICES TO REFERENCE:
+- 90-Day SHIFT Leadership System (www.leadershipbydesign.co/shift-methodology)
+- Leadership Index Diagnostic — free 5-min assessment (www.leadershipbydesign.co/leadership-diagnostic)
+- Team Diagnostic (www.leadershipbydesign.co/team-diagnostic)
+- Leader as Coach Programme (www.leadershipbydesign.co/leader-as-coach)
+- Executive Coaching (www.leadershipbydesign.co/executive-coaching)
+- Team Alignment Workshop (www.leadershipbydesign.co/workshops/alignment)
+- Feedback Formula (www.leadershipbydesign.co/products/feedback-formula)
+- Contagious Identity Workbook (www.leadershipbydesign.co/products/contagious-identity-workbook)
+
+OUTPUT FORMAT (JSON):
+{
+  "topic": "The specific leadership pain point identified, tied to ${monthlyTheme}",
+  "subject_line": "Pain-point-led, curiosity-driven, max 9 words",
+  "preview_text": "Complements subject, adds urgency or specificity, under 120 chars",
+  "hook": "2-3 sentences stating the pain point as a real scenario the reader recognises",
+  "insight_section": "3-4 sentences explaining why this pain point persists, tied to the theme ${monthlyTheme}",
+  "solution_bridge": "3-4 sentences naming the specific LBD tool/programme that addresses it and how",
+  "proof_layer": "1-2 sentences with a stat, quote, or outcome reference (e.g., 'Leaders using our 90-day system report up to 40% productivity gains')",
+  "primary_cta": "One clear action — include the full URL",
+  "closing_thought": "1 sentence strategic takeaway"
+}`
+      : `You are Kevin Britz's AI content strategist for Leadership by Design, a premium leadership development consultancy in South Africa.
+
+Your job: Analyze the research below and identify ONE dominant leadership concern trending right now. Then generate a complete newsletter.
+
+CRITICAL RULES:
+- The topic MUST be about LEADERSHIP specifically — not general business, not politics, not technology unless it directly impacts how leaders lead.
+- The newsletter must be authoritative, practical, and position Kevin/Leadership by Design as the expert.
+- Include at least one actionable solution readers can use immediately.
+- Write in a confident, warm, executive tone — no fluff.
+- ABSOLUTELY CRITICAL: The ONLY correct website is www.leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other domain variant.
+- Do NOT invent or hallucinate any URLs, programs, or offerings that don't exist.
+
+OUTPUT FORMAT (JSON):
+{
+  "topic": "The specific leadership concern identified",
+  "subject_line": "Email subject line — high authority, curiosity-driven, under 60 chars",
+  "preview_text": "Email preview text under 120 chars",
+  "hook": "2-3 sentences opening the newsletter with a recognisable pain point",
+  "insight_section": "3-4 sentences on why this concern matters now with supporting context",
+  "solution_bridge": "3-4 sentences with practical solutions readers can use, referencing LBD where relevant",
+  "proof_layer": "1-2 sentences with a stat, quote, or outcome",
+  "primary_cta": "Compelling call-to-action — use www.leadershipbydesign.co if linking",
+  "closing_thought": "1 sentence strategic takeaway"
+}`;
+
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -154,29 +248,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4096,
-        system: `You are Kevin Britz's AI content strategist for Leadership by Design, a premium leadership development consultancy in South Africa.
-
-Your job: Analyze the research below and identify ONE dominant leadership concern trending right now. Then generate a complete newsletter.
-
-CRITICAL RULES:
-- The topic MUST be about LEADERSHIP specifically — not general business, not politics, not technology unless it directly impacts how leaders lead.
-- The newsletter must be authoritative, practical, and position Kevin/Leadership by Design as the expert.
-- Include at least one actionable solution readers can use immediately.
-- Write in a confident, warm, executive tone — no fluff.
-- ABSOLUTELY CRITICAL: The ONLY correct website is www.leadershipbydesign.co — NEVER use .co.za, .lovable.app, or any other domain variant. If you mention the website, use ONLY www.leadershipbydesign.co.
-- Do NOT invent or hallucinate any URLs, programs, or offerings that don't exist.
-
-OUTPUT FORMAT (JSON):
-{
-  "topic": "The specific leadership concern identified",
-  "subject_line": "Email subject line — high authority, curiosity-driven, under 60 chars",
-  "preview_text": "Email preview text under 120 chars",
-  "concern_summary": "2-3 paragraphs explaining the concern with supporting data",
-  "why_it_matters": "1-2 paragraphs on urgency and relevance",
-  "practical_solutions": ["Solution 1 with detail", "Solution 2 with detail", "Solution 3 with detail"],
-  "strategic_insight": "One deeper insight connecting to leadership frameworks (SHIFT, Leadership Levels, etc.)",
-  "closing_cta": "Compelling call-to-action paragraph — use www.leadershipbydesign.co if linking"
-}`,
+        system: systemPrompt,
         messages: [{
           role: 'user',
           content: `Here is the latest web research on leadership concerns:\n\n${researchContext}\n\nAnalyze this and generate a leadership newsletter in JSON format.`,
@@ -193,25 +265,22 @@ OUTPUT FORMAT (JSON):
     const claudeData = await claudeResponse.json();
     const rawContent = claudeData.content[0]?.text || '';
 
-    // Parse JSON from Claude's response
     const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Failed to parse newsletter JSON from Claude');
 
     const newsletter = JSON.parse(jsonMatch[0]);
     console.log(`Step 3: Newsletter generated. Topic: "${newsletter.topic}"`);
 
-    // Step 3: Select relevant product ads
-    const ads = selectRelevantAds(newsletter.topic);
+    // Step 3: Select relevant product ads (theme-aware)
+    const ads = selectRelevantAds(newsletter.topic, featuredProducts);
     const adHtml = buildAdHtml(ads);
 
-    // Step 4: Build the full HTML email
+    // Step 4: Build the full HTML email — structured format
     const approvalToken = crypto.randomUUID();
     const approveUrl = `${supabaseUrl}/functions/v1/approve-newsletter?token=${approvalToken}&action=approve`;
     const rejectUrl = `${supabaseUrl}/functions/v1/approve-newsletter?token=${approvalToken}&action=reject`;
 
-    const solutionsHtml = newsletter.practical_solutions.map((s: string, i: number) => 
-      `<tr><td style="padding:8px 0;font-size:15px;color:#333;line-height:1.6;"><strong>${i + 1}.</strong> ${s}</td></tr>`
-    ).join('');
+    const themeLabel = hasTheme ? `<p style="margin:4px 0 0;color:#c8a97e;font-size:11px;text-transform:uppercase;letter-spacing:2px;">Monthly Theme: ${monthlyTheme}</p>` : '';
 
     const fullHtml = `
 <!DOCTYPE html>
@@ -225,50 +294,50 @@ OUTPUT FORMAT (JSON):
 <!-- Header -->
 <tr><td style="background:#1a1a2e;padding:32px 40px;text-align:center;">
   <h1 style="margin:0;color:#c8a97e;font-size:24px;font-weight:bold;letter-spacing:1px;">LEADERSHIP BY DESIGN</h1>
-  <p style="margin:8px 0 0;color:#aaa;font-size:13px;">Weekly Leadership Intelligence</p>
+  <p style="margin:8px 0 0;color:#aaa;font-size:13px;">Leadership Intelligence</p>
+  ${themeLabel}
 </td></tr>
 
 <!-- Content -->
 <tr><td style="padding:40px;">
 
-  <h2 style="margin:0 0 16px;font-size:22px;color:#1a1a2e;line-height:1.3;">${newsletter.subject_line}</h2>
+  <h2 style="margin:0 0 20px;font-size:22px;color:#1a1a2e;line-height:1.3;">${newsletter.subject_line}</h2>
 
-  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;">
-    ${newsletter.concern_summary}
+  <!-- HOOK: Pain Point Scenario -->
+  <div style="font-size:16px;color:#333;line-height:1.7;margin-bottom:24px;border-left:3px solid #1a1a2e;padding-left:16px;font-style:italic;">
+    ${newsletter.hook}
   </div>
 
-  <h3 style="margin:24px 0 12px;font-size:17px;color:#1a1a2e;">Why This Matters Now</h3>
+  <!-- INSIGHT: Why It Persists -->
+  <h3 style="margin:24px 0 12px;font-size:17px;color:#1a1a2e;">Why This Keeps Happening</h3>
   <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;">
-    ${newsletter.why_it_matters}
+    ${newsletter.insight_section}
   </div>
-
-  <h3 style="margin:24px 0 12px;font-size:17px;color:#1a1a2e;">Practical Solutions You Can Use Today</h3>
-  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-    ${solutionsHtml}
-  </table>
 
   <!-- Ad Block 1 -->
-  ${adHtml.split('</table>')[0]}</table>
+  ${ads.length > 0 ? buildAdHtml([ads[0]]) : ''}
 
-  <h3 style="margin:24px 0 12px;font-size:17px;color:#1a1a2e;">The Deeper Strategic Play</h3>
+  <!-- SOLUTION BRIDGE: Named Product/Programme -->
+  <h3 style="margin:24px 0 12px;font-size:17px;color:#1a1a2e;">What Actually Works</h3>
   <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;">
-    ${newsletter.strategic_insight}
+    ${newsletter.solution_bridge}
+  </div>
+
+  <!-- PROOF LAYER -->
+  <div style="margin:24px 0;padding:20px;background:#f8f6f3;border-radius:8px;text-align:center;">
+    <p style="margin:0;font-size:15px;color:#1a1a2e;font-weight:bold;line-height:1.6;">${newsletter.proof_layer}</p>
   </div>
 
   <!-- Remaining Ads -->
-  ${ads.slice(1).map(ad => `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0;border-left:4px solid #c8a97e;padding-left:16px;">
-      <tr><td>
-        <p style="margin:0 0 4px;font-size:14px;font-weight:bold;color:#1a1a2e;">🔹 ${ad.name}</p>
-        <p style="margin:0 0 8px;font-size:13px;color:#555;">${ad.description}</p>
-        <a href="${ad.url}" style="display:inline-block;padding:8px 20px;background:#c8a97e;color:#fff;text-decoration:none;border-radius:4px;font-size:13px;font-weight:bold;">${ad.cta}</a>
-      </td></tr>
-    </table>
-  `).join('')}
+  ${ads.length > 1 ? buildAdHtml(ads.slice(1)) : ''}
 
-  <div style="margin-top:32px;padding:24px;background:#f8f6f3;border-radius:8px;text-align:center;">
-    <p style="margin:0 0 8px;font-size:16px;color:#1a1a2e;font-weight:bold;">${newsletter.closing_cta}</p>
+  <!-- PRIMARY CTA -->
+  <div style="margin:32px 0;padding:28px;background:#1a1a2e;border-radius:8px;text-align:center;">
+    <p style="margin:0 0 12px;font-size:16px;color:#fff;font-weight:bold;">${newsletter.primary_cta}</p>
   </div>
+
+  <!-- Closing Thought -->
+  <p style="margin:16px 0 0;font-size:14px;color:#666;font-style:italic;text-align:center;">${newsletter.closing_thought}</p>
 
 </td></tr>
 
@@ -299,7 +368,6 @@ OUTPUT FORMAT (JSON):
         research_topic: newsletter.topic,
         research_sources: sources,
         sent_by: 'ai-auto',
-        
       })
       .select()
       .single();
@@ -309,12 +377,14 @@ OUTPUT FORMAT (JSON):
     console.log('Step 5: Newsletter saved. Sending preview to Kevin for approval...');
 
     // Step 6: Send approval email to Kevin
+    const themeInfo = hasTheme ? `<p><strong>Monthly Theme:</strong> ${monthlyTheme}</p>` : '';
     const approvalEmailHtml = `
 <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;">
   <div style="background:#1a1a2e;padding:20px;text-align:center;border-radius:8px 8px 0 0;">
     <h2 style="color:#c8a97e;margin:0;">📬 Newsletter Ready for Approval</h2>
   </div>
   <div style="padding:24px;background:#fff;border:1px solid #eee;">
+    ${themeInfo}
     <p><strong>Topic:</strong> ${newsletter.topic}</p>
     <p><strong>Subject Line:</strong> ${newsletter.subject_line}</p>
     <p><strong>Sources:</strong> ${sources.length} web sources analyzed</p>
@@ -364,8 +434,9 @@ OUTPUT FORMAT (JSON):
           subject: newsletter.subject_line,
           topic: newsletter.topic,
           sourceCount: sources.length,
-          approveUrl: approveUrl,
-          rejectUrl: rejectUrl,
+          approveUrl,
+          rejectUrl,
+          ...(hasTheme ? { monthlyTheme } : {}),
         },
       }),
     }).catch(e => console.error('Slack notify error:', e));
@@ -376,14 +447,15 @@ OUTPUT FORMAT (JSON):
       topic: newsletter.topic,
       subject: newsletter.subject_line,
       status: 'pending_approval',
+      monthly_theme: monthlyTheme || null,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('generate-ai-newsletter error:', error);
-    return new Response(JSON.stringify({ 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return new Response(JSON.stringify({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

@@ -1253,6 +1253,36 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_themes: {
+        Row: {
+          created_at: string
+          featured_products: string[]
+          id: string
+          month: number
+          pain_point_cluster: string
+          theme: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          featured_products?: string[]
+          id?: string
+          month: number
+          pain_point_cluster: string
+          theme: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          featured_products?: string[]
+          id?: string
+          month?: number
+          pain_point_cluster?: string
+          theme?: string
+          year?: number
+        }
+        Relationships: []
+      }
       newsletter_tracking: {
         Row: {
           created_at: string

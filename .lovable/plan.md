@@ -1,82 +1,189 @@
 
 
-# Upgrade AI Newsletter to Theme-Locked, Pain-Point-Anchored Framework
+# Slack Command Center -- Complete Build Plan
 
-## What Changes
+## Overview
+Build a multi-channel Slack notification system that turns your Slack workspace into a real-time command center for Leadership by Design. Every key business event fires a structured, rich Slack message to the right channel.
 
-The current newsletter generator uses a generic "find trending leadership concerns" approach. This upgrade locks every newsletter to a **monthly theme**, a **specific pain point**, and a **product bridge** -- turning it from general thought leadership into a targeted conversion asset.
+## Prerequisites (Already Done)
+- Slack bot connector is linked to the project
+- `SLACK_API_KEY` and `LOVABLE_API_KEY` are available as environment variables
+- Bot has `chat:write`, `chat:write.customize` scopes (confirmed)
 
-## 1. Add Monthly Theme Calendar to the Database
+## Step 1: Create Your Slack Channels
 
-Create a new `newsletter_themes` table to store the quarterly theme calendar so it can be managed without code changes:
+Before we deploy, you need to create these 4 channels in Slack (the bot can post to any public channel automatically):
 
-| Column | Type | Purpose |
-|---|---|---|
-| `id` | uuid | Primary key |
-| `year` | integer | e.g. 2026 |
-| `month` | integer | 1-12 |
-| `theme` | text | e.g. "Leading Through Change" |
-| `pain_point_cluster` | text | Related pain points for AI context |
-| `featured_products` | text[] | Product names to prioritize in ads |
-| `created_at` | timestamp | Auto |
+| Channel | Purpose |
+|---|---|
+| `#mission-control` | Critical alerts only: purchases, newsletter sent, traction spikes |
+| `#newsletter-engine` | Newsletter lifecycle: drafted, approval needed, approved, rejected, performance |
+| `#leads-and-signups` | New subscribers, contact forms, coaching inquiries, diagnostic completions |
+| `#system-health` | Errors, failures, technical issues |
 
-Pre-seed with the 6-month starter calendar (Jan-Jun) from your framework above.
+Products/revenue events go to `#mission-control` to keep signal density high. Analytics intelligence will be added as a Phase 2 feature.
 
-No RLS needed -- this is admin-only data accessed via service role key in the edge function.
+## Step 2: Create `slack-notify` Edge Function
 
-## 2. Rewrite the Claude System Prompt
+A single, centralized backend function that all other functions call to post Slack messages.
 
-Replace the current open-ended prompt in `generate-ai-newsletter` with the structured framework:
+**How it works:**
+- Accepts a JSON payload with `eventType`, `channel`, and `data`
+- Formats a rich Slack Block Kit message based on the event type
+- Posts via the Slack connector gateway at `https://connector-gateway.lovable.dev/slack/api/chat.postMessage`
+- Uses `chat:write.customize` to set contextual bot names and icons per event type
 
-- **Monthly theme lock**: Function reads the current month's theme from `newsletter_themes` and injects it into the prompt
-- **Pain point anchor**: Claude must name a specific, published leader pain point in the first 2 sentences, sourced from the Firecrawl research AND filtered through the monthly theme
-- **Solution bridge**: Every newsletter must map Pain Point --> Why It Happens --> Specific LBD Product/Service
-- **Strict structure**: Subject line (max 9 words), pre-header, hook, insight, solution, proof/social layer, single CTA
-- **Tone**: Authoritative but empathetic, targeting mid-to-senior leaders
+**Supported event types and their channels:**
 
-The JSON output format stays the same shape but gains new fields: `hook`, `insight_section`, `solution_bridge`, `proof_layer`, and `primary_cta` to match the required structure.
+| Event | Channel | Bot Name | Icon |
+|---|---|---|---|
+| `new_lead` | `#leads-and-signups` | LBD Lead Alert | Depends on temperature |
+| `new_signup` | `#leads-and-signups` | LBD Growth | Envelope emoji |
+| `purchase` | `#mission-control` | LBD Revenue | Money emoji |
+| `newsletter_generated` | `#newsletter-engine` | LBD Newsletter | Newspaper emoji |
+| `newsletter_approved` | `#mission-control` + `#newsletter-engine` | LBD Newsletter | Checkmark emoji |
+| `newsletter_rejected` | `#newsletter-engine` | LBD Newsletter | X emoji |
+| `traction_alert` | `#mission-control` | LBD Traction | Fire emoji |
+| `system_error` | `#system-health` | LBD System | Warning emoji |
 
-## 3. Update Firecrawl Search Query
+**Security:** Internal function-to-function calls use `SUPABASE_SERVICE_ROLE_KEY`. External apps use `x-admin-token` header validation.
 
-Make the search query theme-aware:
+**Channel resolution:** The function will look up channel IDs by name using `conversations.list` and cache them in memory for the function's lifecycle.
 
+## Step 3: Wire Into Existing Edge Functions
+
+### 3a. `send-lead-notification` (leads and coaching inquiries)
+After sending the existing email alerts, add a non-blocking call to `slack-notify` with:
+- Lead name, email, company, score, temperature
+- AI recommendation summary
+- Source (diagnostic, contact form, coaching inquiry)
+- Hot leads also post to `#mission-control`
+
+### 3b. `generate-ai-newsletter` (newsletter drafted)
+After saving the draft and sending the approval email to Kevin, fire a `newsletter_generated` event with:
+- Topic and subject line
+- Direct approve/reject links (same ones in the email)
+- Number of sources analyzed
+
+### 3c. `approve-newsletter` (newsletter approved or rejected)
+After processing the action, fire either `newsletter_approved` or `newsletter_rejected`:
+- Approved: subject, recipient count, sent timestamp -- posts to both `#mission-control` and `#newsletter-engine`
+- Rejected: subject only -- posts to `#newsletter-engine`
+
+### 3d. `send-purchase-email` (product sale)
+After sending buyer and admin emails, fire a `purchase` event to `#mission-control`:
+- Product name, buyer name/email, payment reference
+- Timestamp in SAST
+
+### 3e. `ExitIntentPopup.tsx` (new signup from frontend)
+After successful subscriber insert, call the `slack-notify` function directly from the frontend via `supabase.functions.invoke()`:
+- Subscriber name, email, source
+- This goes to `#leads-and-signups`
+
+## Step 4: Newsletter Traction Alerts
+
+Add threshold-based alerting to the `track-newsletter` function:
+
+- After recording each open/click event, count total opens and clicks for that newsletter
+- Query `newsletter_sends` for `recipient_count`
+- If open rate exceeds 40% and no alert has been sent yet, fire a `traction_alert` to `#mission-control`
+- If click count exceeds 50 and no alert has been sent yet, fire a `traction_alert`
+
+**Database change:** Add two boolean columns to `newsletter_sends`:
+- `slack_open_alert_sent` (default false)
+- `slack_click_alert_sent` (default false)
+
+These prevent duplicate alerts for the same campaign.
+
+## Step 5: Error Handling as Signal
+
+All `slack-notify` calls are non-blocking (fire-and-forget). If Slack posting fails, it logs to console but never breaks the primary business logic (email sending, purchase processing, etc.).
+
+If the `slack-notify` function itself encounters a critical error (missing API keys, gateway down), it posts to `#system-health` as a fallback or simply logs.
+
+## Example Slack Messages
+
+**Hot Lead (Block Kit):**
 ```text
-Current: "biggest leadership challenge concern trending this week"
-New:     "leadership [MONTHLY THEME] challenge concern trending this week"
++----------------------------------+
+| HOT LEAD ALERT                   |
+| Score: 87/100                    |
+|                                  |
+| Name:    Sarah van der Berg      |
+| Email:   sarah@bigcorp.co.za     |
+| Company: BigCorp (Enterprise)    |
+| Source:  Leadership Diagnostic   |
+|                                  |
+| AI: Decision-maker showing       |
+| urgency. Call within 2 hours.    |
++----------------------------------+
 ```
 
-This focuses research results on the month's theme rather than casting a wide net.
+**Newsletter Ready:**
+```text
++----------------------------------+
+| NEWSLETTER READY FOR APPROVAL    |
+|                                  |
+| "Why Leaders Are Struggling      |
+| with Decision Fatigue"           |
+|                                  |
+| Sources: 7 analyzed              |
+|                                  |
+| [ Approve ]  [ Reject ]         |
++----------------------------------+
+```
 
-## 4. Update Email HTML Template
+**New Sale:**
+```text
++----------------------------------+
+| NEW SALE                         |
+|                                  |
+| Product:   New Manager Kit       |
+| Buyer:     John Smith            |
+| Amount:    R497                  |
+| Reference: PAY-abc123           |
+| Time:      14:03 SAST           |
++----------------------------------+
+```
 
-Restructure the email body to match the new format:
-- Hook section (2-3 sentences, pain point scenario)
-- Insight section (3-4 sentences, why it persists, tied to theme)
-- Solution section (3-4 sentences, named LBD product/programme)
-- Proof/social layer (stat or outcome reference)
-- Single clear CTA (diagnostic, programme page, or booking)
-- Product ads remain as soft placements between sections
+**Traction Alert:**
+```text
++----------------------------------+
+| TRACTION ALERT                   |
+|                                  |
+| Campaign: "CEOs cite             |
+| uncertainty..."                  |
+| Open Rate: 48% (target: 40%)    |
+| Recipients: 36                   |
++----------------------------------+
+```
 
-## 5. Fallback Behavior
+## Files to Create
 
-If no theme is configured for the current month, the function falls back to the existing generic approach so newsletters never fail to generate.
+| File | Purpose |
+|---|---|
+| `supabase/functions/slack-notify/index.ts` | Core notification engine |
 
 ## Files to Modify
 
 | File | Change |
 |---|---|
-| `supabase/functions/generate-ai-newsletter/index.ts` | Theme lookup, new Claude prompt, updated HTML template, theme-aware search query |
+| `supabase/functions/send-lead-notification/index.ts` | Add Slack call after email send |
+| `supabase/functions/generate-ai-newsletter/index.ts` | Add Slack call after draft saved |
+| `supabase/functions/approve-newsletter/index.ts` | Add Slack call on approve/reject |
+| `supabase/functions/send-purchase-email/index.ts` | Add Slack call after purchase emails |
+| `supabase/functions/track-newsletter/index.ts` | Add threshold check + Slack traction alert |
+| `src/components/ExitIntentPopup.tsx` | Add Slack call after signup |
 
 ## Database Migration
 
-One new table (`newsletter_themes`) with starter data seeded for Jan-Jun.
+```text
+ALTER TABLE newsletter_sends
+  ADD COLUMN slack_open_alert_sent boolean DEFAULT false,
+  ADD COLUMN slack_click_alert_sent boolean DEFAULT false;
+```
 
-## What Stays the Same
+## Multi-App Support (Built In)
 
-- Approval workflow (token-based approve/reject)
-- Resend email delivery
-- Slack notifications
-- Product ad selection logic (enhanced with theme's `featured_products`)
-- Schedule (Mon/Thu generation, Tue/Fri send)
-- All existing edge functions and frontend code
+The `slack-notify` function accepts a `sourceApp` field. Any future app (SHIFT, Startup SA) can POST to it with an `x-admin-token` header and a valid payload to send alerts to the same channels. No additional setup needed.
 
