@@ -141,6 +141,7 @@ const App = () => (
           <Route path="/corporate-mind-reset" element={<CorporateMindReset />} />
           <Route path="/leadership-development" element={<LeadershipDevelopmentSales />} />
           <Route path="/leader-as-coach" element={<LeaderAsCoachSales />} />
+          <Route path="/manager-coaching" element={<LeaderAsCoachSales />} />
           <Route path="/corporate-training" element={<CorporateTraining />} />
           <Route path="/bespoke-meditations" element={<BespokeMeditations />} />
           <Route path="/bespoke-meditations/success" element={<BespokeMeditationsSuccess />} />
