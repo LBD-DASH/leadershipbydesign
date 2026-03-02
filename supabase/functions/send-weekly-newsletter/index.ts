@@ -131,6 +131,27 @@ Deno.serve(async (req) => {
 
     console.log(`Weekly newsletter sent: "${subject}" to ${totalSent} contacts`);
 
+    // Send a copy to the owner for records
+    const ownerEmail = Deno.env.get('OWNER_EMAIL') || 'hello@leadershipbydesign.co';
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Leadership by Design <hello@leadershipbydesign.co>',
+          to: [ownerEmail],
+          subject: `[SENT COPY] ${subject}`,
+          html: body_html,
+        }),
+      });
+      console.log(`Owner copy sent to ${ownerEmail}`);
+    } catch (ownerErr) {
+      console.error('Failed to send owner copy:', ownerErr);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       recipient_count: totalSent,
