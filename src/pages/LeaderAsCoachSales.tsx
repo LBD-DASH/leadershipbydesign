@@ -107,7 +107,7 @@ const phases = [
   },
 ];
 
-const CTA_TEXT = "Book a 30-Minute Manager Capability Strategy Call";
+const CTA_TEXT = "Book a Free 30-Min Call — We'll Map Your Gaps";
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -188,6 +188,9 @@ export default function LeaderAsCoachSales() {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/90 to-primary" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center">
+            <p className="text-primary-foreground/90 text-sm sm:text-base font-semibold tracking-wide mb-4">
+              For HR Leaders & L&D Managers in Financial Services
+            </p>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
               <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
                 <Clock className="w-3 h-3" /> 90-Day Accelerator
@@ -224,14 +227,16 @@ export default function LeaderAsCoachSales() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white/30 text-primary-foreground hover:bg-white/10 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
+                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
                 onClick={() => setBookingOpen(true)}
               >
                 Request a Proposal
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
+            <p className="text-primary-foreground/70 text-sm mt-5 max-w-xl mx-auto">
+              In 30 minutes, we'll assess your manager capability gaps and show you what's achievable in 90 days.
+            </p>
           </div>
         </section>
 
@@ -522,8 +527,7 @@ export default function LeaderAsCoachSales() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white/30 text-primary-foreground hover:bg-white/10 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
+                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
                 onClick={() => setBookingOpen(true)}
               >
                 Request a Proposal
@@ -589,7 +593,7 @@ export default function LeaderAsCoachSales() {
               {CTA_TEXT}
             </DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Choose a time that works for you — no commitment required.
+              In 30 minutes, we'll map your manager capability gaps and show you what's possible in 90 days. No commitment required.
             </p>
           </DialogHeader>
           <div className="w-full h-[600px]">
