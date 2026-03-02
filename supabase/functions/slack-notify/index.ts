@@ -254,6 +254,22 @@ function buildDailyHealthCheckBlocks(data: Record<string, any>) {
   ];
 }
 
+function buildHourlyPulseBlocks(data: Record<string, any>) {
+  const lines: string[] = [];
+  if (data.subscribers > 0) lines.push(`📩 *${data.subscribers}* new subscriber${data.subscribers > 1 ? 's' : ''}`);
+  if (data.contacts > 0) lines.push(`📋 *${data.contacts}* contact form${data.contacts > 1 ? 's' : ''}`);
+  if (data.diagnostics > 0) lines.push(`🧭 *${data.diagnostics}* diagnostic${data.diagnostics > 1 ? 's' : ''} completed`);
+  if (data.downloads > 0) lines.push(`📥 *${data.downloads}* lead magnet download${data.downloads > 1 ? 's' : ''}`);
+  if (data.purchases > 0) lines.push(`💰 *${data.purchases}* purchase${data.purchases > 1 ? 's' : ''}`);
+  if (data.coaching > 0) lines.push(`🎯 *${data.coaching}* coaching inquir${data.coaching > 1 ? 'ies' : 'y'}`);
+
+  return [
+    { type: 'header', text: { type: 'plain_text', text: `⚡ Hourly Pulse — ${data.total} new`, emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: lines.join('\n') } },
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Last hour ending ${data.hour || ''} SAST` }] },
+  ];
+}
+
 // ── Event → channel + format routing ──────────────────────
 
 const EVENT_CONFIG: Record<string, {
@@ -339,6 +355,13 @@ const EVENT_CONFIG: Record<string, {
     icon: ':alarm_clock:',
     buildBlocks: buildCadenceReminderBlocks,
     text: (d) => `${d.dayLabel} follow-up due: ${d.leadName || 'Unknown'}`,
+  },
+  hourly_leads_pulse: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Pulse',
+    icon: ':zap:',
+    buildBlocks: buildHourlyPulseBlocks,
+    text: (d) => `Hourly pulse: ${d.total} new activities`,
   },
 };
 
