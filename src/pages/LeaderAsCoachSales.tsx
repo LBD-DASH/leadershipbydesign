@@ -590,7 +590,7 @@ export default function LeaderAsCoachSales() {
               {CTA_TEXT}
             </DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Choose a time that works for you — no commitment required.
+              In 30 minutes, we'll map your manager capability gaps and show you what's possible in 90 days. No commitment required.
             </p>
           </DialogHeader>
           <div className="w-full h-[600px]">
