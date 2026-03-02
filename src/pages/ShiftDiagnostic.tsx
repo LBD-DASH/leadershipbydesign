@@ -66,6 +66,10 @@ export default function ShiftDiagnostic() {
 
       console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
 
+      // Fire GA4 conversion event
+      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      trackDiagnosticComplete({ diagnostic_type: 'shift' });
+
       const { data: submission, error } = await supabase
         .from('shift_diagnostic_submissions')
         .insert({

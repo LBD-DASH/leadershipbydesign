@@ -208,6 +208,9 @@ export default function LeaderAsCoachProgramme() {
         utm_term: utmParams.utm_term,
       });
       if (error) throw error;
+      // Fire GA4 conversion event
+      const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
+      trackContactFormSubmit({ service_interest: 'Leader as Coach Programme', source: 'leader_as_coach_product' });
       toast.success("Enquiry submitted! We'll be in touch shortly.");
       setEnquiryOpen(false);
       setFormData({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });

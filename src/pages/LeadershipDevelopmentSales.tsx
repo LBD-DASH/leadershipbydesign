@@ -123,6 +123,9 @@ export default function LeadershipDevelopmentSales() {
         service_interest: "Leadership Development L1-L5",
       });
       if (error) throw error;
+      // Fire GA4 conversion event
+      const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
+      trackContactFormSubmit({ service_interest: 'Leadership Development L1-L5', source: 'leadership_dev_page' });
       toast.success("Enquiry submitted! We'll be in touch shortly.");
       setSubmitted(true);
       setFormData({ name: "", company: "", email: "", phone: "", message: "" });

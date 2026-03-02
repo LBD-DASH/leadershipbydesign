@@ -42,6 +42,10 @@ export default function AIReadinessDiagnostic() {
     if (!result) return;
 
     try {
+      // Fire GA4 conversion event
+      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      trackDiagnosticComplete({ diagnostic_type: 'ai-readiness' });
+
       // Save to database
       const { data, error } = await supabase
         .from('ai_readiness_submissions')

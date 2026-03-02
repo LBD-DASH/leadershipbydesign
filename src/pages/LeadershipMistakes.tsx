@@ -93,6 +93,10 @@ export default function LeadershipMistakes() {
 
       if (dbError) throw dbError;
 
+      // Fire GA4 conversion event
+      const { trackLeadMagnetDownload } = await import('@/utils/gtmEvents');
+      trackLeadMagnetDownload({ lead_magnet: 'leadership-mistakes-checklist' });
+
       // Send email with PDF link
       const { error: emailError } = await supabase.functions.invoke("send-lead-magnet-email", {
         body: {

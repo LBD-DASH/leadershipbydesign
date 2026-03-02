@@ -29,6 +29,11 @@ export default function SurvivalPackSuccess() {
           payment_reference: reference || trxref,
         } as any).then(() => console.log("Purchase recorded"));
 
+        // Fire GA4 conversion event
+        import('@/utils/gtmEvents').then(({ trackPurchaseComplete }) => {
+          trackPurchaseComplete({ product_name: 'survival-pack', value: 147, currency: 'ZAR' });
+        });
+
         supabase.functions.invoke("send-purchase-email", {
           body: { email, name, product: "survival-pack", paymentReference: reference || trxref },
         }).then(() => console.log("Purchase email sent"));
