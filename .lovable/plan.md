@@ -1,189 +1,64 @@
 
 
-# Slack Command Center -- Complete Build Plan
+# Leader as Coach Page — 5-Second Audit Fixes
 
-## Overview
-Build a multi-channel Slack notification system that turns your Slack workspace into a real-time command center for Leadership by Design. Every key business event fires a structured, rich Slack message to the right channel.
+## What Changes
 
-## Prerequisites (Already Done)
-- Slack bot connector is linked to the project
-- `SLACK_API_KEY` and `LOVABLE_API_KEY` are available as environment variables
-- Bot has `chat:write`, `chat:write.customize` scopes (confirmed)
+Three targeted fixes to the hero section based on the UX audit: clarify the buyer, fix the invisible CTA, and add a micro-promise to the booking button.
 
-## Step 1: Create Your Slack Channels
+---
 
-Before we deploy, you need to create these 4 channels in Slack (the bot can post to any public channel automatically):
+## 1. Add Buyer Identity Line Above the Headline
 
-| Channel | Purpose |
-|---|---|
-| `#mission-control` | Critical alerts only: purchases, newsletter sent, traction spikes |
-| `#newsletter-engine` | Newsletter lifecycle: drafted, approval needed, approved, rejected, performance |
-| `#leads-and-signups` | New subscribers, contact forms, coaching inquiries, diagnostic completions |
-| `#system-health` | Errors, failures, technical issues |
+Add a clear, explicit line above the h1 that names the buyer:
 
-Products/revenue events go to `#mission-control` to keep signal density high. Analytics intelligence will be added as a Phase 2 feature.
+**"For HR Leaders & L&D Managers in Financial Services"**
 
-## Step 2: Create `slack-notify` Edge Function
+This will be a small, styled text element sitting between the tag pills and the headline, so a first-time visitor instantly knows who the page is for.
 
-A single, centralized backend function that all other functions call to post Slack messages.
+---
 
-**How it works:**
-- Accepts a JSON payload with `eventType`, `channel`, and `data`
-- Formats a rich Slack Block Kit message based on the event type
-- Posts via the Slack connector gateway at `https://connector-gateway.lovable.dev/slack/api/chat.postMessage`
-- Uses `chat:write.customize` to set contextual bot names and icons per event type
+## 2. Fix the Invisible "Request a Proposal" Button
 
-**Supported event types and their channels:**
+The secondary CTA uses `variant="outline"` with `border-white/30 text-primary-foreground` — which renders as near-invisible white-on-white in both hero locations (lines 225-233 and 523-531).
 
-| Event | Channel | Bot Name | Icon |
-|---|---|---|---|
-| `new_lead` | `#leads-and-signups` | LBD Lead Alert | Depends on temperature |
-| `new_signup` | `#leads-and-signups` | LBD Growth | Envelope emoji |
-| `purchase` | `#mission-control` | LBD Revenue | Money emoji |
-| `newsletter_generated` | `#newsletter-engine` | LBD Newsletter | Newspaper emoji |
-| `newsletter_approved` | `#mission-control` + `#newsletter-engine` | LBD Newsletter | Checkmark emoji |
-| `newsletter_rejected` | `#newsletter-engine` | LBD Newsletter | X emoji |
-| `traction_alert` | `#mission-control` | LBD Traction | Fire emoji |
-| `system_error` | `#system-health` | LBD System | Warning emoji |
+**Fix**: Replace the styling with a solid, contrasting treatment:
+- Remove `variant="outline"` 
+- Apply `bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25`
 
-**Security:** Internal function-to-function calls use `SUPABASE_SERVICE_ROLE_KEY`. External apps use `x-admin-token` header validation.
+This makes it clearly visible as a secondary option while keeping the primary CTA dominant. Applied to both the hero and final CTA section.
 
-**Channel resolution:** The function will look up channel IDs by name using `conversations.list` and cache them in memory for the function's lifecycle.
+---
 
-## Step 3: Wire Into Existing Edge Functions
+## 3. Reframe the CTA with a Micro-Promise
 
-### 3a. `send-lead-notification` (leads and coaching inquiries)
-After sending the existing email alerts, add a non-blocking call to `slack-notify` with:
-- Lead name, email, company, score, temperature
-- AI recommendation summary
-- Source (diagnostic, contact form, coaching inquiry)
-- Hot leads also post to `#mission-control`
+Change the CTA text from:
 
-### 3b. `generate-ai-newsletter` (newsletter drafted)
-After saving the draft and sending the approval email to Kevin, fire a `newsletter_generated` event with:
-- Topic and subject line
-- Direct approve/reject links (same ones in the email)
-- Number of sources analyzed
-
-### 3c. `approve-newsletter` (newsletter approved or rejected)
-After processing the action, fire either `newsletter_approved` or `newsletter_rejected`:
-- Approved: subject, recipient count, sent timestamp -- posts to both `#mission-control` and `#newsletter-engine`
-- Rejected: subject only -- posts to `#newsletter-engine`
-
-### 3d. `send-purchase-email` (product sale)
-After sending buyer and admin emails, fire a `purchase` event to `#mission-control`:
-- Product name, buyer name/email, payment reference
-- Timestamp in SAST
-
-### 3e. `ExitIntentPopup.tsx` (new signup from frontend)
-After successful subscriber insert, call the `slack-notify` function directly from the frontend via `supabase.functions.invoke()`:
-- Subscriber name, email, source
-- This goes to `#leads-and-signups`
-
-## Step 4: Newsletter Traction Alerts
-
-Add threshold-based alerting to the `track-newsletter` function:
-
-- After recording each open/click event, count total opens and clicks for that newsletter
-- Query `newsletter_sends` for `recipient_count`
-- If open rate exceeds 40% and no alert has been sent yet, fire a `traction_alert` to `#mission-control`
-- If click count exceeds 50 and no alert has been sent yet, fire a `traction_alert`
-
-**Database change:** Add two boolean columns to `newsletter_sends`:
-- `slack_open_alert_sent` (default false)
-- `slack_click_alert_sent` (default false)
-
-These prevent duplicate alerts for the same campaign.
-
-## Step 5: Error Handling as Signal
-
-All `slack-notify` calls are non-blocking (fire-and-forget). If Slack posting fails, it logs to console but never breaks the primary business logic (email sending, purchase processing, etc.).
-
-If the `slack-notify` function itself encounters a critical error (missing API keys, gateway down), it posts to `#system-health` as a fallback or simply logs.
-
-## Example Slack Messages
-
-**Hot Lead (Block Kit):**
-```text
-+----------------------------------+
-| HOT LEAD ALERT                   |
-| Score: 87/100                    |
-|                                  |
-| Name:    Sarah van der Berg      |
-| Email:   sarah@bigcorp.co.za     |
-| Company: BigCorp (Enterprise)    |
-| Source:  Leadership Diagnostic   |
-|                                  |
-| AI: Decision-maker showing       |
-| urgency. Call within 2 hours.    |
-+----------------------------------+
+```
+"Book a 30-Minute Manager Capability Strategy Call"
 ```
 
-**Newsletter Ready:**
-```text
-+----------------------------------+
-| NEWSLETTER READY FOR APPROVAL    |
-|                                  |
-| "Why Leaders Are Struggling      |
-| with Decision Fatigue"           |
-|                                  |
-| Sources: 7 analyzed              |
-|                                  |
-| [ Approve ]  [ Reject ]         |
-+----------------------------------+
+To:
+
+```
+"Book a Free 30-Min Call — We'll Map Your Gaps"
 ```
 
-**New Sale:**
-```text
-+----------------------------------+
-| NEW SALE                         |
-|                                  |
-| Product:   New Manager Kit       |
-| Buyer:     John Smith            |
-| Amount:    R497                  |
-| Reference: PAY-abc123           |
-| Time:      14:03 SAST           |
-+----------------------------------+
-```
+And add a one-line sub-text below the CTA buttons in the hero:
 
-**Traction Alert:**
-```text
-+----------------------------------+
-| TRACTION ALERT                   |
-|                                  |
-| Campaign: "CEOs cite             |
-| uncertainty..."                  |
-| Open Rate: 48% (target: 40%)    |
-| Recipients: 36                   |
-+----------------------------------+
-```
+**"In 30 minutes, we'll assess your manager capability gaps and show you what's achievable in 90 days."**
 
-## Files to Create
+This answers the "what do I get?" question immediately.
 
-| File | Purpose |
-|---|---|
-| `supabase/functions/slack-notify/index.ts` | Core notification engine |
+Also update the calendar dialog description to match: *"In 30 minutes, we'll map your manager capability gaps and show you what's possible in 90 days. No commitment required."*
 
-## Files to Modify
+---
+
+## Files Modified
 
 | File | Change |
 |---|---|
-| `supabase/functions/send-lead-notification/index.ts` | Add Slack call after email send |
-| `supabase/functions/generate-ai-newsletter/index.ts` | Add Slack call after draft saved |
-| `supabase/functions/approve-newsletter/index.ts` | Add Slack call on approve/reject |
-| `supabase/functions/send-purchase-email/index.ts` | Add Slack call after purchase emails |
-| `supabase/functions/track-newsletter/index.ts` | Add threshold check + Slack traction alert |
-| `src/components/ExitIntentPopup.tsx` | Add Slack call after signup |
+| `src/pages/LeaderAsCoachSales.tsx` | All three fixes: buyer line, button styling, CTA text + micro-promise |
 
-## Database Migration
-
-```text
-ALTER TABLE newsletter_sends
-  ADD COLUMN slack_open_alert_sent boolean DEFAULT false,
-  ADD COLUMN slack_click_alert_sent boolean DEFAULT false;
-```
-
-## Multi-App Support (Built In)
-
-The `slack-notify` function accepts a `sourceApp` field. Any future app (SHIFT, Startup SA) can POST to it with an `x-admin-token` header and a valid payload to send alerts to the same channels. No additional setup needed.
+No database or backend changes needed.
 
