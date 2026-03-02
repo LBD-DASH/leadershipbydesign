@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart3, Eye, MousePointer, Send, TrendingUp } from 'lucide-react';
+import { BarChart3, Eye, MousePointer, Send, TrendingUp, Target, Zap } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface TrackingStats {
@@ -13,14 +13,24 @@ interface TrackingStats {
   auto_generated: boolean;
 }
 
+interface ConversionInsight {
+  theme: string | null;
+  pain_cluster: string | null;
+  subject_line_type: string | null;
+  total_opens: number;
+  total_clicks: number;
+  open_rate: number | null;
+  click_rate: number | null;
+}
+
 export default function NewsletterAnalytics() {
   const [stats, setStats] = useState<TrackingStats[]>([]);
+  const [insights, setInsights] = useState<ConversionInsight[]>([]);
   const [loading, setLoading] = useState(true);
   const [totals, setTotals] = useState({ sent: 0, opens: 0, clicks: 0, ctr: 0 });
 
   useEffect(() => {
     const fetchAnalytics = async () => {
-      // Fetch sent newsletters via admin edge function (bypasses RLS)
       const adminToken = sessionStorage.getItem('admin_token') || '';
       const { data: result } = await supabase.functions.invoke('admin-newsletters', {
         body: { action: 'sent_history' },
@@ -33,8 +43,7 @@ export default function NewsletterAnalytics() {
         return;
       }
 
-      // Fetch tracking events for these newsletters
-      const ids = newsletters.map(n => n.id);
+      const ids = newsletters.map((n: any) => n.id);
       const { data: tracking } = await supabase
         .from('newsletter_tracking')
         .select('newsletter_id, event_type')
@@ -47,7 +56,7 @@ export default function NewsletterAnalytics() {
         if (t.event_type === 'click') trackingMap[t.newsletter_id].clicks++;
       });
 
-      const combined = newsletters.map(n => ({
+      const combined = newsletters.map((n: any) => ({
         newsletter_id: n.id,
         subject: n.subject,
         sent_at: n.sent_at || '',
@@ -57,9 +66,9 @@ export default function NewsletterAnalytics() {
         auto_generated: n.auto_generated || false,
       }));
 
-      const totalSent = combined.reduce((s, n) => s + n.recipient_count, 0);
-      const totalOpens = combined.reduce((s, n) => s + n.opens, 0);
-      const totalClicks = combined.reduce((s, n) => s + n.clicks, 0);
+      const totalSent = combined.reduce((s: number, n: any) => s + n.recipient_count, 0);
+      const totalOpens = combined.reduce((s: number, n: any) => s + n.opens, 0);
+      const totalClicks = combined.reduce((s: number, n: any) => s + n.clicks, 0);
 
       setStats(combined);
       setTotals({
@@ -68,6 +77,14 @@ export default function NewsletterAnalytics() {
         clicks: totalClicks,
         ctr: totalOpens > 0 ? Math.round((totalClicks / totalOpens) * 100) : 0,
       });
+
+      // Fetch conversion insights
+      const { data: insightsData } = await supabase
+        .from('conversion_insights')
+        .select('theme, pain_cluster, subject_line_type, total_opens, total_clicks, open_rate, click_rate')
+        .order('total_clicks', { ascending: false });
+
+      setInsights(insightsData || []);
       setLoading(false);
     };
 
@@ -77,6 +94,26 @@ export default function NewsletterAnalytics() {
   if (loading) {
     return <p className="text-sm text-muted-foreground text-center py-8">Loading analytics...</p>;
   }
+
+  // Aggregate insights by pain cluster
+  const painClusterPerformance = insights.reduce((acc, i) => {
+    const key = i.pain_cluster || 'Uncategorised';
+    if (!acc[key]) acc[key] = { clicks: 0, opens: 0, count: 0 };
+    acc[key].clicks += i.total_clicks;
+    acc[key].opens += i.total_opens;
+    acc[key].count++;
+    return acc;
+  }, {} as Record<string, { clicks: number; opens: number; count: number }>);
+
+  // Aggregate by subject line type
+  const subjectTypePerformance = insights.reduce((acc, i) => {
+    const key = i.subject_line_type || 'unknown';
+    if (!acc[key]) acc[key] = { clicks: 0, opens: 0, count: 0 };
+    acc[key].clicks += i.total_clicks;
+    acc[key].opens += i.total_opens;
+    acc[key].count++;
+    return acc;
+  }, {} as Record<string, { clicks: number; opens: number; count: number }>);
 
   return (
     <div className="space-y-6">
@@ -111,6 +148,85 @@ export default function NewsletterAnalytics() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Conversion Insights */}
+      {insights.length > 0 && (
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Pain Cluster Performance */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <Target className="w-4 h-4" />
+                Pain Cluster Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {Object.entries(painClusterPerformance)
+                  .sort(([, a], [, b]) => b.clicks - a.clicks)
+                  .map(([cluster, data]) => {
+                    const ctr = data.opens > 0 ? Math.round((data.clicks / data.opens) * 100) : 0;
+                    return (
+                      <div key={cluster} className="flex items-center justify-between p-2 rounded border border-border">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">{cluster}</p>
+                          <p className="text-xs text-muted-foreground">{data.count} newsletter{data.count !== 1 ? 's' : ''}</p>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs shrink-0 ml-3">
+                          <div className="text-center">
+                            <p className="font-bold text-green-500">{ctr}%</p>
+                            <p className="text-muted-foreground">CTR</p>
+                          </div>
+                          <div className="text-center">
+                            <p className="font-bold">{data.clicks}</p>
+                            <p className="text-muted-foreground">clicks</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Subject Line Type Performance */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <Zap className="w-4 h-4" />
+                Subject Line Type
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {Object.entries(subjectTypePerformance)
+                  .sort(([, a], [, b]) => b.clicks - a.clicks)
+                  .map(([type, data]) => {
+                    const ctr = data.opens > 0 ? Math.round((data.clicks / data.opens) * 100) : 0;
+                    return (
+                      <div key={type} className="flex items-center justify-between p-2 rounded border border-border">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium capitalize">{type}</p>
+                          <p className="text-xs text-muted-foreground">{data.count} newsletter{data.count !== 1 ? 's' : ''}</p>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs shrink-0 ml-3">
+                          <div className="text-center">
+                            <p className="font-bold text-green-500">{ctr}%</p>
+                            <p className="text-muted-foreground">CTR</p>
+                          </div>
+                          <div className="text-center">
+                            <p className="font-bold">{data.clicks}</p>
+                            <p className="text-muted-foreground">clicks</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Per-newsletter breakdown */}
       <Card>

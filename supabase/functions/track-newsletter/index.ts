@@ -14,7 +14,6 @@ Deno.serve(async (req) => {
     const redirectUrl = url.searchParams.get('url');
 
     if (!newsletterId || !email) {
-      // Still return pixel/redirect to not break email
       if (event === 'click' && redirectUrl) {
         return Response.redirect(redirectUrl, 302);
       }
@@ -43,6 +42,18 @@ Deno.serve(async (req) => {
         if (error) console.error('Tracking insert error:', error.message);
       });
 
+    // Update conversion_insights counters (non-blocking)
+    if (event === 'open' || event === 'click') {
+      const column = event === 'open' ? 'total_opens' : 'total_clicks';
+      supabase.rpc('increment_conversion_insight', { p_newsletter_id: newsletterId, p_column: column })
+        .then(({ error }) => {
+          if (error) {
+            // Fallback: direct update if RPC doesn't exist yet
+            console.error('Conversion insight update error:', error.message);
+          }
+        });
+    }
+
     // Traction threshold check (non-blocking)
     if (newsletterId) {
       (async () => {
@@ -68,6 +79,18 @@ Deno.serve(async (req) => {
             .eq('event_type', 'click');
 
           const openRate = Math.round(((openCount || 0) / newsletter.recipient_count) * 100);
+          const clickRate = openCount ? Math.round(((clickCount || 0) / (openCount || 1)) * 100) : 0;
+
+          // Update conversion_insights with computed rates
+          await supabase
+            .from('conversion_insights')
+            .update({
+              total_opens: openCount || 0,
+              total_clicks: clickCount || 0,
+              open_rate: openRate,
+              click_rate: clickRate,
+            })
+            .eq('newsletter_id', newsletterId);
 
           // Open rate threshold: 40%
           if (openRate >= 40 && !newsletter.slack_open_alert_sent) {
@@ -115,7 +138,6 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error('track-newsletter error:', error);
-    // Still return something useful
     const url = new URL(req.url);
     const redirectUrl = url.searchParams.get('url');
     if (redirectUrl) return Response.redirect(redirectUrl, 302);
