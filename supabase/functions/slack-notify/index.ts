@@ -340,6 +340,13 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildCadenceReminderBlocks,
     text: (d) => `${d.dayLabel} follow-up due: ${d.leadName || 'Unknown'}`,
   },
+  hourly_leads_pulse: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Pulse',
+    icon: ':zap:',
+    buildBlocks: buildHourlyPulseBlocks,
+    text: (d) => `Hourly pulse: ${d.total} new activities`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────
