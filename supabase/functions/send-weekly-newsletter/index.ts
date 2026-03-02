@@ -36,17 +36,16 @@ Deno.serve(async (req) => {
 
     const { subject, body_html, tag_filter } = draft;
 
-    // Fetch ALL active subscribers with pagination
+    // Fetch ALL active subscribers with pagination (no limit)
     const PAGE_SIZE = 1000;
     let subscribers: { email: string; name: string | null }[] = [];
     let from = 0;
-    let keepGoing = true;
 
-    while (keepGoing) {
+    while (true) {
       let query = supabase
         .from('email_subscribers')
         .select('email, name')
-        .eq('status', 'active')
+        .in('status', ['active', 'subscribed'])
         .range(from, from + PAGE_SIZE - 1);
 
       if (tag_filter) {
@@ -55,9 +54,10 @@ Deno.serve(async (req) => {
 
       const { data, error: fetchError } = await query;
       if (fetchError) throw fetchError;
-      subscribers = subscribers.concat(data || []);
-      if (!data || data.length < PAGE_SIZE) keepGoing = false;
-      else from += PAGE_SIZE;
+      if (!data || data.length === 0) break;
+      subscribers = subscribers.concat(data);
+      if (data.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
     }
 
     if (subscribers.length === 0) {
@@ -130,6 +130,27 @@ Deno.serve(async (req) => {
       .eq('id', draft.id);
 
     console.log(`Weekly newsletter sent: "${subject}" to ${totalSent} contacts`);
+
+    // Send a copy to the owner for records
+    const ownerEmail = Deno.env.get('OWNER_EMAIL') || 'hello@leadershipbydesign.co';
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Leadership by Design <hello@leadershipbydesign.co>',
+          to: [ownerEmail],
+          subject: `[SENT COPY] ${subject}`,
+          html: body_html,
+        }),
+      });
+      console.log(`Owner copy sent to ${ownerEmail}`);
+    } catch (ownerErr) {
+      console.error('Failed to send owner copy:', ownerErr);
+    }
 
     return new Response(JSON.stringify({
       success: true,
