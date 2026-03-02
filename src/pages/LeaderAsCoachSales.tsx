@@ -129,7 +129,7 @@ export default function LeaderAsCoachSales() {
         event_label: 'Leader as Coach - Book a Free 30-Min Call',
       });
     }
-    setCalendarOpen(true);
+    window.open('https://calendar.app.google/QvjXmUfXbfjrmrH78', '_blank', 'noopener,noreferrer');
   };
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
