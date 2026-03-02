@@ -604,26 +604,6 @@ export default function LeaderAsCoachSales() {
         </DialogContent>
       </Dialog>
 
-      {/* CALENDAR POPUP */}
-      <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 overflow-hidden">
-          <DialogHeader className="p-6 pb-0">
-            <DialogTitle className="font-serif text-2xl font-bold">
-              {CTA_TEXT}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              In 30 minutes, we'll map your manager capability gaps and show you what's possible in 90 days. No commitment required.
-            </p>
-          </DialogHeader>
-          <div className="w-full h-[600px]">
-            <iframe
-              src="https://calendar.app.google/QvjXmUfXbfjrmrH78"
-              className="w-full h-full border-0"
-              title="Book a strategy call"
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
