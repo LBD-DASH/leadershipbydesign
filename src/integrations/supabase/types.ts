@@ -398,6 +398,56 @@ export type Database = {
         }
         Relationships: []
       }
+      conversion_insights: {
+        Row: {
+          click_rate: number | null
+          contact_submissions: number
+          created_at: string
+          id: string
+          newsletter_id: string | null
+          open_rate: number | null
+          pain_cluster: string | null
+          subject_line_type: string | null
+          theme: string | null
+          total_clicks: number
+          total_opens: number
+        }
+        Insert: {
+          click_rate?: number | null
+          contact_submissions?: number
+          created_at?: string
+          id?: string
+          newsletter_id?: string | null
+          open_rate?: number | null
+          pain_cluster?: string | null
+          subject_line_type?: string | null
+          theme?: string | null
+          total_clicks?: number
+          total_opens?: number
+        }
+        Update: {
+          click_rate?: number | null
+          contact_submissions?: number
+          created_at?: string
+          id?: string
+          newsletter_id?: string | null
+          open_rate?: number | null
+          pain_cluster?: string | null
+          subject_line_type?: string | null
+          theme?: string | null
+          total_clicks?: number
+          total_opens?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversion_insights_newsletter_id_fkey"
+            columns: ["newsletter_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_sends"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
