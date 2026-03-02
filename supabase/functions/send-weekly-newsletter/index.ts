@@ -36,17 +36,16 @@ Deno.serve(async (req) => {
 
     const { subject, body_html, tag_filter } = draft;
 
-    // Fetch ALL active subscribers with pagination
+    // Fetch ALL active subscribers with pagination (no limit)
     const PAGE_SIZE = 1000;
     let subscribers: { email: string; name: string | null }[] = [];
     let from = 0;
-    let keepGoing = true;
 
-    while (keepGoing) {
+    while (true) {
       let query = supabase
         .from('email_subscribers')
         .select('email, name')
-        .eq('status', 'active')
+        .in('status', ['active', 'subscribed'])
         .range(from, from + PAGE_SIZE - 1);
 
       if (tag_filter) {
@@ -55,9 +54,10 @@ Deno.serve(async (req) => {
 
       const { data, error: fetchError } = await query;
       if (fetchError) throw fetchError;
-      subscribers = subscribers.concat(data || []);
-      if (!data || data.length < PAGE_SIZE) keepGoing = false;
-      else from += PAGE_SIZE;
+      if (!data || data.length === 0) break;
+      subscribers = subscribers.concat(data);
+      if (data.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
     }
 
     if (subscribers.length === 0) {
