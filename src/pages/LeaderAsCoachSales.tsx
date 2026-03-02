@@ -524,8 +524,7 @@ export default function LeaderAsCoachSales() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white/30 text-primary-foreground hover:bg-white/10 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
+                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
                 onClick={() => setBookingOpen(true)}
               >
                 Request a Proposal
