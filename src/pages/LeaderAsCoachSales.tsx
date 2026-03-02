@@ -112,6 +112,25 @@ const CTA_TEXT = "Book a Free 30-Min Call — We'll Map Your Gaps";
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
+
+  const handleCalendarOpen = () => {
+    // Fire GA4 event via dataLayer (picked up by GTM)
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'schedule_call_click',
+        event_category: 'engagement',
+        event_label: 'Leader as Coach - Book a Free 30-Min Call',
+      });
+    }
+    // Also fire via gtag directly as fallback
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'schedule_call_click', {
+        event_category: 'engagement',
+        event_label: 'Leader as Coach - Book a Free 30-Min Call',
+      });
+    }
+    setCalendarOpen(true);
+  };
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -220,7 +239,7 @@ export default function LeaderAsCoachSales() {
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
-                onClick={() => setCalendarOpen(true)}
+                onClick={() => handleCalendarOpen()}
               >
                 {CTA_TEXT}
                 <Calendar className="ml-2 w-5 h-5" />
@@ -386,7 +405,7 @@ export default function LeaderAsCoachSales() {
             <Button
               size="lg"
               className="rounded-full font-bold group min-h-[56px]"
-              onClick={() => setCalendarOpen(true)}
+              onClick={() => handleCalendarOpen()}
             >
               {CTA_TEXT}
               <Calendar className="ml-2 w-5 h-5" />
@@ -520,7 +539,7 @@ export default function LeaderAsCoachSales() {
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
-                onClick={() => setCalendarOpen(true)}
+                onClick={() => handleCalendarOpen()}
               >
                 {CTA_TEXT}
                 <Calendar className="ml-2 w-5 h-5" />
