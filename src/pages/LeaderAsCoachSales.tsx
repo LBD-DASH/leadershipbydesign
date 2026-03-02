@@ -188,6 +188,9 @@ export default function LeaderAsCoachSales() {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/90 to-primary" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center">
+            <p className="text-primary-foreground/90 text-sm sm:text-base font-semibold tracking-wide mb-4">
+              For HR Leaders & L&D Managers in Financial Services
+            </p>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
               <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
                 <Clock className="w-3 h-3" /> 90-Day Accelerator
