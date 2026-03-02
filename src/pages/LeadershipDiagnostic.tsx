@@ -66,6 +66,10 @@ export default function LeadershipDiagnostic() {
 
       console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
 
+      // Fire GA4 conversion event
+      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      trackDiagnosticComplete({ diagnostic_type: 'leadership' });
+
       // Save to database with user data, follow-up preference, UTM params, AND lead scoring
       const { data: insertedData } = await supabase
         .from('leadership_diagnostic_submissions')

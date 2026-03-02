@@ -72,6 +72,12 @@ export default function Contact() {
           scoring_breakdown: leadScore.breakdown
         });
 
+      // Fire GA4 conversion event
+      if (!dbError) {
+        const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
+        trackContactFormSubmit({ service_interest: formData.service_interest, source: 'contact_page' });
+      }
+
       if (dbError) {
         console.error('Database save error:', dbError);
         // Continue with email even if database save fails

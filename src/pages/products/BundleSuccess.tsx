@@ -46,6 +46,11 @@ export default function BundleSuccess() {
           payment_reference: reference || trxref,
         } as any).then(() => console.log("Purchase recorded"));
 
+        // Fire GA4 conversion event
+        import('@/utils/gtmEvents').then(({ trackPurchaseComplete }) => {
+          trackPurchaseComplete({ product_name: 'bundle', value: 597, currency: 'ZAR' });
+        });
+
         supabase.functions.invoke("send-purchase-email", {
           body: { email, name, product: "bundle", paymentReference: reference || trxref },
         }).then(() => console.log("Purchase email sent"));
