@@ -224,14 +224,16 @@ export default function LeaderAsCoachSales() {
               </Button>
               <Button
                 size="lg"
-                variant="outline"
-                className="border-white/30 text-primary-foreground hover:bg-white/10 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
+                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
                 onClick={() => setBookingOpen(true)}
               >
                 Request a Proposal
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
+            <p className="text-primary-foreground/70 text-sm mt-5 max-w-xl mx-auto">
+              In 30 minutes, we'll assess your manager capability gaps and show you what's achievable in 90 days.
+            </p>
           </div>
         </section>
 
