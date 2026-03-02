@@ -80,6 +80,9 @@ export default function CorporateMindReset() {
         service_interest: "Corporate Mind Reset",
       });
       if (error) throw error;
+      // Fire GA4 conversion event
+      const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
+      trackContactFormSubmit({ service_interest: 'Corporate Mind Reset', source: 'cmr_page' });
       toast.success("Booking request submitted! We'll be in touch shortly.");
       setBookingSubmitted(true);
       setFormData({ name: "", company: "", email: "", phone: "", dates: "", attendees: "" });

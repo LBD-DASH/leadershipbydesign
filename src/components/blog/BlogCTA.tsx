@@ -53,6 +53,10 @@ export default function BlogCTA({ postTitle, variant = "waitlist" }: BlogCTAProp
 
       if (error) throw error;
 
+      // Fire GA4 conversion event
+      const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
+      trackContactFormSubmit({ service_interest: 'Blog - Priority Insights', source: 'blog_cta' });
+
       processLead(leadData, `Blog CTA signup. Article: ${postTitle || "General"}`).catch(
         (err) => console.error("Lead processing error:", err)
       );
