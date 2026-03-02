@@ -405,7 +405,7 @@ export default function LeaderAsCoachSales() {
             <Button
               size="lg"
               className="rounded-full font-bold group min-h-[56px]"
-              onClick={() => setCalendarOpen(true)}
+              onClick={() => handleCalendarOpen()}
             >
               {CTA_TEXT}
               <Calendar className="ml-2 w-5 h-5" />
