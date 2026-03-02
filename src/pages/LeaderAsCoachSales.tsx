@@ -107,7 +107,7 @@ const phases = [
   },
 ];
 
-const CTA_TEXT = "Book a 30-Minute Manager Capability Strategy Call";
+const CTA_TEXT = "Book a Free 30-Min Call — We'll Map Your Gaps";
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
