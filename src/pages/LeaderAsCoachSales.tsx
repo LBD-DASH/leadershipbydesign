@@ -539,7 +539,7 @@ export default function LeaderAsCoachSales() {
               <Button
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
-                onClick={() => setCalendarOpen(true)}
+                onClick={() => handleCalendarOpen()}
               >
                 {CTA_TEXT}
                 <Calendar className="ml-2 w-5 h-5" />
