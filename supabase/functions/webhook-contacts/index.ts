@@ -26,8 +26,9 @@ Deno.serve(async (req) => {
 
   try {
     // Simple secret check — Pipedream sends this header
-    const webhookSecret = req.headers.get("x-webhook-secret");
-    const expectedSecret = Deno.env.get("WEBHOOK_CONTACTS_SECRET");
+    const webhookSecret = (req.headers.get("x-webhook-secret") || "").trim();
+    const expectedSecret = (Deno.env.get("WEBHOOK_CONTACTS_SECRET") || "").trim();
+    console.log(`Auth check: got secret length=${webhookSecret.length}, expected length=${expectedSecret.length}, match=${webhookSecret === expectedSecret}`);
     if (expectedSecret && webhookSecret !== expectedSecret) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers });
     }
