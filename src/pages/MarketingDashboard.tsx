@@ -200,6 +200,10 @@ export default function MarketingDashboard() {
                   <Newspaper className="w-4 h-4" />
                   <span className="hidden sm:inline">Newsletter</span>
                 </TabsTrigger>
+                <TabsTrigger value="call-logs" className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span className="hidden sm:inline">Calls</span>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="submissions" className="mt-6">
