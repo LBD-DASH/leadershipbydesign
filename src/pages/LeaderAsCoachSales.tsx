@@ -555,13 +555,14 @@ export default function LeaderAsCoachSales() {
               Limited quarterly intake. Book now to secure your Q2 cohort spot.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Button
+               <Button
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px] text-sm sm:text-base px-4 sm:px-6"
                 onClick={() => handleCalendarOpen()}
               >
-                {CTA_TEXT}
-                <Calendar className="ml-2 w-5 h-5" />
+                <span className="sm:hidden">Book a Free 30-Min Call</span>
+                <span className="hidden sm:inline">{CTA_TEXT}</span>
+                <Calendar className="ml-2 w-5 h-5 shrink-0" />
               </Button>
               <Button
                 size="lg"
