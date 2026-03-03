@@ -200,6 +200,19 @@ export default function LeaderAsCoachSales() {
         canonicalUrl="/leader-as-coach"
         keywords="manager coaching programme, reduce HR escalations, leadership development financial services, coaching capability, manager training South Africa"
       />
+      <ServiceSchema
+        name="Leader as Coach Programme"
+        description="A structured 90-day accelerator that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity."
+        areaServed="South Africa"
+        url="/leader-as-coach"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Programmes", url: "/programmes" },
+          { name: "Leader as Coach Programme", url: "/leader-as-coach" },
+        ]}
+      />
 
       <div className="min-h-screen bg-background">
         <Header />
