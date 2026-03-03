@@ -718,19 +718,16 @@ export default function ColdCallPrompter() {
                       <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
                     )}
                   </div>
-                  <label className="cursor-pointer">
-                    <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" />
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors cursor-pointer">
-                      <Upload className="w-3 h-3" />
-                      Upload CSV
-                    </span>
-                  </label>
+                  <Button variant="ghost" size="sm" onClick={fetchProspects} className="gap-1.5 text-xs">
+                    <RefreshCw className="w-3 h-3" />
+                    Refresh
+                  </Button>
                 </div>
 
                 {prospects.length === 0 ? (
                   <div className="text-center py-6 text-muted-foreground">
-                    <p className="text-sm">Upload a CSV with columns: Name, Surname, Email, Company</p>
-                    <p className="text-xs mt-1">Optional: Phone</p>
+                    <p className="text-sm">No prospects loaded yet</p>
+                    <p className="text-xs mt-1">Your admin will upload the call list</p>
                   </div>
                 ) : (
                   <div className="max-h-48 overflow-y-auto border border-border rounded-md">
