@@ -149,6 +149,39 @@ export default function ColdCallPrompter() {
     }
   }, [isAuthenticated]);
 
+  const fetchProspects = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke('admin-call-list', {
+      method: 'GET',
+    });
+    if (!error && data?.prospects) {
+      const mapped: Prospect[] = data.prospects.map((p: any) => ({
+        id: p.id,
+        name: p.first_name || '',
+        surname: p.last_name || '',
+        email: p.email || '',
+        company: p.company || '',
+        phone: p.phone || '',
+        title: p.title || '',
+      }));
+      setProspects(mapped);
+      if (mapped.length > 0 && currentProspectIndex === -1) {
+        setCurrentProspectIndex(0);
+        const p = mapped[0];
+        setForm((f) => ({
+          ...f,
+          contactName: `${p.name} ${p.surname}`.trim(),
+          company: p.company,
+          email: p.email,
+          phone: p.phone || '',
+        }));
+      }
+    }
+  }, [currentProspectIndex]);
+
+  useEffect(() => {
+    if (isAuthenticated) fetchProspects();
+  }, [isAuthenticated, fetchProspects]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
