@@ -12,9 +12,22 @@ import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 
 export default function SubmissionsPanel() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('overview');
   const [showWaitingListOnly, setShowWaitingListOnly] = useState(false);
 
+  const handleDeleteLeadership = async (id: string) => {
+    const { error } = await supabase
+      .from('leadership_diagnostic_submissions')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      toast.error('Failed to delete submission');
+      return;
+    }
+    toast.success('Submission deleted');
+    queryClient.invalidateQueries({ queryKey: ['leadership-submissions'] });
+  };
   const { data: leadershipSubmissions, isLoading: loadingLeadership } = useQuery({
     queryKey: ['leadership-submissions'],
     queryFn: async () => {
