@@ -21,6 +21,7 @@ import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 import ContentEngine from '@/components/marketing/ContentEngine';
 import NewsletterTab from '@/components/marketing/NewsletterTab';
 import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
+import CallLogsPanel from '@/components/admin/CallLogsPanel';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
