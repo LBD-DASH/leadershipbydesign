@@ -352,6 +352,12 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                     Import {selected.size} to Call List
                   </Button>
                 )}
+                {results.some(r => !r.phone) && (
+                  <Button size="sm" variant="secondary" onClick={handleScrapePhones} disabled={scrapingPhones} className="gap-1.5">
+                    {scrapingPhones ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PhoneCall className="w-3.5 h-3.5" />}
+                    {scrapingPhones ? 'Scraping...' : `Find Numbers (${results.filter(r => !r.phone).length})`}
+                  </Button>
+                )}
               </div>
             </div>
 
