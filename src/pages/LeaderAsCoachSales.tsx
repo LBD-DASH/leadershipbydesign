@@ -480,7 +480,7 @@ export default function LeaderAsCoachSales() {
               </p>
             </div>
 
-            <div className="grid grid-cols-5 gap-2 sm:gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 sm:gap-4">
               {shiftSkills.map((skill, i) => {
                 const Icon = skill.icon;
                 return (
@@ -495,7 +495,7 @@ export default function LeaderAsCoachSales() {
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center bg-primary/10">
                       <span className="text-lg sm:text-xl font-bold text-primary">{skill.letter}</span>
                     </div>
-                    <h3 className="text-[10px] sm:text-sm font-semibold text-foreground">{skill.skill}</h3>
+                    <h3 className="text-xs sm:text-sm font-semibold text-foreground">{skill.skill}</h3>
                   </motion.div>
                 );
               })}
