@@ -336,6 +336,7 @@ export default function ColdCallPrompter() {
           email: cols[emailIdx] || "",
           company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
           phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
+          title: titleIdx >= 0 ? cols[titleIdx] || "" : "",
         });
       }
       setProspects(parsed);
