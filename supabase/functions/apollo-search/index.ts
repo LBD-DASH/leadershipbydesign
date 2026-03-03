@@ -53,7 +53,7 @@ serve(async (req) => {
 
     console.log('Apollo search request:', JSON.stringify(apolloBody));
 
-    const response = await fetch('https://api.apollo.io/api/v1/mixed_people/search', {
+    const response = await fetch('https://api.apollo.io/api/v1/mixed_people/api_search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
