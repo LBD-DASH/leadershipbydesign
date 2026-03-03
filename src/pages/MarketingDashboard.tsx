@@ -275,6 +275,11 @@ export default function MarketingDashboard() {
               <TabsContent value="newsletter" className="mt-6">
                 <NewsletterTab />
               </TabsContent>
+
+              <TabsContent value="call-logs" className="mt-6">
+                <CallLogsPanel />
+              </TabsContent>
+            </Tabs>
             </Tabs>
           </motion.div>
         </div>
