@@ -118,6 +118,14 @@ const BackButton = ({ screen, onBack }: { screen: Screen; onBack: (target: Scree
   );
 };
 
+interface Prospect {
+  name: string;
+  surname: string;
+  email: string;
+  company: string;
+  phone?: string;
+}
+
 export default function ColdCallPrompter() {
   const { user, loading: authLoading, signIn, signOut, isAuthenticated } = useAuth();
   const [screen, setScreen] = useState<Screen>("REP_NAME");
@@ -127,6 +135,8 @@ export default function ColdCallPrompter() {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPdf, setShowPdf] = useState(false);
+  const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
 
   useEffect(() => {
     if (!isAuthenticated) return;
