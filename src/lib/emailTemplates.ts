@@ -162,19 +162,19 @@ No catch, no follow-up unless you want it. I just think the data would be useful
 
 function getStep4Template(data: ProspectData): EmailTemplate {
   return {
-    subject: `Last note from me`,
+    subject: `Last one from me`,
     body: `Hi ${data.contactFirstName},
 
-I won't keep following up — I respect your time.
+I'll leave it here — I know you're busy and I respect that.
 
-If leadership development or manager effectiveness comes onto your radar in the next 6-12 months, I'm here: leadershipbydesign.co
+If leadership development or manager effectiveness ever comes onto your radar, you know where to find me: leadershipbydesign.co
 
-In the meantime, I've put together some free resources that might be useful for your people team:
+In the meantime, a couple of free things your people team might find useful:
 
 • Team Diagnostic: ${getDiagnosticUrl(data.prospectId, 4)}
-• SHIFT Methodology overview: https://leadershipbydesign.lovable.app/shift-methodology
+• Our SHIFT approach: https://leadershipbydesign.lovable.app/shift-methodology
 
-Wishing you and the team at ${data.companyName} a strong year ahead.
+Here's to a strong year for ${data.companyName}.
 
 — Kevin, Leadership by Design`
   };
