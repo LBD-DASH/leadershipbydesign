@@ -883,6 +883,45 @@ export default function ColdCallPrompter() {
                 </ul>
               </div>
 
+              {/* Quick-Fire Answers */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-amber-700">⚡ Quick-Fire Answers</p>
+                <div className="space-y-2 text-xs">
+                  <div>
+                    <p className="font-semibold text-foreground">"Where did you get my number?"</p>
+                    <p className="text-muted-foreground italic">We do extensive research to find the right person responsible for leadership development — that's why I'm calling you specifically.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"What is this programme about?"</p>
+                    <p className="text-muted-foreground italic">It transforms your managers into leadership coaches — so instead of just managing tasks, they drive culture, accountability and performance.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"How much does it cost?"</p>
+                    <p className="text-muted-foreground italic">It depends on cohort size and duration — 3, 6, or 10 months. Most clients use their SDL or CSI budget so there's zero out-of-pocket. That's exactly what the 30-min call covers.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"We already have training providers."</p>
+                    <p className="text-muted-foreground italic">That's great — most of our clients did too. The difference is we don't do once-off workshops. We embed coaching capability over 90 days with measurable behaviour change.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"I'm not the right person."</p>
+                    <p className="text-muted-foreground italic">No problem at all — who would be the best person to speak to about leadership development or your Skills Development Levy spend?</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"Send me an email."</p>
+                    <p className="text-muted-foreground italic">Absolutely — I'll send it right now. Just so I can personalise it, is your biggest challenge manager accountability, culture, or coaching conversations?</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"We don't have budget right now."</p>
+                    <p className="text-muted-foreground italic">Totally understand. Most companies don't realise this qualifies under SDL — your levy is already paid, we just help you claim it back as real capability. When does your next financial year start?</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">"How is this different from other programmes?"</p>
+                    <p className="text-muted-foreground italic">We don't just train — we coach managers over 90 days using the SHIFT framework. They get 1-on-1 coaching, assessments, and accountability. The result is behaviour change, not just knowledge.</p>
+                  </div>
+                </div>
+              </div>
+
               {/* Assessments */}
               <div className="bg-background border border-border rounded-lg p-3">
                 <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">Assessments Included</p>
