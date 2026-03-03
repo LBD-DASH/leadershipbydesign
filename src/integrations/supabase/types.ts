@@ -167,6 +167,60 @@ export type Database = {
         }
         Relationships: []
       }
+      cold_call_logs: {
+        Row: {
+          company: string | null
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          follow_up_date: string | null
+          gatekeeper_outcome: string | null
+          id: string
+          initial_response: string
+          notes: string | null
+          objection_reason: string | null
+          phone: string | null
+          pitch_outcome: string | null
+          programme_interest: string | null
+          proposed_meeting_date: string | null
+          rep_name: string
+        }
+        Insert: {
+          company?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          follow_up_date?: string | null
+          gatekeeper_outcome?: string | null
+          id?: string
+          initial_response: string
+          notes?: string | null
+          objection_reason?: string | null
+          phone?: string | null
+          pitch_outcome?: string | null
+          programme_interest?: string | null
+          proposed_meeting_date?: string | null
+          rep_name: string
+        }
+        Update: {
+          company?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          follow_up_date?: string | null
+          gatekeeper_outcome?: string | null
+          id?: string
+          initial_response?: string
+          notes?: string | null
+          objection_reason?: string | null
+          phone?: string | null
+          pitch_outcome?: string | null
+          programme_interest?: string | null
+          proposed_meeting_date?: string | null
+          rep_name?: string
+        }
+        Relationships: []
+      }
       contact_form_submissions: {
         Row: {
           ai_analysis: string | null

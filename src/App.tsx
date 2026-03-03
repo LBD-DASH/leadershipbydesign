@@ -83,6 +83,7 @@ import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
 import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
+import ColdCallPrompter from "./pages/ColdCallPrompter";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -169,6 +170,7 @@ const App = () => (
           <Route path="/marketing" element={<MarketingDashboard />} />
           <Route path="/client-alignment-index" element={<ClientAlignmentIndex />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/cold-call-prompter" element={<ColdCallPrompter />} />
           <Route
             path="/blog-admin"
             element={
