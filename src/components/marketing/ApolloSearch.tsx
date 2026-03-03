@@ -126,7 +126,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
     }
   };
 
-  const handleImport = async () => {
+  const handleSendToCallAgent = async () => {
     const toImport = results.filter(r => selected.has(r.id));
     if (toImport.length === 0) return;
 
