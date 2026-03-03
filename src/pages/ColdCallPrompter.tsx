@@ -119,6 +119,7 @@ const BackButton = ({ screen, onBack }: { screen: Screen; onBack: (target: Scree
 };
 
 interface Prospect {
+  id: string;
   name: string;
   surname: string;
   email: string;
