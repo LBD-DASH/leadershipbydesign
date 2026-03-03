@@ -478,6 +478,9 @@ export default function ColdCallPrompter() {
                         {prospects[currentProspectIndex].name} {prospects[currentProspectIndex].surname}
                       </span>
                       <span className="text-xs text-muted-foreground">— {prospects[currentProspectIndex].company}</span>
+                      {prospects[currentProspectIndex].title && (
+                        <span className="text-xs text-muted-foreground">· {prospects[currentProspectIndex].title}</span>
+                      )}
                     </div>
                     <span className="text-xs text-muted-foreground">{currentProspectIndex + 1}/{prospects.length}</span>
                   </div>
