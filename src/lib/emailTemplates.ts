@@ -100,17 +100,17 @@ If anything in the results raises questions, I'm happy to jump on a call and wal
 }
 
 function getStep1CoolTemplate(data: ProspectData): EmailTemplate {
-  const insight = data.industryInsight || `${data.industry} companies scaling past 200 people often see a sharp drop in middle-management effectiveness — impacting retention and engagement`;
+  const insight = data.industryInsight || `${data.industry} companies scaling past 200 people often hit a wall with middle-management effectiveness — and it shows up in retention and engagement numbers`;
   
   return {
-    subject: `Something I noticed about ${data.industry} companies in ${data.location}`,
+    subject: `A pattern I keep seeing in ${data.industry}`,
     body: `Hi ${data.contactFirstName},
 
-I've been researching leadership capability in ${data.industry} companies across ${data.location}, and a pattern keeps showing up: ${insight}.
+I've been looking at leadership capability across ${data.industry} companies in ${data.location} and there's a pattern that keeps showing up: ${insight}.
 
-I work with HR and People teams on exactly this — developing the human skills in managers that don't improve on their own.
+It's the kind of thing that doesn't fix itself. I work with HR and People teams on developing the human skills in managers that training manuals can't cover.
 
-If this resonates, I'd welcome a conversation. If not, no worries at all.
+If that resonates at all, I'd welcome a conversation. If not, no worries — I won't keep chasing.
 
 — Kevin, Leadership by Design`
   };
