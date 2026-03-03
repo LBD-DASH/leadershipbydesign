@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ import SubmissionsPanel from '@/components/admin/SubmissionsPanel';
 import ContentEngine from '@/components/marketing/ContentEngine';
 import NewsletterTab from '@/components/marketing/NewsletterTab';
 import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
+import CallLogsPanel from '@/components/admin/CallLogsPanel';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -154,7 +155,7 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-11 w-full max-w-6xl">
+              <TabsList className="grid grid-cols-12 w-full max-w-6xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
@@ -198,6 +199,10 @@ export default function MarketingDashboard() {
                 <TabsTrigger value="newsletter" className="flex items-center gap-2">
                   <Newspaper className="w-4 h-4" />
                   <span className="hidden sm:inline">Newsletter</span>
+                </TabsTrigger>
+                <TabsTrigger value="call-logs" className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span className="hidden sm:inline">Calls</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -270,7 +275,12 @@ export default function MarketingDashboard() {
               <TabsContent value="newsletter" className="mt-6">
                 <NewsletterTab />
               </TabsContent>
+
+              <TabsContent value="call-logs" className="mt-6">
+                <CallLogsPanel />
+              </TabsContent>
             </Tabs>
+
           </motion.div>
         </div>
       </main>

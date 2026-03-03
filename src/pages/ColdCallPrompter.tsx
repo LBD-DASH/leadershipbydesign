@@ -2,15 +2,17 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut } from "lucide-react";
+import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 type Screen =
   | "REP_NAME"
@@ -76,17 +78,79 @@ const Pause = () => (
 );
 
 export default function ColdCallPrompter() {
+  const { user, loading: authLoading, signIn, signOut, isAuthenticated } = useAuth();
   const [screen, setScreen] = useState<Screen>("REP_NAME");
   const [form, setForm] = useState<FormData>(initialFormData);
   const [saving, setSaving] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const savedRep = localStorage.getItem("cold-call-rep-name");
     if (savedRep) {
       setForm((f) => ({ ...f, repName: savedRep }));
       setScreen("CALL_START");
     }
-  }, []);
+  }, [isAuthenticated]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    const { error } = await signIn(loginEmail, loginPassword);
+    setLoginLoading(false);
+    if (error) {
+      toast({ title: "Login failed", description: error.message, variant: "destructive" });
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <div className="border-b bg-background">
+          <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-2">
+            <Phone className="h-5 w-5 text-primary" />
+            <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <Lock className="w-6 h-6 text-primary" />
+              </div>
+              <CardTitle className="text-2xl">Call Centre Login</CardTitle>
+              <CardDescription>Sign in to access the cold call prompter</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <FormLabel htmlFor="cc-email">Email</FormLabel>
+                  <Input id="cc-email" type="email" placeholder="you@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+                </div>
+                <div className="space-y-2">
+                  <FormLabel htmlFor="cc-password">Password</FormLabel>
+                  <Input id="cc-password" type="password" placeholder="Enter your password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
+                </div>
+                <Button type="submit" className="w-full" disabled={loginLoading}>
+                  {loginLoading ? "Signing in…" : "Sign In"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const update = (field: keyof FormData, value: string | Date | undefined) =>
     setForm((f) => ({ ...f, [field]: value }));
@@ -193,9 +257,14 @@ export default function ColdCallPrompter() {
             <Phone className="h-5 w-5 text-primary" />
             <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter v1</h1>
           </div>
-          {screen !== "REP_NAME" && (
-            <span className="text-xs text-muted-foreground">{form.repName}</span>
-          )}
+          <div className="flex items-center gap-2">
+            {screen !== "REP_NAME" && (
+              <span className="text-xs text-muted-foreground">{form.repName}</span>
+            )}
+            <Button variant="ghost" size="sm" onClick={() => signOut()} className="text-xs text-muted-foreground">
+              <LogOut className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
 
