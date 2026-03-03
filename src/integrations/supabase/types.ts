@@ -119,6 +119,86 @@ export type Database = {
         }
         Relationships: []
       }
+      apollo_sequence_tracking: {
+        Row: {
+          added_to_call_list_at: string | null
+          apollo_contact_id: string
+          apollo_sequence_id: string
+          apollo_sequence_name: string | null
+          call_alert_sent: boolean | null
+          call_alert_sent_at: string | null
+          call_list_prospect_id: string | null
+          contact_company: string | null
+          contact_email: string
+          contact_name: string | null
+          contact_title: string | null
+          created_at: string
+          has_bounced: boolean | null
+          id: string
+          last_activity_at: string | null
+          status: string
+          total_clicks: number | null
+          total_emails_sent: number | null
+          total_opens: number | null
+          total_replies: number | null
+          updated_at: string
+        }
+        Insert: {
+          added_to_call_list_at?: string | null
+          apollo_contact_id: string
+          apollo_sequence_id: string
+          apollo_sequence_name?: string | null
+          call_alert_sent?: boolean | null
+          call_alert_sent_at?: string | null
+          call_list_prospect_id?: string | null
+          contact_company?: string | null
+          contact_email: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          has_bounced?: boolean | null
+          id?: string
+          last_activity_at?: string | null
+          status?: string
+          total_clicks?: number | null
+          total_emails_sent?: number | null
+          total_opens?: number | null
+          total_replies?: number | null
+          updated_at?: string
+        }
+        Update: {
+          added_to_call_list_at?: string | null
+          apollo_contact_id?: string
+          apollo_sequence_id?: string
+          apollo_sequence_name?: string | null
+          call_alert_sent?: boolean | null
+          call_alert_sent_at?: string | null
+          call_list_prospect_id?: string | null
+          contact_company?: string | null
+          contact_email?: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          has_bounced?: boolean | null
+          id?: string
+          last_activity_at?: string | null
+          status?: string
+          total_clicks?: number | null
+          total_emails_sent?: number | null
+          total_opens?: number | null
+          total_replies?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apollo_sequence_tracking_call_list_prospect_id_fkey"
+            columns: ["call_list_prospect_id"]
+            isOneToOne: false
+            referencedRelation: "call_list_prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author: string
