@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X } from "lucide-react";
 import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -77,6 +77,47 @@ const Pause = () => (
   </div>
 );
 
+// Map each screen to its parent screen for back navigation
+const screenParent: Partial<Record<Screen, Screen>> = {
+  CALL_START: "REP_NAME",
+  PITCH: "CALL_START",
+  BOOK_MEETING: "PITCH",
+  NEED_INFO: "PITCH",
+  NOT_INTERESTED: "PITCH",
+  NO_RESPONSE: "CALL_START",
+  VOICEMAIL: "CALL_START",
+  GATEKEEPER: "CALL_START",
+  GATEKEEPER_BLOCKED: "GATEKEEPER",
+};
+
+const screenLabel: Partial<Record<Screen, string>> = {
+  REP_NAME: "Welcome",
+  CALL_START: "Opening",
+  PITCH: "Pitch",
+  BOOK_MEETING: "Book Meeting",
+  NEED_INFO: "More Info",
+  NOT_INTERESTED: "Not Interested",
+  NO_RESPONSE: "No Response",
+  VOICEMAIL: "Voicemail",
+  GATEKEEPER: "Gatekeeper",
+  GATEKEEPER_BLOCKED: "Gatekeeper Details",
+  SUCCESS: "Saved",
+};
+
+const BackButton = ({ screen, onBack }: { screen: Screen; onBack: (target: Screen) => void }) => {
+  const parent = screenParent[screen];
+  if (!parent) return null;
+  return (
+    <button
+      onClick={() => onBack(parent)}
+      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+    >
+      <ChevronLeft className="w-4 h-4" />
+      Back to {screenLabel[parent]}
+    </button>
+  );
+};
+
 export default function ColdCallPrompter() {
   const { user, loading: authLoading, signIn, signOut, isAuthenticated } = useAuth();
   const [screen, setScreen] = useState<Screen>("REP_NAME");
@@ -85,6 +126,7 @@ export default function ColdCallPrompter() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
+  const [showPdf, setShowPdf] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -183,6 +225,8 @@ export default function ColdCallPrompter() {
     else if (outcome === "need_email") setScreen("GATEKEEPER_BLOCKED");
   };
 
+  const goBack = (target: Screen) => setScreen(target);
+
   const saveCall = async () => {
     setSaving(true);
     const { error } = await supabase.from("cold_call_logs").insert({
@@ -252,7 +296,7 @@ export default function ColdCallPrompter() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="border-b bg-background sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
             <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter v1</h1>
@@ -261,6 +305,15 @@ export default function ColdCallPrompter() {
             {screen !== "REP_NAME" && (
               <span className="text-xs text-muted-foreground">{form.repName}</span>
             )}
+            <Button
+              variant={showPdf ? "default" : "outline"}
+              size="sm"
+              className="gap-1.5 text-xs"
+              onClick={() => setShowPdf(!showPdf)}
+            >
+              <FileText className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">{showPdf ? "Hide" : "Show"} Reference</span>
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => signOut()} className="text-xs text-muted-foreground">
               <LogOut className="h-3.5 w-3.5" />
             </Button>
@@ -268,262 +321,315 @@ export default function ColdCallPrompter() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex items-start justify-center px-4 py-8">
-        <Card className="w-full max-w-2xl shadow-sm">
-          <CardContent className="p-6 md:p-8 space-y-6">
-            {/* REP NAME */}
-            {screen === "REP_NAME" && (
-              <>
-                <h2 className="text-xl font-semibold">Welcome</h2>
-                <p className="text-muted-foreground">Enter your name to get started.</p>
-                <Input
-                  placeholder="Your name"
-                  value={form.repName}
-                  onChange={(e) => update("repName", e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && setRepAndContinue()}
-                  autoFocus
-                />
-                <Button onClick={setRepAndContinue} className="w-full" size="lg">
-                  Start Calling
-                </Button>
-              </>
-            )}
+      {/* Main layout with optional PDF sidebar */}
+      <div className="flex-1 flex">
+        {/* Prompter content */}
+        <div className={cn("flex-1 flex items-start justify-center px-4 py-8 transition-all", showPdf ? "lg:w-1/2" : "w-full")}>
+          <Card className="w-full max-w-2xl shadow-sm">
+            <CardContent className="p-6 md:p-8 space-y-6">
 
-            {/* CALL START */}
-            {screen === "CALL_START" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "Hi [First Name], it's Kevin Britz from Leadership by Design.
-                  <br /><br />
-                  I know I'm calling out of the blue — can I take 60 seconds to explain why I'm calling?"
-                </ScriptBlock>
-                <Pause />
-                <div className="grid grid-cols-2 gap-3">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleInitial("yes")}>
-                    YES
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => handleInitial("no")}>
-                    NO
-                  </Button>
-                  <Button size="lg" variant="outline" className="text-muted-foreground" onClick={() => handleInitial("voicemail")}>
-                    VOICEMAIL
-                  </Button>
-                  <Button size="lg" variant="outline" className="text-muted-foreground" onClick={() => handleInitial("gatekeeper")}>
-                    GATEKEEPER
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* PITCH */}
-            {screen === "PITCH" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "We work with financial services and insurance firms who are spending their Skills Development Levy and CSI budgets on leadership training that isn't changing behaviour.
-                  <br /><br />
-                  Managers still avoid hard conversations, culture lives on the wall, and SDL spend ticks compliance but doesn't build capability.
-                  <br /><br />
-                  We've built a structured Leader as Coach programme that transforms managers into culture architects over 3, 6, or 10 months — and it's fully eligible for SDL and B-BBEE spend."
-                </ScriptBlock>
-                <Pause />
-                <Label>Then ask:</Label>
-                <ScriptBlock>
-                  "Would it be worth a 20-minute conversation to see if this fits what you're trying to solve?"
-                </ScriptBlock>
-                <div className="grid grid-cols-3 gap-3 pt-2">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handlePitch("book_meeting")}>
-                    BOOK MEETING
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => handlePitch("need_info")}>
-                    NEED INFO
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-red-400 text-red-600 hover:bg-red-50" onClick={() => handlePitch("not_interested")}>
-                    NOT INTERESTED
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* BOOK MEETING */}
-            {screen === "BOOK_MEETING" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "Great. I'll keep it practical — we'll look at whether the 3-month Accelerator, the 6-month Transformation, or the full 10-month Culture Architecture fits your leadership layer."
-                </ScriptBlock>
-                <div className="space-y-3 pt-2">
-                  <Input placeholder="Contact name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
-                  <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
-                  <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
-                  <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-                  <a href="https://calendar.app.google/DRewMsaisLeh1J319" target="_blank" rel="noopener noreferrer">
-                    <Button type="button" variant="outline" className="w-full gap-2 border-primary text-primary hover:bg-primary/5">
-                      <CalendarIcon className="w-4 h-4" />
-                      Open Calendar — Book a Time
-                    </Button>
-                  </a>
-                  <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* NEED INFO */}
-            {screen === "NEED_INFO" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "The programme installs what we call the SHIFT Skills Framework — Self-Management, Human Intelligence, Innovation, Focus, Thinking, and AI Edge — as a behavioural operating system for managers."
-                </ScriptBlock>
-                <Pause />
-                <Label>Then ask:</Label>
-                <ScriptBlock>
-                  "Are you more focused on quick coaching skills for managers, or a deeper culture shift across your leadership layer?"
-                </ScriptBlock>
-                <div className="space-y-3 pt-2">
-                  <Select value={form.programmeInterest} onValueChange={(v) => update("programmeInterest", v)}>
-                    <SelectTrigger><SelectValue placeholder="Programme interest" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="3-month">3-Month Accelerator</SelectItem>
-                      <SelectItem value="6-month">6-Month Transformation</SelectItem>
-                      <SelectItem value="10-month">10-Month Culture Architecture</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
-                  <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* NOT INTERESTED */}
-            {screen === "NOT_INTERESTED" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "Understood. Just so I close the loop properly — are you already running a structured leadership coaching programme internally, or is this not a focus right now?"
-                </ScriptBlock>
-                <div className="space-y-3 pt-2">
-                  <Select value={form.objectionReason} onValueChange={(v) => update("objectionReason", v)}>
-                    <SelectTrigger><SelectValue placeholder="Reason" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="internal_provider">Internal provider</SelectItem>
-                      <SelectItem value="budget_timing">Budget timing</SelectItem>
-                      <SelectItem value="not_priority">Not priority</SelectItem>
-                      <SelectItem value="wrong_contact">Wrong contact</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* NO RESPONSE */}
-            {screen === "NO_RESPONSE" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "No problem at all. When would be a better time to reconnect?"
-                </ScriptBlock>
-                <div className="space-y-3 pt-2">
-                  <DatePicker value={form.followUpDate} onChange={(d) => update("followUpDate", d)} label="Follow-up date" />
-                  <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* VOICEMAIL */}
-            {screen === "VOICEMAIL" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "Hi [First Name], Kevin Britz from Leadership by Design.
-                  <br /><br />
-                  We help organisations turn their Skills Development Levy and CSI spend into measurable leadership capability.
-                  <br /><br />
-                  I'll send a short overview by email. My number is [number]."
-                </ScriptBlock>
-                <div className="space-y-3 pt-2">
-                  <Input placeholder="Contact name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
-                  <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
-                  <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-                  <Input placeholder="Email (if known)" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
-                  <Textarea placeholder="Quick summary" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* GATEKEEPER */}
-            {screen === "GATEKEEPER" && (
-              <>
-                <Label>Say this:</Label>
-                <ScriptBlock>
-                  "Hi, it's Kevin Britz calling regarding leadership development and Skills Levy allocation. Is [First Name] available?"
-                </ScriptBlock>
-                <div className="grid grid-cols-3 gap-3 pt-4">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleGatekeeper("transferred")}>
-                    TRANSFERRED
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => { update("gatekeeperOutcome", "need_email"); setScreen("GATEKEEPER_BLOCKED"); }}>
-                    NEED EMAIL
-                  </Button>
-                  <Button size="lg" variant="outline" className="border-red-400 text-red-600 hover:bg-red-50" onClick={() => handleGatekeeper("blocked")}>
-                    BLOCKED
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {/* GATEKEEPER BLOCKED / NEED EMAIL */}
-            {screen === "GATEKEEPER_BLOCKED" && (
-              <>
-                <h2 className="text-lg font-semibold">
-                  {form.gatekeeperOutcome === "need_email" ? "Capture Email" : "Blocked — Capture Details"}
-                </h2>
-                <div className="space-y-3">
-                  <Input placeholder="Alternate contact / name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
-                  {form.gatekeeperOutcome === "need_email" && (
-                    <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+              {/* Screen breadcrumb */}
+              {screen !== "REP_NAME" && screen !== "SUCCESS" && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span>Opening</span>
+                  {["PITCH", "BOOK_MEETING", "NEED_INFO", "NOT_INTERESTED"].includes(screen) && (
+                    <><span>›</span><span>Pitch</span></>
                   )}
-                  <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
-                  <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
-                    {saving ? "Saving…" : "SAVE CALL"}
+                  {["BOOK_MEETING", "NEED_INFO", "NOT_INTERESTED"].includes(screen) && (
+                    <><span>›</span><span className="text-foreground font-medium">{screenLabel[screen]}</span></>
+                  )}
+                  {screen === "PITCH" && (
+                    <><span>›</span><span className="text-foreground font-medium">Pitch</span></>
+                  )}
+                  {["NO_RESPONSE", "VOICEMAIL"].includes(screen) && (
+                    <><span>›</span><span className="text-foreground font-medium">{screenLabel[screen]}</span></>
+                  )}
+                  {["GATEKEEPER", "GATEKEEPER_BLOCKED"].includes(screen) && (
+                    <><span>›</span><span>Gatekeeper</span></>
+                  )}
+                  {screen === "GATEKEEPER_BLOCKED" && (
+                    <><span>›</span><span className="text-foreground font-medium">Details</span></>
+                  )}
+                </div>
+              )}
+
+              {/* Back button */}
+              <BackButton screen={screen} onBack={goBack} />
+
+              {/* REP NAME */}
+              {screen === "REP_NAME" && (
+                <>
+                  <h2 className="text-xl font-semibold">Welcome</h2>
+                  <p className="text-muted-foreground">Enter your name to get started.</p>
+                  <Input
+                    placeholder="Your name"
+                    value={form.repName}
+                    onChange={(e) => update("repName", e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && setRepAndContinue()}
+                    autoFocus
+                  />
+                  <Button onClick={setRepAndContinue} className="w-full" size="lg">
+                    Start Calling
+                  </Button>
+                </>
+              )}
+
+              {/* CALL START */}
+              {screen === "CALL_START" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "Hi [First Name], it's Kevin Britz from Leadership by Design.
+                    <br /><br />
+                    I know I'm calling out of the blue — can I take 60 seconds to explain why I'm calling?"
+                  </ScriptBlock>
+                  <Pause />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleInitial("yes")}>
+                      YES
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => handleInitial("no")}>
+                      NO
+                    </Button>
+                    <Button size="lg" variant="outline" className="text-muted-foreground" onClick={() => handleInitial("voicemail")}>
+                      VOICEMAIL
+                    </Button>
+                    <Button size="lg" variant="outline" className="text-muted-foreground" onClick={() => handleInitial("gatekeeper")}>
+                      GATEKEEPER
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* PITCH */}
+              {screen === "PITCH" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "We work with financial services and insurance firms who are spending their Skills Development Levy and CSI budgets on leadership training that isn't changing behaviour.
+                    <br /><br />
+                    Managers still avoid hard conversations, culture lives on the wall, and SDL spend ticks compliance but doesn't build capability.
+                    <br /><br />
+                    We've built a structured Leader as Coach programme that transforms managers into culture architects over 3, 6, or 10 months — and it's fully eligible for SDL and B-BBEE spend."
+                  </ScriptBlock>
+                  <Pause />
+                  <Label>Then ask:</Label>
+                  <ScriptBlock>
+                    "Would it be worth a 20-minute conversation to see if this fits what you're trying to solve?"
+                  </ScriptBlock>
+                  <div className="grid grid-cols-3 gap-3 pt-2">
+                    <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handlePitch("book_meeting")}>
+                      BOOK MEETING
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => handlePitch("need_info")}>
+                      NEED INFO
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-red-400 text-red-600 hover:bg-red-50" onClick={() => handlePitch("not_interested")}>
+                      NOT INTERESTED
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* BOOK MEETING */}
+              {screen === "BOOK_MEETING" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "Great. I'll keep it practical — we'll look at whether the 3-month Accelerator, the 6-month Transformation, or the full 10-month Culture Architecture fits your leadership layer."
+                  </ScriptBlock>
+                  <div className="space-y-3 pt-2">
+                    <Input placeholder="Contact name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
+                    <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
+                    <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+                    <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+                    <a href="https://calendar.app.google/DRewMsaisLeh1J319" target="_blank" rel="noopener noreferrer">
+                      <Button type="button" variant="outline" className="w-full gap-2 border-primary text-primary hover:bg-primary/5">
+                        <CalendarIcon className="w-4 h-4" />
+                        Open Calendar — Book a Time
+                      </Button>
+                    </a>
+                    <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* NEED INFO */}
+              {screen === "NEED_INFO" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "The programme installs what we call the SHIFT Skills Framework — Self-Management, Human Intelligence, Innovation, Focus, Thinking, and AI Edge — as a behavioural operating system for managers."
+                  </ScriptBlock>
+                  <Pause />
+                  <Label>Then ask:</Label>
+                  <ScriptBlock>
+                    "Are you more focused on quick coaching skills for managers, or a deeper culture shift across your leadership layer?"
+                  </ScriptBlock>
+                  <div className="space-y-3 pt-2">
+                    <Select value={form.programmeInterest} onValueChange={(v) => update("programmeInterest", v)}>
+                      <SelectTrigger><SelectValue placeholder="Programme interest" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="3-month">3-Month Accelerator</SelectItem>
+                        <SelectItem value="6-month">6-Month Transformation</SelectItem>
+                        <SelectItem value="10-month">10-Month Culture Architecture</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+                    <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* NOT INTERESTED */}
+              {screen === "NOT_INTERESTED" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "Understood. Just so I close the loop properly — are you already running a structured leadership coaching programme internally, or is this not a focus right now?"
+                  </ScriptBlock>
+                  <div className="space-y-3 pt-2">
+                    <Select value={form.objectionReason} onValueChange={(v) => update("objectionReason", v)}>
+                      <SelectTrigger><SelectValue placeholder="Reason" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="internal_provider">Internal provider</SelectItem>
+                        <SelectItem value="budget_timing">Budget timing</SelectItem>
+                        <SelectItem value="not_priority">Not priority</SelectItem>
+                        <SelectItem value="wrong_contact">Wrong contact</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* NO RESPONSE */}
+              {screen === "NO_RESPONSE" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "No problem at all. When would be a better time to reconnect?"
+                  </ScriptBlock>
+                  <div className="space-y-3 pt-2">
+                    <DatePicker value={form.followUpDate} onChange={(d) => update("followUpDate", d)} label="Follow-up date" />
+                    <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* VOICEMAIL */}
+              {screen === "VOICEMAIL" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "Hi [First Name], Kevin Britz from Leadership by Design.
+                    <br /><br />
+                    We help organisations turn their Skills Development Levy and CSI spend into measurable leadership capability.
+                    <br /><br />
+                    I'll send a short overview by email. My number is [number]."
+                  </ScriptBlock>
+                  <div className="space-y-3 pt-2">
+                    <Input placeholder="Contact name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
+                    <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
+                    <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+                    <Input placeholder="Email (if known)" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+                    <Textarea placeholder="Quick summary" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* GATEKEEPER */}
+              {screen === "GATEKEEPER" && (
+                <>
+                  <Label>Say this:</Label>
+                  <ScriptBlock>
+                    "Hi, it's Kevin Britz calling regarding leadership development and Skills Levy allocation. Is [First Name] available?"
+                  </ScriptBlock>
+                  <div className="grid grid-cols-3 gap-3 pt-4">
+                    <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleGatekeeper("transferred")}>
+                      TRANSFERRED
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" onClick={() => { update("gatekeeperOutcome", "need_email"); setScreen("GATEKEEPER_BLOCKED"); }}>
+                      NEED EMAIL
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-red-400 text-red-600 hover:bg-red-50" onClick={() => handleGatekeeper("blocked")}>
+                      BLOCKED
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* GATEKEEPER BLOCKED / NEED EMAIL */}
+              {screen === "GATEKEEPER_BLOCKED" && (
+                <>
+                  <h2 className="text-lg font-semibold">
+                    {form.gatekeeperOutcome === "need_email" ? "Capture Email" : "Blocked — Capture Details"}
+                  </h2>
+                  <div className="space-y-3">
+                    <Input placeholder="Alternate contact / name" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} />
+                    {form.gatekeeperOutcome === "need_email" && (
+                      <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+                    )}
+                    <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
+                      {saving ? "Saving…" : "SAVE CALL"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* SUCCESS */}
+              {screen === "SUCCESS" && (
+                <div className="text-center space-y-4 py-8">
+                  <div className="text-4xl">✅</div>
+                  <h2 className="text-xl font-semibold">Call Saved</h2>
+                  <p className="text-muted-foreground">Ready for the next one.</p>
+                  <Button size="lg" onClick={resetCall} className="gap-2">
+                    <RotateCcw className="h-4 w-4" /> Start New Call
                   </Button>
                 </div>
-              </>
-            )}
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-            {/* SUCCESS */}
-            {screen === "SUCCESS" && (
-              <div className="text-center space-y-4 py-8">
-                <div className="text-4xl">✅</div>
-                <h2 className="text-xl font-semibold">Call Saved</h2>
-                <p className="text-muted-foreground">Ready for the next one.</p>
-                <Button size="lg" onClick={resetCall} className="gap-2">
-                  <RotateCcw className="h-4 w-4" /> Start New Call
-                </Button>
+        {/* PDF Reference Sidebar */}
+        {showPdf && (
+          <div className="hidden lg:flex w-1/2 border-l border-border flex-col bg-muted/30">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">Leader as Coach — Programme Overview</span>
               </div>
-            )}
-          </CardContent>
-        </Card>
+              <Button variant="ghost" size="sm" onClick={() => setShowPdf(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src="/ai/leader-as-coach.html"
+                className="w-full h-full"
+                title="Leader as Coach Reference"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
