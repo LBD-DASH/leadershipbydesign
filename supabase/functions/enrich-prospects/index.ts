@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
       .from("call_list_prospects")
       .select("id, first_name, last_name, company, email, phone")
       .or("phone.is.null,phone.eq.")
-      .limit(5); // Process in small batches to avoid timeouts
+      .limit(10); // Process 10 per run
 
     if (error) throw error;
 
