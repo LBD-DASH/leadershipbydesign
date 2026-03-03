@@ -223,6 +223,63 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           </div>
         </TabsContent>
 
+        <TabsContent value="waiting-list" className="mt-6">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Leadership Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{leadershipWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Team Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{teamWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>SHIFT Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{shiftWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+            </div>
+
+            {leadershipWaitingList > 0 && (
+              <SubmissionsTable
+                title="Leadership - Waiting List"
+                submissions={(leadershipSubmissions || []).filter(s => s.waiting_list)}
+                type="leadership"
+                isLoading={loadingLeadership}
+              />
+            )}
+            {teamWaitingList > 0 && (
+              <SubmissionsTable
+                title="Team - Waiting List"
+                submissions={(teamSubmissions || []).filter(s => s.waiting_list)}
+                type="team"
+                isLoading={loadingTeam}
+              />
+            )}
+            {shiftWaitingList > 0 && (
+              <SubmissionsTable
+                title="SHIFT - Waiting List"
+                submissions={(shiftSubmissions || []).filter(s => s.waiting_list)}
+                type="shift"
+                isLoading={loadingShift}
+              />
+            )}
+            {totalWaitingList === 0 && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  No one on the waiting list yet.
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
+
         <TabsContent value="leadership" className="mt-6">
           <div className="flex items-center gap-3 mb-4">
             <Button
