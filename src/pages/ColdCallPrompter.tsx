@@ -773,14 +773,14 @@ export default function ColdCallPrompter() {
                     <p className="text-xs mt-1">Your admin will upload the call list</p>
                   </div>
                 ) : (
-                  <div className="max-h-48 overflow-y-auto border border-border rounded-md">
+                  <div className="max-h-72 overflow-y-auto border border-border rounded-md">
                     <table className="w-full text-xs">
-                      <thead className="bg-muted/50 sticky top-0">
+                      <thead className="bg-muted/50 sticky top-0 z-10">
                         <tr>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
                           <th className="py-1.5 px-2"></th>
                         </tr>
@@ -796,10 +796,18 @@ export default function ColdCallPrompter() {
                             onClick={() => selectProspect(idx)}
                           >
                             <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
-                            <td className="py-1.5 px-2 text-foreground">{p.name} {p.surname}</td>
-                            <td className="py-1.5 px-2 text-muted-foreground text-xs">{p.title || '—'}</td>
+                            <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.company}</td>
-                            <td className="py-1.5 px-2 text-muted-foreground">{p.email}</td>
+                            <td className="py-1.5 px-2">
+                              {p.phone ? (
+                                <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
+                                  {p.phone}
+                                </a>
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
+                              )}
+                            </td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
                             <td className="py-1.5 px-2">
                               {idx === currentProspectIndex && (
                                 <span className="text-primary text-[10px] font-bold">ACTIVE</span>
