@@ -323,12 +323,13 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                     <TableHead className="w-10">
                       <Checkbox checked={selected.size === results.length && results.length > 0} onCheckedChange={toggleAll} />
                     </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Status</TableHead>
+                     <TableHead>Name</TableHead>
+                     <TableHead>Title</TableHead>
+                     <TableHead>Company</TableHead>
+                     <TableHead>Email</TableHead>
+                     <TableHead>Phone</TableHead>
+                     <TableHead>Location</TableHead>
+                     <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
