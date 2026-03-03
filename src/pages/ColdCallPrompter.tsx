@@ -406,21 +406,44 @@ export default function ColdCallPrompter() {
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
-            <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter v1</h1>
+            <h1 className="font-semibold text-sm md:text-base">Call Centre</h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* View mode toggle */}
+            <div className="flex items-center border border-border rounded-md overflow-hidden">
+              <Button
+                variant={viewMode === 'script' ? 'default' : 'ghost'}
+                size="sm"
+                className="rounded-none text-xs gap-1 h-7"
+                onClick={() => setViewMode('script')}
+              >
+                <FileText className="h-3 w-3" />
+                Script
+              </Button>
+              <Button
+                variant={viewMode === 'queue' ? 'default' : 'ghost'}
+                size="sm"
+                className="rounded-none text-xs gap-1 h-7"
+                onClick={() => setViewMode('queue')}
+              >
+                <Flame className="h-3 w-3" />
+                Smart Queue
+              </Button>
+            </div>
             {screen !== "REP_NAME" && (
               <span className="text-xs text-muted-foreground">{form.repName}</span>
             )}
-            <Button
-              variant={showPdf ? "default" : "outline"}
-              size="sm"
-              className="gap-1.5 text-xs"
-              onClick={() => setShowPdf(!showPdf)}
-            >
-              <FileText className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{showPdf ? "Hide" : "Show"} Reference</span>
-            </Button>
+            {viewMode === 'script' && (
+              <Button
+                variant={showPdf ? "default" : "outline"}
+                size="sm"
+                className="gap-1.5 text-xs"
+                onClick={() => setShowPdf(!showPdf)}
+              >
+                <FileText className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{showPdf ? "Hide" : "Show"} Reference</span>
+              </Button>
+            )}
             <Button variant="ghost" size="sm" onClick={() => signOut()} className="text-xs text-muted-foreground">
               <LogOut className="h-3.5 w-3.5" />
             </Button>
@@ -428,7 +451,17 @@ export default function ColdCallPrompter() {
         </div>
       </div>
 
-      {/* Main layout with optional PDF sidebar */}
+      {/* Smart Queue View */}
+      {viewMode === 'queue' && (
+        <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="max-w-3xl mx-auto">
+            <CallQueue agentName={form.repName || 'Agent'} adminToken={MASTER_TOKEN} />
+          </div>
+        </div>
+      )}
+
+      {/* Script View */}
+      {viewMode === 'script' && (
       <div className="flex-1 flex">
         {/* Prompter content */}
         <div className={cn("flex-1 flex flex-col items-center px-4 py-8 transition-all overflow-y-auto", showPdf ? "lg:w-1/2" : "w-full")}>
