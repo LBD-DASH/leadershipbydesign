@@ -350,7 +350,7 @@ export default function LeaderAsCoachSales() {
             </div>
 
             {/* Authority signals */}
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs sm:text-sm text-muted-foreground font-medium">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-y-1 gap-x-6 text-xs sm:text-sm text-muted-foreground font-medium text-center">
               <span>750+ workshops delivered</span>
               <span className="hidden sm:inline">·</span>
               <span>4,000+ leaders developed</span>
