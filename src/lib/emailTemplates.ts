@@ -63,16 +63,16 @@ export function getTemplateVariant(score: number): TemplateVariant {
 
 function getStep1HotTemplate(data: ProspectData): EmailTemplate {
   return {
-    subject: `Quick question about manager effectiveness at ${data.companyName}`,
+    subject: `Quick question for the team at ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I've been working with ${data.industry} companies in ${data.location} on a specific problem: the gap between the leadership skills managers were hired for and the skills they actually need now.
+I've been doing some work with ${data.industry} companies in ${data.location} and one thing keeps coming up — there's usually a real gap between the leadership skills managers were hired for and what they actually need right now.
 
-One question: if you could strengthen one capability across your management team right now, what would it be?
+If you could wave a magic wand and strengthen one capability across your management team, what would it be?
 
-I ask because I've spent 11 years developing 4,000+ leaders across 50+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
+I ask because after 11 years and 4,000+ leaders, the answer usually points straight to where development would make the biggest difference to retention and engagement.
 
-Happy to share what I've seen working for ${data.industry} companies if you're open to a 15-minute conversation.
+Happy to share what I've been seeing if you're up for a 15-minute chat.
 
 — Kevin, Leadership by Design`
   };
