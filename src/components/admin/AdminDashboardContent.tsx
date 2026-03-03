@@ -178,9 +178,14 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
       </div>
 
       {/* Tabs for different views */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); if (val !== 'waiting-list') setShowWaitingListOnly(false); }}>
         <TabsList className="flex-wrap">
           <TabsTrigger value="overview">UTM Analytics</TabsTrigger>
+          <TabsTrigger value="waiting-list" className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Waiting List
+            {totalWaitingList > 0 && <Badge variant="secondary">{totalWaitingList}</Badge>}
+          </TabsTrigger>
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
