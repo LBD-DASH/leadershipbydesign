@@ -63,16 +63,16 @@ export function getTemplateVariant(score: number): TemplateVariant {
 
 function getStep1HotTemplate(data: ProspectData): EmailTemplate {
   return {
-    subject: `Quick question about manager effectiveness at ${data.companyName}`,
+    subject: `Quick question for the team at ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I've been working with ${data.industry} companies in ${data.location} on a specific problem: the gap between the leadership skills managers were hired for and the skills they actually need now.
+I've been doing some work with ${data.industry} companies in ${data.location} and one thing keeps coming up — there's usually a real gap between the leadership skills managers were hired for and what they actually need right now.
 
-One question: if you could strengthen one capability across your management team right now, what would it be?
+If you could wave a magic wand and strengthen one capability across your management team, what would it be?
 
-I ask because I've spent 11 years developing 4,000+ leaders across 50+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
+I ask because after 11 years and 4,000+ leaders, the answer usually points straight to where development would make the biggest difference to retention and engagement.
 
-Happy to share what I've seen working for ${data.industry} companies if you're open to a 15-minute conversation.
+Happy to share what I've been seeing if you're up for a 15-minute chat.
 
 — Kevin, Leadership by Design`
   };
@@ -80,39 +80,37 @@ Happy to share what I've seen working for ${data.industry} companies if you're o
 
 function getStep1WarmTemplate(data: ProspectData): EmailTemplate {
   const painPointRef = data.painPoints.length > 0 
-    ? `especially given the challenges around ${data.painPoints[0].toLowerCase()}`
-    : `especially given the growth I noticed`;
+    ? `especially with what's happening around ${data.painPoints[0].toLowerCase()}`
+    : `especially given the growth I've seen`;
   
   return {
-    subject: `Free team diagnostic for ${data.companyName}`,
+    subject: `Something useful for ${data.companyName}'s people team`,
     body: `Hi ${data.contactFirstName},
 
-I put together a team diagnostic that helps HR and People leaders identify their biggest leadership skill gaps in about 5 minutes.
+I built a quick team diagnostic that helps HR and People leaders spot their biggest leadership skill gaps — takes about 5 minutes, no strings attached.
 
-No sales pitch attached — it's a genuine tool we built based on 11 years of data from 50+ organisations and 4,000+ leaders.
+Thought it might be genuinely useful for ${data.companyName}, ${painPointRef}.
 
-Thought it might be useful for ${data.companyName}, ${painPointRef}.
+Here's the link if you're curious: ${getDiagnosticUrl(data.prospectId, 1)}
 
-Here's the link: ${getDiagnosticUrl(data.prospectId, 1)}
-
-If the results raise any questions, happy to jump on a quick call to walk through what the data typically means for manager effectiveness and team performance.
+If anything in the results raises questions, I'm happy to jump on a call and walk you through what it usually means for manager effectiveness.
 
 — Kevin, Leadership by Design`
   };
 }
 
 function getStep1CoolTemplate(data: ProspectData): EmailTemplate {
-  const insight = data.industryInsight || `${data.industry} companies scaling past 200 people often see a sharp drop in middle-management effectiveness — impacting retention and engagement`;
+  const insight = data.industryInsight || `${data.industry} companies scaling past 200 people often hit a wall with middle-management effectiveness — and it shows up in retention and engagement numbers`;
   
   return {
-    subject: `Something I noticed about ${data.industry} companies in ${data.location}`,
+    subject: `A pattern I keep seeing in ${data.industry}`,
     body: `Hi ${data.contactFirstName},
 
-I've been researching leadership capability in ${data.industry} companies across ${data.location}, and a pattern keeps showing up: ${insight}.
+I've been looking at leadership capability across ${data.industry} companies in ${data.location} and there's a pattern that keeps showing up: ${insight}.
 
-I work with HR and People teams on exactly this — developing the human skills in managers that don't improve on their own.
+It's the kind of thing that doesn't fix itself. I work with HR and People teams on developing the human skills in managers that training manuals can't cover.
 
-If this resonates, I'd welcome a conversation. If not, no worries at all.
+If that resonates at all, I'd welcome a conversation. If not, no worries — I won't keep chasing.
 
 — Kevin, Leadership by Design`
   };
@@ -127,13 +125,11 @@ function getStep2Template(data: ProspectData, originalSubject: string): EmailTem
     subject: `Re: ${originalSubject}`,
     body: `Hi ${data.contactFirstName},
 
-Just following up on my note from earlier this week.
+Just bumping this up — I know inboxes are a nightmare.
 
-I know inboxes are brutal, so I'll keep this short: I work with ${data.industry} companies on leadership development — specifically helping HR and People teams improve manager effectiveness across the organisation.
+Short version: I work with ${data.industry} companies on making their managers better leaders. Not theory — the actual human skills that move the needle on team performance.
 
-If you have 15 minutes this week or next, I'd love to explore whether there's value in a conversation.
-
-If the timing isn't right, just let me know and I'll check back in a few months.
+If you've got 15 minutes this week or next, I think it'd be worth a quick chat. And if the timing's off, just say the word and I'll circle back later.
 
 — Kevin`
   };
@@ -145,18 +141,16 @@ If the timing isn't right, just let me know and I'll check back in a few months.
 
 function getStep3Template(data: ProspectData): EmailTemplate {
   return {
-    subject: `A resource for ${data.companyName}'s people team`,
+    subject: `This might actually be useful for ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I wanted to share something genuinely useful rather than just follow up again.
+Rather than just following up again, I wanted to share something that might genuinely help.
 
-We recently published a diagnostic tool that helps HR and People teams identify which of 5 critical human skills need strengthening across their management team — self-management, human intelligence, innovation, focus, and thinking.
+I built a diagnostic that shows HR and People teams exactly where their managers' skill gaps are across 5 critical areas — self-management, human intelligence, innovation, focus, and thinking. Takes about 5 minutes.
 
-It takes about 5 minutes and gives you a clear picture of where your managers' gaps are:
+Here's the link: ${getDiagnosticUrl(data.prospectId, 3)}
 
-${getDiagnosticUrl(data.prospectId, 3)}
-
-No obligation, no follow-up unless you want it. I just think the data would be valuable for ${data.companyName}'s people strategy.
+No catch, no follow-up unless you want it. I just think the data would be useful for your people strategy.
 
 — Kevin`
   };
@@ -168,19 +162,19 @@ No obligation, no follow-up unless you want it. I just think the data would be v
 
 function getStep4Template(data: ProspectData): EmailTemplate {
   return {
-    subject: `Last note from me`,
+    subject: `Last one from me`,
     body: `Hi ${data.contactFirstName},
 
-I won't keep following up — I respect your time.
+I'll leave it here — I know you're busy and I respect that.
 
-If leadership development or manager effectiveness comes onto your radar in the next 6-12 months, I'm here: leadershipbydesign.co
+If leadership development or manager effectiveness ever comes onto your radar, you know where to find me: leadershipbydesign.co
 
-In the meantime, I've put together some free resources that might be useful for your people team:
+In the meantime, a couple of free things your people team might find useful:
 
 • Team Diagnostic: ${getDiagnosticUrl(data.prospectId, 4)}
-• SHIFT Methodology overview: https://leadershipbydesign.lovable.app/shift-methodology
+• Our SHIFT approach: https://leadershipbydesign.lovable.app/shift-methodology
 
-Wishing you and the team at ${data.companyName} a strong year ahead.
+Here's to a strong year for ${data.companyName}.
 
 — Kevin, Leadership by Design`
   };
