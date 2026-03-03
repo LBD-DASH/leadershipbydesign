@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, Phone, Upload, Trash2, Users, FileText } from 'lucide-react';
+import ApolloSearch from '@/components/marketing/ApolloSearch';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
 import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
@@ -201,6 +202,9 @@ export default function CallLogsPanel() {
 
   return (
     <div className="space-y-6">
+      {/* Apollo Search */}
+      <ApolloSearch onImported={fetchData} />
+
       {/* Call List Management */}
       <Card>
         <CardHeader>
