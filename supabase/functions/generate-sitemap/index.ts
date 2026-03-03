@@ -38,6 +38,7 @@ const staticPages = [
   { loc: "/contagious-identity-workbook", priority: "0.7", changefreq: "monthly" },
   { loc: "/feedback-formula", priority: "0.7", changefreq: "monthly" },
   { loc: "/leader-as-coach-programme", priority: "0.8", changefreq: "monthly" },
+  { loc: "/leader-as-coach", priority: "0.9", changefreq: "monthly" },
 ];
 
 function buildPageSitemap(today: string): string {
