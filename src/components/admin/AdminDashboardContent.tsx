@@ -155,7 +155,13 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           </CardContent>
         </Card>
 
-        <Card>
+        <Card 
+          className="cursor-pointer hover:border-primary/50 transition-colors"
+          onClick={() => {
+            setShowWaitingListOnly(true);
+            setActiveTab('waiting-list');
+          }}
+        >
           <CardHeader className="pb-2">
             <CardDescription>Waiting List</CardDescription>
             <CardTitle className="text-3xl flex items-center gap-2">
@@ -165,16 +171,21 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              Priority insight requests
+              Click to view all · {leadershipWaitingList} Leadership · {teamWaitingList} Team · {shiftWaitingList} SHIFT
             </p>
           </CardContent>
         </Card>
       </div>
 
       {/* Tabs for different views */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); if (val !== 'waiting-list') setShowWaitingListOnly(false); }}>
         <TabsList className="flex-wrap">
           <TabsTrigger value="overview">UTM Analytics</TabsTrigger>
+          <TabsTrigger value="waiting-list" className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Waiting List
+            {totalWaitingList > 0 && <Badge variant="secondary">{totalWaitingList}</Badge>}
+          </TabsTrigger>
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
@@ -209,6 +220,63 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
               submissions={shiftSubmissions || []}
               isLoading={loadingShift}
             />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="waiting-list" className="mt-6">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Leadership Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{leadershipWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Team Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{teamWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>SHIFT Waiting List</CardDescription>
+                  <CardTitle className="text-2xl">{shiftWaitingList}</CardTitle>
+                </CardHeader>
+              </Card>
+            </div>
+
+            {leadershipWaitingList > 0 && (
+              <SubmissionsTable
+                title="Leadership - Waiting List"
+                submissions={(leadershipSubmissions || []).filter(s => s.waiting_list)}
+                type="leadership"
+                isLoading={loadingLeadership}
+              />
+            )}
+            {teamWaitingList > 0 && (
+              <SubmissionsTable
+                title="Team - Waiting List"
+                submissions={(teamSubmissions || []).filter(s => s.waiting_list)}
+                type="team"
+                isLoading={loadingTeam}
+              />
+            )}
+            {shiftWaitingList > 0 && (
+              <SubmissionsTable
+                title="SHIFT - Waiting List"
+                submissions={(shiftSubmissions || []).filter(s => s.waiting_list)}
+                type="shift"
+                isLoading={loadingShift}
+              />
+            )}
+            {totalWaitingList === 0 && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  No one on the waiting list yet.
+                </CardContent>
+              </Card>
+            )}
           </div>
         </TabsContent>
 
