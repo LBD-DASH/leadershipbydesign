@@ -608,24 +608,87 @@ export default function ColdCallPrompter() {
           </Card>
         </div>
 
-        {/* PDF Reference Sidebar */}
+        {/* Quick Reference Sidebar */}
         {showPdf && (
           <div className="hidden lg:flex w-1/2 border-l border-border flex-col bg-muted/30">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Leader as Coach — Programme Overview</span>
+                <span className="text-sm font-medium">Quick Reference</span>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setShowPdf(false)}>
                 <X className="w-4 h-4" />
               </Button>
             </div>
-            <div className="flex-1 overflow-hidden">
-              <iframe
-                src="/leader-as-coach-brochure.pdf"
-                className="w-full h-full"
-                title="Leader as Coach Sales Brochure"
-              />
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
+              {/* One-liner */}
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                <p className="font-semibold text-primary text-xs uppercase tracking-wide mb-1">What We Do</p>
+                <p className="text-foreground">Structured coaching programme that transforms managers into culture architects — 3, 6, or 10 months. SDL & CSI eligible.</p>
+              </div>
+
+              {/* The Problem */}
+              <div className="bg-background border border-border rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">The Problem We Solve</p>
+                <ul className="space-y-1 text-foreground">
+                  <li>• Training budgets spent — behaviour doesn't change</li>
+                  <li>• Managers avoid hard conversations</li>
+                  <li>• Culture on the wall, not in the corridor</li>
+                  <li>• SDL/CSI spend ticks compliance, not capability</li>
+                </ul>
+              </div>
+
+              {/* 3 Programmes */}
+              <div className="bg-background border border-border rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">3 Programme Options</p>
+                <div className="space-y-2">
+                  <div className="border-l-2 border-amber-500 pl-2">
+                    <p className="font-medium text-foreground">Accelerator — 3 months</p>
+                    <p className="text-muted-foreground text-xs">Coaching fundamentals, self-awareness, communication. Best for new managers.</p>
+                  </div>
+                  <div className="border-l-2 border-green-500 pl-2">
+                    <p className="font-medium text-foreground">Transformation — 6 months ⭐</p>
+                    <p className="text-muted-foreground text-xs">Coaching identity, accountability, performance standards, 360° feedback. Most popular.</p>
+                  </div>
+                  <div className="border-l-2 border-primary pl-2">
+                    <p className="font-medium text-foreground">Culture Architecture — 10 months</p>
+                    <p className="text-muted-foreground text-xs">Full 5-phase programme: strategy, AI edge, succession, mentoring capability.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* SHIFT Framework */}
+              <div className="bg-background border border-border rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">SHIFT Skills Framework</p>
+                <div className="grid grid-cols-1 gap-1 text-xs">
+                  <div className="flex gap-2"><span className="font-bold text-primary w-4">S</span><span className="text-foreground">Self-Management — emotional regulation, accountability</span></div>
+                  <div className="flex gap-2"><span className="font-bold text-primary w-4">H</span><span className="text-foreground">Human Intelligence — empathy, cultural intelligence</span></div>
+                  <div className="flex gap-2"><span className="font-bold text-primary w-4">I</span><span className="text-foreground">Innovation — creative problem-solving, design thinking</span></div>
+                  <div className="flex gap-2"><span className="font-bold text-primary w-4">F</span><span className="text-foreground">Focus — prioritisation, time mastery, strategic clarity</span></div>
+                  <div className="flex gap-2"><span className="font-bold text-primary w-4">T</span><span className="text-foreground">Thinking — critical thinking, decision-making, systems</span></div>
+                </div>
+              </div>
+
+              {/* CSI & B-BBEE */}
+              <div className="bg-background border border-border rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">CSI & B-BBEE Alignment</p>
+                <ul className="space-y-1 text-foreground text-xs">
+                  <li>✅ Skills Development Levy eligible</li>
+                  <li>✅ B-BBEE Scorecard: Skills Dev & SED</li>
+                  <li>✅ Measurable outcomes for SETA reporting</li>
+                </ul>
+              </div>
+
+              {/* Assessments */}
+              <div className="bg-background border border-border rounded-lg p-3">
+                <p className="font-semibold text-xs uppercase tracking-wide mb-2 text-muted-foreground">Assessments Included</p>
+                <p className="text-foreground text-xs">Values Blueprint · DISC Profile · 6 Human Needs · Find My Purpose · Monthly Pulse · Quarterly 360°</p>
+              </div>
+
+              {/* Credibility */}
+              <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
+                <p className="text-xs text-muted-foreground">11 Years · 4,000+ Leaders · 750+ Programmes · 50+ Organisations</p>
+              </div>
             </div>
           </div>
         )}
