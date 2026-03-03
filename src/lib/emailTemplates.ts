@@ -80,22 +80,20 @@ Happy to share what I've been seeing if you're up for a 15-minute chat.
 
 function getStep1WarmTemplate(data: ProspectData): EmailTemplate {
   const painPointRef = data.painPoints.length > 0 
-    ? `especially given the challenges around ${data.painPoints[0].toLowerCase()}`
-    : `especially given the growth I noticed`;
+    ? `especially with what's happening around ${data.painPoints[0].toLowerCase()}`
+    : `especially given the growth I've seen`;
   
   return {
-    subject: `Free team diagnostic for ${data.companyName}`,
+    subject: `Something useful for ${data.companyName}'s people team`,
     body: `Hi ${data.contactFirstName},
 
-I put together a team diagnostic that helps HR and People leaders identify their biggest leadership skill gaps in about 5 minutes.
+I built a quick team diagnostic that helps HR and People leaders spot their biggest leadership skill gaps — takes about 5 minutes, no strings attached.
 
-No sales pitch attached — it's a genuine tool we built based on 11 years of data from 50+ organisations and 4,000+ leaders.
+Thought it might be genuinely useful for ${data.companyName}, ${painPointRef}.
 
-Thought it might be useful for ${data.companyName}, ${painPointRef}.
+Here's the link if you're curious: ${getDiagnosticUrl(data.prospectId, 1)}
 
-Here's the link: ${getDiagnosticUrl(data.prospectId, 1)}
-
-If the results raise any questions, happy to jump on a quick call to walk through what the data typically means for manager effectiveness and team performance.
+If anything in the results raises questions, I'm happy to jump on a call and walk you through what it usually means for manager effectiveness.
 
 — Kevin, Leadership by Design`
   };
