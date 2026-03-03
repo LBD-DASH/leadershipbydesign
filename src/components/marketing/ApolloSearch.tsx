@@ -356,8 +356,15 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                         </div>
                         {r.company_size && <span className="text-xs text-muted-foreground">{r.company_size} employees</span>}
                       </TableCell>
-                      <TableCell className="text-xs">{r.email || '—'}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{[r.city, r.country].filter(Boolean).join(', ') || '—'}</TableCell>
+                       <TableCell className="text-xs">{r.email || '—'}</TableCell>
+                       <TableCell className="text-xs">
+                         {r.phone ? (
+                           <a href={`tel:${r.phone}`} className="flex items-center gap-1 text-primary hover:underline">
+                             <Phone className="w-3 h-3" />
+                             {r.phone}
+                           </a>
+                         ) : '—'}
+                       </TableCell>
                       <TableCell>
                         {imported.has(r.id) ? (
                           <Badge variant="outline" className="text-xs">Enrolled</Badge>
