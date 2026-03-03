@@ -793,6 +793,7 @@ export default function ColdCallPrompter() {
                           >
                             <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.name} {p.surname}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground text-xs">{p.title || '—'}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.company}</td>
                             <td className="py-1.5 px-2 text-muted-foreground">{p.email}</td>
                             <td className="py-1.5 px-2">
