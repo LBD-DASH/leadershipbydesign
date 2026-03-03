@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { processLead } from "@/utils/notifications";
 import SEO from "@/components/SEO";
+import { ServiceSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StatsBar from "@/components/StatsBar";
@@ -198,6 +199,19 @@ export default function LeaderAsCoachSales() {
         description="A structured 90-day programme that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity. For Financial Services and Insurance teams."
         canonicalUrl="/leader-as-coach"
         keywords="manager coaching programme, reduce HR escalations, leadership development financial services, coaching capability, manager training South Africa"
+      />
+      <ServiceSchema
+        name="Leader as Coach Programme"
+        description="A structured 90-day accelerator that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity."
+        areaServed="South Africa"
+        url="/leader-as-coach"
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Programmes", url: "/programmes" },
+          { name: "Leader as Coach Programme", url: "/leader-as-coach" },
+        ]}
       />
 
       <div className="min-h-screen bg-background">
