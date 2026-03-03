@@ -365,7 +365,8 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                            </a>
                          ) : '—'}
                        </TableCell>
-                      <TableCell>
+                       <TableCell className="text-xs text-muted-foreground">{[r.city, r.country].filter(Boolean).join(', ') || '—'}</TableCell>
+                       <TableCell>
                         {imported.has(r.id) ? (
                           <Badge variant="outline" className="text-xs">Enrolled</Badge>
                         ) : (
