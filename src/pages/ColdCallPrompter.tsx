@@ -257,9 +257,14 @@ export default function ColdCallPrompter() {
             <Phone className="h-5 w-5 text-primary" />
             <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter v1</h1>
           </div>
-          {screen !== "REP_NAME" && (
-            <span className="text-xs text-muted-foreground">{form.repName}</span>
-          )}
+          <div className="flex items-center gap-2">
+            {screen !== "REP_NAME" && (
+              <span className="text-xs text-muted-foreground">{form.repName}</span>
+            )}
+            <Button variant="ghost" size="sm" onClick={() => signOut()} className="text-xs text-muted-foreground">
+              <LogOut className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
 
