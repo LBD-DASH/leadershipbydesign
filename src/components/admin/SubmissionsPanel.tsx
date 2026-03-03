@@ -218,6 +218,7 @@ export default function SubmissionsPanel() {
               : (leadershipSubmissions || [])}
             type="leadership"
             isLoading={loadingLeadership}
+            onDelete={handleDeleteLeadership}
           />
         </TabsContent>
 
