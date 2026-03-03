@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, Upload, ChevronRight, Users } from "lucide-react";
 import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -118,6 +118,14 @@ const BackButton = ({ screen, onBack }: { screen: Screen; onBack: (target: Scree
   );
 };
 
+interface Prospect {
+  name: string;
+  surname: string;
+  email: string;
+  company: string;
+  phone?: string;
+}
+
 export default function ColdCallPrompter() {
   const { user, loading: authLoading, signIn, signOut, isAuthenticated } = useAuth();
   const [screen, setScreen] = useState<Screen>("REP_NAME");
@@ -127,6 +135,8 @@ export default function ColdCallPrompter() {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPdf, setShowPdf] = useState(false);
+  const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -257,8 +267,89 @@ export default function ColdCallPrompter() {
   };
 
   const resetCall = () => {
-    setForm({ ...initialFormData, repName: form.repName });
+    // Move to next prospect automatically
+    if (prospects.length > 0 && currentProspectIndex < prospects.length - 1) {
+      const nextIdx = currentProspectIndex + 1;
+      setCurrentProspectIndex(nextIdx);
+      const p = prospects[nextIdx];
+      setForm({
+        ...initialFormData,
+        repName: form.repName,
+        contactName: `${p.name} ${p.surname}`.trim(),
+        company: p.company,
+        email: p.email,
+        phone: p.phone || "",
+      });
+    } else {
+      setForm({ ...initialFormData, repName: form.repName });
+    }
     setScreen("CALL_START");
+  };
+
+  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (!text) return;
+      const lines = text.split(/\r?\n/).filter((l) => l.trim());
+      if (lines.length < 2) {
+        toast({ title: "Empty CSV", description: "No data rows found.", variant: "destructive" });
+        return;
+      }
+      const headers = lines[0].toLowerCase().split(",").map((h) => h.trim().replace(/"/g, ""));
+      const nameIdx = headers.findIndex((h) => h === "name" || h === "first name" || h === "firstname");
+      const surnameIdx = headers.findIndex((h) => h === "surname" || h === "last name" || h === "lastname");
+      const emailIdx = headers.findIndex((h) => h.includes("email"));
+      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation");
+      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile");
+
+      if (nameIdx === -1 || emailIdx === -1) {
+        toast({ title: "Missing columns", description: "CSV needs at least 'Name' and 'Email' columns.", variant: "destructive" });
+        return;
+      }
+
+      const parsed: Prospect[] = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+        if (!cols[emailIdx]) continue;
+        parsed.push({
+          name: cols[nameIdx] || "",
+          surname: surnameIdx >= 0 ? cols[surnameIdx] || "" : "",
+          email: cols[emailIdx] || "",
+          company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
+          phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
+        });
+      }
+      setProspects(parsed);
+      if (parsed.length > 0) {
+        setCurrentProspectIndex(0);
+        const p = parsed[0];
+        setForm((f) => ({
+          ...f,
+          contactName: `${p.name} ${p.surname}`.trim(),
+          company: p.company,
+          email: p.email,
+          phone: p.phone || "",
+        }));
+        toast({ title: `${parsed.length} prospects loaded`, description: "First prospect selected." });
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const selectProspect = (idx: number) => {
+    setCurrentProspectIndex(idx);
+    const p = prospects[idx];
+    setForm((f) => ({
+      ...f,
+      contactName: `${p.name} ${p.surname}`.trim(),
+      company: p.company,
+      email: p.email,
+      phone: p.phone || "",
+    }));
   };
 
   const DatePicker = ({
@@ -324,9 +415,23 @@ export default function ColdCallPrompter() {
       {/* Main layout with optional PDF sidebar */}
       <div className="flex-1 flex">
         {/* Prompter content */}
-        <div className={cn("flex-1 flex items-start justify-center px-4 py-8 transition-all", showPdf ? "lg:w-1/2" : "w-full")}>
+        <div className={cn("flex-1 flex flex-col items-center px-4 py-8 transition-all overflow-y-auto", showPdf ? "lg:w-1/2" : "w-full")}>
           <Card className="w-full max-w-2xl shadow-sm">
             <CardContent className="p-6 md:p-8 space-y-6">
+
+              {/* Current prospect indicator */}
+              {prospects.length > 0 && currentProspectIndex >= 0 && screen !== "REP_NAME" && (
+                <div className="flex items-center justify-between bg-primary/5 border border-primary/15 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">
+                      {prospects[currentProspectIndex].name} {prospects[currentProspectIndex].surname}
+                    </span>
+                    <span className="text-xs text-muted-foreground">— {prospects[currentProspectIndex].company}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">{currentProspectIndex + 1}/{prospects.length}</span>
+                </div>
+              )}
 
               {/* Screen breadcrumb */}
               {screen !== "REP_NAME" && screen !== "SUCCESS" && (
@@ -606,6 +711,73 @@ export default function ColdCallPrompter() {
               )}
             </CardContent>
           </Card>
+
+          {/* Prospect List Panel */}
+          <div className="w-full max-w-2xl mt-4">
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium">Call List</span>
+                    {prospects.length > 0 && (
+                      <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
+                    )}
+                  </div>
+                  <label className="cursor-pointer">
+                    <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" />
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors cursor-pointer">
+                      <Upload className="w-3 h-3" />
+                      Upload CSV
+                    </span>
+                  </label>
+                </div>
+
+                {prospects.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p className="text-sm">Upload a CSV with columns: Name, Surname, Email, Company</p>
+                    <p className="text-xs mt-1">Optional: Phone</p>
+                  </div>
+                ) : (
+                  <div className="max-h-48 overflow-y-auto border border-border rounded-md">
+                    <table className="w-full text-xs">
+                      <thead className="bg-muted/50 sticky top-0">
+                        <tr>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
+                          <th className="py-1.5 px-2"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {prospects.map((p, idx) => (
+                          <tr
+                            key={idx}
+                            className={cn(
+                              "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                              idx === currentProspectIndex && "bg-primary/5 font-medium"
+                            )}
+                            onClick={() => selectProspect(idx)}
+                          >
+                            <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
+                            <td className="py-1.5 px-2 text-foreground">{p.name} {p.surname}</td>
+                            <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.email}</td>
+                            <td className="py-1.5 px-2">
+                              {idx === currentProspectIndex && (
+                                <span className="text-primary text-[10px] font-bold">ACTIVE</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Quick Reference Sidebar */}
