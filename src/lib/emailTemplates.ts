@@ -141,18 +141,16 @@ If you've got 15 minutes this week or next, I think it'd be worth a quick chat. 
 
 function getStep3Template(data: ProspectData): EmailTemplate {
   return {
-    subject: `A resource for ${data.companyName}'s people team`,
+    subject: `This might actually be useful for ${data.companyName}`,
     body: `Hi ${data.contactFirstName},
 
-I wanted to share something genuinely useful rather than just follow up again.
+Rather than just following up again, I wanted to share something that might genuinely help.
 
-We recently published a diagnostic tool that helps HR and People teams identify which of 5 critical human skills need strengthening across their management team — self-management, human intelligence, innovation, focus, and thinking.
+I built a diagnostic that shows HR and People teams exactly where their managers' skill gaps are across 5 critical areas — self-management, human intelligence, innovation, focus, and thinking. Takes about 5 minutes.
 
-It takes about 5 minutes and gives you a clear picture of where your managers' gaps are:
+Here's the link: ${getDiagnosticUrl(data.prospectId, 3)}
 
-${getDiagnosticUrl(data.prospectId, 3)}
-
-No obligation, no follow-up unless you want it. I just think the data would be valuable for ${data.companyName}'s people strategy.
+No catch, no follow-up unless you want it. I just think the data would be useful for your people strategy.
 
 — Kevin`
   };
