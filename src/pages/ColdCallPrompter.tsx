@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, Upload, ChevronRight, Users } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, ChevronRight, Users, RefreshCw } from "lucide-react";
 import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -119,6 +119,7 @@ const BackButton = ({ screen, onBack }: { screen: Screen; onBack: (target: Scree
 };
 
 interface Prospect {
+  id: string;
   name: string;
   surname: string;
   email: string;
@@ -147,6 +148,39 @@ export default function ColdCallPrompter() {
       setScreen("CALL_START");
     }
   }, [isAuthenticated]);
+
+  const fetchProspects = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke('admin-call-list', {
+      method: 'GET',
+    });
+    if (!error && data?.prospects) {
+      const mapped: Prospect[] = data.prospects.map((p: any) => ({
+        id: p.id,
+        name: p.first_name || '',
+        surname: p.last_name || '',
+        email: p.email || '',
+        company: p.company || '',
+        phone: p.phone || '',
+        title: p.title || '',
+      }));
+      setProspects(mapped);
+      if (mapped.length > 0 && currentProspectIndex === -1) {
+        setCurrentProspectIndex(0);
+        const p = mapped[0];
+        setForm((f) => ({
+          ...f,
+          contactName: `${p.name} ${p.surname}`.trim(),
+          company: p.company,
+          email: p.email,
+          phone: p.phone || '',
+        }));
+      }
+    }
+  }, [currentProspectIndex]);
+
+  useEffect(() => {
+    if (isAuthenticated) fetchProspects();
+  }, [isAuthenticated, fetchProspects]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -287,75 +321,7 @@ export default function ColdCallPrompter() {
     setScreen("CALL_START");
   };
 
-  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target?.result as string;
-      if (!text) return;
-      const lines = text.split(/\r?\n/).filter((l) => l.trim());
-      if (lines.length < 2) {
-        toast({ title: "Empty CSV", description: "No data rows found.", variant: "destructive" });
-        return;
-      }
-      // Parse CSV properly handling quoted fields with commas
-      const parseCSVLine = (line: string): string[] => {
-        const result: string[] = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          if (line[i] === '"') { inQuotes = !inQuotes; }
-          else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
-          else { current += line[i]; }
-        }
-        result.push(current.trim());
-        return result;
-      };
 
-      const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase());
-      const nameIdx = headers.findIndex((h) => h === "name" || h === "first name" || h === "firstname");
-      const surnameIdx = headers.findIndex((h) => h === "surname" || h === "last name" || h === "lastname");
-      const emailIdx = headers.findIndex((h) => h.includes("email") && !h.includes("status") && !h.includes("source") && !h.includes("confidence") && !h.includes("verification") && !h.includes("catch") && !h.includes("verified") && !h.includes("sent") && !h.includes("open") && !h.includes("bounced") && !h.includes("secondary") && !h.includes("tertiary"));
-      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation" || h === "company name for emails");
-      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile" || h === "mobile phone" || h === "work direct phone" || h === "corporate phone");
-      const titleIdx = headers.findIndex((h) => h === "title" || h === "job title");
-
-      if (nameIdx === -1 || emailIdx === -1) {
-        toast({ title: "Missing columns", description: "CSV needs at least 'Name'/'First Name' and 'Email' columns.", variant: "destructive" });
-        return;
-      }
-
-      const parsed: Prospect[] = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVLine(lines[i]);
-        if (!cols[emailIdx]) continue;
-        parsed.push({
-          name: cols[nameIdx] || "",
-          surname: surnameIdx >= 0 ? cols[surnameIdx] || "" : "",
-          email: cols[emailIdx] || "",
-          company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
-          phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
-          title: titleIdx >= 0 ? cols[titleIdx] || "" : "",
-        });
-      }
-      setProspects(parsed);
-      if (parsed.length > 0) {
-        setCurrentProspectIndex(0);
-        const p = parsed[0];
-        setForm((f) => ({
-          ...f,
-          contactName: `${p.name} ${p.surname}`.trim(),
-          company: p.company,
-          email: p.email,
-          phone: p.phone || "",
-        }));
-        toast({ title: `${parsed.length} prospects loaded`, description: "First prospect selected." });
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
 
   const selectProspect = (idx: number) => {
     setCurrentProspectIndex(idx);
@@ -754,19 +720,16 @@ export default function ColdCallPrompter() {
                       <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
                     )}
                   </div>
-                  <label className="cursor-pointer">
-                    <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" />
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors cursor-pointer">
-                      <Upload className="w-3 h-3" />
-                      Upload CSV
-                    </span>
-                  </label>
+                  <Button variant="ghost" size="sm" onClick={fetchProspects} className="gap-1.5 text-xs">
+                    <RefreshCw className="w-3 h-3" />
+                    Refresh
+                  </Button>
                 </div>
 
                 {prospects.length === 0 ? (
                   <div className="text-center py-6 text-muted-foreground">
-                    <p className="text-sm">Upload a CSV with columns: Name, Surname, Email, Company</p>
-                    <p className="text-xs mt-1">Optional: Phone</p>
+                    <p className="text-sm">No prospects loaded yet</p>
+                    <p className="text-xs mt-1">Your admin will upload the call list</p>
                   </div>
                 ) : (
                   <div className="max-h-48 overflow-y-auto border border-border rounded-md">

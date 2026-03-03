@@ -167,6 +167,54 @@ export type Database = {
         }
         Relationships: []
       }
+      call_list_prospects: {
+        Row: {
+          batch_id: string | null
+          call_outcome: string | null
+          called_at: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string | null
+          phone: string | null
+          status: string
+          title: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          batch_id?: string | null
+          call_outcome?: string | null
+          called_at?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          status?: string
+          title?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          batch_id?: string | null
+          call_outcome?: string | null
+          called_at?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          status?: string
+          title?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
       cold_call_logs: {
         Row: {
           company: string | null
