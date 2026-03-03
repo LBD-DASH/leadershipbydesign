@@ -116,13 +116,38 @@ serve(async (req) => {
         });
       }
 
+      // Fetch the user's email account ID from Apollo
+      let emailAccountId = '';
+      try {
+        const accountsRes = await fetch('https://api.apollo.io/api/v1/email_accounts', {
+          method: 'GET',
+          headers: apolloHeaders,
+        });
+        if (accountsRes.ok) {
+          const accountsData = await accountsRes.json();
+          const activeAccount = (accountsData.email_accounts || []).find((a: any) => a.active) || accountsData.email_accounts?.[0];
+          emailAccountId = activeAccount?.id || '';
+        } else {
+          await accountsRes.text();
+        }
+      } catch (e) {
+        console.error('Failed to fetch email accounts:', e);
+      }
+
+      if (!emailAccountId) {
+        return new Response(JSON.stringify({ error: 'No active email account found in Apollo. Please configure one first.' }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       // Add contacts to the sequence
       const enrollRes = await fetch(`https://api.apollo.io/api/v1/emailer_campaigns/${sequence_id}/add_contact_ids`, {
         method: 'POST',
         headers: apolloHeaders,
         body: JSON.stringify({
           contact_ids: contactIds,
-          send_email_from_email_account_id: '', // uses default
+          emailer_campaign_id: sequence_id,
+          send_email_from_email_account_id: emailAccountId,
         }),
       });
 
