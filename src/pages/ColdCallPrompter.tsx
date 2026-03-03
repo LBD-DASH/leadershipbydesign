@@ -124,6 +124,7 @@ interface Prospect {
   email: string;
   company: string;
   phone?: string;
+  title?: string;
 }
 
 export default function ColdCallPrompter() {
