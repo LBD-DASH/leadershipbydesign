@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,9 +12,22 @@ import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 
 export default function SubmissionsPanel() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('overview');
   const [showWaitingListOnly, setShowWaitingListOnly] = useState(false);
 
+  const handleDeleteLeadership = async (id: string) => {
+    const { error } = await supabase
+      .from('leadership_diagnostic_submissions')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      toast.error('Failed to delete submission');
+      return;
+    }
+    toast.success('Submission deleted');
+    queryClient.invalidateQueries({ queryKey: ['leadership-submissions'] });
+  };
   const { data: leadershipSubmissions, isLoading: loadingLeadership } = useQuery({
     queryKey: ['leadership-submissions'],
     queryFn: async () => {
@@ -204,6 +218,7 @@ export default function SubmissionsPanel() {
               : (leadershipSubmissions || [])}
             type="leadership"
             isLoading={loadingLeadership}
+            onDelete={handleDeleteLeadership}
           />
         </TabsContent>
 
