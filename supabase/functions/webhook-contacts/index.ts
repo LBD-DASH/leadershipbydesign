@@ -84,6 +84,30 @@ Deno.serve(async (req) => {
 
     if (error) throw error;
 
+    // Notify Slack about new contacts
+    if (data.length > 0) {
+      try {
+        const names = data.map((r: any) => `${r.first_name} ${r.last_name || ''}`.trim()).join(', ');
+        await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${serviceKey}`,
+          },
+          body: JSON.stringify({
+            eventType: 'new_signup',
+            data: {
+              name: data.length === 1 ? names : `${data.length} contacts: ${names.slice(0, 200)}`,
+              email: data.length === 1 ? data[0].email : `${data.length} new contacts`,
+              source: 'Pipedream → Google Sheet',
+            },
+          }),
+        });
+      } catch (slackErr) {
+        console.error('Slack notify failed (non-fatal):', slackErr);
+      }
+    }
+
     return new Response(
       JSON.stringify({ success: true, imported: data.length, skipped: rows.length - newRows.length }),
       { headers },
