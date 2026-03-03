@@ -347,14 +347,20 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                   </Button>
                 )}
                 {selected.size > 0 && (
-                  <Button size="sm" variant="outline" onClick={handleImport} disabled={importing} className="gap-1.5">
-                    {importing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UserPlus className="w-3.5 h-3.5" />}
-                    Import {selected.size} to Call List
+                  <Button size="sm" variant="default" onClick={handleSendToCallAgent} disabled={importing} className="gap-1.5 bg-green-600 hover:bg-green-700">
+                    {importing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PhoneCall className="w-3.5 h-3.5" />}
+                    Send {selected.size} to Call Agent
+                  </Button>
+                )}
+                {selected.size > 0 && selectedSequence && (
+                  <Button size="sm" variant="default" onClick={handleEnrollInSequence} disabled={enrolling} className="gap-1.5">
+                    {enrolling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                    Enroll {selected.size} in Sequence
                   </Button>
                 )}
                 {results.some(r => !r.phone) && (
                   <Button size="sm" variant="secondary" onClick={handleScrapePhones} disabled={scrapingPhones} className="gap-1.5">
-                    {scrapingPhones ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PhoneCall className="w-3.5 h-3.5" />}
+                    {scrapingPhones ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Phone className="w-3.5 h-3.5" />}
                     {scrapingPhones ? 'Scraping...' : `Find Numbers (${results.filter(r => !r.phone).length})`}
                   </Button>
                 )}
