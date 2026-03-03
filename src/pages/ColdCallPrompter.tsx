@@ -711,6 +711,73 @@ export default function ColdCallPrompter() {
               )}
             </CardContent>
           </Card>
+
+          {/* Prospect List Panel */}
+          <div className="w-full max-w-2xl mt-4">
+            <Card className="shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium">Call List</span>
+                    {prospects.length > 0 && (
+                      <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
+                    )}
+                  </div>
+                  <label className="cursor-pointer">
+                    <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" />
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors cursor-pointer">
+                      <Upload className="w-3 h-3" />
+                      Upload CSV
+                    </span>
+                  </label>
+                </div>
+
+                {prospects.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p className="text-sm">Upload a CSV with columns: Name, Surname, Email, Company</p>
+                    <p className="text-xs mt-1">Optional: Phone</p>
+                  </div>
+                ) : (
+                  <div className="max-h-48 overflow-y-auto border border-border rounded-md">
+                    <table className="w-full text-xs">
+                      <thead className="bg-muted/50 sticky top-0">
+                        <tr>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
+                          <th className="py-1.5 px-2"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {prospects.map((p, idx) => (
+                          <tr
+                            key={idx}
+                            className={cn(
+                              "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                              idx === currentProspectIndex && "bg-primary/5 font-medium"
+                            )}
+                            onClick={() => selectProspect(idx)}
+                          >
+                            <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
+                            <td className="py-1.5 px-2 text-foreground">{p.name} {p.surname}</td>
+                            <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.email}</td>
+                            <td className="py-1.5 px-2">
+                              {idx === currentProspectIndex && (
+                                <span className="text-primary text-[10px] font-bold">ACTIVE</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Quick Reference Sidebar */}
