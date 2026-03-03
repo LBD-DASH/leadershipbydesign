@@ -288,75 +288,38 @@ export default function ColdCallPrompter() {
     setScreen("CALL_START");
   };
 
-  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target?.result as string;
-      if (!text) return;
-      const lines = text.split(/\r?\n/).filter((l) => l.trim());
-      if (lines.length < 2) {
-        toast({ title: "Empty CSV", description: "No data rows found.", variant: "destructive" });
-        return;
-      }
-      // Parse CSV properly handling quoted fields with commas
-      const parseCSVLine = (line: string): string[] => {
-        const result: string[] = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          if (line[i] === '"') { inQuotes = !inQuotes; }
-          else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
-          else { current += line[i]; }
-        }
-        result.push(current.trim());
-        return result;
-      };
-
-      const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase());
-      const nameIdx = headers.findIndex((h) => h === "name" || h === "first name" || h === "firstname");
-      const surnameIdx = headers.findIndex((h) => h === "surname" || h === "last name" || h === "lastname");
-      const emailIdx = headers.findIndex((h) => h.includes("email") && !h.includes("status") && !h.includes("source") && !h.includes("confidence") && !h.includes("verification") && !h.includes("catch") && !h.includes("verified") && !h.includes("sent") && !h.includes("open") && !h.includes("bounced") && !h.includes("secondary") && !h.includes("tertiary"));
-      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation" || h === "company name for emails");
-      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile" || h === "mobile phone" || h === "work direct phone" || h === "corporate phone");
-      const titleIdx = headers.findIndex((h) => h === "title" || h === "job title");
-
-      if (nameIdx === -1 || emailIdx === -1) {
-        toast({ title: "Missing columns", description: "CSV needs at least 'Name'/'First Name' and 'Email' columns.", variant: "destructive" });
-        return;
-      }
-
-      const parsed: Prospect[] = [];
-      for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVLine(lines[i]);
-        if (!cols[emailIdx]) continue;
-        parsed.push({
-          name: cols[nameIdx] || "",
-          surname: surnameIdx >= 0 ? cols[surnameIdx] || "" : "",
-          email: cols[emailIdx] || "",
-          company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
-          phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
-          title: titleIdx >= 0 ? cols[titleIdx] || "" : "",
-        });
-      }
-      setProspects(parsed);
-      if (parsed.length > 0) {
+  const fetchProspects = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke('admin-call-list', {
+      method: 'GET',
+    });
+    if (!error && data?.prospects) {
+      const mapped: Prospect[] = data.prospects.map((p: any) => ({
+        id: p.id,
+        name: p.first_name || '',
+        surname: p.last_name || '',
+        email: p.email || '',
+        company: p.company || '',
+        phone: p.phone || '',
+        title: p.title || '',
+      }));
+      setProspects(mapped);
+      if (mapped.length > 0 && currentProspectIndex === -1) {
         setCurrentProspectIndex(0);
-        const p = parsed[0];
+        const p = mapped[0];
         setForm((f) => ({
           ...f,
           contactName: `${p.name} ${p.surname}`.trim(),
           company: p.company,
           email: p.email,
-          phone: p.phone || "",
+          phone: p.phone || '',
         }));
-        toast({ title: `${parsed.length} prospects loaded`, description: "First prospect selected." });
       }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
+    }
+  }, [currentProspectIndex]);
+
+  useEffect(() => {
+    if (isAuthenticated) fetchProspects();
+  }, [isAuthenticated, fetchProspects]);
 
   const selectProspect = (idx: number) => {
     setCurrentProspectIndex(idx);
