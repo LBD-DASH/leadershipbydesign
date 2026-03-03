@@ -198,6 +198,7 @@ export default function LeaderAsCoachSales() {
         title="Reduce HR Escalations & Build Manager Coaching Capability in 90 Days"
         description="A structured 90-day programme that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity. For Financial Services and Insurance teams."
         canonicalUrl="/leader-as-coach"
+        ogImage="https://leadershipbydesign.co/og-leader-as-coach.jpg"
         keywords="manager coaching programme, reduce HR escalations, leadership development financial services, coaching capability, manager training South Africa"
       />
       <ServiceSchema
