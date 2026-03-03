@@ -179,6 +179,7 @@ export type Database = {
           id: string
           last_name: string | null
           phone: string | null
+          source: string
           status: string
           title: string | null
           uploaded_by: string | null
@@ -194,6 +195,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           phone?: string | null
+          source?: string
           status?: string
           title?: string | null
           uploaded_by?: string | null
@@ -209,6 +211,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           phone?: string | null
+          source?: string
           status?: string
           title?: string | null
           uploaded_by?: string | null
