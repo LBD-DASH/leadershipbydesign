@@ -155,7 +155,13 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           </CardContent>
         </Card>
 
-        <Card>
+        <Card 
+          className="cursor-pointer hover:border-primary/50 transition-colors"
+          onClick={() => {
+            setShowWaitingListOnly(true);
+            setActiveTab('waiting-list');
+          }}
+        >
           <CardHeader className="pb-2">
             <CardDescription>Waiting List</CardDescription>
             <CardTitle className="text-3xl flex items-center gap-2">
@@ -165,7 +171,7 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
-              Priority insight requests
+              Click to view all · {leadershipWaitingList} Leadership · {teamWaitingList} Team · {shiftWaitingList} SHIFT
             </p>
           </CardContent>
         </Card>
