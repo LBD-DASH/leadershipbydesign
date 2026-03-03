@@ -548,13 +548,25 @@ export default function ColdCallPrompter() {
                     <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
                     <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-                    <div className="border border-border rounded-lg overflow-hidden" style={{ height: "400px" }}>
+                    <div className="border border-border rounded-lg overflow-hidden" style={{ height: "420px" }}>
                       <iframe
                         src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0vMzJjMjk5MzI1ZmUtYzI0Yy00MjAzLTkxMjAtYWEwNjhiMGUxNmE0?gv=true"
                         className="w-full h-full border-0"
                         title="Book a Meeting"
+                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                       />
                     </div>
+                    <p className="text-xs text-muted-foreground text-center">
+                      If calendar doesn't load,{" "}
+                      <a
+                        href="https://calendar.app.google/DRewMsaisLeh1J319"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline"
+                      >
+                        open booking page here
+                      </a>
+                    </p>
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
                     <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
