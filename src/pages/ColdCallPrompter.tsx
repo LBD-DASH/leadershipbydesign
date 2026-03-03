@@ -715,7 +715,7 @@ export default function ColdCallPrompter() {
                 <>
                   <Label>Say this:</Label>
                   <ScriptBlock>
-                    "Hi [First Name], Kevin Britz from Leadership by Design.
+                    "Hi {form.contactName ? form.contactName.split(' ')[0] : '[First Name]'}, {form.repName || 'Kevin Britz'} from Leadership by Design.
                     <br /><br />
                     We help organisations turn their Skills Development Levy and CSI spend into measurable leadership capability.
                     <br /><br />
