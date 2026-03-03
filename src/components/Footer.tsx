@@ -74,10 +74,14 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex items-center justify-center">
+        <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs sm:text-sm text-muted-foreground">
             © {new Date().getFullYear()} Leadership by Design. All rights reserved.
           </p>
+          <Link to="/cold-call-prompter" className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+            <Phone className="w-3.5 h-3.5" />
+            Call Centre Prompter
+          </Link>
         </div>
       </div>
     </footer>
