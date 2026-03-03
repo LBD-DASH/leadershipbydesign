@@ -297,6 +297,18 @@ export default function ColdCallPrompter() {
     if (error) {
       toast({ title: "Error saving call", description: error.message, variant: "destructive" });
     } else {
+      // Mark the current prospect as called so they drop off the list
+      if (prospects.length > 0 && currentProspectIndex >= 0) {
+        const prospect = prospects[currentProspectIndex];
+        await supabase.functions.invoke('admin-call-list', {
+          body: {
+            action: 'update_status',
+            id: prospect.id,
+            status: 'called',
+            call_outcome: form.pitchOutcome || form.initialResponse || 'completed',
+          },
+        });
+      }
       setScreen("SUCCESS");
     }
   };
