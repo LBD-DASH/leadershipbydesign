@@ -267,8 +267,89 @@ export default function ColdCallPrompter() {
   };
 
   const resetCall = () => {
-    setForm({ ...initialFormData, repName: form.repName });
+    // Move to next prospect automatically
+    if (prospects.length > 0 && currentProspectIndex < prospects.length - 1) {
+      const nextIdx = currentProspectIndex + 1;
+      setCurrentProspectIndex(nextIdx);
+      const p = prospects[nextIdx];
+      setForm({
+        ...initialFormData,
+        repName: form.repName,
+        contactName: `${p.name} ${p.surname}`.trim(),
+        company: p.company,
+        email: p.email,
+        phone: p.phone || "",
+      });
+    } else {
+      setForm({ ...initialFormData, repName: form.repName });
+    }
     setScreen("CALL_START");
+  };
+
+  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (!text) return;
+      const lines = text.split(/\r?\n/).filter((l) => l.trim());
+      if (lines.length < 2) {
+        toast({ title: "Empty CSV", description: "No data rows found.", variant: "destructive" });
+        return;
+      }
+      const headers = lines[0].toLowerCase().split(",").map((h) => h.trim().replace(/"/g, ""));
+      const nameIdx = headers.findIndex((h) => h === "name" || h === "first name" || h === "firstname");
+      const surnameIdx = headers.findIndex((h) => h === "surname" || h === "last name" || h === "lastname");
+      const emailIdx = headers.findIndex((h) => h.includes("email"));
+      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation");
+      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile");
+
+      if (nameIdx === -1 || emailIdx === -1) {
+        toast({ title: "Missing columns", description: "CSV needs at least 'Name' and 'Email' columns.", variant: "destructive" });
+        return;
+      }
+
+      const parsed: Prospect[] = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+        if (!cols[emailIdx]) continue;
+        parsed.push({
+          name: cols[nameIdx] || "",
+          surname: surnameIdx >= 0 ? cols[surnameIdx] || "" : "",
+          email: cols[emailIdx] || "",
+          company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
+          phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
+        });
+      }
+      setProspects(parsed);
+      if (parsed.length > 0) {
+        setCurrentProspectIndex(0);
+        const p = parsed[0];
+        setForm((f) => ({
+          ...f,
+          contactName: `${p.name} ${p.surname}`.trim(),
+          company: p.company,
+          email: p.email,
+          phone: p.phone || "",
+        }));
+        toast({ title: `${parsed.length} prospects loaded`, description: "First prospect selected." });
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const selectProspect = (idx: number) => {
+    setCurrentProspectIndex(idx);
+    const p = prospects[idx];
+    setForm((f) => ({
+      ...f,
+      contactName: `${p.name} ${p.surname}`.trim(),
+      company: p.company,
+      email: p.email,
+      phone: p.phone || "",
+    }));
   };
 
   const DatePicker = ({
