@@ -547,9 +547,9 @@ export default function ColdCallPrompter() {
                 <>
                   <Label>Say this:</Label>
                   <ScriptBlock>
-                    "Hi [First Name], it's Kevin Britz from Leadership by Design.
-                    <br /><br />
-                    I know I'm calling out of the blue — can I take 60 seconds to explain why I'm calling?"
+                    "Hi {form.contactName ? form.contactName.split(' ')[0] : '[First Name]'}, it's {form.repName || '_________(your name)'} from Leadership by Design.
+                     <br /><br />
+                     I know I'm calling out of the blue — can I take 60 seconds to explain why I'm calling?"
                   </ScriptBlock>
                   <Pause />
                   <div className="grid grid-cols-2 gap-3">
