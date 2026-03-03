@@ -548,12 +548,13 @@ export default function ColdCallPrompter() {
                     <Input placeholder="Company" value={form.company} onChange={(e) => update("company", e.target.value)} />
                     <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-                    <a href="https://calendar.app.google/DRewMsaisLeh1J319" target="_blank" rel="noopener noreferrer">
-                      <Button type="button" variant="outline" className="w-full gap-2 border-primary text-primary hover:bg-primary/5">
-                        <CalendarIcon className="w-4 h-4" />
-                        Open Calendar — Book a Time
-                      </Button>
-                    </a>
+                    <div className="border border-border rounded-lg overflow-hidden" style={{ height: "400px" }}>
+                      <iframe
+                        src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0vMzJjMjk5MzI1ZmUtYzI0Yy00MjAzLTkxMjAtYWEwNjhiMGUxNmE0?gv=true"
+                        className="w-full h-full border-0"
+                        title="Book a Meeting"
+                      />
+                    </div>
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
                     <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
