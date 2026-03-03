@@ -182,6 +182,24 @@ export default function ColdCallPrompter() {
     if (isAuthenticated) fetchProspects();
   }, [isAuthenticated, fetchProspects]);
 
+  // Real-time: auto-refresh when new prospects are added
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const channel = supabase
+      .channel('call-list-changes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'call_list_prospects' },
+        () => {
+          fetchProspects();
+          toast({ title: "New prospect added", description: "Your call list has been updated." });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [isAuthenticated, fetchProspects]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
