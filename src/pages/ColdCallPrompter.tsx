@@ -622,9 +622,9 @@ export default function ColdCallPrompter() {
             </div>
             <div className="flex-1 overflow-hidden">
               <iframe
-                src="/ai/leader-as-coach.html"
+                src="/leader-as-coach-brochure.pdf"
                 className="w-full h-full"
-                title="Leader as Coach Reference"
+                title="Leader as Coach Sales Brochure"
               />
             </div>
           </div>
