@@ -125,13 +125,11 @@ function getStep2Template(data: ProspectData, originalSubject: string): EmailTem
     subject: `Re: ${originalSubject}`,
     body: `Hi ${data.contactFirstName},
 
-Just following up on my note from earlier this week.
+Just bumping this up — I know inboxes are a nightmare.
 
-I know inboxes are brutal, so I'll keep this short: I work with ${data.industry} companies on leadership development — specifically helping HR and People teams improve manager effectiveness across the organisation.
+Short version: I work with ${data.industry} companies on making their managers better leaders. Not theory — the actual human skills that move the needle on team performance.
 
-If you have 15 minutes this week or next, I'd love to explore whether there's value in a conversation.
-
-If the timing isn't right, just let me know and I'll check back in a few months.
+If you've got 15 minutes this week or next, I think it'd be worth a quick chat. And if the timing's off, just say the word and I'll circle back later.
 
 — Kevin`
   };
