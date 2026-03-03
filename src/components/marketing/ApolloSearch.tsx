@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Loader2, UserPlus, Globe, Building, CheckCircle2, Zap, Send, RefreshCw } from 'lucide-react';
+import { Search, Loader2, UserPlus, Globe, Building, CheckCircle2, Zap, Send, RefreshCw, Phone } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 
@@ -323,12 +323,13 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                     <TableHead className="w-10">
                       <Checkbox checked={selected.size === results.length && results.length > 0} onCheckedChange={toggleAll} />
                     </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Status</TableHead>
+                     <TableHead>Name</TableHead>
+                     <TableHead>Title</TableHead>
+                     <TableHead>Company</TableHead>
+                     <TableHead>Email</TableHead>
+                     <TableHead>Phone</TableHead>
+                     <TableHead>Location</TableHead>
+                     <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -355,9 +356,17 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                         </div>
                         {r.company_size && <span className="text-xs text-muted-foreground">{r.company_size} employees</span>}
                       </TableCell>
-                      <TableCell className="text-xs">{r.email || '—'}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{[r.city, r.country].filter(Boolean).join(', ') || '—'}</TableCell>
-                      <TableCell>
+                       <TableCell className="text-xs">{r.email || '—'}</TableCell>
+                       <TableCell className="text-xs">
+                         {r.phone ? (
+                           <a href={`tel:${r.phone}`} className="flex items-center gap-1 text-primary hover:underline">
+                             <Phone className="w-3 h-3" />
+                             {r.phone}
+                           </a>
+                         ) : '—'}
+                       </TableCell>
+                       <TableCell className="text-xs text-muted-foreground">{[r.city, r.country].filter(Boolean).join(', ') || '—'}</TableCell>
+                       <TableCell>
                         {imported.has(r.id) ? (
                           <Badge variant="outline" className="text-xs">Enrolled</Badge>
                         ) : (
