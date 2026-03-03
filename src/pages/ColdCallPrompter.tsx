@@ -415,9 +415,23 @@ export default function ColdCallPrompter() {
       {/* Main layout with optional PDF sidebar */}
       <div className="flex-1 flex">
         {/* Prompter content */}
-        <div className={cn("flex-1 flex items-start justify-center px-4 py-8 transition-all", showPdf ? "lg:w-1/2" : "w-full")}>
+        <div className={cn("flex-1 flex flex-col items-center px-4 py-8 transition-all overflow-y-auto", showPdf ? "lg:w-1/2" : "w-full")}>
           <Card className="w-full max-w-2xl shadow-sm">
             <CardContent className="p-6 md:p-8 space-y-6">
+
+              {/* Current prospect indicator */}
+              {prospects.length > 0 && currentProspectIndex >= 0 && screen !== "REP_NAME" && (
+                <div className="flex items-center justify-between bg-primary/5 border border-primary/15 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">
+                      {prospects[currentProspectIndex].name} {prospects[currentProspectIndex].surname}
+                    </span>
+                    <span className="text-xs text-muted-foreground">— {prospects[currentProspectIndex].company}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">{currentProspectIndex + 1}/{prospects.length}</span>
+                </div>
+              )}
 
               {/* Screen breadcrumb */}
               {screen !== "REP_NAME" && screen !== "SUCCESS" && (
