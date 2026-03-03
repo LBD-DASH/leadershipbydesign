@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
       let query = supabase
         .from("call_list_prospects")
         .select("*")
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: false });
 
       // By default only show uncalled prospects (pending/skipped)
       if (!showAll) {
