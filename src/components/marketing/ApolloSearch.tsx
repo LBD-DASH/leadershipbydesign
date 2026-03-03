@@ -229,6 +229,45 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
     }
   };
 
+  const handleScrapePhones = async () => {
+    const noPhone = results.filter(r => !r.phone && !imported.has(r.id));
+    if (noPhone.length === 0) {
+      toast({ title: 'All contacts have numbers', description: 'No missing phone numbers to scrape.' });
+      return;
+    }
+
+    setScrapingPhones(true);
+    try {
+      const companies = noPhone.map(r => ({ id: r.id, company: r.company }));
+
+      const { data, error } = await supabase.functions.invoke('scrape-company-phones', {
+        body: { companies },
+        headers: { 'x-admin-token': token },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const phoneMap = new Map<string, string>();
+      (data.results || []).forEach((r: any) => {
+        if (r.phone) phoneMap.set(r.id, r.phone);
+      });
+
+      if (phoneMap.size > 0) {
+        setResults(prev => prev.map(r => phoneMap.has(r.id) ? { ...r, phone: phoneMap.get(r.id)! } : r));
+      }
+
+      toast({
+        title: `📞 Found ${data.found} numbers`,
+        description: `Scraped ${data.total} company websites. ${data.found} phone numbers discovered.`,
+      });
+    } catch (err: any) {
+      toast({ title: 'Scraping failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setScrapingPhones(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
