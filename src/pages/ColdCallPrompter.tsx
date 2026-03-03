@@ -478,6 +478,9 @@ export default function ColdCallPrompter() {
                         {prospects[currentProspectIndex].name} {prospects[currentProspectIndex].surname}
                       </span>
                       <span className="text-xs text-muted-foreground">— {prospects[currentProspectIndex].company}</span>
+                      {prospects[currentProspectIndex].title && (
+                        <span className="text-xs text-muted-foreground">· {prospects[currentProspectIndex].title}</span>
+                      )}
                     </div>
                     <span className="text-xs text-muted-foreground">{currentProspectIndex + 1}/{prospects.length}</span>
                   </div>
@@ -816,8 +819,8 @@ export default function ColdCallPrompter() {
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
                           <th className="py-1.5 px-2"></th>
                         </tr>
                       </thead>
@@ -834,6 +837,7 @@ export default function ColdCallPrompter() {
                             <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
                             <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
                             <td className="py-1.5 px-2">
                               {p.phone ? (
                                 <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
