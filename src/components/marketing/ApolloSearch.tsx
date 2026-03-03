@@ -53,7 +53,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
   const [selectedSequence, setSelectedSequence] = useState<string>('');
   const [loadingSequences, setLoadingSequences] = useState(false);
   const [syncing, setSyncing] = useState(false);
-
+  const [scrapingPhones, setScrapingPhones] = useState(false);
   const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
 
   // Load sequences on mount
