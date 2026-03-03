@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Loader2, UserPlus, Globe, Building, CheckCircle2, Zap, Send, RefreshCw, Phone } from 'lucide-react';
+import { Search, Loader2, UserPlus, Globe, Building, CheckCircle2, Zap, Send, RefreshCw, Phone, PhoneCall } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
 
@@ -53,7 +53,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
   const [selectedSequence, setSelectedSequence] = useState<string>('');
   const [loadingSequences, setLoadingSequences] = useState(false);
   const [syncing, setSyncing] = useState(false);
-
+  const [scrapingPhones, setScrapingPhones] = useState(false);
   const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
 
   // Load sequences on mount
@@ -229,6 +229,45 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
     }
   };
 
+  const handleScrapePhones = async () => {
+    const noPhone = results.filter(r => !r.phone && !imported.has(r.id));
+    if (noPhone.length === 0) {
+      toast({ title: 'All contacts have numbers', description: 'No missing phone numbers to scrape.' });
+      return;
+    }
+
+    setScrapingPhones(true);
+    try {
+      const companies = noPhone.map(r => ({ id: r.id, company: r.company }));
+
+      const { data, error } = await supabase.functions.invoke('scrape-company-phones', {
+        body: { companies },
+        headers: { 'x-admin-token': token },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      const phoneMap = new Map<string, string>();
+      (data.results || []).forEach((r: any) => {
+        if (r.phone) phoneMap.set(r.id, r.phone);
+      });
+
+      if (phoneMap.size > 0) {
+        setResults(prev => prev.map(r => phoneMap.has(r.id) ? { ...r, phone: phoneMap.get(r.id)! } : r));
+      }
+
+      toast({
+        title: `📞 Found ${data.found} numbers`,
+        description: `Scraped ${data.total} company websites. ${data.found} phone numbers discovered.`,
+      });
+    } catch (err: any) {
+      toast({ title: 'Scraping failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setScrapingPhones(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -311,6 +350,12 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
                   <Button size="sm" variant="outline" onClick={handleImport} disabled={importing} className="gap-1.5">
                     {importing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UserPlus className="w-3.5 h-3.5" />}
                     Import {selected.size} to Call List
+                  </Button>
+                )}
+                {results.some(r => !r.phone) && (
+                  <Button size="sm" variant="secondary" onClick={handleScrapePhones} disabled={scrapingPhones} className="gap-1.5">
+                    {scrapingPhones ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PhoneCall className="w-3.5 h-3.5" />}
+                    {scrapingPhones ? 'Scraping...' : `Find Numbers (${results.filter(r => !r.phone).length})`}
                   </Button>
                 )}
               </div>
