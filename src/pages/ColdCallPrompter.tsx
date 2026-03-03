@@ -124,6 +124,7 @@ interface Prospect {
   email: string;
   company: string;
   phone?: string;
+  title?: string;
 }
 
 export default function ColdCallPrompter() {
@@ -298,21 +299,36 @@ export default function ColdCallPrompter() {
         toast({ title: "Empty CSV", description: "No data rows found.", variant: "destructive" });
         return;
       }
-      const headers = lines[0].toLowerCase().split(",").map((h) => h.trim().replace(/"/g, ""));
+      // Parse CSV properly handling quoted fields with commas
+      const parseCSVLine = (line: string): string[] => {
+        const result: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          if (line[i] === '"') { inQuotes = !inQuotes; }
+          else if (line[i] === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
+          else { current += line[i]; }
+        }
+        result.push(current.trim());
+        return result;
+      };
+
+      const headers = parseCSVLine(lines[0]).map((h) => h.toLowerCase());
       const nameIdx = headers.findIndex((h) => h === "name" || h === "first name" || h === "firstname");
       const surnameIdx = headers.findIndex((h) => h === "surname" || h === "last name" || h === "lastname");
-      const emailIdx = headers.findIndex((h) => h.includes("email"));
-      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation");
-      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile");
+      const emailIdx = headers.findIndex((h) => h.includes("email") && !h.includes("status") && !h.includes("source") && !h.includes("confidence") && !h.includes("verification") && !h.includes("catch") && !h.includes("verified") && !h.includes("sent") && !h.includes("open") && !h.includes("bounced") && !h.includes("secondary") && !h.includes("tertiary"));
+      const companyIdx = headers.findIndex((h) => h === "company" || h === "company name" || h === "organisation" || h === "company name for emails");
+      const phoneIdx = headers.findIndex((h) => h === "phone" || h === "tel" || h === "mobile" || h === "mobile phone" || h === "work direct phone" || h === "corporate phone");
+      const titleIdx = headers.findIndex((h) => h === "title" || h === "job title");
 
       if (nameIdx === -1 || emailIdx === -1) {
-        toast({ title: "Missing columns", description: "CSV needs at least 'Name' and 'Email' columns.", variant: "destructive" });
+        toast({ title: "Missing columns", description: "CSV needs at least 'Name'/'First Name' and 'Email' columns.", variant: "destructive" });
         return;
       }
 
       const parsed: Prospect[] = [];
       for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+        const cols = parseCSVLine(lines[i]);
         if (!cols[emailIdx]) continue;
         parsed.push({
           name: cols[nameIdx] || "",
@@ -320,6 +336,7 @@ export default function ColdCallPrompter() {
           email: cols[emailIdx] || "",
           company: companyIdx >= 0 ? cols[companyIdx] || "" : "",
           phone: phoneIdx >= 0 ? cols[phoneIdx] || "" : "",
+          title: titleIdx >= 0 ? cols[titleIdx] || "" : "",
         });
       }
       setProspects(parsed);
@@ -758,6 +775,7 @@ export default function ColdCallPrompter() {
                         <tr>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
                           <th className="py-1.5 px-2"></th>
@@ -775,6 +793,7 @@ export default function ColdCallPrompter() {
                           >
                             <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.name} {p.surname}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground text-xs">{p.title || '—'}</td>
                             <td className="py-1.5 px-2 text-foreground">{p.company}</td>
                             <td className="py-1.5 px-2 text-muted-foreground">{p.email}</td>
                             <td className="py-1.5 px-2">
