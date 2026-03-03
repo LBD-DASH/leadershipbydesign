@@ -20,10 +20,20 @@ Deno.serve(async (req) => {
   try {
     // GET: fetch all prospects (no admin token needed — callers need this)
     if (req.method === "GET") {
-      const { data, error } = await supabase
+      const url = new URL(req.url);
+      const showAll = url.searchParams.get("all") === "true";
+
+      let query = supabase
         .from("call_list_prospects")
         .select("*")
         .order("created_at", { ascending: true });
+
+      // By default only show uncalled prospects (pending/skipped)
+      if (!showAll) {
+        query = query.in("status", ["pending", "skipped"]);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return new Response(JSON.stringify({ prospects: data }), { headers });
