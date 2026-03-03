@@ -202,6 +202,9 @@ export default function CallLogsPanel() {
 
   return (
     <div className="space-y-6">
+      {/* Apollo Search */}
+      <ApolloSearch onImported={fetchData} />
+
       {/* Call List Management */}
       <Card>
         <CardHeader>
