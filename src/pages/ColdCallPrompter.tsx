@@ -819,8 +819,8 @@ export default function ColdCallPrompter() {
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
                           <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Email</th>
                           <th className="py-1.5 px-2"></th>
                         </tr>
                       </thead>
