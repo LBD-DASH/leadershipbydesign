@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -10,7 +11,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Search, Mail, Building, Calendar } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Search, Mail, Building, Calendar, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface SubmissionsTableProps {
@@ -34,6 +46,7 @@ interface SubmissionsTableProps {
   }>;
   type: 'leadership' | 'team' | 'shift';
   isLoading: boolean;
+  onDelete?: (id: string) => void;
 }
 
 const getResultLabel = (sub: SubmissionsTableProps['submissions'][0], type: SubmissionsTableProps['type']) => {
@@ -43,7 +56,7 @@ const getResultLabel = (sub: SubmissionsTableProps['submissions'][0], type: Subm
   return '-';
 };
 
-export default function SubmissionsTable({ title, submissions, type, isLoading }: SubmissionsTableProps) {
+export default function SubmissionsTable({ title, submissions, type, isLoading, onDelete }: SubmissionsTableProps) {
   const [search, setSearch] = useState('');
 
   const filteredSubmissions = submissions.filter(sub => {
@@ -102,6 +115,7 @@ export default function SubmissionsTable({ title, submissions, type, isLoading }
                   <TableHead>Result</TableHead>
                   <TableHead>UTM Source</TableHead>
                   <TableHead>Status</TableHead>
+                  {onDelete && <TableHead className="w-12"></TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -165,11 +179,39 @@ export default function SubmissionsTable({ title, submissions, type, isLoading }
                           )}
                         </div>
                       </TableCell>
+                      {onDelete && (
+                        <TableCell>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete submission?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This will permanently remove {sub.name || sub.email || 'this submission'}. This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => onDelete(sub.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={onDelete ? 7 : 6} className="text-center py-8 text-muted-foreground">
                       {search ? 'No matching submissions found' : 'No submissions yet'}
                     </TableCell>
                   </TableRow>
