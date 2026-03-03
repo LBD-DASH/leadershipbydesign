@@ -83,6 +83,7 @@ import SurvivalPackSuccess from "./pages/products/SurvivalPackSuccess";
 import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
+import ColdCallPrompter from "./pages/ColdCallPrompter";
 const queryClient = new QueryClient();
 
 const App = () => (
