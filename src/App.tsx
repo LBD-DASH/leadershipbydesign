@@ -170,6 +170,7 @@ const App = () => (
           <Route path="/marketing" element={<MarketingDashboard />} />
           <Route path="/client-alignment-index" element={<ClientAlignmentIndex />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/cold-call-prompter" element={<ColdCallPrompter />} />
           <Route
             path="/blog-admin"
             element={
