@@ -125,18 +125,35 @@ export type Database = {
           apollo_contact_id: string
           apollo_sequence_id: string
           apollo_sequence_name: string | null
+          assigned_agent: string | null
+          assigned_at: string | null
           call_alert_sent: boolean | null
           call_alert_sent_at: string | null
           call_list_prospect_id: string | null
+          call_notes: string | null
+          call_outcome: string | null
+          called_at: string | null
+          campaign_intent: string | null
           contact_company: string | null
           contact_email: string
           contact_name: string | null
           contact_title: string | null
           created_at: string
+          current_step: number | null
+          email_steps: Json | null
           has_bounced: boolean | null
           id: string
+          industry_tag: string | null
           last_activity_at: string | null
+          last_email_sent_at: string | null
+          offer_type: string | null
+          priority_reason: string | null
+          priority_score: number | null
+          sequence_finished: boolean | null
+          sequence_total_steps: number | null
+          source: string | null
           status: string
+          suggested_opener: string | null
           total_clicks: number | null
           total_emails_sent: number | null
           total_opens: number | null
@@ -148,18 +165,35 @@ export type Database = {
           apollo_contact_id: string
           apollo_sequence_id: string
           apollo_sequence_name?: string | null
+          assigned_agent?: string | null
+          assigned_at?: string | null
           call_alert_sent?: boolean | null
           call_alert_sent_at?: string | null
           call_list_prospect_id?: string | null
+          call_notes?: string | null
+          call_outcome?: string | null
+          called_at?: string | null
+          campaign_intent?: string | null
           contact_company?: string | null
           contact_email: string
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
+          current_step?: number | null
+          email_steps?: Json | null
           has_bounced?: boolean | null
           id?: string
+          industry_tag?: string | null
           last_activity_at?: string | null
+          last_email_sent_at?: string | null
+          offer_type?: string | null
+          priority_reason?: string | null
+          priority_score?: number | null
+          sequence_finished?: boolean | null
+          sequence_total_steps?: number | null
+          source?: string | null
           status?: string
+          suggested_opener?: string | null
           total_clicks?: number | null
           total_emails_sent?: number | null
           total_opens?: number | null
@@ -171,18 +205,35 @@ export type Database = {
           apollo_contact_id?: string
           apollo_sequence_id?: string
           apollo_sequence_name?: string | null
+          assigned_agent?: string | null
+          assigned_at?: string | null
           call_alert_sent?: boolean | null
           call_alert_sent_at?: string | null
           call_list_prospect_id?: string | null
+          call_notes?: string | null
+          call_outcome?: string | null
+          called_at?: string | null
+          campaign_intent?: string | null
           contact_company?: string | null
           contact_email?: string
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
+          current_step?: number | null
+          email_steps?: Json | null
           has_bounced?: boolean | null
           id?: string
+          industry_tag?: string | null
           last_activity_at?: string | null
+          last_email_sent_at?: string | null
+          offer_type?: string | null
+          priority_reason?: string | null
+          priority_score?: number | null
+          sequence_finished?: boolean | null
+          sequence_total_steps?: number | null
+          source?: string | null
           status?: string
+          suggested_opener?: string | null
           total_clicks?: number | null
           total_emails_sent?: number | null
           total_opens?: number | null
