@@ -14,6 +14,7 @@ import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import Footer from "@/components/Footer";
+import BookingWidget from "@/components/shared/BookingWidget";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
