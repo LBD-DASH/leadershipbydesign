@@ -319,6 +319,51 @@ export type Database = {
         }
         Relationships: []
       }
+      bookings: {
+        Row: {
+          confirmation_sent: boolean | null
+          created_at: string
+          diagnostic_sent: boolean | null
+          id: string
+          meeting_datetime: string | null
+          meeting_type: string | null
+          notes: string | null
+          prospect_company: string | null
+          prospect_email: string | null
+          prospect_name: string | null
+          source_id: string | null
+          source_table: string | null
+        }
+        Insert: {
+          confirmation_sent?: boolean | null
+          created_at?: string
+          diagnostic_sent?: boolean | null
+          id?: string
+          meeting_datetime?: string | null
+          meeting_type?: string | null
+          notes?: string | null
+          prospect_company?: string | null
+          prospect_email?: string | null
+          prospect_name?: string | null
+          source_id?: string | null
+          source_table?: string | null
+        }
+        Update: {
+          confirmation_sent?: boolean | null
+          created_at?: string
+          diagnostic_sent?: boolean | null
+          id?: string
+          meeting_datetime?: string | null
+          meeting_type?: string | null
+          notes?: string | null
+          prospect_company?: string | null
+          prospect_email?: string | null
+          prospect_name?: string | null
+          source_id?: string | null
+          source_table?: string | null
+        }
+        Relationships: []
+      }
       call_list_prospects: {
         Row: {
           batch_id: string | null
@@ -2263,6 +2308,75 @@ export type Database = {
           lead_temperature?: string | null
           next_reminder_at?: string | null
           notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      warm_outreach_queue: {
+        Row: {
+          apollo_person_id: string | null
+          booked_at: string | null
+          company_name: string | null
+          company_website: string | null
+          contact_email: string | null
+          contact_linkedin: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          contact_title: string | null
+          created_at: string
+          email_body: string | null
+          email_sent_at: string | null
+          email_subject: string | null
+          follow_up_body: string | null
+          follow_up_sent_at: string | null
+          id: string
+          scrape_summary: string | null
+          source_keyword: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          apollo_person_id?: string | null
+          booked_at?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          contact_email?: string | null
+          contact_linkedin?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          contact_title?: string | null
+          created_at?: string
+          email_body?: string | null
+          email_sent_at?: string | null
+          email_subject?: string | null
+          follow_up_body?: string | null
+          follow_up_sent_at?: string | null
+          id?: string
+          scrape_summary?: string | null
+          source_keyword?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          apollo_person_id?: string | null
+          booked_at?: string | null
+          company_name?: string | null
+          company_website?: string | null
+          contact_email?: string | null
+          contact_linkedin?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          contact_title?: string | null
+          created_at?: string
+          email_body?: string | null
+          email_sent_at?: string | null
+          email_subject?: string | null
+          follow_up_body?: string | null
+          follow_up_sent_at?: string | null
+          id?: string
+          scrape_summary?: string | null
+          source_keyword?: string | null
           status?: string
           updated_at?: string
         }
