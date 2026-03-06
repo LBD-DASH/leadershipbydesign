@@ -19,7 +19,15 @@ serve(async (req) => {
   const resendKey = Deno.env.get("RESEND_API_KEY");
 
   if (!firecrawlKey || !anthropicKey || !resendKey) {
-    return new Response(JSON.stringify({ error: "Missing API keys" }), {
+    const missing = [!firecrawlKey && "FIRECRAWL", !anthropicKey && "ANTHROPIC", !resendKey && "RESEND"].filter(Boolean).join(", ");
+    try {
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+        body: JSON.stringify({ eventType: "system_error", data: { function: "auto-outreach", error: `Missing API keys: ${missing}` } }),
+      });
+    } catch { /* best effort */ }
+    return new Response(JSON.stringify({ error: `Missing API keys: ${missing}` }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
