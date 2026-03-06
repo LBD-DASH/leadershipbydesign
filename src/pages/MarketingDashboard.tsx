@@ -263,6 +263,7 @@ export default function MarketingDashboard() {
 
               <TabsContent value="analytics" className="mt-6">
                 <div className="space-y-8">
+                  <GA4Analytics />
                   <SalesPipeline />
                   <div className="grid gap-6 lg:grid-cols-2">
                     <PipelineFunnel />
