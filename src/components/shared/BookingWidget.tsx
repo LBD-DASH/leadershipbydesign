@@ -1,8 +1,7 @@
 import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackScheduleCallClick } from "@/utils/gtmEvents";
-
-const BOOKING_LINK = "https://calendar.app.google/vFHzgHMvUqU6vzgv6";
+import { useBookingLink } from "@/hooks/useBookingLink";
 
 interface BookingWidgetProps {
   /** Inline = button only; card = styled card with description; embed = iframe */
