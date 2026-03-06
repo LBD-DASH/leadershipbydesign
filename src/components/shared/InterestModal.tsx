@@ -40,12 +40,7 @@ export default function InterestModal({
   });
   const utmParams = useUtmParams();
 
-  const CALENDAR_LINK = "https://calendar.app.google/vFHzgHMvUqU6vzgv6";
-
-  const handleBookAppointment = () => {
-    window.open(CALENDAR_LINK, '_blank', 'noopener,noreferrer');
-    onOpenChange(false);
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
