@@ -26,10 +26,11 @@ const EXCLUDED_DOMAINS = [
   "linkedin.com", "facebook.com", "youtube.com", "twitter.com", "instagram.com",
   "indeed.com", "glassdoor.com", "pnet.co.za", "careers24.co.za", "careerjet.co.za",
   "myjobmag.co.za", "jobvine.co.za", "gumtree.co.za", "offerzen.com",
+  "careerjunction.co.za", "za.talent.com", "simplyhired.co.za", "jobisjob.co.za",
   "wikipedia.org", "gov.za", "reddit.com", "quora.com",
   "leadershipbydesign.co.za", "leadershipbydesign.lovable.app",
-  // Recruitment agencies
   "robertwaltersafrica.com", "michaelpage.co.za", "hays.co.za",
+  "bluesteps.com", "theknowledgeacademy.com",
 ];
 
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
