@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Mail, Loader2, CheckCircle } from "lucide-react";
+import { Mail, Loader2, CheckCircle } from "lucide-react";
+import BookingWidget from "@/components/shared/BookingWidget";
 import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
