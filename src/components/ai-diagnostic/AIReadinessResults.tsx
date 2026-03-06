@@ -8,6 +8,7 @@ import { AIReadinessResult, categoryDetails, getReadinessLevelInfo, getScoreInte
 import { AIReadinessCategory, aiReadinessCategories } from "@/data/aiReadinessQuestions";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import InterestModal from "@/components/shared/InterestModal";
+import BookingWidget from "@/components/shared/BookingWidget";
 import { cn } from "@/lib/utils";
 
 interface AIReadinessResultsProps {
