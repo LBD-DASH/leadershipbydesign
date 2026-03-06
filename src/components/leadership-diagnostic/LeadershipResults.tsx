@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
+import BookingWidget from '@/components/shared/BookingWidget';
 
 interface LeadershipResultsProps {
   result: LeadershipResult;
