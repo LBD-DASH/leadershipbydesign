@@ -743,6 +743,8 @@ export default function ContagiousIdentityCoaching() {
               </p>
             </div>
 
+            <BookingWidget context="Contagious Identity Page" className="mb-8" />
+
             <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
               <InterestForm />
             </div>
