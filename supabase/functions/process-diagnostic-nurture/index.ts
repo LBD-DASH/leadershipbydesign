@@ -25,6 +25,16 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
+    // Load booking link from admin settings
+    const { data: settingData } = await supabase
+      .from('admin_settings')
+      .select('setting_value')
+      .eq('setting_key', 'booking_link')
+      .single();
+    if (settingData?.setting_value) {
+      BOOKING_LINK = settingData.setting_value;
+    }
+
     // Find sequences due for sending
     const now = new Date();
     const { data: sequences, error: seqErr } = await supabase

@@ -379,6 +379,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
         <TabsContent value="google-ads" className="mt-6">
           <GoogleAdsGenerator />
         </TabsContent>
+
+        <TabsContent value="settings" className="mt-6">
+          <AdminSettingsPanel />
+        </TabsContent>
       </Tabs>
     </div>
   );
