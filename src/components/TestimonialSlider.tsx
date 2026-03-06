@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TestimonialCard from "./TestimonialCard";
@@ -66,115 +65,65 @@ const testimonials: Testimonial[] = [
 
 export default function TestimonialSlider() {
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setDirection(1);
       setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(timer);
   }, []);
 
-  const next = () => {
-    setDirection(1);
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prev = () => {
-    setDirection(-1);
-    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-      position: "absolute" as const,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      position: "relative" as const,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-      position: "absolute" as const,
-    })
-  };
+  const next = () => setCurrent((prev) => (prev + 1) % testimonials.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
 
   return (
     <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-secondary/30">
       <div className="max-w-6xl mx-auto">
-        <div
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-        >
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4 sm:mb-6">
             What Our Clients Say
           </h2>
           <div className="w-16 sm:w-24 h-1 bg-primary mx-auto" />
         </div>
 
-        <div className="relative overflow-hidden min-h-[280px] sm:min-h-[240px]">
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
-              key={current}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                x: { type: "tween", duration: 0.35, ease: "easeInOut" },
-                opacity: { duration: 0.25 }
-              }}
-              className="w-full"
-            >
-              <TestimonialCard testimonial={testimonials[current]} index={0} />
-            </motion.div>
-          </AnimatePresence>
+        <div className="max-w-4xl mx-auto">
+          <TestimonialCard testimonial={testimonials[current]} index={current} />
         </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 mt-8">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prev}
-              className="rounded-full w-12 h-12 border-2"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            
-            {/* Dots Indicator */}
-            <div className="flex items-center gap-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setDirection(index > current ? 1 : -1);
-                    setCurrent(index);
-                  }}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === current 
-                      ? 'bg-primary w-8' 
-                      : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
-            
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={next}
-              className="rounded-full w-12 h-12 border-2"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
+        <div className="flex justify-center gap-4 mt-8">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={prev}
+            className="rounded-full w-12 h-12 border-2"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+
+          <div className="flex items-center gap-2">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrent(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === current
+                    ? 'bg-primary w-8'
+                    : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                }`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
           </div>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={next}
+            className="rounded-full w-12 h-12 border-2"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
     </section>
   );
