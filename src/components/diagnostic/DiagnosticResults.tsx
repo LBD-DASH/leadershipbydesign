@@ -6,6 +6,7 @@ import { BarChart3, Sparkles, ArrowRight, Target, Users, TrendingUp, Zap } from 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
+import BookingWidget from "@/components/shared/BookingWidget";
 
 interface DiagnosticResultsProps {
   result: DiagnosticResult;
