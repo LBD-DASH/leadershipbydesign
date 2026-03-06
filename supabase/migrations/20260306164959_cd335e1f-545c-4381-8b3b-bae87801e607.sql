@@ -1,0 +1,1 @@
+DELETE FROM warm_outreach_queue WHERE contact_email IN ('info@sdcorp.co.za','support@globalmanagementacademy.com','Ustraining@trainingcred.com','hello@quarterdeck.co.uk','info@gibs.co.za','info@henleysa.ac.za','shortcourses.wsg@wits.ac.za');
