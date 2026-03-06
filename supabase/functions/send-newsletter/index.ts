@@ -50,6 +50,8 @@ Deno.serve(async (req) => {
       else from += PAGE_SIZE;
     }
 
+    console.log(`📧 Total active subscribers fetched: ${subscribers.length}`);
+
     if (subscribers.length === 0) {
       return new Response(JSON.stringify({ error: 'No active subscribers found' }), {
         status: 400,
@@ -74,18 +76,19 @@ Deno.serve(async (req) => {
     if (insertError) throw insertError;
 
     // Build unsubscribe base URL
-    const projectUrl = supabaseUrl.replace('.supabase.co', '');
     const unsubscribeBaseUrl = `${supabaseUrl}/functions/v1/unsubscribe`;
 
-    // Send in batches via Resend
+    // Use Resend Batch API to send up to 100 emails per batch call
+    // Resend batch endpoint: POST /emails/batch (max 100 per call)
     let totalSent = 0;
-    const batchSize = 50; // Keep under Resend limits
+    let totalFailed = 0;
+    const failedEmails: string[] = [];
+    const BATCH_SIZE = 100;
 
-    for (let i = 0; i < subscribers.length; i += batchSize) {
-      const batch = subscribers.slice(i, i + batchSize);
+    for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+      const batch = subscribers.slice(i, i + BATCH_SIZE);
 
-      // Send individually for personalized unsubscribe links
-      const sendPromises = batch.map(async (sub) => {
+      const emailPayloads = batch.map((sub) => {
         const unsubscribeUrl = `${unsubscribeBaseUrl}?email=${encodeURIComponent(sub.email)}`;
         const personalizedHtml = `
           ${body_html}
@@ -97,39 +100,104 @@ Deno.serve(async (req) => {
           </div>
         `;
 
-        const res = await fetch('https://api.resend.com/emails', {
+        return {
+          from: 'Leadership by Design <hello@leadershipbydesign.co>',
+          to: [sub.email],
+          subject,
+          html: personalizedHtml,
+        };
+      });
+
+      try {
+        const res = await fetch('https://api.resend.com/emails/batch', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${RESEND_API_KEY}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            from: 'Leadership by Design <hello@leadershipbydesign.co>',
-            to: [sub.email],
-            subject,
-            html: personalizedHtml,
-          }),
+          body: JSON.stringify(emailPayloads),
         });
 
-        if (res.ok) totalSent++;
-      });
+        const resBody = await res.text();
 
-      await Promise.all(sendPromises);
+        if (res.ok) {
+          totalSent += batch.length;
+          console.log(`✅ Batch ${Math.floor(i / BATCH_SIZE) + 1}: sent ${batch.length} emails`);
+        } else {
+          totalFailed += batch.length;
+          console.error(`❌ Batch ${Math.floor(i / BATCH_SIZE) + 1} failed [${res.status}]: ${resBody}`);
+          failedEmails.push(...batch.map(b => b.email));
+
+          // If we hit rate limit (429), wait and retry once
+          if (res.status === 429) {
+            console.log('⏳ Rate limited — waiting 10s before retry...');
+            await new Promise(r => setTimeout(r, 10000));
+
+            const retryRes = await fetch('https://api.resend.com/emails/batch', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(emailPayloads),
+            });
+
+            if (retryRes.ok) {
+              totalSent += batch.length;
+              totalFailed -= batch.length;
+              console.log(`✅ Retry batch ${Math.floor(i / BATCH_SIZE) + 1}: sent ${batch.length} emails`);
+            } else {
+              const retryBody = await retryRes.text();
+              console.error(`❌ Retry also failed [${retryRes.status}]: ${retryBody}`);
+            }
+          }
+        }
+      } catch (batchErr: any) {
+        totalFailed += batch.length;
+        console.error(`❌ Batch ${Math.floor(i / BATCH_SIZE) + 1} exception: ${batchErr.message}`);
+      }
+
+      // Small delay between batches to avoid rate limits
+      if (i + BATCH_SIZE < subscribers.length) {
+        await new Promise(r => setTimeout(r, 1500));
+      }
     }
+
+    // Send monitoring copy to owner
+    const ownerEmail = Deno.env.get('OWNER_EMAIL') || 'hello@leadershipbydesign.co';
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Leadership by Design <hello@leadershipbydesign.co>',
+          to: [ownerEmail],
+          subject: `[SENT COPY] ${subject} — ${totalSent}/${subscribers.length} delivered`,
+          html: `<p><strong>Delivery Report:</strong> ${totalSent} sent, ${totalFailed} failed out of ${subscribers.length} subscribers.</p><hr/>${body_html}`,
+        }),
+      });
+    } catch (_) {}
 
     // Update newsletter record
     await supabase
       .from('newsletter_sends')
       .update({
-        status: 'sent',
+        status: totalFailed > 0 ? 'partial' : 'sent',
         recipient_count: totalSent,
         sent_at: new Date().toISOString(),
       })
       .eq('id', newsletter.id);
 
+    console.log(`📊 Newsletter complete: ${totalSent} sent, ${totalFailed} failed out of ${subscribers.length} total`);
+
     return new Response(JSON.stringify({
       success: true,
-      recipient_count: totalSent,
+      total_subscribers: subscribers.length,
+      sent: totalSent,
+      failed: totalFailed,
       newsletter_id: newsletter.id,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
