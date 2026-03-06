@@ -98,6 +98,10 @@ export default function InterestModal({
         .catch(err => console.error('Lead processing error:', err));
 
       setIsSubmitted(true);
+      // Fire GA4 conversion event
+      import('@/utils/gtmEvents').then(({ trackContactFormSubmit }) => {
+        trackContactFormSubmit({ service_interest: 'General Interest', source: context });
+      });
       toast.success("Thank you! We'll be in touch soon.");
       
       // Keep open longer so user can see referral prompt

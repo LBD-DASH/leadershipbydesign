@@ -84,6 +84,9 @@ import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
 import ColdCallPrompter from "./pages/ColdCallPrompter";
+import TeamDiagnosticAd from "./pages/ads/TeamDiagnosticAd";
+import LeadershipDiagnosticAd from "./pages/ads/LeadershipDiagnosticAd";
+import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -189,6 +192,10 @@ const App = () => (
               </AdminProtectedRoute>
             }
           />
+          {/* Ad Landing Pages — no nav, single CTA */}
+          <Route path="/ad/team-diagnostic" element={<TeamDiagnosticAd />} />
+          <Route path="/ad/leadership-diagnostic" element={<LeadershipDiagnosticAd />} />
+          <Route path="/ad/executive-coaching" element={<ExecutiveCoachingAd />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
