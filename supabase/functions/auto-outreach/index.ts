@@ -1,12 +1,11 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -36,25 +35,42 @@ serve(async (req) => {
   try {
     console.log("📧 Starting auto-outreach pipeline...");
 
-    // Get top 10 pending prospects with email
+    // Get top 10 pending prospects with VALID email (not empty, not null)
     const { data: prospects, error: fetchErr } = await supabase
       .from("warm_outreach_queue")
       .select("*")
       .eq("status", "pending")
       .not("contact_email", "is", null)
-      .not("contact_email", "eq", "")
+      .neq("contact_email", "")
       .order("created_at", { ascending: true })
       .limit(10);
 
-    if (fetchErr || !prospects?.length) {
-      console.log("No pending prospects found");
-      return new Response(JSON.stringify({ success: true, emailed: 0 }), {
+    if (fetchErr) {
+      console.error("DB fetch error:", fetchErr.message);
+      throw new Error(`DB fetch: ${fetchErr.message}`);
+    }
+
+    if (!prospects?.length) {
+      console.log("No pending prospects with email found");
+      // Still notify so we know the function ran
+      try {
+        await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+          body: JSON.stringify({
+            eventType: "system_error",
+            data: { function: "auto-outreach", error: "No pending prospects with email addresses found. Check web-scraper-leads pipeline." },
+          }),
+        });
+      } catch { /* best effort */ }
+      return new Response(JSON.stringify({ success: true, emailed: 0, reason: "no_prospects_with_email" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     console.log(`Processing ${prospects.length} prospects`);
     let emailedCount = 0;
+    const errors: string[] = [];
 
     // Fetch booking link from admin settings
     const { data: settingsData } = await supabase
@@ -133,7 +149,9 @@ Only valid JSON, no markdown.`,
         });
 
         if (!aiRes.ok) {
-          console.error(`Claude API failed for ${prospect.company_name}: ${aiRes.status}`);
+          const errDetail = await aiRes.text();
+          console.error(`Claude API failed for ${prospect.company_name}: ${aiRes.status} — ${errDetail}`);
+          errors.push(`Claude ${aiRes.status} for ${prospect.company_name}`);
           continue;
         }
 
@@ -145,6 +163,7 @@ Only valid JSON, no markdown.`,
           emailContent = JSON.parse(aiText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim());
         } catch {
           console.error("Failed to parse AI email response:", aiText);
+          errors.push(`Parse fail for ${prospect.company_name}`);
           continue;
         }
 
@@ -169,6 +188,7 @@ Only valid JSON, no markdown.`,
         if (!sendRes.ok) {
           const errText = await sendRes.text();
           console.error(`Resend failed for ${prospect.contact_email}: ${errText}`);
+          errors.push(`Resend fail: ${prospect.contact_email} — ${errText.slice(0, 100)}`);
           continue;
         }
 
@@ -185,17 +205,7 @@ Only valid JSON, no markdown.`,
           })
           .eq("id", prospect.id);
 
-        // Step 5: Enroll in nurture sequence
-        await supabase.from("diagnostic_nurture_sequences").insert({
-          lead_email: prospect.contact_email,
-          lead_name: prospect.contact_name,
-          diagnostic_type: "outreach",
-          primary_result: "warm_outreach",
-          status: "active",
-          next_send_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-        });
-
-        // Step 6: Add to pipeline
+        // Step 5: Add to pipeline
         await supabase.from("pipeline_deals").insert({
           lead_source_table: "warm_outreach_queue",
           lead_source_id: prospect.id,
@@ -207,37 +217,34 @@ Only valid JSON, no markdown.`,
         }).then(() => {}).catch(() => {});
 
         emailedCount++;
-        console.log(`✅ Emailed: ${prospect.contact_name} at ${prospect.company_name}`);
+        console.log(`✅ Emailed: ${prospect.contact_name || prospect.contact_email} at ${prospect.company_name}`);
 
         // Rate limit delay
         await new Promise((r) => setTimeout(r, 2000));
       } catch (err) {
-        console.error(`Error processing prospect ${prospect.id}:`, err);
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`Error processing prospect ${prospect.id}:`, msg);
+        errors.push(`${prospect.company_name}: ${msg.slice(0, 100)}`);
       }
     }
 
-    console.log(`📧 Auto-outreach complete: ${emailedCount} emails sent`);
+    console.log(`📧 Auto-outreach complete: ${emailedCount}/${prospects.length} emails sent`);
 
-    // Slack notification
+    // Slack notification with full status
+    const statusEmoji = emailedCount === prospects.length ? "✅" : emailedCount > 0 ? "⚠️" : "❌";
+    const slackText = `*Emails sent:* ${emailedCount}/${prospects.length}${errors.length ? `\n*Errors:*\n${errors.map(e => `• ${e}`).join("\n")}` : ""}`;
+
     try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${supabaseKey}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          blocks: [
-            { type: "header", text: { type: "plain_text", text: "📧 Auto-Outreach Complete" } },
-            {
-              type: "section",
-              text: {
-                type: "mrkdwn",
-                text: `*Emails sent:* ${emailedCount}/${prospects.length}\n*Pipeline:* Prospects moved to "contacted"`,
-              },
-            },
-          ],
+          eventType: "system_error",
+          data: {
+            function: `auto-outreach ${statusEmoji}`,
+            error: slackText,
+          },
         }),
       });
     } catch (e) {
@@ -245,7 +252,7 @@ Only valid JSON, no markdown.`,
     }
 
     return new Response(
-      JSON.stringify({ success: true, emailed: emailedCount, total: prospects.length }),
+      JSON.stringify({ success: true, emailed: emailedCount, total: prospects.length, errors }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
