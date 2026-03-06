@@ -8,14 +8,10 @@ const corsHeaders = {
 
 // Target corporate BUYERS — companies that need leadership development
 const SEARCH_QUERIES = [
-  "site:co.za HR director leadership development",
-  "site:co.za head of learning and development corporate",
-  "site:co.za skills development facilitator accredited",
-  "corporate leadership programme South Africa 2026",
-  "management development programme Johannesburg company",
-  "team leadership training corporate Gauteng",
-  "B-BBEE skills development accredited training provider corporate",
-  "executive leadership programme South Africa corporate",
+  "corporate leadership development programme South Africa 2026",
+  "management training corporate Gauteng Johannesburg",
+  "B-BBEE accredited leadership training corporate",
+  "executive development programme company South Africa",
 ];
 
 const HR_TITLES = [
