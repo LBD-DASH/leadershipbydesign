@@ -88,16 +88,19 @@ export default function TestimonialSlider() {
 
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      position: "absolute" as const,
     }),
     center: {
       x: 0,
-      opacity: 1
+      opacity: 1,
+      position: "relative" as const,
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      position: "absolute" as const,
     })
   };
 
