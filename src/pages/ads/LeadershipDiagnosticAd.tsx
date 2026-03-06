@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Clock, Target, Zap, ArrowRight, CheckCircle2, Shield, MapPin, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackScheduleCallClick } from "@/utils/gtmEvents";
+import BookingWidget from "@/components/shared/BookingWidget";
 
 const benefits = [
   "Pinpoint your exact leadership operating level (1–5)",
