@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search, Zap } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search, Zap, Settings } from 'lucide-react';
+import AdminSettingsPanel from './AdminSettingsPanel';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
 import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
@@ -201,6 +202,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             <Megaphone className="w-4 h-4" />
             Google Ads
           </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Settings className="w-4 h-4" />
+            Settings
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -373,6 +378,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
 
         <TabsContent value="google-ads" className="mt-6">
           <GoogleAdsGenerator />
+        </TabsContent>
+
+        <TabsContent value="settings" className="mt-6">
+          <AdminSettingsPanel />
         </TabsContent>
       </Tabs>
     </div>
