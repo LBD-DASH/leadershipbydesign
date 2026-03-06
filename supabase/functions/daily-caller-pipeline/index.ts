@@ -82,17 +82,43 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: true, found: 0, industry }), { headers });
     }
 
-    // 3. Deduplicate against existing call list (by email)
+    // 3. Deduplicate against existing call list (by email OR first_name+company)
     const emails = people.filter((p: any) => p.email).map((p: any) => p.email.toLowerCase());
-    const { data: existing } = await supabase
+    const { data: existingByEmail } = await supabase
       .from("call_list_prospects")
-      .select("email")
-      .in("email", emails);
+      .select("email, first_name, company")
+      .in("email", emails.length > 0 ? emails : ["__none__"]);
 
-    const existingEmails = new Set((existing || []).map((e: any) => e.email?.toLowerCase()));
-    const newPeople = people.filter((p: any) => !existingEmails.has(p.email?.toLowerCase()));
+    // Also check by first_name + company for contacts without email matches
+    const nameCompanyPairs = people.map((p: any) => ({
+      first_name: (p.first_name || "").toLowerCase().trim(),
+      company: (p.company || "").toLowerCase().trim(),
+    }));
+    const uniqueCompanies = [...new Set(nameCompanyPairs.map(nc => nc.company).filter(Boolean))];
+    const { data: existingByCompany } = await supabase
+      .from("call_list_prospects")
+      .select("email, first_name, company")
+      .in("company", uniqueCompanies.length > 0 ? uniqueCompanies : ["__none__"]);
 
-    console.log(`${newPeople.length} new contacts after dedup (${existingEmails.size} already exist)`);
+    const existingEmails = new Set((existingByEmail || []).map((e: any) => e.email?.toLowerCase()));
+    const existingNameCompany = new Set(
+      (existingByCompany || []).map((e: any) => 
+        `${(e.first_name || "").toLowerCase().trim()}||${(e.company || "").toLowerCase().trim()}`
+      )
+    );
+
+    const newPeople = people.filter((p: any) => {
+      const email = (p.email || "").toLowerCase();
+      const nameCompanyKey = `${(p.first_name || "").toLowerCase().trim()}||${(p.company || "").toLowerCase().trim()}`;
+      
+      // Skip if email already exists
+      if (email && existingEmails.has(email)) return false;
+      // Skip if first_name + company already exists
+      if (p.first_name && p.company && existingNameCompany.has(nameCompanyKey)) return false;
+      return true;
+    });
+
+    console.log(`${newPeople.length} new contacts after dedup (${existingEmails.size} email matches, ${existingNameCompany.size} name+company matches)`);
 
     // 4. Scrape phone numbers for contacts missing them
     let phonesFound = 0;
