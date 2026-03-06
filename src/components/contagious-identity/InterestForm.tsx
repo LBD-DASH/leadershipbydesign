@@ -107,6 +107,10 @@ export default function InterestForm() {
       });
 
       setIsSuccess(true);
+      // Fire GA4 conversion event
+      import('@/utils/gtmEvents').then(({ trackContactFormSubmit }) => {
+        trackContactFormSubmit({ service_interest: 'Contagious Identity Coaching', source: 'contagious_identity_page' });
+      });
       toast({
         title: "Interest submitted",
         description: "We'll be in touch within 24 hours.",
