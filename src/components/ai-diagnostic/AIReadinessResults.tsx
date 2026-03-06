@@ -8,6 +8,7 @@ import { AIReadinessResult, categoryDetails, getReadinessLevelInfo, getScoreInte
 import { AIReadinessCategory, aiReadinessCategories } from "@/data/aiReadinessQuestions";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import InterestModal from "@/components/shared/InterestModal";
+import BookingWidget from "@/components/shared/BookingWidget";
 import { cn } from "@/lib/utils";
 
 interface AIReadinessResultsProps {
@@ -198,6 +199,9 @@ export function AIReadinessResults({ result, submissionId, onExpertContact }: AI
           </Button>
         </CardContent>
       </Card>
+
+      {/* Book a Strategy Call CTA */}
+      <BookingWidget context="AI Readiness Diagnostic Results" />
 
       {/* CTAs */}
       <div className="grid sm:grid-cols-2 gap-4">

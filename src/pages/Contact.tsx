@@ -14,6 +14,7 @@ import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import Footer from "@/components/Footer";
+import BookingWidget from "@/components/shared/BookingWidget";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -407,6 +408,9 @@ export default function Contact() {
                 </li>
               </ul>
             </div>
+
+            {/* Book a Call Widget */}
+            <BookingWidget context="Contact Page" className="mb-8" />
 
             {/* Risk Reversal */}
             <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-2xl p-6 text-center">

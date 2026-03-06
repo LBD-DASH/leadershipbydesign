@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Clock, Target, Zap, ArrowRight, CheckCircle2, Shield, MapPin, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackScheduleCallClick } from "@/utils/gtmEvents";
+import BookingWidget from "@/components/shared/BookingWidget";
 
 const benefits = [
   "Pinpoint your exact leadership operating level (1–5)",
@@ -146,6 +147,9 @@ export default function LeadershipDiagnosticAd() {
               </Button>
             </Link>
           </div>
+
+          {/* Or Book a Call */}
+          <BookingWidget context="Leadership Diagnostic Ad" variant="card" className="mb-8" />
 
           {/* Trust footer */}
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pb-6">

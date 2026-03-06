@@ -22,6 +22,7 @@ import ContentEngine from '@/components/marketing/ContentEngine';
 import NewsletterTab from '@/components/marketing/NewsletterTab';
 import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
 import CallLogsPanel from '@/components/admin/CallLogsPanel';
+import SalesPipeline from '@/components/marketing/SalesPipeline';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -260,14 +261,17 @@ export default function MarketingDashboard() {
               </TabsContent>
 
               <TabsContent value="analytics" className="mt-6">
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <PipelineFunnel />
-                  <div className="bg-card rounded-xl border border-border p-8 text-center">
-                    <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">Advanced Analytics Coming Soon</h3>
-                    <p className="text-muted-foreground">
-                      Track engagement, email open rates, and conversion metrics over time.
-                    </p>
+                <div className="space-y-8">
+                  <SalesPipeline />
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <PipelineFunnel />
+                    <div className="bg-card rounded-xl border border-border p-8 text-center">
+                      <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-foreground mb-2">Prospect Pipeline</h3>
+                      <p className="text-muted-foreground">
+                        Track prospect engagement and conversion metrics.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </TabsContent>

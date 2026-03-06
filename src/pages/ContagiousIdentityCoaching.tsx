@@ -22,6 +22,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import InterestForm from "@/components/contagious-identity/InterestForm";
+import BookingWidget from "@/components/shared/BookingWidget";
 import A4CoachingModel from "@/components/contagious-identity/A4CoachingModel";
 
 // Images
@@ -741,6 +742,8 @@ export default function ContagiousIdentityCoaching() {
                 whether this coaching is the right fit for your goals.
               </p>
             </div>
+
+            <BookingWidget context="Contagious Identity Page" className="mb-8" />
 
             <div className="bg-card rounded-2xl p-8 md:p-12 shadow-lg border border-border">
               <InterestForm />

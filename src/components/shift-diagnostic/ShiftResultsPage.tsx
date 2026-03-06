@@ -7,6 +7,7 @@ import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInt
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
+import BookingWidget from '@/components/shared/BookingWidget';
 
 interface ShiftResultsPageProps {
   result: ShiftResult;
@@ -264,6 +265,15 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
             />
           ))}
         </div>
+      </motion.div>
+
+      {/* Book a Strategy Call CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+      >
+        <BookingWidget context="SHIFT Diagnostic Results" />
       </motion.div>
 
       {/* Social Sharing */}

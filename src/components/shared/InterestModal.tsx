@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Mail, Loader2, CheckCircle } from "lucide-react";
+import { Mail, Loader2, CheckCircle } from "lucide-react";
+import BookingWidget from "@/components/shared/BookingWidget";
 import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -39,12 +40,7 @@ export default function InterestModal({
   });
   const utmParams = useUtmParams();
 
-  const CALENDAR_LINK = "https://calendar.app.google/vFHzgHMvUqU6vzgv6";
-
-  const handleBookAppointment = () => {
-    window.open(CALENDAR_LINK, '_blank', 'noopener,noreferrer');
-    onOpenChange(false);
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,14 +147,7 @@ export default function InterestModal({
         ) : !showForm ? (
           <div className="space-y-4 py-4">
             {/* Option 1: Book Appointment */}
-            <Button
-              onClick={handleBookAppointment}
-              size="lg"
-              className="w-full py-6 text-lg"
-            >
-              <Calendar className="mr-3 w-5 h-5" />
-              Book a Clarity Call
-            </Button>
+            <BookingWidget variant="inline" context={context} className="w-full py-6 text-lg" buttonText="Book a Clarity Call" />
             
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
