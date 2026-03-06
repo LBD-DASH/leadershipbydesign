@@ -88,16 +88,19 @@ export default function TestimonialSlider() {
 
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      position: "absolute" as const,
     }),
     center: {
       x: 0,
-      opacity: 1
+      opacity: 1,
+      position: "relative" as const,
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      position: "absolute" as const,
     })
   };
 
@@ -113,8 +116,8 @@ export default function TestimonialSlider() {
           <div className="w-16 sm:w-24 h-1 bg-primary mx-auto" />
         </div>
 
-        <div className="relative">
-          <AnimatePresence initial={false} custom={direction} mode="wait">
+        <div className="relative overflow-hidden min-h-[280px] sm:min-h-[240px]">
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
             <motion.div
               key={current}
               custom={direction}
@@ -123,13 +126,15 @@ export default function TestimonialSlider() {
               animate="center"
               exit="exit"
               transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                x: { type: "tween", duration: 0.35, ease: "easeInOut" },
+                opacity: { duration: 0.25 }
               }}
+              className="w-full"
             >
               <TestimonialCard testimonial={testimonials[current]} index={0} />
             </motion.div>
           </AnimatePresence>
+        </div>
 
           {/* Navigation Buttons */}
           <div className="flex justify-center gap-4 mt-8">
@@ -170,7 +175,6 @@ export default function TestimonialSlider() {
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
-        </div>
       </div>
     </section>
   );

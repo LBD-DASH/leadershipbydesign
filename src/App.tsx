@@ -133,6 +133,8 @@ const App = () => (
           <Route path="/difficult-conversations/success" element={<DifficultConversationsSuccess />} />
           <Route path="/bundle/success" element={<BundleSuccess />} />
           <Route path="/contagious-identity" element={<ContagiousIdentityCoaching />} />
+          <Route path="/contagious-identity-coaching" element={<Navigate to="/contagious-identity" replace />} />
+          <Route path="/executive-coaching-south-africa" element={<Navigate to="/contagious-identity" replace />} />
           <Route path="/contagious-identity-workbook" element={<ContagiousIdentityWorkbook />} />
           <Route path="/contagious-identity-workbook/success" element={<ContagiousIdentityWorkbookSuccess />} />
           <Route path="/feedback-formula" element={<FeedbackFormula />} />
