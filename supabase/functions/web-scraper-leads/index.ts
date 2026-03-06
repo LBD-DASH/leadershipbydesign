@@ -220,8 +220,8 @@ serve(async (req) => {
         if (!contactFound) {
           try {
             const baseUrl = `https://${domain}`;
-            // Try common contact page paths
-            const contactPaths = ["/contact", "/contact-us", "/about", "/about-us", "/team", "/get-in-touch"];
+            // Try common contact page paths (limited to avoid timeout)
+            const contactPaths = ["/contact", "/about"];
             let scrapedEmail: string | null = null;
 
             for (const path of contactPaths) {
