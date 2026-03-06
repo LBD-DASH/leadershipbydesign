@@ -149,7 +149,7 @@ serve(async (req) => {
     let apolloHits = 0;
     let scrapeHits = 0;
 
-    for (const company of allCompanies.slice(0, 25)) {
+    for (const company of allCompanies.slice(0, 15)) {
       try {
         let domain: string;
         try {
