@@ -7,6 +7,7 @@ import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInt
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
+import BookingWidget from '@/components/shared/BookingWidget';
 
 interface ShiftResultsPageProps {
   result: ShiftResult;
