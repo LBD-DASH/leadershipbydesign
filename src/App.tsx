@@ -192,6 +192,10 @@ const App = () => (
               </AdminProtectedRoute>
             }
           />
+          {/* Ad Landing Pages — no nav, single CTA */}
+          <Route path="/ad/team-diagnostic" element={<TeamDiagnosticAd />} />
+          <Route path="/ad/leadership-diagnostic" element={<LeadershipDiagnosticAd />} />
+          <Route path="/ad/executive-coaching" element={<ExecutiveCoachingAd />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
