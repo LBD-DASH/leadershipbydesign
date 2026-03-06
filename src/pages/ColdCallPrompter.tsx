@@ -602,7 +602,7 @@ export default function ColdCallPrompter() {
               {/* BOOK MEETING */}
               {screen === "BOOK_MEETING" && (
                 <>
-                  <Label>Say this:</Label>
+                   <Label>Say this:</Label>
                   <ScriptBlock>
                     "Great. I'll keep it practical — we'll look at whether the 3-month Accelerator, the 6-month Transformation, or the full 10-month Culture Architecture fits your leadership layer."
                   </ScriptBlock>
@@ -630,6 +630,34 @@ export default function ColdCallPrompter() {
                         open booking page here
                       </a>
                     </p>
+
+                    {/* Send booking confirmation email */}
+                    {form.email && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full gap-2"
+                        onClick={async () => {
+                          try {
+                            await supabase.functions.invoke('send-contact-email', {
+                              body: {
+                                name: form.contactName,
+                                email: form.email,
+                                company: form.company,
+                                message: `Meeting booked via Cold Call Prompter by ${form.repName}. Booking link: https://calendar.app.google/vFHzgHMvUqU6vzgv6`,
+                                serviceInterest: form.programmeInterest || 'Leader as Coach',
+                              }
+                            });
+                            toast({ title: "Confirmation sent", description: `Booking email sent to ${form.email}` });
+                          } catch {
+                            toast({ title: "Email failed", variant: "destructive" });
+                          }
+                        }}
+                      >
+                        📧 Send Booking Confirmation to {form.contactName?.split(' ')[0] || 'Prospect'}
+                      </Button>
+                    )}
+
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
                     <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}

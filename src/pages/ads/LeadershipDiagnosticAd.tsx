@@ -148,6 +148,9 @@ export default function LeadershipDiagnosticAd() {
             </Link>
           </div>
 
+          {/* Or Book a Call */}
+          <BookingWidget context="Leadership Diagnostic Ad" variant="card" className="mb-8" />
+
           {/* Trust footer */}
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pb-6">
             <Shield className="w-4 h-4" />

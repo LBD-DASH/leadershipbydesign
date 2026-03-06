@@ -409,6 +409,9 @@ export default function Contact() {
               </ul>
             </div>
 
+            {/* Book a Call Widget */}
+            <BookingWidget context="Contact Page" className="mb-8" />
+
             {/* Risk Reversal */}
             <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-2xl p-6 text-center">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">

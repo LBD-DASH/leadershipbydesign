@@ -174,13 +174,8 @@ export default function ExecutiveCoachingAd() {
             </p>
           </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center mb-8">
-            <Button size="lg" onClick={handleCTA} className="w-full text-lg py-7 rounded-xl shadow-lg">
-              Book Your Free Exploratory Call
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
+          {/* Booking Widget */}
+          <BookingWidget context="Executive Coaching Ad" variant="card" buttonText="Book Your Free Exploratory Call" className="mb-8" />
 
           {/* Trust footer */}
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pb-6">

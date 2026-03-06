@@ -218,6 +218,15 @@ export default function DiagnosticResults({ result, submissionId, userName }: Di
         </div>
       </motion.div>
 
+      {/* Book a Strategy Call CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+      >
+        <BookingWidget context="Team Diagnostic Results" />
+      </motion.div>
+
       {/* Social Sharing */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

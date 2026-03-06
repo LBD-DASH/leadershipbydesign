@@ -200,6 +200,9 @@ export function AIReadinessResults({ result, submissionId, onExpertContact }: AI
         </CardContent>
       </Card>
 
+      {/* Book a Strategy Call CTA */}
+      <BookingWidget context="AI Readiness Diagnostic Results" />
+
       {/* CTAs */}
       <div className="grid sm:grid-cols-2 gap-4">
         <Button 
