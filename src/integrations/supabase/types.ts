@@ -1610,6 +1610,78 @@ export type Database = {
           },
         ]
       }
+      pipeline_deals: {
+        Row: {
+          assigned_to: string | null
+          booked_at: string | null
+          close_reason: string | null
+          closed_at: string | null
+          contacted_at: string | null
+          created_at: string
+          deal_value: number | null
+          id: string
+          lead_company: string | null
+          lead_email: string | null
+          lead_name: string | null
+          lead_phone: string | null
+          lead_score: number | null
+          lead_source_id: string
+          lead_source_table: string
+          lead_temperature: string | null
+          met_at: string | null
+          notes: string | null
+          proposal_sent_at: string | null
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          booked_at?: string | null
+          close_reason?: string | null
+          closed_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          deal_value?: number | null
+          id?: string
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_score?: number | null
+          lead_source_id: string
+          lead_source_table: string
+          lead_temperature?: string | null
+          met_at?: string | null
+          notes?: string | null
+          proposal_sent_at?: string | null
+          stage?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          booked_at?: string | null
+          close_reason?: string | null
+          closed_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          deal_value?: number | null
+          id?: string
+          lead_company?: string | null
+          lead_email?: string | null
+          lead_name?: string | null
+          lead_phone?: string | null
+          lead_score?: number | null
+          lead_source_id?: string
+          lead_source_table?: string
+          lead_temperature?: string | null
+          met_at?: string | null
+          notes?: string | null
+          proposal_sent_at?: string | null
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_purchases: {
         Row: {
           amount_zar: number
