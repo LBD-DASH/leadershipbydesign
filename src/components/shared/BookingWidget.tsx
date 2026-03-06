@@ -76,5 +76,3 @@ export default function BookingWidget({
     </div>
   );
 }
-
-export { BOOKING_LINK };
