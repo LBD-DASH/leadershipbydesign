@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Shield, MapPin, Clock, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import InterestModal from "@/components/shared/InterestModal";
+import BookingWidget from "@/components/shared/BookingWidget";
 import { trackScheduleCallClick } from "@/utils/gtmEvents";
 
 const outcomes = [
