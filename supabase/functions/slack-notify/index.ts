@@ -363,6 +363,13 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildHourlyPulseBlocks,
     text: (d) => `Hourly pulse: ${d.total} new activities`,
   },
+  daily_pipeline_complete: {
+    channels: ['mission-control'],
+    username: 'LBD Auto Pipeline',
+    icon: ':robot_face:',
+    buildBlocks: buildPipelineCompleteBlocks,
+    text: (d) => `Pipeline: ${d.added} prospects added from ${d.industry}`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────
