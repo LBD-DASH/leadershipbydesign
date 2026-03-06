@@ -111,8 +111,33 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Step 2: Claude generates personalized email
+        // Step 2: Claude generates personalized email based on campaign mode
         const firstName = prospect.contact_name?.split(" ")[0] || "there";
+
+        const campaignPrompts: Record<string, string> = {
+          general: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
+
+RULES:
+- First paragraph: ONE specific observation about their company (2 sentences max)
+- Second paragraph: A relatable challenge companies like theirs face with people development. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
+- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
+
+          leader_as_coach: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
+
+RULES:
+- First paragraph: ONE specific observation about their management layer or team performance (2 sentences max)
+- Second paragraph: Connect to the challenge of managers who manage but don't coach — creating bottlenecks and disengaged teams. Position Kevin as someone who installs coaching capability into management teams through a structured 90-day programme. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
+- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
+
+          shift_programme: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
+
+RULES:
+- First paragraph: ONE specific observation about their organisation navigating change or scaling teams (2 sentences max)
+- Second paragraph: Connect to the challenge of managers who lack the skills to lead in an AI-driven, high-pressure environment. Position Kevin's SHIFT framework (Self-Management, Human Intelligence, Innovation, Focus, Thinking) as a leadership operating system — not a training course. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
+- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
+        };
+
+        const campaignPrompt = campaignPrompts[campaignMode] || campaignPrompts.general;
 
         const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
@@ -127,18 +152,15 @@ Deno.serve(async (req) => {
             messages: [
               {
                 role: "user",
-                content: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders. 
+                content: `${campaignPrompt}
 
 PROSPECT: ${prospect.contact_name || "Unknown"}, ${prospect.contact_title || ""} at ${prospect.company_name}
 COMPANY WEBSITE CONTENT: ${companyContext || "No website content available"}
 BOOKING LINK: ${bookingLink}
 
-RULES:
+GLOBAL RULES:
 - Subject line: Short, personal, no corporate fluff. Max 6 words.
 - Body: Under 100 words. Written in first person as Kevin.
-- First paragraph: ONE specific observation about their company (2 sentences max)
-- Second paragraph: A relatable challenge companies like theirs face. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.
 - Sign off as: — Kevin, Leadership by Design
 - NEVER use: "I noticed your impressive...", "particularly caught my attention", "Would you be open to a brief 15-minute conversation"
 - Be warm, direct, human. NOT corporate sales.
