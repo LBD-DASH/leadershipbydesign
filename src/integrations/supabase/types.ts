@@ -684,6 +684,48 @@ export type Database = {
           },
         ]
       }
+      diagnostic_nurture_sequences: {
+        Row: {
+          created_at: string
+          current_step: number
+          diagnostic_submission_id: string | null
+          diagnostic_type: string
+          id: string
+          lead_email: string
+          lead_name: string | null
+          next_send_at: string
+          primary_result: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_step?: number
+          diagnostic_submission_id?: string | null
+          diagnostic_type: string
+          id?: string
+          lead_email: string
+          lead_name?: string | null
+          next_send_at?: string
+          primary_result?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_step?: number
+          diagnostic_submission_id?: string | null
+          diagnostic_type?: string
+          id?: string
+          lead_email?: string
+          lead_name?: string | null
+          next_send_at?: string
+          primary_result?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
