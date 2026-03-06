@@ -105,3 +105,6 @@ verify_jwt = false
 [functions.enrich-prospects]
 verify_jwt = false
 
+[functions.process-diagnostic-nurture]
+verify_jwt = false
+
