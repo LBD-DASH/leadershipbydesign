@@ -6,11 +6,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Target BUYERS of leadership development, not providers/competitors
 const SEARCH_QUERIES = [
-  "leadership coaching South Africa",
-  "executive coaching Johannesburg",
-  "B-BBEE skills development provider",
-  "leadership development programme South Africa",
+  "HR director leadership development South Africa",
+  "chief people officer skills development Johannesburg",
+  "head of learning and development corporate South Africa",
+  "B-BBEE skills development levy corporate training",
+  "leadership training RFP South Africa",
+  "people development corporate Gauteng",
+  "employee development programme large company South Africa",
+  "executive development corporate Cape Town Durban",
 ];
 
 const HR_TITLES = [
@@ -24,7 +29,48 @@ const HR_TITLES = [
   "Training Manager",
   "Head of Talent",
   "CHRO",
+  "Head of Organisational Development",
+  "VP People",
 ];
+
+// Domains to exclude — competitors, job boards, directories
+const EXCLUDED_DOMAINS = [
+  "linkedin.com", "facebook.com", "youtube.com", "twitter.com",
+  "indeed.com", "glassdoor.com", "pnet.co.za", "careers24.co.za",
+  "wikipedia.org", "gov.za", "reddit.com",
+  // Known competitors / training providers to skip
+  "leadershipbydesign.co.za", "leadershipbydesign.lovable.app",
+];
+
+// Email regex for scraping contact pages
+const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+const GENERIC_EMAIL_PREFIXES = ["info", "admin", "support", "hello", "contact", "sales", "enquiries", "enquiry", "reception", "office"];
+
+function isCompanyDomain(domain: string): boolean {
+  return !EXCLUDED_DOMAINS.some((ex) => domain.includes(ex));
+}
+
+function extractBestEmail(text: string, domain: string): string | null {
+  const emails = text.match(EMAIL_REGEX) || [];
+  const domainRoot = domain.replace(/^www\./, "");
+
+  // Prefer emails from the same domain
+  const domainEmails = emails.filter((e) => e.includes(domainRoot));
+  // Prefer non-generic emails (e.g. kevin@company.co.za over info@company.co.za)
+  const personalEmails = domainEmails.filter(
+    (e) => !GENERIC_EMAIL_PREFIXES.some((p) => e.toLowerCase().startsWith(p + "@"))
+  );
+
+  if (personalEmails.length > 0) return personalEmails[0];
+  if (domainEmails.length > 0) return domainEmails[0];
+  // Fallback: any non-generic email found
+  const anyPersonal = emails.filter(
+    (e) => !GENERIC_EMAIL_PREFIXES.some((p) => e.toLowerCase().startsWith(p + "@"))
+  );
+  if (anyPersonal.length > 0) return anyPersonal[0];
+  if (emails.length > 0) return emails[0];
+  return null;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -77,12 +123,13 @@ serve(async (req) => {
 
         for (const r of results) {
           const url = r.url || r.link || "";
-          if (!url || url.includes("linkedin.com") || url.includes("facebook.com") || url.includes("youtube.com")) continue;
+          if (!url) continue;
 
           try {
             const domain = new URL(url).hostname.replace("www.", "");
+            if (!isCompanyDomain(domain)) continue;
+
             const name = r.title || domain;
-            // Deduplicate by domain
             if (!allCompanies.find((c) => c.website.includes(domain))) {
               allCompanies.push({ name, website: url, keyword: query });
             }
@@ -97,10 +144,12 @@ serve(async (req) => {
 
     console.log(`Found ${allCompanies.length} unique companies from search`);
 
-    // Step 2: For each company, find HR decision-makers via Apollo
+    // Step 2: For each company, find HR decision-makers via Apollo, fallback to Firecrawl scrape
     let addedCount = 0;
+    let apolloHits = 0;
+    let scrapeHits = 0;
 
-    for (const company of allCompanies.slice(0, 20)) {
+    for (const company of allCompanies.slice(0, 25)) {
       try {
         let domain: string;
         try {
@@ -121,68 +170,151 @@ serve(async (req) => {
           continue;
         }
 
-        // Apollo people search for HR titles at this company domain
-        const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Api-Key": apolloKey,
-          },
-          body: JSON.stringify({
-            q_organization_domains: [domain],
-            person_titles: HR_TITLES,
-            per_page: 3,
-            page: 1,
-          }),
-        });
-
-        if (!apolloRes.ok) {
-          console.error(`Apollo search failed for ${domain}: ${apolloRes.status}`);
-          continue;
-        }
-
-        const apolloData = await apolloRes.json();
-        const people = apolloData.people || [];
-
-        if (people.length === 0) {
-          // Still add company with no contact
-          const { error } = await supabase.from("warm_outreach_queue").insert({
-            company_name: company.name,
-            company_website: company.website,
-            source_keyword: company.keyword,
-            status: "pending",
+        // Try Apollo first
+        let contactFound = false;
+        try {
+          const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Api-Key": apolloKey,
+            },
+            body: JSON.stringify({
+              q_organization_domains: [domain],
+              person_titles: HR_TITLES,
+              per_page: 3,
+              page: 1,
+            }),
           });
-          if (!error) addedCount++;
-          continue;
+
+          if (apolloRes.ok) {
+            const apolloData = await apolloRes.json();
+            const people = apolloData.people || [];
+
+            if (people.length > 0 && people[0].email) {
+              const person = people[0];
+              const { error } = await supabase.from("warm_outreach_queue").insert({
+                company_name: person.organization?.name || company.name,
+                company_website: company.website,
+                contact_name: `${person.first_name || ""} ${person.last_name || ""}`.trim(),
+                contact_title: person.title || "",
+                contact_email: person.email || "",
+                contact_phone: person.phone_numbers?.[0]?.sanitized_number || "",
+                contact_linkedin: person.linkedin_url || "",
+                apollo_person_id: person.id || "",
+                source_keyword: company.keyword,
+                status: "pending",
+              });
+              if (!error) {
+                addedCount++;
+                apolloHits++;
+                contactFound = true;
+              }
+            }
+          }
+        } catch (err) {
+          console.error(`Apollo failed for ${domain}:`, err);
         }
 
-        // Add best HR contact
-        const person = people[0];
-        const { error } = await supabase.from("warm_outreach_queue").insert({
-          company_name: person.organization?.name || company.name,
-          company_website: company.website,
-          contact_name: `${person.first_name || ""} ${person.last_name || ""}`.trim(),
-          contact_title: person.title || "",
-          contact_email: person.email || "",
-          contact_phone: person.phone_numbers?.[0]?.sanitized_number || "",
-          contact_linkedin: person.linkedin_url || "",
-          apollo_person_id: person.id || "",
-          source_keyword: company.keyword,
-          status: "pending",
-        });
+        // Fallback: Scrape contact/about page for emails
+        if (!contactFound) {
+          try {
+            const baseUrl = `https://${domain}`;
+            // Try common contact page paths
+            const contactPaths = ["/contact", "/contact-us", "/about", "/about-us", "/team", "/get-in-touch"];
+            let scrapedEmail: string | null = null;
 
-        if (!error) addedCount++;
+            for (const path of contactPaths) {
+              if (scrapedEmail) break;
+              try {
+                const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${firecrawlKey}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    url: `${baseUrl}${path}`,
+                    formats: ["markdown"],
+                    onlyMainContent: true,
+                    timeout: 15000,
+                  }),
+                });
+
+                if (scrapeRes.ok) {
+                  const scrapeData = await scrapeRes.json();
+                  const content = scrapeData.data?.markdown || scrapeData.markdown || "";
+                  scrapedEmail = extractBestEmail(content, domain);
+                  if (scrapedEmail) {
+                    console.log(`📧 Found email via scrape: ${scrapedEmail} at ${baseUrl}${path}`);
+                  }
+                }
+              } catch {
+                // Path doesn't exist, try next
+              }
+            }
+
+            // Also try homepage if no contact page worked
+            if (!scrapedEmail) {
+              try {
+                const homeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
+                  method: "POST",
+                  headers: {
+                    Authorization: `Bearer ${firecrawlKey}`,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    url: baseUrl,
+                    formats: ["markdown"],
+                    onlyMainContent: false,
+                    timeout: 15000,
+                  }),
+                });
+                if (homeRes.ok) {
+                  const homeData = await homeRes.json();
+                  const content = homeData.data?.markdown || homeData.markdown || "";
+                  scrapedEmail = extractBestEmail(content, domain);
+                }
+              } catch {
+                // Homepage scrape failed
+              }
+            }
+
+            const { error } = await supabase.from("warm_outreach_queue").insert({
+              company_name: company.name,
+              company_website: company.website,
+              contact_email: scrapedEmail || "",
+              source_keyword: company.keyword,
+              status: "pending",
+            });
+
+            if (!error) {
+              addedCount++;
+              if (scrapedEmail) scrapeHits++;
+            }
+          } catch (err) {
+            console.error(`Scrape fallback failed for ${domain}:`, err);
+            // Still add without email
+            await supabase.from("warm_outreach_queue").insert({
+              company_name: company.name,
+              company_website: company.website,
+              source_keyword: company.keyword,
+              status: "pending",
+            });
+            addedCount++;
+          }
+        }
       } catch (err) {
         console.error(`Error processing ${company.name}:`, err);
       }
     }
 
-    console.log(`✅ web-scraper-leads complete: ${addedCount} prospects added`);
+    const summary = `*Companies found:* ${allCompanies.length}\n*Prospects added:* ${addedCount}\n*Apollo contacts:* ${apolloHits}\n*Scraped emails:* ${scrapeHits}\n*Keywords:* ${SEARCH_QUERIES.length}`;
+    console.log(`✅ web-scraper-leads complete: ${addedCount} added (${apolloHits} Apollo, ${scrapeHits} scraped)`);
 
     // Notify Slack
     try {
-      const slackUrl = `${supabaseUrl}/functions/v1/slack-notify`;
-      await fetch(slackUrl, {
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -192,13 +324,7 @@ serve(async (req) => {
           channel: "mission-control",
           blocks: [
             { type: "header", text: { type: "plain_text", text: "🔍 Lead Scraper Complete" } },
-            {
-              type: "section",
-              text: {
-                type: "mrkdwn",
-                text: `*Companies found:* ${allCompanies.length}\n*Prospects added to queue:* ${addedCount}\n*Keywords searched:* ${SEARCH_QUERIES.length}`,
-              },
-            },
+            { type: "section", text: { type: "mrkdwn", text: summary } },
           ],
         }),
       });
@@ -211,6 +337,8 @@ serve(async (req) => {
         success: true,
         companies_found: allCompanies.length,
         prospects_added: addedCount,
+        apollo_contacts: apolloHits,
+        scraped_emails: scrapeHits,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
