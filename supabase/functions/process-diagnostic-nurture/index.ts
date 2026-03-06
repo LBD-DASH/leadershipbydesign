@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const BOOKING_LINK = 'https://calendar.app.google/vFHzgHMvUqU6vzgv6';
+let BOOKING_LINK = 'https://calendar.google.com/calendar/appointments/schedules/';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
