@@ -72,13 +72,15 @@ Deno.serve(async (req) => {
     let emailedCount = 0;
     const errors: string[] = [];
 
-    // Fetch booking link from admin settings
+    // Fetch settings
     const { data: settingsData } = await supabase
       .from("admin_settings")
-      .select("setting_value")
-      .eq("setting_key", "booking_link")
-      .single();
-    const bookingLink = settingsData?.setting_value || "https://leadershipbydesign.lovable.app/contact";
+      .select("setting_key, setting_value")
+      .in("setting_key", ["booking_link", "campaign_mode"]);
+    
+    const settingsMap = Object.fromEntries((settingsData || []).map((s: any) => [s.setting_key, s.setting_value]));
+    const bookingLink = settingsMap.booking_link || "https://leadershipbydesign.lovable.app/contact";
+    const campaignMode = settingsMap.campaign_mode || "general";
 
     for (const prospect of prospects) {
       try {
