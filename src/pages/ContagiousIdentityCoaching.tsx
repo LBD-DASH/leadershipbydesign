@@ -22,6 +22,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import InterestForm from "@/components/contagious-identity/InterestForm";
+import BookingWidget from "@/components/shared/BookingWidget";
 import A4CoachingModel from "@/components/contagious-identity/A4CoachingModel";
 
 // Images
