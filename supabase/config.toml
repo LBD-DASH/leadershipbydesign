@@ -93,3 +93,15 @@ verify_jwt = false
 [functions.slack-notify]
 verify_jwt = false
 
+[functions.daily-caller-pipeline]
+verify_jwt = false
+
+[functions.scrape-company-phones]
+verify_jwt = false
+
+[functions.admin-call-list]
+verify_jwt = false
+
+[functions.enrich-prospects]
+verify_jwt = false
+

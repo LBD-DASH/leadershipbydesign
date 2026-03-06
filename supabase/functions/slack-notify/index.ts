@@ -270,6 +270,21 @@ function buildHourlyPulseBlocks(data: Record<string, any>) {
   ];
 }
 
+function buildPipelineCompleteBlocks(data: Record<string, any>) {
+  return [
+    { type: 'header', text: { type: 'plain_text', text: '🤖 Daily Caller Pipeline Complete', emoji: true } },
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Industry:*\n${data.industry || '—'}` },
+      { type: 'mrkdwn', text: `*New Prospects Added:*\n${data.added || 0}` },
+    ]},
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*With Phone Numbers:*\n${data.withPhones || 0}` },
+      { type: 'mrkdwn', text: `*Status:*\n✅ Ready to call` },
+    ]},
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Auto-pipeline • ${sast()} SAST` }] },
+  ];
+}
+
 // ── Event → channel + format routing ──────────────────────
 
 const EVENT_CONFIG: Record<string, {
@@ -362,6 +377,13 @@ const EVENT_CONFIG: Record<string, {
     icon: ':zap:',
     buildBlocks: buildHourlyPulseBlocks,
     text: (d) => `Hourly pulse: ${d.total} new activities`,
+  },
+  daily_pipeline_complete: {
+    channels: ['mission-control'],
+    username: 'LBD Auto Pipeline',
+    icon: ':robot_face:',
+    buildBlocks: buildPipelineCompleteBlocks,
+    text: (d) => `Pipeline: ${d.added} prospects added from ${d.industry}`,
   },
 };
 
