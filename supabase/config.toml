@@ -108,3 +108,15 @@ verify_jwt = false
 [functions.process-diagnostic-nurture]
 verify_jwt = false
 
+[functions.web-scraper-leads]
+verify_jwt = false
+
+[functions.auto-outreach]
+verify_jwt = false
+
+[functions.auto-follow-up]
+verify_jwt = false
+
+[functions.daily-pipeline-report]
+verify_jwt = false
+
