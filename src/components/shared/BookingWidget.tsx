@@ -17,6 +17,8 @@ export default function BookingWidget({
   className = "",
   buttonText = "Book a Free Strategy Call",
 }: BookingWidgetProps) {
+  const BOOKING_LINK = useBookingLink();
+
   const handleClick = () => {
     trackScheduleCallClick({ source: context });
     window.open(BOOKING_LINK, "_blank", "noopener,noreferrer");
