@@ -25,10 +25,13 @@ export default function Hero() {
         {/* Main Content - Centered */}
         <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p className="text-xs sm:text-sm uppercase tracking-widest text-white/70 mb-2 sm:mb-4 font-medium">
+              🇿🇦 South Africa's Leadership Development Partner
+            </p>
             <h1
               className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
-              The Leadership Partner Trusted by Future Forward-Thinking Organisations
+              The Leadership Partner Trusted by Forward-Thinking Organisations
             </h1>
             
             <p
