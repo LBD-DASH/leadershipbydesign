@@ -117,9 +117,19 @@ Either way, hope you're having a good week.
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("auto-follow-up error:", error);
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("auto-follow-up error:", errMsg);
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+        body: JSON.stringify({ eventType: "system_error", data: { function: "auto-follow-up", error: errMsg } }),
+      });
+    } catch { /* best effort */ }
     return new Response(
-      JSON.stringify({ success: false, error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ success: false, error: errMsg }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

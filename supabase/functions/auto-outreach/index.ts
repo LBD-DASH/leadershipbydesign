@@ -241,9 +241,17 @@ Only valid JSON, no markdown.`,
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("auto-outreach error:", error);
+    const errMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("auto-outreach error:", errMsg);
+    try {
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+        body: JSON.stringify({ eventType: "system_error", data: { function: "auto-outreach", error: errMsg } }),
+      });
+    } catch { /* best effort */ }
     return new Response(
-      JSON.stringify({ success: false, error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ success: false, error: errMsg }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
