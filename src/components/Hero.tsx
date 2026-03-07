@@ -5,9 +5,11 @@ import { ArrowRight, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import InterestModal from "@/components/shared/InterestModal";
 import heroImage from "@/assets/hero-leadership-team.jpg";
+import { useBookingLink } from "@/hooks/useBookingLink";
 
 export default function Hero() {
   const [showInterestModal, setShowInterestModal] = useState(false);
+  const bookingLink = useBookingLink();
 
   return (
     <>
@@ -26,33 +28,34 @@ export default function Hero() {
         <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-xs sm:text-sm uppercase tracking-widest text-white/70 mb-2 sm:mb-4 font-medium">
-              🇿🇦 South Africa's Leadership Development Partner
+              🇿🇦 South Africa's Manager Coaching Specialist
             </p>
             <h1
               className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
             >
-              The Leadership Partner Trusted by Forward-Thinking Organisations
+              Turn Your Managers Into Coaches in 90 Days
             </h1>
             
             <p
               className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
             >
-              A 90-Day Leadership System Proven to Deliver Up to 40% Productivity Gains
+              The 90-Day Manager Coaching Accelerator — a proven system that transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention.
             </p>
             
-            {/* Primary CTA - I'm Interested */}
+            {/* Primary CTA - Book a Discovery Call */}
             <div
               className="mb-4 sm:mb-6"
             >
-              <Button 
-                onClick={() => setShowInterestModal(true)}
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
-              >
-                <Phone className="mr-3 w-5 h-5" />
-                I'm Interested
-                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <a href={bookingLink} target="_blank" rel="noopener noreferrer">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
+                >
+                  <Phone className="mr-3 w-5 h-5" />
+                  Book a Discovery Call
+                  <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </a>
             </div>
             
             {/* Secondary CTAs - Diagnostics */}
@@ -65,7 +68,7 @@ export default function Hero() {
                   variant="outline"
                   className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
                 >
-                  Free Team Diagnostic
+                  Free Coaching Readiness Assessment
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
