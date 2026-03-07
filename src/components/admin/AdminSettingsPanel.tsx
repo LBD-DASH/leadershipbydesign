@@ -12,6 +12,7 @@ const CAMPAIGN_MODES = [
   { value: 'general', label: 'General Leadership Development', description: 'Company observation → people development challenge → booking ask' },
   { value: 'leader_as_coach', label: 'Leader as Coach', description: '90-day programme to install coaching capability into management teams' },
   { value: 'shift_programme', label: 'SHIFT Programme', description: 'Leadership operating system for AI-driven, high-pressure environments' },
+  { value: 'manager_coaching_accelerator', label: '90-Day Manager Coaching Accelerator', description: 'Transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention' },
 ];
 
 export default function AdminSettingsPanel() {
