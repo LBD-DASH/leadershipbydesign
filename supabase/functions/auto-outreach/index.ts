@@ -135,6 +135,15 @@ RULES:
 - First paragraph: ONE specific observation about their organisation navigating change or scaling teams (2 sentences max)
 - Second paragraph: Connect to the challenge of managers who lack the skills to lead in an AI-driven, high-pressure environment. Position Kevin's SHIFT framework (Self-Management, Human Intelligence, Innovation, Focus, Thinking) as a leadership operating system — not a training course. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
 - Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
+
+          manager_coaching_accelerator: `Write a personalized outreach email from Kevin Britz — South Africa's Manager Coaching Specialist — who's worked with 4,000+ leaders.
+
+CONTEXT: Most managers were promoted for technical excellence, not people skills. They default to command-and-control instead of coaching their teams. This kills engagement, drives turnover, and stalls productivity. Kevin runs a 90-Day Manager Coaching Accelerator — a proven system that transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention.
+
+RULES:
+- First paragraph: ONE specific observation about their company's management layer, team growth, or retention challenges (2 sentences max)
+- Second paragraph: Connect to the problem of managers defaulting to command-and-control instead of coaching. Most were promoted for technical ability, not people skills — and it's costing the business in engagement, turnover, and stalled productivity. Position Kevin's 90-Day Manager Coaching Accelerator as the fix. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
+- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat about how this could work for your team?" style.`,
         };
 
         const campaignPrompt = campaignPrompts[campaignMode] || campaignPrompts.general;
