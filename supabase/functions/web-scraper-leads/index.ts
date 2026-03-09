@@ -108,8 +108,9 @@ function isQualityEmail(email: string, companyDomain: string): boolean {
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
 
-  // Must look like a person's email (has a dot or multiple chars)
+  // Must look like a person's email — require a dot separator (firstname.lastname pattern)
   if (prefix.length < 3) return false;
+  if (!prefix.includes(".") && !prefix.includes("_")) return false; // Single-word prefixes are usually departments
 
   return true;
 }
