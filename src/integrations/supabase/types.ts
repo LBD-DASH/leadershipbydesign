@@ -1082,6 +1082,129 @@ export type Database = {
         }
         Relationships: []
       }
+      leader_as_coach_assessments: {
+        Row: {
+          ai_analysis: string | null
+          buyer_persona: string | null
+          company: string | null
+          company_size: string | null
+          created_at: string
+          email: string | null
+          id: string
+          job_title: string | null
+          lead_score: number | null
+          lead_temperature: string | null
+          lowest_areas: Json
+          name: string | null
+          next_action: string | null
+          profile: string
+          q1: number
+          q10: number
+          q11: number
+          q12: number
+          q13: number
+          q14: number
+          q15: number
+          q2: number
+          q3: number
+          q4: number
+          q5: number
+          q6: number
+          q7: number
+          q8: number
+          q9: number
+          scoring_breakdown: Json | null
+          total_score: number
+          urgency: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          version: string
+        }
+        Insert: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
+          company?: string | null
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          job_title?: string | null
+          lead_score?: number | null
+          lead_temperature?: string | null
+          lowest_areas?: Json
+          name?: string | null
+          next_action?: string | null
+          profile: string
+          q1: number
+          q10: number
+          q11: number
+          q12: number
+          q13: number
+          q14: number
+          q15: number
+          q2: number
+          q3: number
+          q4: number
+          q5: number
+          q6: number
+          q7: number
+          q8: number
+          q9: number
+          scoring_breakdown?: Json | null
+          total_score: number
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          version: string
+        }
+        Update: {
+          ai_analysis?: string | null
+          buyer_persona?: string | null
+          company?: string | null
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          job_title?: string | null
+          lead_score?: number | null
+          lead_temperature?: string | null
+          lowest_areas?: Json
+          name?: string | null
+          next_action?: string | null
+          profile?: string
+          q1?: number
+          q10?: number
+          q11?: number
+          q12?: number
+          q13?: number
+          q14?: number
+          q15?: number
+          q2?: number
+          q3?: number
+          q4?: number
+          q5?: number
+          q6?: number
+          q7?: number
+          q8?: number
+          q9?: number
+          scoring_breakdown?: Json | null
+          total_score?: number
+          urgency?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          version?: string
+        }
+        Relationships: []
+      }
       leadership_diagnostic_submissions: {
         Row: {
           ai_analysis: string | null
