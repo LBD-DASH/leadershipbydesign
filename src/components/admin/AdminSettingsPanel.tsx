@@ -111,10 +111,10 @@ export default function AdminSettingsPanel() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Rocket className="w-4 h-4 text-primary" />
-            <CardTitle className="text-base">Apollo Prospecting</CardTitle>
+            <CardTitle className="text-base">Signal-Based Prospecting</CardTitle>
           </div>
           <CardDescription>
-            Searches for HR/L&D decision-makers at Financial Services, Insurance, and Banking companies in South Africa. Rotates through industries daily.
+            Searches for companies actively hiring HR/L&D roles or signalling leadership development need across SA Financial Services, Insurance, and Professional Services. Reports post to #mission-control 3× daily.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -132,7 +132,7 @@ export default function AdminSettingsPanel() {
             )}
           </Button>
           <p className="text-xs text-muted-foreground mt-2">
-            Also runs automatically every day at 7:00 AM SAST via cron.
+            Runs automatically at 7:00 AM SAST. Pipeline status reports post to Slack at 07:00, 13:00, and 18:00 SAST.
           </p>
         </CardContent>
       </Card>

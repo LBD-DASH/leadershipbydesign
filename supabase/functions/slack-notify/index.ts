@@ -399,6 +399,13 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildPipelineCompleteBlocks,
     text: (d) => `Pipeline: ${d.added} prospects added from ${d.industry}`,
   },
+  pipeline_status_report: {
+    channels: ['mission-control'],
+    username: 'LBD Pipeline Status',
+    icon: ':bar_chart:',
+    buildBlocks: buildPipelineStatusBlocks,
+    text: (d) => `✅ Sent: ${d.emailsSent} | 🎯 Interested: ${d.repliesInterested} | 📅 Booked: ${d.bookings} | 🔄 Queue: ${d.queueDepth} | ❌ Failed: ${d.failed}`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────
