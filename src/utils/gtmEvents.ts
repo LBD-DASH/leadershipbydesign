@@ -58,3 +58,12 @@ export function trackScheduleCallClick(meta?: { source?: string }) {
     ...meta,
   });
 }
+
+/** Fires when any CTA button is clicked — generic engagement event */
+export function trackCTAClick(meta: { cta_label: string; cta_location?: string; destination?: string }) {
+  push({
+    event: 'cta_click',
+    event_category: 'engagement',
+    ...meta,
+  });
+}
