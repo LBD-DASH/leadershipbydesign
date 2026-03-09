@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -209,6 +209,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    console.log("🚀 web-scraper-leads invoked at", new Date().toISOString());
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
     const startIdx = (dayOfYear * QUERIES_PER_RUN) % SEARCH_QUERIES.length;
     const runQueries: typeof SEARCH_QUERIES = [];

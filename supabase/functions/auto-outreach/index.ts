@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    console.log("📧 Starting auto-outreach pipeline...");
+    console.log("📧 auto-outreach invoked at", new Date().toISOString());
 
     // Get top 10 pending prospects that are NOT disqualified, with valid email, score >= 60
     const { data: prospects, error: fetchErr } = await supabase
