@@ -84,6 +84,7 @@ import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
 import ColdCallPrompter from "./pages/ColdCallPrompter";
+import ClientNeedsAnalysis from "./pages/admin/ClientNeedsAnalysis";
 import TeamDiagnosticAd from "./pages/ads/TeamDiagnosticAd";
 import LeadershipDiagnosticAd from "./pages/ads/LeadershipDiagnosticAd";
 import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
@@ -172,7 +173,8 @@ const App = () => (
           <Route path="/admin/pdf-library" element={<AdminPDFLibrary />} />
           <Route path="/admin/infographics" element={<AdminInfographicsLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
-          <Route path="/marketing" element={<MarketingDashboard />} />
+            <Route path="/marketing" element={<MarketingDashboard />} />
+            <Route path="/admin/needs-analysis" element={<ClientNeedsAnalysis />} />
           <Route path="/client-alignment-index" element={<ClientAlignmentIndex />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/cold-call-prompter" element={<ColdCallPrompter />} />

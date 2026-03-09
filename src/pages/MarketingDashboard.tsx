@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone, ClipboardCheck } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -121,6 +121,12 @@ export default function MarketingDashboard() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <Link to="/admin/needs-analysis">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                    <ClipboardCheck className="w-4 h-4" />
+                    <span className="hidden md:inline">Needs Analysis</span>
+                  </Button>
+                </Link>
                 <Link to="/admin/pdf-library">
                   <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                     <FileText className="w-4 h-4" />

@@ -1590,6 +1590,48 @@ export type Database = {
         }
         Relationships: []
       }
+      needs_analysis: {
+        Row: {
+          additional_notes: string | null
+          company_name: string
+          company_size: string
+          contact_name: string
+          contact_title: string | null
+          created_at: string
+          generated_summary: string | null
+          id: string
+          industry: string
+          pain_points: Json
+          updated_at: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          company_name: string
+          company_size: string
+          contact_name: string
+          contact_title?: string | null
+          created_at?: string
+          generated_summary?: string | null
+          id?: string
+          industry: string
+          pain_points?: Json
+          updated_at?: string
+        }
+        Update: {
+          additional_notes?: string | null
+          company_name?: string
+          company_size?: string
+          contact_name?: string
+          contact_title?: string | null
+          created_at?: string
+          generated_summary?: string | null
+          id?: string
+          industry?: string
+          pain_points?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_sends: {
         Row: {
           approval_status: string | null
