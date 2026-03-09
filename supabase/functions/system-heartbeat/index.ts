@@ -51,6 +51,55 @@ Deno.serve(async (req) => {
       ? Math.round((now.getTime() - new Date(lastRun.completed_at).getTime()) / (1000 * 60 * 60))
       : null;
 
+    // Check for stale pending prospects (older than 24h with email, not contacted)
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+    const { data: stalePending, count: stalePendingCount } = await supabase
+      .from("warm_outreach_queue")
+      .select("id, company_name, contact_email", { count: "exact" })
+      .eq("status", "pending")
+      .not("contact_email", "is", null)
+      .neq("contact_email", "")
+      .or("disqualified.is.null,disqualified.eq.false")
+      .lt("created_at", twentyFourHoursAgo)
+      .limit(5);
+
+    // ALERT: Scraper stale > 25 hours
+    if (lastRunAge && lastRunAge > 25) {
+      try {
+        await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+          body: JSON.stringify({
+            channel: "system-health",
+            eventType: "system_error",
+            data: {
+              function: "🚨 web-scraper-leads STALE",
+              error: `Last prospecting run was ${lastRunAge} hours ago. The scraper cron may have stopped firing. Check edge function deployment status.`,
+            },
+          }),
+        });
+      } catch { /* best effort */ }
+    }
+
+    // ALERT: Pending prospects older than 24h not contacted
+    if ((stalePendingCount || 0) > 0) {
+      const names = (stalePending || []).map((p: any) => `${p.company_name} (${p.contact_email})`).join(", ");
+      try {
+        await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+          body: JSON.stringify({
+            channel: "system-health",
+            eventType: "system_error",
+            data: {
+              function: "🚨 auto-outreach STALE",
+              error: `${stalePendingCount} pending prospect(s) older than 24h haven't been contacted: ${names}. The auto-outreach cron may have stopped firing.`,
+            },
+          }),
+        });
+      } catch { /* best effort */ }
+    }
+
     // Check total queue with no email (bad data)
     const { count: noEmailQueue } = await supabase
       .from("warm_outreach_queue")
