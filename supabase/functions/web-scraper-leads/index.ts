@@ -88,6 +88,10 @@ const GENERIC_PREFIXES = [
   "reception", "office", "no-reply", "noreply", "webmaster", "marketing",
   "news", "documents", "membership", "careers", "hr", "jobs", "media",
   "press", "feedback", "compliance", "legal", "service", "help",
+  "clientservice", "clientservices", "assetmanagement", "investments",
+  "claims", "queries", "applications", "treasury", "operations",
+  "accounts", "billing", "general", "team", "group", "corporate",
+  "investor", "shareholders", "communications", "procurement",
 ];
 
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
