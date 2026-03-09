@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight, CheckCircle2, Users, Target,
   TrendingUp, Shield, MessageCircle, Calendar,
-  BarChart3, AlertTriangle, Zap,
-  Brain, Lightbulb, X, Clock, BookOpen, GraduationCap, Briefcase
+  BarChart3, AlertTriangle, Zap, X, Clock, Briefcase, GraduationCap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,114 +23,24 @@ import StatsBar from "@/components/StatsBar";
 import ReferralSharePrompt from "@/components/shared/ReferralSharePrompt";
 import kevinImage from "@/assets/kevin-britz-facilitator.jpg";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
-import leadershipFeedback from "@/assets/leadership-feedback.jpg";
 import productTeamHandsAbove from "@/assets/product-team-hands-above.jpg";
-
-// --- Data ---
-
-const problemItems = [
-  "Promoted managers avoiding difficult performance conversations — issues fester for months",
-  "Underperformance escalated to HR instead of coached directly by the line manager",
-  "Managers defaulting to micromanagement because they lack coaching frameworks",
-  "HR spending 40%+ of time on people issues that should be handled at manager level",
-  "New leaders promoted for technical skill but never trained to lead people",
-  "Exit interviews citing 'my manager' as the primary reason for leaving",
-];
-
-const costItems = [
-  { icon: TrendingUp, label: "Productivity gaps" },
-  { icon: Users, label: "Staff turnover" },
-  { icon: AlertTriangle, label: "HR escalations" },
-  { icon: Zap, label: "Culture erosion" },
-];
-
-const caseResults = [
-  {
-    context: "Financial Services Firm",
-    size: "800+ employees",
-    outcome: "Manager-led performance conversations increased from 20% to 85% within 90 days. HR escalations dropped 47%.",
-  },
-  {
-    context: "Insurance Group",
-    size: "1,200 employees",
-    outcome: "Internal promotion rate for leadership roles rose from 12% to 68% within 12 months of programme completion.",
-  },
-  {
-    context: "Mid-size Corporate",
-    size: "350 employees",
-    outcome: "Staff turnover in coached divisions reduced from 32% to 14%. Estimated saving: R2.4M annually.",
-  },
-];
-
-const managerOutcomes = [
-  "Run structured performance conversations weekly.",
-  "Diagnose what drives employee behaviour using needs-based coaching.",
-  "Reduce emotional escalation and manage conflict constructively.",
-  "Replace micromanagement with accountability frameworks.",
-  "Coach for results, not comfort.",
-  "Hold difficult conversations without HR involvement.",
-];
-
-const executiveOutcomes = [
-  "Pre- and post-assessment data.",
-  "Behavioural improvement metrics.",
-  "Summary report with ROI indicators.",
-  "360-degree feedback insights.",
-];
-
-const shiftSkills = [
-  { letter: "S", skill: "Self-Management", icon: Shield },
-  { letter: "H", skill: "Human Intelligence", icon: Users },
-  { letter: "I", skill: "Innovation", icon: Lightbulb },
-  { letter: "F", skill: "Focus", icon: Target },
-  { letter: "T", skill: "Thinking", icon: Brain },
-];
-
-const phases = [
-  {
-    num: "01",
-    title: "Diagnostic",
-    description: "Leadership Index assessment + behavioural baseline mapping. Includes 6 professional assessments: DISC, Values Blueprint, 360-Degree Feedback, and more.",
-    icon: BarChart3,
-  },
-  {
-    num: "02",
-    title: "Skills Installation",
-    description: "6 live coaching sessions: performance conversations, accountability frameworks, conflict handling, and identity shift from 'doer' to 'leader'.",
-    icon: Target,
-  },
-  {
-    num: "03",
-    title: "Application & Reporting",
-    description: "Real-case coaching practice, measurement against baseline, executive summary with ROI data and succession readiness mapping.",
-    icon: MessageCircle,
-  },
-];
-
-const CTA_TEXT = "Book a Free 30-Min Call — We'll Map Your Gaps";
+import { useBookingLink } from "@/hooks/useBookingLink";
 
 export default function LeaderAsCoachSales() {
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
+  const bookingLink = useBookingLink();
 
   const handleCalendarOpen = () => {
-    // Fire GA4 event via dataLayer (picked up by GTM)
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: 'schedule_call_click',
         event_category: 'engagement',
-        event_label: 'Leader as Coach - Book a Free 30-Min Call',
+        event_label: 'Leader as Coach - Book Discovery Call',
       });
     }
-    // Also fire via gtag directly as fallback
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'schedule_call_click', {
-        event_category: 'engagement',
-        event_label: 'Leader as Coach - Book a Free 30-Min Call',
-      });
-    }
-    window.open('https://calendar.app.google/QvjXmUfXbfjrmrH78', '_blank', 'noopener,noreferrer');
+    window.open(bookingLink, '_blank', 'noopener,noreferrer');
   };
+
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", role: "", participants: "", timeline: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -164,7 +73,6 @@ export default function LeaderAsCoachSales() {
         utm_term: utmParams.utm_term,
       });
       if (error) throw error;
-      // Fire GA4 conversion event
       const { trackContactFormSubmit } = await import('@/utils/gtmEvents');
       trackContactFormSubmit({ service_interest: 'Leader as Coach Programme', source: 'leader_as_coach_page' });
       toast.success("Enquiry submitted! We'll be in touch shortly.");
@@ -195,15 +103,15 @@ export default function LeaderAsCoachSales() {
   return (
     <>
       <SEO
-        title="Reduce HR Escalations & Build Manager Coaching Capability in 90 Days"
-        description="A structured 90-day programme that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity. For Financial Services and Insurance teams."
+        title="Leader as Coach — 90-Day Manager Coaching Accelerator | Leadership by Design"
+        description="Your managers are managing, not coaching. The 90-Day Manager Coaching Accelerator installs coaching capability into your management layer — structured, practical, and proven across 50+ organisations."
         canonicalUrl="/leader-as-coach"
         ogImage="https://leadershipbydesign.co/og-leader-as-coach.jpg"
-        keywords="manager coaching programme, reduce HR escalations, leadership development financial services, coaching capability, manager training South Africa"
+        keywords="manager coaching programme, leader as coach, coaching capability, manager training South Africa, HR leadership development, financial services coaching"
       />
       <ServiceSchema
-        name="Leader as Coach Programme"
-        description="A structured 90-day accelerator that equips promoted managers with coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity."
+        name="Leader as Coach — 90-Day Manager Coaching Accelerator"
+        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 50+ organisations and 4,000+ leaders."
         areaServed="South Africa"
         url="/leader-as-coach"
       />
@@ -211,129 +119,237 @@ export default function LeaderAsCoachSales() {
         items={[
           { name: "Home", url: "/" },
           { name: "Programmes", url: "/programmes" },
-          { name: "Leader as Coach Programme", url: "/leader-as-coach" },
+          { name: "Leader as Coach", url: "/leader-as-coach" },
         ]}
       />
 
       <div className="min-h-screen bg-background">
         <Header />
 
-        {/* 1. HERO */}
+        {/* ───────────── 1. HERO ───────────── */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
-            <img src={leaderAsCoachImage} alt="Leadership coaching" className="w-full h-full object-cover object-top" />
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/90 to-primary" />
+            <img src={leaderAsCoachImage} alt="Leadership coaching session" className="w-full h-full object-cover object-top" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/88 via-primary/92 to-primary" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center">
-            <p className="text-primary-foreground/90 text-sm sm:text-base font-semibold tracking-wide mb-4">
-              For HR Leaders & L&D Managers in Financial Services
-            </p>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
               <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
                 <Clock className="w-3 h-3" /> 90-Day Accelerator
               </span>
               <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
-                <Briefcase className="w-3 h-3" /> Financial Services & Insurance
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
-                <GraduationCap className="w-3 h-3" /> Certificate Included
+                <Briefcase className="w-3 h-3" /> Financial Services & Professional Services
               </span>
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl lg:text-5xl font-bold text-primary-foreground mb-5 leading-tight">
-              Reduce Escalations, Improve Accountability, and Build Manager Coaching Capability in 90 Days
+              Your Managers Are Managing.<br className="hidden sm:block" />
+              They're Not Coaching.<br className="hidden sm:block" />
+              <span className="text-white/70">That's Costing You More Than You Think.</span>
             </h1>
-            <p className="text-primary-foreground/80 text-base sm:text-lg max-w-2xl mx-auto mb-6 leading-relaxed">
-              A structured 90-day programme that equips promoted managers with the coaching skills to run performance conversations, reduce HR escalations by up to 50%, and drive measurable team productivity.
+            <p className="text-primary-foreground/80 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+              The 90-Day Manager Coaching Accelerator for Financial Services and Professional Services firms.
             </p>
-
-            {/* Urgency strip */}
-            <div className="mb-8">
-              <p className="text-primary-foreground/70 text-xs sm:text-sm font-medium tracking-wide">
-                Limited to 4 cohorts per quarter · Next intake: Q2 2026 · 3 spots remaining
-              </p>
-            </div>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <Button
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px] text-sm sm:text-base px-4 sm:px-6"
-                onClick={() => handleCalendarOpen()}
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px] text-sm sm:text-base"
+                onClick={handleCalendarOpen}
               >
-                <span className="sm:hidden">Book a Free 30-Min Call</span>
-                <span className="hidden sm:inline">{CTA_TEXT}</span>
+                Book a Discovery Call
                 <Calendar className="ml-2 w-5 h-5 shrink-0" />
               </Button>
-              <Button
-                size="lg"
-                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
-                onClick={() => setBookingOpen(true)}
-              >
-                Request a Proposal
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full min-h-[56px]"
+                >
+                  Take the Free Assessment
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
             </div>
-            <p className="text-primary-foreground/70 text-sm mt-5 max-w-xl mx-auto">
-              In 30 minutes, we'll assess your manager capability gaps and show you what's achievable in 90 days.
-            </p>
           </div>
         </section>
 
         <StatsBar />
 
-        {/* 2. THE PROBLEM */}
+        {/* ───────────── 2. THE PROBLEM ───────────── */}
         <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className="order-2 md:order-1">
-                <img
-                  src={leadershipFeedback}
-                  alt="Leadership challenges in the workplace"
-                  className="w-full rounded-2xl shadow-xl object-cover aspect-[4/3]"
-                  loading="lazy"
-                />
-              </div>
-              <div className="order-1 md:order-2">
-                <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">The Problem</span>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-4">
-                  Sound Familiar?
-                </h2>
-                <div className="space-y-3 mb-6">
-                  {problemItems.map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <X className="w-4 h-4 text-destructive shrink-0 mt-1" />
-                      <span className="text-sm text-muted-foreground">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {costItems.map((c) => (
-                    <span key={c.label} className="bg-destructive/10 text-destructive text-xs font-medium px-3 py-1.5 rounded-full border border-destructive/20 flex items-center gap-1.5">
-                      <c.icon className="w-3 h-3" />
-                      {c.label}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-primary font-semibold text-sm">
-                  This is a coaching capability problem — not a motivation problem.
-                </p>
-              </div>
+          <div className="max-w-4xl mx-auto">
+            <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block text-center">The Problem</span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-8 text-center">
+              Sound Familiar?
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-5">
+              {[
+                { icon: GraduationCap, text: "Managers promoted for technical skill, not people skill. They default to command-and-control because nobody taught them anything else." },
+                { icon: AlertTriangle, text: "Development happens in workshops, not in daily work. The training budget gets spent but nothing actually changes on the floor." },
+                { icon: TrendingUp, text: "You're losing your best people to managers who can't coach. Exit interviews keep citing 'my manager' as the reason." },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="bg-card rounded-2xl p-6 border border-border"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-destructive" />
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 3. SOCIAL PROOF — Case Results */}
+        {/* ───────────── 3. THE SOLUTION ───────────── */}
         <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">The Solution</span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-6">
+              Not a Course. Not a Workshop.<br />
+              A 90-Day Operating System.
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-2xl mx-auto mb-8">
+              Leader as Coach is a structured 90-day accelerator installed into your management layer. It equips managers with practical coaching tools they use every day — performance conversations, accountability frameworks, and needs-based coaching — so development happens in the flow of work, not in a classroom.
+            </p>
+            <div className="w-16 h-1 bg-primary mx-auto" />
+          </div>
+        </section>
+
+        {/* ───────────── 4. THE 90 DAYS ───────────── */}
+        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">The 90 Days</span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
+                What Happens Month by Month
+              </h2>
+              <div className="w-16 h-1 bg-primary mx-auto mt-3" />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-5 sm:gap-6">
+              {[
+                {
+                  num: "01",
+                  title: "Foundation",
+                  subtitle: "Month 1",
+                  icon: BarChart3,
+                  description: "Leadership Index assessment + behavioural baseline. Coaching mindset installed. Managers learn conversation frameworks, accountability tools, and the shift from 'doer' to 'leader'.",
+                },
+                {
+                  num: "02",
+                  title: "Practice",
+                  subtitle: "Month 2",
+                  icon: MessageCircle,
+                  description: "Live coaching in the flow of work. Managers apply skills in real performance conversations with their teams. Weekly facilitated sessions reinforce and course-correct.",
+                },
+                {
+                  num: "03",
+                  title: "Embed",
+                  subtitle: "Month 3",
+                  icon: Target,
+                  description: "Consistency, measurement, and culture shift. Post-assessment against baseline. Executive summary with ROI data and succession readiness mapping.",
+                },
+              ].map((phase, i) => {
+                const Icon = phase.icon;
+                return (
+                  <motion.div
+                    key={phase.num}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="bg-card rounded-2xl p-6 sm:p-8 border border-border border-t-4 border-t-primary"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <span className="text-xs font-semibold text-primary mb-1 block text-center">{phase.subtitle}</span>
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-foreground mb-3 text-center">{phase.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{phase.description}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ───────────── 5. WHAT CHANGES ───────────── */}
+        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">What Changes</span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
+                Five Outcomes That Move the Needle
+              </h2>
+              <div className="w-16 h-1 bg-primary mx-auto mt-3" />
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { icon: Users, title: "Retention improves", text: "Managers who coach retain their best people. Exit interviews stop citing 'my manager' as the reason." },
+                { icon: Zap, title: "Engagement rises", text: "Teams led by coaches show measurably higher discretionary effort and accountability." },
+                { icon: MessageCircle, title: "Performance conversations happen", text: "Weekly, honest, two-way. Not annual reviews that change nothing." },
+                { icon: AlertTriangle, title: "Escalations drop", text: "Managers handle conflict, feedback, and underperformance directly — HR stops being the middleman." },
+                { icon: TrendingUp, title: "Pipeline develops", text: "Your next generation of leaders is identified and grown from within, not hired from outside." },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-card rounded-xl p-5 border border-border"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Icon className="w-4 h-4 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-foreground text-sm">{item.title}</h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{item.text}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ───────────── 6. PROOF ───────────── */}
+        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-10">
               <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">Proven Results</span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
                 What Organisations Like Yours Have Achieved
               </h2>
-              <div className="w-16 h-1 bg-primary mx-auto" />
+              <div className="w-16 h-1 bg-primary mx-auto mt-3" />
             </div>
 
             <div className="grid md:grid-cols-3 gap-5 sm:gap-6 mb-10">
-              {caseResults.map((r, i) => (
+              {[
+                {
+                  context: "Financial Services Firm",
+                  size: "800+ employees",
+                  outcome: "Manager-led performance conversations increased from 20% to 85% within 90 days. HR escalations dropped 47%.",
+                },
+                {
+                  context: "Insurance Group",
+                  size: "1,200 employees",
+                  outcome: "Internal promotion rate for leadership roles rose from 12% to 68% within 12 months of programme completion.",
+                },
+                {
+                  context: "Mid-size Corporate",
+                  size: "350 employees",
+                  outcome: "Staff turnover in coached divisions reduced from 32% to 14%. Estimated saving: R2.4M annually.",
+                },
+              ].map((r, i) => (
                 <motion.div
                   key={r.context}
                   initial={{ opacity: 0, y: 20 }}
@@ -349,175 +365,39 @@ export default function LeaderAsCoachSales() {
               ))}
             </div>
 
-            {/* Authority signals */}
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-y-1 gap-x-6 text-xs sm:text-sm text-muted-foreground font-medium text-center">
-              <span>750+ workshops delivered</span>
-              <span className="hidden sm:inline">·</span>
               <span>4,000+ leaders developed</span>
               <span className="hidden sm:inline">·</span>
-              <span>Trusted by Discovery, FNB & 50+ organisations</span>
+              <span>50+ organisations</span>
               <span className="hidden sm:inline">·</span>
-              <span>Business School Faculty</span>
+              <span>11 years</span>
+              <span className="hidden sm:inline">·</span>
+              <span>750+ programmes delivered</span>
             </div>
           </div>
         </section>
 
-        {/* 4. THE PROMISE (compact) */}
-        <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-primary">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-primary-foreground mb-4">
-              Leader as Coach delivers behaviour change — not theory.
-            </h2>
-            <p className="text-primary-foreground/80 text-sm sm:text-base">
-              90 days. Measurable coaching capability. Executive reporting with ROI data.
-            </p>
-          </div>
-        </section>
-
-        {/* 5. WHAT THEY WALK AWAY WITH */}
-        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-10">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
-                What Your Managers Will Do Differently
-              </h2>
-              <div className="w-16 h-1 bg-primary mx-auto" />
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-              <div className="bg-card rounded-2xl p-6 sm:p-8 border border-border">
-                <h3 className="font-serif text-lg font-bold text-foreground mb-5">After 90 days, your managers will:</h3>
-                <ul className="space-y-3">
-                  {managerOutcomes.map((o) => (
-                    <li key={o} className="flex items-start gap-3 text-sm text-foreground">
-                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                      {o}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-card rounded-2xl p-6 sm:p-8 border border-border">
-                <h3 className="font-serif text-lg font-bold text-foreground mb-5">Executives receive:</h3>
-                <ul className="space-y-3">
-                  {executiveOutcomes.map((o) => (
-                    <li key={o} className="flex items-start gap-3 text-sm text-foreground">
-                      <BarChart3 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                      {o}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 6. MID-PAGE CTA */}
-        <section className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 bg-primary/5 border-y border-primary/10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h3 className="font-serif text-lg sm:text-xl font-bold text-foreground mb-2">
-              Ready to upgrade your managers?
-            </h3>
-            <p className="text-muted-foreground text-sm mb-5">
-              Limited quarterly intake. Secure your team's spot now.
-            </p>
-            <Button
-              size="lg"
-              className="rounded-full font-bold group min-h-[56px]"
-              onClick={() => handleCalendarOpen()}
-            >
-              {CTA_TEXT}
-              <Calendar className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
-        </section>
-
-        {/* 7. HOW IT WORKS — 3 Phases */}
-        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-10">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
-                How It Works
-              </h2>
-              <p className="text-muted-foreground text-sm sm:text-base">Diagnostic → Skills Installation → Application & Reporting</p>
-              <div className="w-16 h-1 bg-primary mx-auto mt-3" />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-5 sm:gap-6">
-              {phases.map((phase, i) => {
-                const Icon = phase.icon;
-                return (
-                  <motion.div
-                    key={phase.num}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-card rounded-2xl p-6 sm:p-8 border border-border border-t-4 border-t-primary"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <span className="text-xs font-semibold text-primary mb-2 block text-center">Phase {phase.num}</span>
-                    <h3 className="font-serif text-lg sm:text-xl font-bold text-foreground mb-3 text-center">{phase.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{phase.description}</p>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* 8. SHIFT SKILLS (simplified) */}
-        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">The Framework</span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-3">
-                Built on the SHIFT Skills Framework
-              </h2>
-              <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                A common language for leadership behaviour that your managers practise daily.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 sm:gap-4">
-              {shiftSkills.map((skill, i) => {
-                const Icon = skill.icon;
-                return (
-                  <motion.div
-                    key={skill.letter}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className="bg-card rounded-xl p-3 sm:p-5 border border-border text-center"
-                  >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center bg-primary/10">
-                      <span className="text-lg sm:text-xl font-bold text-primary">{skill.letter}</span>
-                    </div>
-                    <h3 className="text-xs sm:text-sm font-semibold text-foreground">{skill.skill}</h3>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* 9. GUARANTEE (compact) */}
+        {/* ───────────── 7. WHO IT'S FOR ───────────── */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-primary/5 border-y border-primary/10">
-          <div className="max-w-2xl mx-auto text-center">
-            <Shield className="w-10 h-10 text-primary mx-auto mb-4" />
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">
-              Results Guarantee
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">Who It's For</span>
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-4">
+              Built for HR Directors & L&D Heads
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-              If after completing the first two phases you don't see measurable improvement in communication, accountability, and coaching behaviours, we'll work with you until you do — or refund your investment.
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-6">
+              At firms of 100–500 people in Financial Services, Insurance, Banking, Accounting, Legal, and Professional Services in South Africa.
             </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {["Financial Services", "Insurance", "Banking", "Accounting", "Legal", "Professional Services"].map(tag => (
+                <span key={tag} className="bg-primary/10 text-primary text-xs font-medium px-3 py-1.5 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* 10. FACILITATOR (compact) */}
+        {/* ───────────── 8. FACILITATOR ───────────── */}
         <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-5 gap-8 items-center">
@@ -541,7 +421,59 @@ export default function LeaderAsCoachSales() {
           </div>
         </section>
 
-        {/* 11. FINAL CTA */}
+        {/* ───────────── 9. INVESTMENT ───────────── */}
+        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="text-xs font-semibold tracking-widest uppercase text-primary mb-3 block">Investment</span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-4">
+              Structured for Organisations of 100–500 People
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-8">
+              Discovery call required to confirm fit and scope. We'll map your management capability gaps and design the right cohort structure for your organisation.
+            </p>
+            <Button
+              size="lg"
+              className="rounded-full font-bold group min-h-[56px]"
+              onClick={handleCalendarOpen}
+            >
+              Book a Discovery Call — 30 Minutes, No Obligation
+              <Calendar className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </section>
+
+        {/* ───────────── 10. GUARANTEE ───────────── */}
+        <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-primary/5 border-y border-primary/10">
+          <div className="max-w-2xl mx-auto text-center">
+            <Shield className="w-10 h-10 text-primary mx-auto mb-4" />
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">
+              Results Guarantee
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              If after completing the first two phases you don't see measurable improvement in communication, accountability, and coaching behaviours, we'll work with you until you do — or refund your investment.
+            </p>
+          </div>
+        </section>
+
+        {/* ───────────── 11. BOTTOM CTA — DIAGNOSTIC ───────────── */}
+        <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">
+              Not Sure If Your Managers Need This?
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base mb-6">
+              Take the free 3-minute assessment. You'll get a coaching readiness profile, your three biggest gaps, and a clear recommendation.
+            </p>
+            <Link to="/leader-as-coach-diagnostic">
+              <Button size="lg" variant="outline" className="rounded-full font-bold group min-h-[56px]">
+                How Coaching-Ready Is Your Management Layer?
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        {/* ───────────── 12. FINAL CTA ───────────── */}
         <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-primary">
           <div className="absolute inset-0">
             <img src={productTeamHandsAbove} alt="Team collaboration" className="w-full h-full object-cover object-center opacity-15" />
@@ -551,27 +483,27 @@ export default function LeaderAsCoachSales() {
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
               Your Managers Won't Coach Themselves.<br className="hidden sm:block" /> Let's Fix That in 90 Days.
             </h2>
-            <p className="text-primary-foreground/70 text-xs sm:text-sm mb-8">
-              Limited quarterly intake. Book now to secure your Q2 cohort spot.
+            <p className="text-primary-foreground/70 text-sm mb-8">
+              4,000+ leaders. 50+ organisations. 11 years of proven results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-               <Button
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px] text-sm sm:text-base px-4 sm:px-6"
-                onClick={() => handleCalendarOpen()}
-              >
-                <span className="sm:hidden">Book a Free 30-Min Call</span>
-                <span className="hidden sm:inline">{CTA_TEXT}</span>
-                <Calendar className="ml-2 w-5 h-5 shrink-0" />
-              </Button>
               <Button
                 size="lg"
-                className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full sm:w-auto min-h-[56px]"
-                onClick={() => setBookingOpen(true)}
+                className="bg-white text-primary hover:bg-white/90 rounded-full font-bold group w-full sm:w-auto min-h-[56px]"
+                onClick={handleCalendarOpen}
               >
-                Request a Proposal
-                <ArrowRight className="ml-2 w-5 h-5" />
+                Book a Discovery Call
+                <Calendar className="ml-2 w-5 h-5 shrink-0" />
               </Button>
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="bg-white/15 backdrop-blur-sm text-white border border-white/40 hover:bg-white/25 rounded-full font-bold w-full min-h-[56px]"
+                >
+                  Take the Free Assessment
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -623,7 +555,6 @@ export default function LeaderAsCoachSales() {
           </form>
         </DialogContent>
       </Dialog>
-
     </>
   );
 }
