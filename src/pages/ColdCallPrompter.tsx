@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, ChevronRight, Users, RefreshCw, Flame } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, ChevronRight, Users, RefreshCw, Flame, ClipboardCheck } from "lucide-react";
 import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
