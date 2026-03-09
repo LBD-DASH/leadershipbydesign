@@ -62,13 +62,13 @@ export default function Hero() {
             <div
               className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
             >
-              <Link to="/team-diagnostic" className="w-full sm:w-auto">
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   variant="outline"
                   className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
                 >
-                  Free Coaching Readiness Assessment
+                  How Coaching-Ready Is Your Management Layer?
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
