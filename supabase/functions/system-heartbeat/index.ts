@@ -138,7 +138,8 @@ Deno.serve(async (req) => {
     const issues: string[] = [];
     if ((pendingOutreach || 0) === 0) issues.push("No outreach prospects queued");
     if ((emailedToday || 0) === 0 && now.getHours() > 10) issues.push("No emails sent today");
-    if (lastRunAge && lastRunAge > 30) issues.push("Prospecting stale");
+    if (lastRunAge && lastRunAge > 25) issues.push(`Prospecting stale (${lastRunAge}h ago)`);
+    if ((stalePendingCount || 0) > 0) issues.push(`${stalePendingCount} pending prospects >24h not contacted`);
     if ((noEmailQueue || 0) > 5) issues.push(`${noEmailQueue} dead prospects clogging queue`);
 
     const healthStatus = issues.length === 0 ? "✅ All Systems Go" : `⚠️ ${issues.length} Issue${issues.length > 1 ? "s" : ""} Detected`;
