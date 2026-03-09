@@ -114,7 +114,7 @@ export default function AdminSettingsPanel() {
             <CardTitle className="text-base">Apollo Prospecting</CardTitle>
           </div>
           <CardDescription>
-            Searches Apollo for verified HR/L&D decision-makers at FSI companies in South Africa (200+ employees). Rotates through Financial Services, Insurance, and Banking daily.
+            Searches for HR/L&D decision-makers at Financial Services, Insurance, and Banking companies in South Africa. Rotates through industries daily.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -122,7 +122,7 @@ export default function AdminSettingsPanel() {
             {runningProspecting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Running Apollo Search…
+                Searching for prospects…
               </>
             ) : (
               <>
