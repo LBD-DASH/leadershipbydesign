@@ -6,78 +6,37 @@ const corsHeaders = {
 };
 
 // ═══════════════════════════════════════════════════════════════
-// TARGET UNIVERSE: Top 60 SA FSI companies by name + domain
+// SIGNAL-BASED SEARCH QUERIES — rotated daily, 4 per run
 // ═══════════════════════════════════════════════════════════════
-const TARGET_COMPANIES = [
-  // ── Banks ──
-  { name: "Standard Bank", domain: "standardbank.co.za", industry: "banking" },
-  { name: "FirstRand / FNB", domain: "firstrand.co.za", industry: "banking" },
-  { name: "Absa Group", domain: "absa.co.za", industry: "banking" },
-  { name: "Nedbank", domain: "nedbank.co.za", industry: "banking" },
-  { name: "Capitec Bank", domain: "capitecbank.co.za", industry: "banking" },
-  { name: "Investec", domain: "investec.com", industry: "banking" },
-  { name: "African Bank", domain: "africanbank.co.za", industry: "banking" },
-  { name: "TymeBank", domain: "tymebank.co.za", industry: "banking" },
-  { name: "Discovery Bank", domain: "discovery.co.za", industry: "banking" },
-  { name: "Sasfin", domain: "sasfin.com", industry: "banking" },
-  { name: "Grindrod Bank", domain: "grindrodbank.co.za", industry: "banking" },
-  { name: "Bidvest Bank", domain: "bidvestbank.co.za", industry: "banking" },
-  { name: "Mercantile Bank", domain: "mercantile.co.za", industry: "banking" },
-
-  // ── Insurance ──
-  { name: "Discovery", domain: "discovery.co.za", industry: "insurance" },
-  { name: "Sanlam", domain: "sanlam.co.za", industry: "insurance" },
-  { name: "Old Mutual", domain: "oldmutual.co.za", industry: "insurance" },
-  { name: "Liberty Group", domain: "liberty.co.za", industry: "insurance" },
-  { name: "Momentum Metropolitan", domain: "momentummetropolitan.co.za", industry: "insurance" },
-  { name: "OUTsurance", domain: "outsurance.co.za", industry: "insurance" },
-  { name: "Hollard Insurance", domain: "hollard.co.za", industry: "insurance" },
-  { name: "Santam", domain: "santam.co.za", industry: "insurance" },
-  { name: "MiWay Insurance", domain: "miway.co.za", industry: "insurance" },
-  { name: "King Price Insurance", domain: "kingprice.co.za", industry: "insurance" },
-  { name: "Bryte Insurance", domain: "bryte.co.za", industry: "insurance" },
-  { name: "Guardrisk", domain: "guardrisk.co.za", industry: "insurance" },
-  { name: "1st for Women", domain: "1stforwomen.co.za", industry: "insurance" },
-  { name: "Auto & General", domain: "autoandgeneral.co.za", industry: "insurance" },
-  { name: "Alexander Forbes", domain: "alexanderforbes.co.za", industry: "insurance" },
-  { name: "PPS", domain: "pps.co.za", industry: "insurance" },
-  { name: "Clientele Life", domain: "clientele.co.za", industry: "insurance" },
-  { name: "Telesure Group", domain: "telesure.co.za", industry: "insurance" },
-
-  // ── Asset Management / Financial Services ──
-  { name: "Ninety One", domain: "ninetyone.com", industry: "financial services" },
-  { name: "Stanlib", domain: "stanlib.com", industry: "financial services" },
-  { name: "Coronation Fund Managers", domain: "coronation.com", industry: "financial services" },
-  { name: "Allan Gray", domain: "allangray.co.za", industry: "financial services" },
-  { name: "PSG Konsult", domain: "psg.co.za", industry: "financial services" },
-  { name: "Prescient", domain: "prescient.co.za", industry: "financial services" },
-  { name: "Ashburton Investments", domain: "ashburtoninvestments.com", industry: "financial services" },
-  { name: "RMB", domain: "rmb.co.za", industry: "financial services" },
-  { name: "Rand Merchant Bank", domain: "rmb.co.za", industry: "financial services" },
-  { name: "Glacier by Sanlam", domain: "glacierinsights.co.za", industry: "financial services" },
-  { name: "Citadel", domain: "citadel.co.za", industry: "financial services" },
-  { name: "Brait", domain: "brait.com", industry: "financial services" },
-  { name: "Transaction Capital", domain: "transactioncapital.co.za", industry: "financial services" },
-  { name: "Peregrine Holdings", domain: "peregrine.co.za", industry: "financial services" },
-  { name: "Efficient Group", domain: "efficient.co.za", industry: "financial services" },
-  { name: "Northam Platinum (Corporate Finance)", domain: "northam.co.za", industry: "financial services" },
-  { name: "Mazars South Africa", domain: "mazars.co.za", industry: "financial services" },
-  { name: "KPMG South Africa", domain: "kpmg.co.za", industry: "financial services" },
-  { name: "Deloitte South Africa", domain: "deloitte.com", industry: "financial services" },
-  { name: "EY South Africa", domain: "ey.com", industry: "financial services" },
-  { name: "PwC South Africa", domain: "pwc.co.za", industry: "financial services" },
-  { name: "Marsh McLennan SA", domain: "marshmclennan.com", industry: "financial services" },
-  { name: "Aon South Africa", domain: "aon.com", industry: "financial services" },
-  { name: "WTW South Africa", domain: "wtwco.com", industry: "financial services" },
-  { name: "NBC Holdings", domain: "nbcholdings.co.za", industry: "financial services" },
-  { name: "Motus Holdings", domain: "motus.co.za", industry: "financial services" },
-  { name: "Imperial Logistics", domain: "imperiallogistics.com", industry: "financial services" },
-  { name: "Dimension Data", domain: "dimensiondata.com", industry: "financial services" },
-  { name: "Redefine Properties", domain: "redefine.co.za", industry: "financial services" },
-  { name: "Growthpoint Properties", domain: "growthpoint.co.za", industry: "financial services" },
+const SEARCH_QUERIES = [
+  { query: '"HR Manager" OR "People Manager" "financial services" Johannesburg site:linkedin.com', tag: 'linkedin-hr-fsi' },
+  { query: '"learning and development" vacancy South Africa financial services 2025', tag: 'ld-vacancy-fsi' },
+  { query: '"HR Manager" wanted insurance OR accounting OR "wealth management" Johannesburg', tag: 'hr-insurance-accounting' },
+  { query: '"leadership development" "our people" "financial services" OR "insurance" South Africa', tag: 'leadership-dev-signal' },
+  { query: '"people and culture" manager vacancy Johannesburg 2025', tag: 'people-culture-jhb' },
+  { query: '"talent development" OR "learning and development" manager "professional services" South Africa', tag: 'talent-dev-proserv' },
+  { query: '"HR" vacancy "short term insurance" OR "life insurance" OR "asset management" South Africa', tag: 'hr-vacancy-insurance' },
+  { query: '"coaching" OR "leadership" "our values" "financial services" Johannesburg staff', tag: 'coaching-values-fsi' },
+  { query: 'site:pnet.co.za "HR Manager" OR "L&D Manager" financial services', tag: 'pnet-hr-fsi' },
+  { query: 'site:careerjunction.co.za "HR" OR "people" manager insurance OR accounting', tag: 'careerjunction-hr' },
 ];
 
-// Pages to scrape for contact info
+const QUERIES_PER_RUN = 4;
+
+// Domains to always skip
+const EXCLUDED_DOMAINS = new Set([
+  "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
+  "tiktok.com", "pinterest.com", "reddit.com",
+  "pnet.co.za", "careerjunction.co.za", "indeed.com", "glassdoor.com",
+  "careers24.com", "jobvine.co.za", "executiveplacements.com", "linkedin.com",
+  "news24.com", "businesslive.co.za", "fin24.com", "iol.co.za", "ewn.co.za",
+  "dailymaverick.co.za", "timeslive.co.za", "mg.co.za", "moneyweb.co.za",
+  "bizcommunity.com", "itweb.co.za", "techcentral.co.za",
+  "wikipedia.org", "gov.za", "ac.za",
+  "gartner.com", "mckinsey.com", "deloitte.com", "pwc.co.za", "ey.com", "kpmg.co.za",
+  "leadershipbydesign.co.za", "leadershipbydesign.lovable.app",
+]);
+
 const CONTACT_PATHS = [
   "/contact", "/contact-us", "/about/leadership", "/about/our-team",
   "/about", "/about-us", "/people", "/leadership", "/our-team",
@@ -96,21 +55,43 @@ const GENERIC_PREFIXES = [
 
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 
+function getRootDomain(hostname: string): string {
+  return hostname.replace(/^www\./, "").toLowerCase();
+}
+
+function isExcludedDomain(domain: string): boolean {
+  const root = getRootDomain(domain);
+  for (const ex of EXCLUDED_DOMAINS) {
+    if (root === ex || root.endsWith("." + ex)) return true;
+  }
+  return false;
+}
+
+function extractDomainFromUrl(url: string): string | null {
+  try {
+    const hostname = new URL(url).hostname;
+    const root = getRootDomain(hostname);
+    if (isExcludedDomain(root)) return null;
+    return root;
+  } catch {
+    return null;
+  }
+}
+
 function isQualityEmail(email: string, companyDomain: string): boolean {
   if (!email || !email.includes("@")) return false;
   const prefix = email.split("@")[0].toLowerCase();
   const emailDomain = email.split("@")[1].toLowerCase();
 
-  // Reject generic prefixes
   if (GENERIC_PREFIXES.some((g) => prefix === g || prefix.startsWith(g + "."))) return false;
 
-  // Prefer emails from the company's own domain
+  // Must be from the company's domain
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
 
-  // Must look like a person's email — require a dot separator (firstname.lastname pattern)
   if (prefix.length < 3) return false;
-  if (!prefix.includes(".") && !prefix.includes("_")) return false; // Single-word prefixes are usually departments
+  // Must look like firstname.lastname or similar
+  if (!prefix.includes(".") && !prefix.includes("_")) return false;
 
   return true;
 }
@@ -121,11 +102,9 @@ function extractEmails(text: string): string[] {
 
 function extractNameFromEmail(email: string): string {
   const prefix = email.split("@")[0];
-  const parts = prefix.split(/[._-]/);
-  return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+  return prefix.split(/[._-]/).map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 }
 
-// Try to extract HR/People titles from page content near emails
 function findTitleNearEmail(content: string, email: string): string {
   const HR_PATTERNS = [
     /(?:HR|Human Resources)\s*(?:Director|Executive|Manager|Head)/i,
@@ -134,18 +113,44 @@ function findTitleNearEmail(content: string, email: string): string {
     /CHRO/i,
     /(?:VP|Vice President)\s*(?:of\s*)?(?:People|HR|Human Resources)/i,
   ];
-
-  // Look in a window around the email mention
   const emailIdx = content.toLowerCase().indexOf(email.toLowerCase());
   if (emailIdx === -1) return "";
-
   const window = content.substring(Math.max(0, emailIdx - 500), Math.min(content.length, emailIdx + 500));
-
   for (const pattern of HR_PATTERNS) {
     const match = window.match(pattern);
     if (match) return match[0];
   }
   return "";
+}
+
+// Check if page content suggests company is too large (>500) or too small (<50)
+function passesHeadcountFilter(content: string): boolean {
+  const patterns = [
+    /(\d[\d,]+)\s*(?:employees|staff|people|team members)/i,
+    /(?:team|staff|workforce)\s*(?:of\s*)?(\d[\d,]+)/i,
+    /(\d[\d,]+)\+?\s*(?:strong|professionals)/i,
+  ];
+  for (const p of patterns) {
+    const match = content.match(p);
+    if (match) {
+      const count = parseInt(match[1].replace(/,/g, ""), 10);
+      if (count < 50 || count > 500) return false;
+    }
+  }
+  // No headcount found — include anyway
+  return true;
+}
+
+function extractCompanyName(content: string, domain: string): string {
+  // Try og:site_name or title patterns
+  const titleMatch = content.match(/(?:^|\n)#\s+(.+?)(?:\n|$)/);
+  if (titleMatch) {
+    const name = titleMatch[1].trim();
+    if (name.length > 2 && name.length < 60) return name;
+  }
+  // Fallback: capitalize domain
+  const parts = domain.replace(/\.co\.za$|\.com$|\.co$/, "").split(".");
+  return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 }
 
 Deno.serve(async (req) => {
@@ -160,23 +165,22 @@ Deno.serve(async (req) => {
 
   if (!firecrawlKey) {
     return new Response(JSON.stringify({ error: "Missing FIRECRAWL_API_KEY" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   try {
-    // Track which companies have been scraped (stored in DB)
-    // Accept optional batch_size and start_index overrides
-    let batchSize = 10;
-    let startOverride: number | null = null;
-    try {
-      const body = await req.json();
-      if (typeof body.batch_size === "number") batchSize = Math.min(body.batch_size, 20);
-      if (typeof body.start_index === "number") startOverride = body.start_index;
-    } catch { /* no body */ }
+    // Select 4 queries for this run based on day rotation
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    const startIdx = (dayOfYear * QUERIES_PER_RUN) % SEARCH_QUERIES.length;
+    const runQueries: typeof SEARCH_QUERIES = [];
+    for (let i = 0; i < QUERIES_PER_RUN; i++) {
+      runQueries.push(SEARCH_QUERIES[(startIdx + i) % SEARCH_QUERIES.length]);
+    }
 
-    // Fetch existing emails and domains for dedup
+    console.log(`🔍 Signal search — ${runQueries.length} queries: ${runQueries.map(q => q.tag).join(", ")}`);
+
+    // Fetch existing emails for dedup
     const { data: existingRows } = await supabase
       .from("warm_outreach_queue")
       .select("contact_email, company_website")
@@ -187,118 +191,146 @@ Deno.serve(async (req) => {
     );
     const existingDomains = new Set(
       (existingRows || []).map((r: any) => {
-        try { return new URL(r.company_website || "").hostname.replace("www.", ""); } catch { return ""; }
+        try { return getRootDomain(new URL(r.company_website || "").hostname); } catch { return ""; }
       }).filter(Boolean)
     );
-
-    // Determine which companies to process this run
-    // Auto-rotate: use day of year * batch_size as starting offset
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    const startIdx = startOverride !== null ? startOverride : (dayOfYear * batchSize) % TARGET_COMPANIES.length;
-
-    // Build batch, wrapping around the list
-    const batch: typeof TARGET_COMPANIES = [];
-    for (let i = 0; i < batchSize; i++) {
-      const idx = (startIdx + i) % TARGET_COMPANIES.length;
-      batch.push(TARGET_COMPANIES[idx]);
-    }
-
-    console.log(`🎯 Scraping batch of ${batch.length} companies (start: ${startIdx}): ${batch.map(c => c.name).join(", ")}`);
 
     let addedCount = 0;
     let skippedDup = 0;
     let skippedQuality = 0;
-    let scrapedPages = 0;
+    let domainsDiscovered = 0;
+    let pagesScraped = 0;
 
-    for (const company of batch) {
-      // Skip if we already have this domain
-      if (existingDomains.has(company.domain)) {
-        console.log(`⏭️ Already have ${company.domain}, skipping`);
-        skippedDup++;
+    for (const sq of runQueries) {
+      console.log(`\n🔎 Query [${sq.tag}]: ${sq.query.substring(0, 80)}...`);
+
+      // Step 1: Firecrawl search
+      let searchResults: any[] = [];
+      try {
+        const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ query: sq.query, limit: 10 }),
+        });
+
+        if (searchRes.ok) {
+          const searchData = await searchRes.json();
+          searchResults = searchData.data || searchData.results || [];
+          console.log(`  📊 Got ${searchResults.length} search results`);
+        } else {
+          console.error(`  ❌ Search failed: ${searchRes.status}`);
+          continue;
+        }
+      } catch (e) {
+        console.error(`  ❌ Search error:`, e);
         continue;
       }
 
-      console.log(`🔍 Scraping ${company.name} (${company.domain})...`);
-
-      let bestEmails: string[] = [];
-      let pageContent = "";
-
-      // Try each contact path
-      for (const path of CONTACT_PATHS) {
-        if (bestEmails.length >= 3) break; // Got enough
-
-        try {
-          const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              url: `https://${company.domain}${path}`,
-              formats: ["markdown"],
-              onlyMainContent: false,
-              timeout: 15000,
-            }),
-          });
-
-          scrapedPages++;
-
-          if (scrapeRes.ok) {
-            const scrapeData = await scrapeRes.json();
-            const content = scrapeData.data?.markdown || scrapeData.markdown || "";
-            pageContent += " " + content;
-
-            const emails = extractEmails(content).filter((e) => isQualityEmail(e, company.domain));
-            for (const email of emails) {
-              if (!bestEmails.includes(email)) bestEmails.push(email);
-            }
-
-            if (bestEmails.length > 0) {
-              console.log(`  📧 Found ${bestEmails.length} email(s) on ${path}`);
-              break; // Got emails, no need to try more paths
-            }
-          }
-        } catch {
-          // Skip failed scrape
-        }
+      // Step 2: Extract unique company domains from results
+      const discoveredDomains = new Map<string, { url: string; title: string; snippet: string }>();
+      for (const result of searchResults) {
+        const url = result.url || result.link || "";
+        const domain = extractDomainFromUrl(url);
+        if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain)) continue;
+        discoveredDomains.set(domain, {
+          url,
+          title: result.title || "",
+          snippet: result.description || result.markdown || "",
+        });
       }
 
-      // Insert found emails
-      for (const email of bestEmails.slice(0, 2)) {
-        if (existingEmails.has(email)) {
-          skippedDup++;
+      domainsDiscovered += discoveredDomains.size;
+      console.log(`  🏢 ${discoveredDomains.size} new company domains found`);
+
+      // Step 3: For each domain, scrape contact pages for emails
+      for (const [domain, info] of discoveredDomains) {
+        if (existingDomains.has(domain)) { skippedDup++; continue; }
+
+        let bestEmails: string[] = [];
+        let pageContent = info.snippet;
+
+        // Check headcount from snippet first
+        if (!passesHeadcountFilter(info.snippet)) {
+          console.log(`  ⏭️ ${domain} — headcount outside 50-500`);
           continue;
         }
 
-        const title = findTitleNearEmail(pageContent, email);
-        const contactName = extractNameFromEmail(email);
+        for (const path of CONTACT_PATHS) {
+          if (bestEmails.length >= 2) break;
+          try {
+            const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
+              method: "POST",
+              headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
+              body: JSON.stringify({
+                url: `https://${domain}${path}`,
+                formats: ["markdown"],
+                onlyMainContent: false,
+                timeout: 15000,
+              }),
+            });
+            pagesScraped++;
 
-        const { error } = await supabase.from("warm_outreach_queue").insert({
-          company_name: company.name,
-          company_website: `https://${company.domain}`,
-          contact_name: contactName,
-          contact_title: title || "",
-          contact_email: email,
-          source_keyword: `target-list:${company.industry}`,
-          status: "pending",
-        });
+            if (scrapeRes.ok) {
+              const scrapeData = await scrapeRes.json();
+              const content = scrapeData.data?.markdown || scrapeData.markdown || "";
+              pageContent += " " + content;
 
-        if (!error) {
-          addedCount++;
-          existingEmails.add(email);
-          existingDomains.add(company.domain);
-          console.log(`  ✅ Added: ${email} (${contactName}) @ ${company.name}`);
-        } else {
-          console.error(`  ❌ Insert error for ${email}:`, error.message);
+              // Re-check headcount with full page content
+              if (!passesHeadcountFilter(content)) {
+                console.log(`  ⏭️ ${domain} — headcount outside 50-500 (from ${path})`);
+                bestEmails = []; // discard
+                break;
+              }
+
+              const emails = extractEmails(content).filter((e) => isQualityEmail(e, domain));
+              for (const email of emails) {
+                if (!bestEmails.includes(email)) bestEmails.push(email);
+              }
+
+              if (bestEmails.length > 0) {
+                console.log(`  📧 Found ${bestEmails.length} email(s) on ${domain}${path}`);
+                break;
+              }
+            }
+          } catch { /* skip failed scrape */ }
         }
-      }
 
-      if (bestEmails.length === 0) {
-        skippedQuality++;
-        console.log(`  ⚠️ No quality emails found for ${company.name}`);
+        // Insert found emails
+        const companyName = extractCompanyName(pageContent, domain);
+        for (const email of bestEmails.slice(0, 2)) {
+          if (existingEmails.has(email)) { skippedDup++; continue; }
+
+          const title = findTitleNearEmail(pageContent, email);
+          const contactName = extractNameFromEmail(email);
+
+          const { error } = await supabase.from("warm_outreach_queue").insert({
+            company_name: companyName,
+            company_website: `https://${domain}`,
+            contact_name: contactName,
+            contact_title: title || "",
+            contact_email: email,
+            source_keyword: `signal-search:${sq.tag}`,
+            status: "pending",
+          });
+
+          if (!error) {
+            addedCount++;
+            existingEmails.add(email);
+            existingDomains.add(domain);
+            console.log(`  ✅ Added: ${email} (${contactName}) @ ${companyName}`);
+          } else {
+            console.error(`  ❌ Insert error for ${email}:`, error.message);
+          }
+        }
+
+        if (bestEmails.length === 0) {
+          skippedQuality++;
+        }
       }
     }
 
-    const summary = `Target List Prospecting\nBatch: ${batch.map(c => c.name).join(", ")}\nPages scraped: ${scrapedPages} | Added: ${addedCount} | Dup: ${skippedDup} | No email: ${skippedQuality}`;
-    console.log(`✅ ${summary}`);
+    const summary = `Signal Search Prospecting\nQueries: ${runQueries.map(q => q.tag).join(", ")}\nDomains found: ${domainsDiscovered} | Pages scraped: ${pagesScraped} | Added: ${addedCount} | Dup: ${skippedDup} | No email: ${skippedQuality}`;
+    console.log(`\n✅ ${summary}`);
 
     // Slack notification
     try {
@@ -308,10 +340,10 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           eventType: "daily_pipeline_complete",
           data: {
-            industry: `Target List (batch from ${startIdx})`,
+            industry: `Signal Search (${runQueries.map(q => q.tag).join(", ")})`,
             added: addedCount,
-            companies_scraped: batch.length,
-            pages_scraped: scrapedPages,
+            domains_discovered: domainsDiscovered,
+            pages_scraped: pagesScraped,
             skipped_dup: skippedDup,
             skipped_no_email: skippedQuality,
           },
@@ -322,9 +354,9 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        batch_start: startIdx,
-        companies_in_batch: batch.map(c => c.name),
-        pages_scraped: scrapedPages,
+        queries_used: runQueries.map(q => q.tag),
+        domains_discovered: domainsDiscovered,
+        pages_scraped: pagesScraped,
         prospects_added: addedCount,
         skipped_duplicate: skippedDup,
         skipped_no_email: skippedQuality,
@@ -335,9 +367,9 @@ Deno.serve(async (req) => {
     const errMsg = error instanceof Error ? error.message : "Unknown error";
     console.error("web-scraper-leads error:", errMsg);
     try {
-      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+      await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/slack-notify`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
         body: JSON.stringify({ eventType: "system_error", data: { function: "web-scraper-leads", error: errMsg } }),
       });
     } catch { /* best effort */ }
