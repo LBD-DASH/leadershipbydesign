@@ -442,18 +442,6 @@ export default function LeaderAsCoachSales() {
           </div>
         </section>
 
-        {/* ───────────── 10. GUARANTEE ───────────── */}
-        <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-primary/5 border-y border-primary/10">
-          <div className="max-w-2xl mx-auto text-center">
-            <Shield className="w-10 h-10 text-primary mx-auto mb-4" />
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">
-              Results Guarantee
-            </h2>
-            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-              If after completing the first two phases you don't see measurable improvement in communication, accountability, and coaching behaviours, we'll work with you until you do — or refund your investment.
-            </p>
-          </div>
-        </section>
 
         {/* ───────────── 11. BOTTOM CTA — DIAGNOSTIC ───────────── */}
         <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
