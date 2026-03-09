@@ -2490,12 +2490,16 @@ export type Database = {
           contact_phone: string | null
           contact_title: string | null
           created_at: string
+          disqualified: boolean | null
+          disqualified_reason: string | null
           email_body: string | null
           email_sent_at: string | null
           email_subject: string | null
           follow_up_body: string | null
           follow_up_sent_at: string | null
           id: string
+          industry: string | null
+          score: number | null
           scrape_summary: string | null
           source_keyword: string | null
           status: string
@@ -2512,12 +2516,16 @@ export type Database = {
           contact_phone?: string | null
           contact_title?: string | null
           created_at?: string
+          disqualified?: boolean | null
+          disqualified_reason?: string | null
           email_body?: string | null
           email_sent_at?: string | null
           email_subject?: string | null
           follow_up_body?: string | null
           follow_up_sent_at?: string | null
           id?: string
+          industry?: string | null
+          score?: number | null
           scrape_summary?: string | null
           source_keyword?: string | null
           status?: string
@@ -2534,12 +2542,16 @@ export type Database = {
           contact_phone?: string | null
           contact_title?: string | null
           created_at?: string
+          disqualified?: boolean | null
+          disqualified_reason?: string | null
           email_body?: string | null
           email_sent_at?: string | null
           email_subject?: string | null
           follow_up_body?: string | null
           follow_up_sent_at?: string | null
           id?: string
+          industry?: string | null
+          score?: number | null
           scrape_summary?: string | null
           source_keyword?: string | null
           status?: string

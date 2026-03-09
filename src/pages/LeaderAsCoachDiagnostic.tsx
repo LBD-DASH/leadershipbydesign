@@ -108,16 +108,41 @@ export default function LeaderAsCoachDiagnostic() {
         .select('id')
         .single();
 
-      // Send Slack notification
+      // Send Slack HOT lead alert
       try {
         await supabase.functions.invoke('slack-notify', {
           body: {
-            channel: '#leads-and-signups',
-            text: `🎯 New LAC Assessment — ${data.name} at ${data.company} (${result.profileName}) — Score: ${result.totalScore}/75`,
+            eventType: 'hot_lead_alert',
+            data: {
+              name: data.name,
+              company: data.company,
+              source: 'LAC Assessment',
+              profile: result.profileName,
+              score: `${result.totalScore}/75`,
+              action: 'Completed coaching readiness assessment',
+            },
           },
         });
       } catch (slackErr) {
         console.error('Slack notification failed:', slackErr);
+      }
+
+      // Auto-feed into warm_outreach_queue as high-priority lead
+      try {
+        await supabase
+          .from('warm_outreach_queue' as any)
+          .insert({
+            company_name: data.company,
+            contact_name: data.name,
+            contact_email: data.email,
+            contact_title: data.jobTitle,
+            source_keyword: `lac-assessment:${version}`,
+            status: 'pending',
+            score: 80,
+            industry: 'assessment-lead',
+          } as any);
+      } catch (pipelineErr) {
+        console.error('Pipeline insert failed:', pipelineErr);
       }
 
       // Process lead (AI analysis + notifications) non-blocking

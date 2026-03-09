@@ -16,60 +16,56 @@ Deno.serve(async (req) => {
 
   try {
     const now = new Date();
-    const sast = now.toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg", hour: "2-digit", minute: "2-digit" });
-    const today = now.toISOString().split("T")[0];
+    const hour = now.toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg", hour: "2-digit", hour12: false });
+    const hourNum = parseInt(hour);
+    const timeLabel = hourNum < 12 ? "Morning" : hourNum < 17 ? "Afternoon" : "Evening";
+    const dateStr = now.toLocaleDateString("en-ZA", { timeZone: "Africa/Johannesburg", day: "2-digit", month: "short", year: "numeric" });
 
-    // Determine reporting window (since last report: ~6h windows for 3x/day)
     const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();
-    const todayStart = `${today}T00:00:00Z`;
+    const todayStart = `${now.toISOString().split("T")[0]}T00:00:00Z`;
 
-    console.log(`📊 Pipeline status report — ${sast} SAST`);
+    console.log(`📊 Pipeline report — ${timeLabel} ${dateStr}`);
 
-    // Gather all metrics in parallel
+    // ── Gather all metrics in parallel ──
     const [
-      { count: prospectsAddedPeriod },
-      { count: emailsSentPeriod },
-      { count: followUpsSentPeriod },
+      { count: prospectsAdded },
+      { count: emailsSent },
+      { count: followUpsSent },
       { count: pendingQueue },
       { count: bookingsToday },
+      { count: disqualifiedToday },
       { data: replyData },
-      { data: failedSends },
+      { data: lacAssessments },
+      { data: industriesData },
     ] = await Promise.all([
-      // Prospects added since last report (~6h)
       supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
-        .gte("created_at", sixHoursAgo),
-      // Emails sent since last report
+        .gte("created_at", sixHoursAgo).or("disqualified.is.null,disqualified.eq.false"),
       supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
         .gte("email_sent_at", sixHoursAgo),
-      // Follow-ups sent since last report
       supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
         .gte("follow_up_sent_at", sixHoursAgo),
-      // Queue depth: pending prospects remaining
       supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
-        .eq("status", "pending")
-        .not("contact_email", "is", null)
-        .neq("contact_email", ""),
-      // Bookings confirmed today
+        .eq("status", "pending").not("contact_email", "is", null).neq("contact_email", "")
+        .or("disqualified.is.null,disqualified.eq.false"),
       supabase.from("bookings").select("*", { count: "exact", head: true })
         .gte("created_at", todayStart),
-      // Reply status breakdown (today)
+      supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart).eq("disqualified", true),
       supabase.from("warm_outreach_queue").select("status")
         .in("status", ["interested", "not_interested", "ooo", "unsubscribed", "replied"])
         .gte("updated_at", todayStart),
-      // Failed sends (status = 'error' or similar)
-      supabase.from("warm_outreach_queue").select("company_name, contact_email, status")
-        .eq("status", "error")
-        .gte("updated_at", sixHoursAgo),
+      // LAC assessments today
+      supabase.from("leader_as_coach_assessments").select("name, company, total_score, profile")
+        .gte("created_at", todayStart),
+      // Industries from today's prospects
+      supabase.from("warm_outreach_queue").select("industry")
+        .gte("created_at", sixHoursAgo)
+        .not("industry", "is", null)
+        .or("disqualified.is.null,disqualified.eq.false"),
     ]);
 
     // Classify replies
-    const replies = {
-      interested: 0,
-      not_interested: 0,
-      ooo: 0,
-      unsubscribed: 0,
-      other: 0,
-    };
+    const replies = { interested: 0, not_interested: 0, ooo: 0, unsubscribed: 0, other: 0 };
     for (const r of (replyData || []) as { status: string }[]) {
       if (r.status === "interested") replies.interested++;
       else if (r.status === "not_interested") replies.not_interested++;
@@ -77,19 +73,48 @@ Deno.serve(async (req) => {
       else if (r.status === "unsubscribed") replies.unsubscribed++;
       else replies.other++;
     }
-    const totalReplies = replies.interested + replies.not_interested + replies.ooo + replies.unsubscribed + replies.other;
-    const failedCount = (failedSends || []).length;
+    const totalReplies = replies.interested + replies.not_interested + replies.ooo + replies.unsubscribed;
 
-    // ── Post main status to #mission-control ──
+    // Unique industries
+    const industries = [...new Set((industriesData || []).map((r: any) => r.industry).filter(Boolean))];
+
+    // Format LAC assessments
+    const lacLines = (lacAssessments || []).map((a: any) => 
+      `  ${a.name || "Unknown"}, ${a.company || "—"}, ${a.total_score}/75, ${a.profile || "—"}`
+    );
+
+    // ── Build the Slack message ──
+    const replyBreakdown = totalReplies > 0
+      ? `🔥 Interested: ${replies.interested} | ❌ Not interested: ${replies.not_interested} | 🔄 OOO: ${replies.ooo} | 🚫 Unsub: ${replies.unsubscribed}`
+      : "None";
+
+    const message = `🎯 *LBD Pipeline — ${timeLabel} ${dateStr}*
+
+*PROSPECTING*
+✅ New prospects added: ${prospectsAdded || 0}
+🏭 Industries: ${industries.length > 0 ? industries.join(", ") : "—"}
+❌ Disqualified (wrong industry): ${disqualifiedToday || 0}
+
+*OUTREACH*
+📧 Emails sent today: ${(emailsSent || 0) + (followUpsSent || 0)}
+📬 Replies received: ${totalReplies} (${replyBreakdown})
+📅 Bookings confirmed: ${bookingsToday || 0}
+🔄 Queue depth: ${pendingQueue || 0} pending
+
+*DIAGNOSTICS*
+🎯 New LAC Assessments completed: ${(lacAssessments || []).length}${lacLines.length > 0 ? "\n" + lacLines.join("\n") : ""}`;
+
+    // ── Post to #mission-control via Slack ──
     await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
       body: JSON.stringify({
+        channel: "mission-control",
         eventType: "pipeline_status_report",
         data: {
-          time: sast,
-          prospectsAdded: prospectsAddedPeriod || 0,
-          emailsSent: (emailsSentPeriod || 0) + (followUpsSentPeriod || 0),
+          time: `${timeLabel} ${dateStr}`,
+          prospectsAdded: prospectsAdded || 0,
+          emailsSent: (emailsSent || 0) + (followUpsSent || 0),
           repliesInterested: replies.interested,
           repliesNotInterested: replies.not_interested,
           repliesOOO: replies.ooo,
@@ -97,40 +122,24 @@ Deno.serve(async (req) => {
           totalReplies,
           bookings: bookingsToday || 0,
           queueDepth: pendingQueue || 0,
-          failed: failedCount,
+          failed: 0,
+          disqualified: disqualifiedToday || 0,
+          lacAssessments: (lacAssessments || []).length,
+          industries: industries.join(", "),
         },
       }),
     });
 
-    // ── Post errors to #system-health if any ──
-    if (failedCount > 0) {
-      const failedList = (failedSends || []).slice(0, 5)
-        .map((f: any) => `• ${f.contact_email} @ ${f.company_name}`)
-        .join("\n");
-
-      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
-        body: JSON.stringify({
-          eventType: "system_error",
-          data: {
-            function: "Pipeline Send Failures",
-            error: `${failedCount} failed send(s) in the last 6h:\n${failedList}`,
-          },
-        }),
-      });
-    }
-
-    console.log(`✅ Pipeline report posted — Sent: ${emailsSentPeriod || 0}, Queue: ${pendingQueue || 0}, Failed: ${failedCount}`);
+    console.log(`✅ Pipeline report posted`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        prospectsAdded: prospectsAddedPeriod || 0,
-        emailsSent: (emailsSentPeriod || 0) + (followUpsSentPeriod || 0),
+        prospectsAdded: prospectsAdded || 0,
+        emailsSent: (emailsSent || 0) + (followUpsSent || 0),
         queueDepth: pendingQueue || 0,
         bookings: bookingsToday || 0,
-        failed: failedCount,
+        lacAssessments: (lacAssessments || []).length,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

@@ -287,15 +287,32 @@ function buildPipelineCompleteBlocks(data: Record<string, any>) {
 
 function buildPipelineStatusBlocks(data: Record<string, any>) {
   const replyLine = data.totalReplies > 0
-    ? `🎯 Interested: ${data.repliesInterested} | 👎 Not interested: ${data.repliesNotInterested} | ✈️ OOO: ${data.repliesOOO} | 🚫 Unsub: ${data.repliesUnsubscribed}`
+    ? `🔥 Interested: ${data.repliesInterested} | ❌ Not interested: ${data.repliesNotInterested} | 🔄 OOO: ${data.repliesOOO} | 🚫 Unsub: ${data.repliesUnsubscribed}`
     : 'No replies yet';
 
   return [
-    { type: 'header', text: { type: 'plain_text', text: `📊 Pipeline Status — ${data.time || ''} SAST`, emoji: true } },
-    { type: 'section', text: { type: 'mrkdwn', text: `✅ Sent: ${data.emailsSent} | 🔍 Prospects added: ${data.prospectsAdded} | 📅 Booked: ${data.bookings} | 🔄 Queue: ${data.queueDepth} | ❌ Failed: ${data.failed}` } },
-    { type: 'section', text: { type: 'mrkdwn', text: `*Replies today:* ${replyLine}` } },
+    { type: 'header', text: { type: 'plain_text', text: `🎯 LBD Pipeline — ${data.time || ''}`, emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*PROSPECTING*\n✅ New prospects added: ${data.prospectsAdded}\n🏭 Industries: ${data.industries || '—'}\n❌ Disqualified (wrong industry): ${data.disqualified || 0}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*OUTREACH*\n📧 Emails sent today: ${data.emailsSent}\n📬 Replies received: ${data.totalReplies} (${replyLine})\n📅 Bookings confirmed: ${data.bookings}\n🔄 Queue depth: ${data.queueDepth} pending` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*DIAGNOSTICS*\n🎯 New LAC Assessments completed: ${data.lacAssessments || 0}` } },
     ...(data.failed > 0 ? [{ type: 'section', text: { type: 'mrkdwn', text: `⚠️ *${data.failed} failed send(s)* — details in #system-health` } }] : []),
     { type: 'context', elements: [{ type: 'mrkdwn', text: `Pipeline report • ${sast()} SAST` }] },
+  ];
+}
+
+function buildHotLeadAlertBlocks(data: Record<string, any>) {
+  const fields = [
+    { type: 'mrkdwn', text: `*Name:*\n${data.name || 'Unknown'}` },
+    { type: 'mrkdwn', text: `*Company:*\n${data.company || '—'}` },
+  ];
+  if (data.source) fields.push({ type: 'mrkdwn', text: `*Source:*\n${data.source}` });
+  if (data.profile) fields.push({ type: 'mrkdwn', text: `*Profile:*\n${data.profile} — Score: ${data.score || '?'}` });
+  if (data.action) fields.push({ type: 'mrkdwn', text: `*Action:*\n${data.action}` });
+
+  return [
+    { type: 'header', text: { type: 'plain_text', text: '🔥 HOT LEAD', emoji: true } },
+    { type: 'section', fields },
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `${sast()} SAST` }] },
   ];
 }
 
@@ -404,7 +421,14 @@ const EVENT_CONFIG: Record<string, {
     username: 'LBD Pipeline Status',
     icon: ':bar_chart:',
     buildBlocks: buildPipelineStatusBlocks,
-    text: (d) => `✅ Sent: ${d.emailsSent} | 🎯 Interested: ${d.repliesInterested} | 📅 Booked: ${d.bookings} | 🔄 Queue: ${d.queueDepth} | ❌ Failed: ${d.failed}`,
+    text: (d) => `🎯 LBD Pipeline — ${d.time} | Sent: ${d.emailsSent} | Queue: ${d.queueDepth} | Booked: ${d.bookings}`,
+  },
+  hot_lead_alert: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Hot Lead',
+    icon: ':fire:',
+    buildBlocks: buildHotLeadAlertBlocks,
+    text: (d) => `🔥 HOT LEAD — ${d.name} at ${d.company} (${d.source})`,
   },
 };
 

@@ -35,13 +35,15 @@ Deno.serve(async (req) => {
   try {
     console.log("📧 Starting auto-outreach pipeline...");
 
-    // Get top 10 pending prospects with VALID email (not empty, not null)
+    // Get top 10 pending prospects that are NOT disqualified, with valid email, score >= 60
     const { data: prospects, error: fetchErr } = await supabase
       .from("warm_outreach_queue")
       .select("*")
       .eq("status", "pending")
       .not("contact_email", "is", null)
       .neq("contact_email", "")
+      .or("disqualified.is.null,disqualified.eq.false")
+      .order("score", { ascending: false }) // Highest score first
       .order("created_at", { ascending: true })
       .limit(10);
 
@@ -51,36 +53,34 @@ Deno.serve(async (req) => {
     }
 
     if (!prospects?.length) {
-      console.log("No pending prospects with email found");
-      // Still notify so we know the function ran
+      console.log("No pending qualified prospects with email found");
       try {
         await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
           body: JSON.stringify({
             eventType: "system_error",
-            data: { function: "auto-outreach", error: "No pending prospects with email addresses found. Check web-scraper-leads pipeline." },
+            data: { function: "auto-outreach", error: "No pending qualified prospects with email addresses found." },
           }),
         });
       } catch { /* best effort */ }
-      return new Response(JSON.stringify({ success: true, emailed: 0, reason: "no_prospects_with_email" }), {
+      return new Response(JSON.stringify({ success: true, emailed: 0, reason: "no_qualified_prospects" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    console.log(`Processing ${prospects.length} prospects`);
+    console.log(`Processing ${prospects.length} qualified prospects`);
     let emailedCount = 0;
     const errors: string[] = [];
 
-    // Fetch settings
+    // Fetch settings — campaign mode is locked to leader_as_coach
     const { data: settingsData } = await supabase
       .from("admin_settings")
       .select("setting_key, setting_value")
-      .in("setting_key", ["booking_link", "campaign_mode"]);
+      .in("setting_key", ["booking_link"]);
     
     const settingsMap = Object.fromEntries((settingsData || []).map((s: any) => [s.setting_key, s.setting_value]));
     const bookingLink = settingsMap.booking_link || "https://leadershipbydesign.lovable.app/contact";
-    const campaignMode = settingsMap.campaign_mode || "general";
 
     for (const prospect of prospects) {
       try {
@@ -111,42 +111,17 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Step 2: Claude generates personalized email based on campaign mode
+        // Step 2: Claude generates personalized email — ALWAYS Leader as Coach mode
         const firstName = prospect.contact_name?.split(" ")[0] || "there";
 
-        const campaignPrompts: Record<string, string> = {
-          general: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
-
-RULES:
-- First paragraph: ONE specific observation about their company (2 sentences max)
-- Second paragraph: A relatable challenge companies like theirs face with people development. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
-
-          leader_as_coach: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
-
-RULES:
-- First paragraph: ONE specific observation about their management layer or team performance (2 sentences max)
-- Second paragraph: Connect to the challenge of managers who manage but don't coach — creating bottlenecks and disengaged teams. Position Kevin as someone who installs coaching capability into management teams through a structured 90-day programme. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
-
-          shift_programme: `Write a personalized outreach email from Kevin Britz, a straight-talking South African leadership coach who's worked with 4,000+ leaders.
-
-RULES:
-- First paragraph: ONE specific observation about their organisation navigating change or scaling teams (2 sentences max)
-- Second paragraph: Connect to the challenge of managers who lack the skills to lead in an AI-driven, high-pressure environment. Position Kevin's SHIFT framework (Self-Management, Human Intelligence, Innovation, Focus, Thinking) as a leadership operating system — not a training course. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat?" style.`,
-
-          manager_coaching_accelerator: `Write a personalized outreach email from Kevin Britz — South Africa's Manager Coaching Specialist — who's worked with 4,000+ leaders.
+        const campaignPrompt = `Write a personalized outreach email from Kevin Britz — South Africa's Manager Coaching Specialist — who's worked with 4,000+ leaders across 50+ organisations over 11 years.
 
 CONTEXT: Most managers were promoted for technical excellence, not people skills. They default to command-and-control instead of coaching their teams. This kills engagement, drives turnover, and stalls productivity. Kevin runs a 90-Day Manager Coaching Accelerator — a proven system that transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention.
 
 RULES:
 - First paragraph: ONE specific observation about their company's management layer, team growth, or retention challenges (2 sentences max)
 - Second paragraph: Connect to the problem of managers defaulting to command-and-control instead of coaching. Most were promoted for technical ability, not people skills — and it's costing the business in engagement, turnover, and stalled productivity. Position Kevin's 90-Day Manager Coaching Accelerator as the fix. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat about how this could work for your team?" style.`,
-        };
-
-        const campaignPrompt = campaignPrompts[campaignMode] || campaignPrompts.general;
+- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat about how this could work for your team?" style.`;
 
         const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
@@ -263,7 +238,7 @@ Only valid JSON, no markdown.`,
 
     console.log(`📧 Auto-outreach complete: ${emailedCount}/${prospects.length} emails sent`);
 
-    // Slack notification with full status
+    // Slack notification
     const statusEmoji = emailedCount === prospects.length ? "✅" : emailedCount > 0 ? "⚠️" : "❌";
     const slackText = `*Emails sent:* ${emailedCount}/${prospects.length}${errors.length ? `\n*Errors:*\n${errors.map(e => `• ${e}`).join("\n")}` : ""}`;
 

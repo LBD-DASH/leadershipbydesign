@@ -6,6 +6,51 @@ const corsHeaders = {
 };
 
 // ═══════════════════════════════════════════════════════════════
+// QUALIFIED INDUSTRIES — only these enter the pipeline
+// ═══════════════════════════════════════════════════════════════
+const QUALIFIED_INDUSTRIES = [
+  "financial services", "insurance", "banking", "accounting",
+  "legal", "professional services", "wealth management",
+  "asset management", "investment", "advisory", "consulting",
+  "audit", "tax", "actuarial", "fund management", "stockbroking",
+];
+
+// Industries/keywords that should NEVER enter the pipeline
+const DISQUALIFIED_KEYWORDS = [
+  "transport", "logistics", "ngo", "non-profit", "nonprofit",
+  "charity", "news", "media", "journalism", "association",
+  "trade union", "competitor", "coaching company",
+  "recruitment", "staffing", "temp agency",
+];
+
+function classifyIndustry(
+  companyName: string,
+  website: string,
+  title: string,
+  sourceKeyword: string,
+  scrapeSummary: string,
+): { qualified: boolean; industry: string; reason: string } {
+  const text = `${companyName} ${website} ${title} ${sourceKeyword} ${scrapeSummary}`.toLowerCase();
+
+  // Check disqualified first
+  for (const kw of DISQUALIFIED_KEYWORDS) {
+    if (text.includes(kw)) {
+      return { qualified: false, industry: kw, reason: `Disqualified: matches "${kw}"` };
+    }
+  }
+
+  // Check qualified
+  for (const ind of QUALIFIED_INDUSTRIES) {
+    if (text.includes(ind)) {
+      return { qualified: true, industry: ind, reason: "" };
+    }
+  }
+
+  // Default: disqualified (doesn't match any target industry)
+  return { qualified: false, industry: "unknown", reason: "No matching target industry found" };
+}
+
+// ═══════════════════════════════════════════════════════════════
 // SIGNAL-BASED SEARCH QUERIES — rotated daily, 4 per run
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
@@ -28,7 +73,7 @@ const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
   "tiktok.com", "pinterest.com", "reddit.com",
   "pnet.co.za", "careerjunction.co.za", "indeed.com", "glassdoor.com",
-  "careers24.com", "jobvine.co.za", "executiveplacements.com", "linkedin.com",
+  "careers24.com", "jobvine.co.za", "executiveplacements.com",
   "news24.com", "businesslive.co.za", "fin24.com", "iol.co.za", "ewn.co.za",
   "dailymaverick.co.za", "timeslive.co.za", "mg.co.za", "moneyweb.co.za",
   "bizcommunity.com", "itweb.co.za", "techcentral.co.za",
@@ -85,12 +130,10 @@ function isQualityEmail(email: string, companyDomain: string): boolean {
 
   if (GENERIC_PREFIXES.some((g) => prefix === g || prefix.startsWith(g + "."))) return false;
 
-  // Must be from the company's domain
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
 
   if (prefix.length < 3) return false;
-  // Must look like firstname.lastname or similar
   if (!prefix.includes(".") && !prefix.includes("_")) return false;
 
   return true;
@@ -123,7 +166,6 @@ function findTitleNearEmail(content: string, email: string): string {
   return "";
 }
 
-// Check if page content suggests company is too large (>500) or too small (<50)
 function passesHeadcountFilter(content: string): boolean {
   const patterns = [
     /(\d[\d,]+)\s*(?:employees|staff|people|team members)/i,
@@ -134,21 +176,18 @@ function passesHeadcountFilter(content: string): boolean {
     const match = content.match(p);
     if (match) {
       const count = parseInt(match[1].replace(/,/g, ""), 10);
-      if (count < 50 || count > 500) return false;
+      if (count < 100 || count > 500) return false; // Updated: 100-500 preferred
     }
   }
-  // No headcount found — include anyway
   return true;
 }
 
 function extractCompanyName(content: string, domain: string): string {
-  // Try og:site_name or title patterns
   const titleMatch = content.match(/(?:^|\n)#\s+(.+?)(?:\n|$)/);
   if (titleMatch) {
     const name = titleMatch[1].trim();
     if (name.length > 2 && name.length < 60) return name;
   }
-  // Fallback: capitalize domain
   const parts = domain.replace(/\.co\.za$|\.com$|\.co$/, "").split(".");
   return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 }
@@ -170,7 +209,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Select 4 queries for this run based on day rotation
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
     const startIdx = (dayOfYear * QUERIES_PER_RUN) % SEARCH_QUERIES.length;
     const runQueries: typeof SEARCH_QUERIES = [];
@@ -180,7 +218,6 @@ Deno.serve(async (req) => {
 
     console.log(`🔍 Signal search — ${runQueries.length} queries: ${runQueries.map(q => q.tag).join(", ")}`);
 
-    // Fetch existing emails for dedup
     const { data: existingRows } = await supabase
       .from("warm_outreach_queue")
       .select("contact_email, company_website")
@@ -198,13 +235,14 @@ Deno.serve(async (req) => {
     let addedCount = 0;
     let skippedDup = 0;
     let skippedQuality = 0;
+    let disqualifiedCount = 0;
     let domainsDiscovered = 0;
     let pagesScraped = 0;
+    const industriesFound: string[] = [];
 
     for (const sq of runQueries) {
       console.log(`\n🔎 Query [${sq.tag}]: ${sq.query.substring(0, 80)}...`);
 
-      // Step 1: Firecrawl search
       let searchResults: any[] = [];
       try {
         const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
@@ -226,7 +264,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Step 2: Extract unique company domains from results
       const discoveredDomains = new Map<string, { url: string; title: string; snippet: string }>();
       for (const result of searchResults) {
         const url = result.url || result.link || "";
@@ -242,16 +279,14 @@ Deno.serve(async (req) => {
       domainsDiscovered += discoveredDomains.size;
       console.log(`  🏢 ${discoveredDomains.size} new company domains found`);
 
-      // Step 3: For each domain, scrape contact pages for emails
       for (const [domain, info] of discoveredDomains) {
         if (existingDomains.has(domain)) { skippedDup++; continue; }
 
         let bestEmails: string[] = [];
         let pageContent = info.snippet;
 
-        // Check headcount from snippet first
         if (!passesHeadcountFilter(info.snippet)) {
-          console.log(`  ⏭️ ${domain} — headcount outside 50-500`);
+          console.log(`  ⏭️ ${domain} — headcount outside 100-500`);
           continue;
         }
 
@@ -275,10 +310,9 @@ Deno.serve(async (req) => {
               const content = scrapeData.data?.markdown || scrapeData.markdown || "";
               pageContent += " " + content;
 
-              // Re-check headcount with full page content
               if (!passesHeadcountFilter(content)) {
-                console.log(`  ⏭️ ${domain} — headcount outside 50-500 (from ${path})`);
-                bestEmails = []; // discard
+                console.log(`  ⏭️ ${domain} — headcount outside 100-500 (from ${path})`);
+                bestEmails = [];
                 break;
               }
 
@@ -295,8 +329,35 @@ Deno.serve(async (req) => {
           } catch { /* skip failed scrape */ }
         }
 
-        // Insert found emails
+        // ── INDUSTRY QUALIFICATION GATE ──
         const companyName = extractCompanyName(pageContent, domain);
+        const classification = classifyIndustry(companyName, domain, "", sq.tag, pageContent.substring(0, 2000));
+
+        if (!classification.qualified) {
+          console.log(`  ❌ Disqualified: ${companyName} — ${classification.reason}`);
+          disqualifiedCount++;
+
+          // Still insert but mark as disqualified for tracking
+          if (bestEmails.length > 0) {
+            await supabase.from("warm_outreach_queue").insert({
+              company_name: companyName,
+              company_website: `https://${domain}`,
+              contact_name: extractNameFromEmail(bestEmails[0]),
+              contact_email: bestEmails[0],
+              source_keyword: `signal-search:${sq.tag}`,
+              status: "disqualified",
+              industry: classification.industry,
+              disqualified: true,
+              disqualified_reason: classification.reason,
+            });
+          }
+          continue;
+        }
+
+        if (!industriesFound.includes(classification.industry)) {
+          industriesFound.push(classification.industry);
+        }
+
         for (const email of bestEmails.slice(0, 2)) {
           if (existingEmails.has(email)) { skippedDup++; continue; }
 
@@ -311,13 +372,15 @@ Deno.serve(async (req) => {
             contact_email: email,
             source_keyword: `signal-search:${sq.tag}`,
             status: "pending",
+            industry: classification.industry,
+            score: 60, // Default score for scraper leads
           });
 
           if (!error) {
             addedCount++;
             existingEmails.add(email);
             existingDomains.add(domain);
-            console.log(`  ✅ Added: ${email} (${contactName}) @ ${companyName}`);
+            console.log(`  ✅ Added: ${email} (${contactName}) @ ${companyName} [${classification.industry}]`);
           } else {
             console.error(`  ❌ Insert error for ${email}:`, error.message);
           }
@@ -329,7 +392,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const summary = `Signal Search Prospecting\nQueries: ${runQueries.map(q => q.tag).join(", ")}\nDomains found: ${domainsDiscovered} | Pages scraped: ${pagesScraped} | Added: ${addedCount} | Dup: ${skippedDup} | No email: ${skippedQuality}`;
+    const summary = `Signal Search Prospecting\nQueries: ${runQueries.map(q => q.tag).join(", ")}\nDomains found: ${domainsDiscovered} | Pages scraped: ${pagesScraped} | Added: ${addedCount} | Disqualified: ${disqualifiedCount} | Dup: ${skippedDup} | No email: ${skippedQuality}`;
     console.log(`\n✅ ${summary}`);
 
     // Slack notification
@@ -340,8 +403,9 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           eventType: "daily_pipeline_complete",
           data: {
-            industry: `Signal Search (${runQueries.map(q => q.tag).join(", ")})`,
+            industry: `Signal Search (${industriesFound.join(", ") || "none"})`,
             added: addedCount,
+            disqualified: disqualifiedCount,
             domains_discovered: domainsDiscovered,
             pages_scraped: pagesScraped,
             skipped_dup: skippedDup,
@@ -358,6 +422,8 @@ Deno.serve(async (req) => {
         domains_discovered: domainsDiscovered,
         pages_scraped: pagesScraped,
         prospects_added: addedCount,
+        disqualified: disqualifiedCount,
+        industries: industriesFound,
         skipped_duplicate: skippedDup,
         skipped_no_email: skippedQuality,
       }),
