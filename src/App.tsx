@@ -89,6 +89,8 @@ import TeamDiagnosticAd from "./pages/ads/TeamDiagnosticAd";
 import LeadershipDiagnosticAd from "./pages/ads/LeadershipDiagnosticAd";
 import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
 import LeaderAsCoachDiagnostic from "./pages/LeaderAsCoachDiagnostic";
+import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
+import ClaudeContext from "./pages/ClaudeContext";
 const queryClient = new QueryClient();
 
 const App = () => (
