@@ -58,11 +58,11 @@ export default function Hero() {
               </a>
             </div>
             
-            {/* Secondary CTAs - Diagnostics */}
+            {/* Secondary CTAs */}
             <div
               className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
             >
-              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
+              <Link to="/leader-as-coach" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   variant="outline"
