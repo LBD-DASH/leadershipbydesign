@@ -88,6 +88,7 @@ import ClientNeedsAnalysis from "./pages/admin/ClientNeedsAnalysis";
 import TeamDiagnosticAd from "./pages/ads/TeamDiagnosticAd";
 import LeadershipDiagnosticAd from "./pages/ads/LeadershipDiagnosticAd";
 import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
+import LeaderAsCoachDiagnostic from "./pages/LeaderAsCoachDiagnostic";
 const queryClient = new QueryClient();
 
 const App = () => (
