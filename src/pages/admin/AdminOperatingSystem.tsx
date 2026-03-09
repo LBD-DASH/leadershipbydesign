@@ -361,6 +361,7 @@ export default function AdminOperatingSystem() {
 
           <div className="space-y-8">
             <PipelineStatus />
+            <GoogleAnalyticsCard />
             <SystemHealth />
             <ActiveProjects />
             <Last7DaysPerformance />

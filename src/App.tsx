@@ -91,6 +91,7 @@ import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
 import LeaderAsCoachDiagnostic from "./pages/LeaderAsCoachDiagnostic";
 import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
 import ClaudeContext from "./pages/ClaudeContext";
+import GTMPageViewTracker from "./components/GTMPageViewTracker";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -100,6 +101,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <GTMPageViewTracker />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<Products />} />
