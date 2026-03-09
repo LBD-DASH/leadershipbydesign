@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone, ClipboardCheck } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
