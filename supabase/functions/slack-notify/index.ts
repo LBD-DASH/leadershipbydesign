@@ -421,7 +421,14 @@ const EVENT_CONFIG: Record<string, {
     username: 'LBD Pipeline Status',
     icon: ':bar_chart:',
     buildBlocks: buildPipelineStatusBlocks,
-    text: (d) => `✅ Sent: ${d.emailsSent} | 🎯 Interested: ${d.repliesInterested} | 📅 Booked: ${d.bookings} | 🔄 Queue: ${d.queueDepth} | ❌ Failed: ${d.failed}`,
+    text: (d) => `🎯 LBD Pipeline — ${d.time} | Sent: ${d.emailsSent} | Queue: ${d.queueDepth} | Booked: ${d.bookings}`,
+  },
+  hot_lead_alert: {
+    channels: ['leads-and-signups'],
+    username: 'LBD Hot Lead',
+    icon: ':fire:',
+    buildBlocks: buildHotLeadAlertBlocks,
+    text: (d) => `🔥 HOT LEAD — ${d.name} at ${d.company} (${d.source})`,
   },
 };
 
