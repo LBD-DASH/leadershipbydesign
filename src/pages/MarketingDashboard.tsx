@@ -121,6 +121,12 @@ export default function MarketingDashboard() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <Link to="/admin/needs-analysis">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                    <ClipboardCheck className="w-4 h-4" />
+                    <span className="hidden md:inline">Needs Analysis</span>
+                  </Button>
+                </Link>
                 <Link to="/admin/pdf-library">
                   <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                     <FileText className="w-4 h-4" />

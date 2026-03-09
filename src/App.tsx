@@ -173,7 +173,8 @@ const App = () => (
           <Route path="/admin/pdf-library" element={<AdminPDFLibrary />} />
           <Route path="/admin/infographics" element={<AdminInfographicsLibrary />} />
           <Route path="/admin/programmes/:id" element={<ProgrammeDetailView />} />
-          <Route path="/marketing" element={<MarketingDashboard />} />
+            <Route path="/marketing" element={<MarketingDashboard />} />
+            <Route path="/admin/needs-analysis" element={<ClientNeedsAnalysis />} />
           <Route path="/client-alignment-index" element={<ClientAlignmentIndex />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/cold-call-prompter" element={<ColdCallPrompter />} />
