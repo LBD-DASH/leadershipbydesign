@@ -160,6 +160,8 @@ const App = () => (
           <Route path="/new-manager-training" element={<NewManagerTraining />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
           <Route path="/admin" element={<Navigate to="/marketing" replace />} />
+          <Route path="/admin/os" element={<AdminOperatingSystem />} />
+          <Route path="/claude-context" element={<ClaudeContext />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />
           <Route path="/admin/overview/executive-coaching" element={<ExecutiveCoachingOverview />} />
           <Route path="/admin/overview/shift-leadership" element={<ShiftLeadershipOverview />} />
