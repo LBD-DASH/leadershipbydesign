@@ -84,6 +84,7 @@ import NewManagerTraining from "./pages/products/NewManagerTraining";
 import Unsubscribe from "./pages/Unsubscribe";
 import ClientAlignmentIndex from "./pages/ClientAlignmentIndex";
 import ColdCallPrompter from "./pages/ColdCallPrompter";
+import ClientNeedsAnalysis from "./pages/admin/ClientNeedsAnalysis";
 import TeamDiagnosticAd from "./pages/ads/TeamDiagnosticAd";
 import LeadershipDiagnosticAd from "./pages/ads/LeadershipDiagnosticAd";
 import ExecutiveCoachingAd from "./pages/ads/ExecutiveCoachingAd";
