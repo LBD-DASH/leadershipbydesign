@@ -430,6 +430,15 @@ export default function ColdCallPrompter() {
                 <Flame className="h-3 w-3" />
                 Smart Queue
               </Button>
+              <Button
+                variant={viewMode === 'needs' ? 'default' : 'ghost'}
+                size="sm"
+                className="rounded-none text-xs gap-1 h-7"
+                onClick={() => setViewMode('needs')}
+              >
+                <ClipboardCheck className="h-3 w-3" />
+                Needs Analysis
+              </Button>
             </div>
             {screen !== "REP_NAME" && (
               <span className="text-xs text-muted-foreground">{form.repName}</span>
