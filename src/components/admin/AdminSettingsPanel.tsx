@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Save, Loader2, Megaphone } from 'lucide-react';
+import { Settings, Save, Loader2, Megaphone, Rocket } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CAMPAIGN_MODES = [
@@ -21,6 +21,7 @@ export default function AdminSettingsPanel() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingCampaign, setSavingCampaign] = useState(false);
+  const [runningProspecting, setRunningProspecting] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -71,6 +72,26 @@ export default function AdminSettingsPanel() {
     setSavingCampaign(false);
   };
 
+  const runProspectingNow = async () => {
+    setRunningProspecting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('web-scraper-leads', {
+        body: {},
+      });
+
+      if (error) {
+        toast.error(`Prospecting failed: ${error.message}`);
+      } else if (data?.success) {
+        toast.success(`Apollo prospecting complete: ${data.prospects_added} new prospects added from ${data.industry}`);
+      } else {
+        toast.error(data?.error || 'Prospecting returned an error');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to run prospecting: ${err.message}`);
+    }
+    setRunningProspecting(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-32">
@@ -85,6 +106,36 @@ export default function AdminSettingsPanel() {
         <Settings className="w-5 h-5 text-primary" />
         <h3 className="text-lg font-semibold text-foreground">Settings</h3>
       </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Rocket className="w-4 h-4 text-primary" />
+            <CardTitle className="text-base">Apollo Prospecting</CardTitle>
+          </div>
+          <CardDescription>
+            Searches Apollo for verified HR/L&D decision-makers at FSI companies in South Africa (200+ employees). Rotates through Financial Services, Insurance, and Banking daily.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={runProspectingNow} disabled={runningProspecting} className="w-full">
+            {runningProspecting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Running Apollo Search…
+              </>
+            ) : (
+              <>
+                <Rocket className="w-4 h-4 mr-2" />
+                Run Prospecting Now
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Also runs automatically every day at 7:00 AM SAST via cron.
+          </p>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
