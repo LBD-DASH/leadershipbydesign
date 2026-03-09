@@ -326,6 +326,12 @@ export default function Programmes() {
                 Take a free 5-minute diagnostic to discover which programme fits your team's biggest challenge.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-3">
+                <Link to="/leader-as-coach-diagnostic">
+                  <Button className="rounded-full group bg-primary text-primary-foreground hover:bg-primary/90">
+                    Leader as Coach Assessment
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
                 <Link to="/team-diagnostic">
                   <Button variant="outline" className="rounded-full group">
                     Team Diagnostic
