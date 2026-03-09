@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -6,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -16,146 +15,123 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    console.log("📊 Generating daily pipeline report...");
+    const now = new Date();
+    const sast = now.toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg", hour: "2-digit", minute: "2-digit" });
+    const today = now.toISOString().split("T")[0];
 
-    const today = new Date().toISOString().split("T")[0];
+    // Determine reporting window (since last report: ~6h windows for 3x/day)
+    const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();
     const todayStart = `${today}T00:00:00Z`;
 
-    // Today's new leads from outreach queue
-    const { count: newLeadsToday } = await supabase
-      .from("warm_outreach_queue")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", todayStart);
+    console.log(`📊 Pipeline status report — ${sast} SAST`);
 
-    // Emails sent today
-    const { count: emailsSentToday } = await supabase
-      .from("warm_outreach_queue")
-      .select("*", { count: "exact", head: true })
-      .gte("email_sent_at", todayStart);
+    // Gather all metrics in parallel
+    const [
+      { count: prospectsAddedPeriod },
+      { count: emailsSentPeriod },
+      { count: followUpsSentPeriod },
+      { count: pendingQueue },
+      { count: bookingsToday },
+      { data: replyData },
+      { data: failedSends },
+    ] = await Promise.all([
+      // Prospects added since last report (~6h)
+      supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
+        .gte("created_at", sixHoursAgo),
+      // Emails sent since last report
+      supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
+        .gte("email_sent_at", sixHoursAgo),
+      // Follow-ups sent since last report
+      supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
+        .gte("follow_up_sent_at", sixHoursAgo),
+      // Queue depth: pending prospects remaining
+      supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true })
+        .eq("status", "pending")
+        .not("contact_email", "is", null)
+        .neq("contact_email", ""),
+      // Bookings confirmed today
+      supabase.from("bookings").select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart),
+      // Reply status breakdown (today)
+      supabase.from("warm_outreach_queue").select("status")
+        .in("status", ["interested", "not_interested", "ooo", "unsubscribed", "replied"])
+        .gte("updated_at", todayStart),
+      // Failed sends (status = 'error' or similar)
+      supabase.from("warm_outreach_queue").select("company_name, contact_email, status")
+        .eq("status", "error")
+        .gte("updated_at", sixHoursAgo),
+    ]);
 
-    // Follow-ups sent today
-    const { count: followUpsSentToday } = await supabase
-      .from("warm_outreach_queue")
-      .select("*", { count: "exact", head: true })
-      .gte("follow_up_sent_at", todayStart);
+    // Classify replies
+    const replies = {
+      interested: 0,
+      not_interested: 0,
+      ooo: 0,
+      unsubscribed: 0,
+      other: 0,
+    };
+    for (const r of (replyData || []) as { status: string }[]) {
+      if (r.status === "interested") replies.interested++;
+      else if (r.status === "not_interested") replies.not_interested++;
+      else if (r.status === "ooo") replies.ooo++;
+      else if (r.status === "unsubscribed") replies.unsubscribed++;
+      else replies.other++;
+    }
+    const totalReplies = replies.interested + replies.not_interested + replies.ooo + replies.unsubscribed + replies.other;
+    const failedCount = (failedSends || []).length;
 
-    // Queue status counts
-    const { data: allQueue } = await supabase
-      .from("warm_outreach_queue")
-      .select("status");
-
-    const statusCounts: Record<string, number> = {};
-    (allQueue || []).forEach((q: { status: string }) => {
-      statusCounts[q.status] = (statusCounts[q.status] || 0) + 1;
+    // ── Post main status to #mission-control ──
+    await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
+      body: JSON.stringify({
+        eventType: "pipeline_status_report",
+        data: {
+          time: sast,
+          prospectsAdded: prospectsAddedPeriod || 0,
+          emailsSent: (emailsSentPeriod || 0) + (followUpsSentPeriod || 0),
+          repliesInterested: replies.interested,
+          repliesNotInterested: replies.not_interested,
+          repliesOOO: replies.ooo,
+          repliesUnsubscribed: replies.unsubscribed,
+          totalReplies,
+          bookings: bookingsToday || 0,
+          queueDepth: pendingQueue || 0,
+          failed: failedCount,
+        },
+      }),
     });
 
-    // Total contact form submissions today
-    const { count: contactFormsToday } = await supabase
-      .from("contact_form_submissions")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", todayStart);
+    // ── Post errors to #system-health if any ──
+    if (failedCount > 0) {
+      const failedList = (failedSends || []).slice(0, 5)
+        .map((f: any) => `• ${f.contact_email} @ ${f.company_name}`)
+        .join("\n");
 
-    // Tomorrow's bookings
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split("T")[0];
-    const { data: tomorrowBookings } = await supabase
-      .from("bookings")
-      .select("prospect_name, prospect_company, meeting_date")
-      .gte("meeting_date", `${tomorrowStr}T00:00:00Z`)
-      .lt("meeting_date", `${tomorrowStr}T23:59:59Z`);
-
-    const bookingsList = (tomorrowBookings || [])
-      .map((b: { prospect_name: string; prospect_company: string }) => `• ${b.prospect_name} (${b.prospect_company})`)
-      .join("\n") || "None scheduled";
-
-    const statusLines = Object.entries(statusCounts)
-      .map(([status, count]) => `• ${status}: ${count}`)
-      .join("\n");
-
-    const reportText = `📊 *Daily Pipeline Report — ${today}*
-
-*🔍 New Leads Found:* ${newLeadsToday || 0}
-*📧 Outreach Emails Sent:* ${emailsSentToday || 0}
-*🔄 Follow-ups Sent:* ${followUpsSentToday || 0}
-*📝 Contact Forms:* ${contactFormsToday || 0}
-
-*Pipeline Status:*
-${statusLines || "No queue data"}
-
-*Tomorrow's Meetings:*
-${bookingsList}`;
-
-    // Send to Slack #mission-control
-    try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${supabaseKey}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
-          channel: "mission-control",
-          blocks: [
-            { type: "header", text: { type: "plain_text", text: `📊 Daily Pipeline Report — ${today}` } },
-            {
-              type: "section",
-              text: {
-                type: "mrkdwn",
-                text: `*🔍 New Leads:* ${newLeadsToday || 0}  |  *📧 Emails Sent:* ${emailsSentToday || 0}  |  *🔄 Follow-ups:* ${followUpsSentToday || 0}  |  *📝 Contact Forms:* ${contactFormsToday || 0}`,
-              },
-            },
-            {
-              type: "section",
-              text: { type: "mrkdwn", text: `*Queue Status:*\n${statusLines || "Empty"}` },
-            },
-            {
-              type: "section",
-              text: { type: "mrkdwn", text: `*Tomorrow's Meetings:*\n${bookingsList}` },
-            },
-          ],
+          eventType: "system_error",
+          data: {
+            function: "Pipeline Send Failures",
+            error: `${failedCount} failed send(s) in the last 6h:\n${failedList}`,
+          },
         }),
       });
-    } catch (e) {
-      console.error("Slack notify failed:", e);
     }
 
-    // Also send email summary to Kevin
-    const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (resendKey) {
-      try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "LBD System <system@leadershipbydesign.co.za>",
-            to: ["kevin@leadershipbydesign.co.za"],
-            subject: `📊 Daily Pipeline Report — ${today}`,
-            html: `<div style="font-family: Georgia, serif; font-size: 15px; line-height: 1.8; color: #333; max-width: 600px;">
-              <h2>Daily Pipeline Report</h2>
-              <p><strong>New Leads Found:</strong> ${newLeadsToday || 0}</p>
-              <p><strong>Outreach Emails Sent:</strong> ${emailsSentToday || 0}</p>
-              <p><strong>Follow-ups Sent:</strong> ${followUpsSentToday || 0}</p>
-              <p><strong>Contact Forms:</strong> ${contactFormsToday || 0}</p>
-              <h3>Queue Status</h3>
-              <pre>${statusLines || "Empty"}</pre>
-              <h3>Tomorrow's Meetings</h3>
-              <pre>${bookingsList}</pre>
-            </div>`,
-          }),
-        });
-      } catch (e) {
-        console.error("Email report failed:", e);
-      }
-    }
-
-    console.log("📊 Daily report sent successfully");
+    console.log(`✅ Pipeline report posted — Sent: ${emailsSentPeriod || 0}, Queue: ${pendingQueue || 0}, Failed: ${failedCount}`);
 
     return new Response(
-      JSON.stringify({ success: true, report: reportText }),
+      JSON.stringify({
+        success: true,
+        prospectsAdded: prospectsAddedPeriod || 0,
+        emailsSent: (emailsSentPeriod || 0) + (followUpsSentPeriod || 0),
+        queueDepth: pendingQueue || 0,
+        bookings: bookingsToday || 0,
+        failed: failedCount,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

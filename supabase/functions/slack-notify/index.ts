@@ -278,10 +278,24 @@ function buildPipelineCompleteBlocks(data: Record<string, any>) {
       { type: 'mrkdwn', text: `*New Prospects Added:*\n${data.added || 0}` },
     ]},
     { type: 'section', fields: [
-      { type: 'mrkdwn', text: `*With Phone Numbers:*\n${data.withPhones || 0}` },
-      { type: 'mrkdwn', text: `*Status:*\n✅ Ready to call` },
+      { type: 'mrkdwn', text: `*Pages Scraped:*\n${data.pages_scraped || 0}` },
+      { type: 'mrkdwn', text: `*Domains Found:*\n${data.domains_discovered || 0}` },
     ]},
     { type: 'context', elements: [{ type: 'mrkdwn', text: `Auto-pipeline • ${sast()} SAST` }] },
+  ];
+}
+
+function buildPipelineStatusBlocks(data: Record<string, any>) {
+  const replyLine = data.totalReplies > 0
+    ? `🎯 Interested: ${data.repliesInterested} | 👎 Not interested: ${data.repliesNotInterested} | ✈️ OOO: ${data.repliesOOO} | 🚫 Unsub: ${data.repliesUnsubscribed}`
+    : 'No replies yet';
+
+  return [
+    { type: 'header', text: { type: 'plain_text', text: `📊 Pipeline Status — ${data.time || ''} SAST`, emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: `✅ Sent: ${data.emailsSent} | 🔍 Prospects added: ${data.prospectsAdded} | 📅 Booked: ${data.bookings} | 🔄 Queue: ${data.queueDepth} | ❌ Failed: ${data.failed}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*Replies today:* ${replyLine}` } },
+    ...(data.failed > 0 ? [{ type: 'section', text: { type: 'mrkdwn', text: `⚠️ *${data.failed} failed send(s)* — details in #system-health` } }] : []),
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Pipeline report • ${sast()} SAST` }] },
   ];
 }
 
@@ -384,6 +398,13 @@ const EVENT_CONFIG: Record<string, {
     icon: ':robot_face:',
     buildBlocks: buildPipelineCompleteBlocks,
     text: (d) => `Pipeline: ${d.added} prospects added from ${d.industry}`,
+  },
+  pipeline_status_report: {
+    channels: ['mission-control'],
+    username: 'LBD Pipeline Status',
+    icon: ':bar_chart:',
+    buildBlocks: buildPipelineStatusBlocks,
+    text: (d) => `✅ Sent: ${d.emailsSent} | 🎯 Interested: ${d.repliesInterested} | 📅 Booked: ${d.bookings} | 🔄 Queue: ${d.queueDepth} | ❌ Failed: ${d.failed}`,
   },
 };
 
