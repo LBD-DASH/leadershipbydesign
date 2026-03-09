@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, ChevronRight, Users, RefreshCw, Flame } from "lucide-react";
+import { CalendarIcon, Phone, RotateCcw, Lock, Loader2, LogOut, ChevronLeft, FileText, X, ChevronRight, Users, RefreshCw, Flame, ClipboardCheck } from "lucide-react";
 import { Label as FormLabel } from "@/components/ui/label";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CallQueue from "@/components/marketing/CallQueue";
+import NeedsAnalysisWizard from "@/components/admin/NeedsAnalysisWizard";
 import { MASTER_TOKEN } from "@/lib/adminAuth";
 
 type Screen =
@@ -141,7 +142,7 @@ export default function ColdCallPrompter() {
   const [showPdf, setShowPdf] = useState(false);
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
-  const [viewMode, setViewMode] = useState<'script' | 'queue'>('script');
+  const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs'>('script');
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -429,6 +430,15 @@ export default function ColdCallPrompter() {
                 <Flame className="h-3 w-3" />
                 Smart Queue
               </Button>
+              <Button
+                variant={viewMode === 'needs' ? 'default' : 'ghost'}
+                size="sm"
+                className="rounded-none text-xs gap-1 h-7"
+                onClick={() => setViewMode('needs')}
+              >
+                <ClipboardCheck className="h-3 w-3" />
+                Needs Analysis
+              </Button>
             </div>
             {screen !== "REP_NAME" && (
               <span className="text-xs text-muted-foreground">{form.repName}</span>
@@ -456,6 +466,15 @@ export default function ColdCallPrompter() {
         <div className="flex-1 overflow-y-auto px-4 py-6">
           <div className="max-w-3xl mx-auto">
             <CallQueue agentName={form.repName || 'Agent'} adminToken={MASTER_TOKEN} />
+          </div>
+        </div>
+      )}
+
+      {/* Needs Analysis View */}
+      {viewMode === 'needs' && (
+        <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="max-w-3xl mx-auto">
+            <NeedsAnalysisWizard compact />
           </div>
         </div>
       )}
