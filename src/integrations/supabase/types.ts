@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_projects: {
+        Row: {
+          created_at: string
+          emoji: string | null
+          id: string
+          notes: string | null
+          priority: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          notes?: string | null
+          priority?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          notes?: string | null
+          priority?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_settings: {
         Row: {
           id: string
