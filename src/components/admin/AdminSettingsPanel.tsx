@@ -122,7 +122,7 @@ export default function AdminSettingsPanel() {
             {runningProspecting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Running Apollo Search…
+                Searching for prospects…
               </>
             ) : (
               <>
