@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CallQueue from "@/components/marketing/CallQueue";
+import NeedsAnalysisWizard from "@/components/admin/NeedsAnalysisWizard";
 import { MASTER_TOKEN } from "@/lib/adminAuth";
 
 type Screen =
