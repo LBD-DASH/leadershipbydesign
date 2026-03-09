@@ -142,7 +142,7 @@ export default function ColdCallPrompter() {
   const [showPdf, setShowPdf] = useState(false);
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
-  const [viewMode, setViewMode] = useState<'script' | 'queue'>('script');
+  const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs'>('script');
 
   useEffect(() => {
     if (!isAuthenticated) return;
