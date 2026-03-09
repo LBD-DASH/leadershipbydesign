@@ -130,7 +130,7 @@ export default function LeaderAsCoachSales() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img src={leaderAsCoachImage} alt="Leadership coaching session" className="w-full h-full object-cover object-top" />
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/92 via-primary/95 to-primary" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-primary" />
           </div>
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 text-center">
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
