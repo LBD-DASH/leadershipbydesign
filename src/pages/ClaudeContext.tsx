@@ -27,6 +27,9 @@ export default function ClaudeContext() {
         projectsRes,
         activeSequencesRes,
         sequenceEmailsTodayRes,
+        step2Res,
+        step3Res,
+        step4Res,
       ] = await Promise.all([
         supabase.from('admin_settings').select('setting_value').eq('setting_key', 'outreach_campaign_mode').maybeSingle(),
         supabase.from('warm_lead_sequences').select('*', { count: 'exact', head: true }).eq('status', 'awaiting_first_contact'),
@@ -41,6 +44,9 @@ export default function ClaudeContext() {
         supabase.from('active_projects').select('*').order('priority', { ascending: true }),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('diagnostic_type', 'lac').gte('updated_at', today + 'T00:00:00'),
+        supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('sequence_step', 2).gte('sent_at', sevenDaysAgo),
+        supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('sequence_step', 3).gte('sent_at', sevenDaysAgo),
+        supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('sequence_step', 4).gte('sent_at', sevenDaysAgo),
       ]);
 
       const campaign = campaignRes.data?.setting_value || 'unknown';
@@ -62,12 +68,20 @@ Emails sent today: ${emailsTodayRes.count ?? 0}
 Interested replies today: – (reply monitor pending)
 Bookings this week: ${bookingsWeekRes.count ?? 0}
 LAC Assessments all time: ${lacAllRes.count ?? 0}
-Active sequences: ${activeSequencesRes.count ?? 0}
+Active LAC sequences: ${activeSequencesRes.count ?? 0}
 Follow-up emails sent today: ${sequenceEmailsTodayRes.count ?? 0}
+
+OUTREACH SEQUENCE (7d)
+Day 1 (initial): ${(emails7dRes.count ?? 0) - (step2Res.count ?? 0) - (step3Res.count ?? 0) - (step4Res.count ?? 0)}
+Day 4 (follow-up): ${step2Res.count ?? 0}
+Day 9 (one question): ${step3Res.count ?? 0}
+Day 16 (final note): ${step4Res.count ?? 0}
 
 SYSTEM STATUS
 Firecrawl scraper: check edge function logs
 Auto-outreach: check edge function logs
+Auto-follow-up: 4-step sequence (Day 1, 4, 9, 16) — active
+LAC nurture: active via lac-follow-up cron
 Gmail monitor: not yet connected
 Slack: connected via connector
 Google Tag firing: verify in GTM (GTM-TV3SFR3G)
