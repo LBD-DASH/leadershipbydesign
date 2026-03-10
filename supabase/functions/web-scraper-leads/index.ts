@@ -15,7 +15,6 @@ const QUALIFIED_INDUSTRIES = [
   "audit", "tax", "actuarial", "fund management", "stockbroking",
 ];
 
-// Industries/keywords that should NEVER enter the pipeline
 const DISQUALIFIED_KEYWORDS = [
   "transport", "logistics", "ngo", "non-profit", "nonprofit",
   "charity", "news", "media", "journalism", "association",
@@ -31,27 +30,32 @@ function classifyIndustry(
   scrapeSummary: string,
 ): { qualified: boolean; industry: string; reason: string } {
   const text = `${companyName} ${website} ${title} ${sourceKeyword} ${scrapeSummary}`.toLowerCase();
-
-  // Check disqualified first
   for (const kw of DISQUALIFIED_KEYWORDS) {
-    if (text.includes(kw)) {
-      return { qualified: false, industry: kw, reason: `Disqualified: matches "${kw}"` };
-    }
+    if (text.includes(kw)) return { qualified: false, industry: kw, reason: `Disqualified: matches "${kw}"` };
   }
-
-  // Check qualified
   for (const ind of QUALIFIED_INDUSTRIES) {
-    if (text.includes(ind)) {
-      return { qualified: true, industry: ind, reason: "" };
-    }
+    if (text.includes(ind)) return { qualified: true, industry: ind, reason: "" };
   }
-
-  // Default: disqualified (doesn't match any target industry)
   return { qualified: false, industry: "unknown", reason: "No matching target industry found" };
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SIGNAL-BASED SEARCH QUERIES — rotated daily, 4 per run
+// APOLLO SEARCH CONFIG — primary source for named contacts
+// ═══════════════════════════════════════════════════════════════
+const APOLLO_INDUSTRIES = [
+  "Financial Services", "Insurance", "Banking", "Accounting",
+  "Legal Services", "Management Consulting", "Investment Management",
+];
+
+const APOLLO_TITLES = [
+  "Head of HR", "HR Director", "HR Manager", "People Director",
+  "Chief People Officer", "L&D Manager", "Talent Lead",
+  "Head of People", "Learning and Development Manager",
+  "Head of Talent", "People & Culture Manager",
+];
+
+// ═══════════════════════════════════════════════════════════════
+// FIRECRAWL SIGNAL QUERIES — fallback for additional leads
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
   { query: '"HR Manager" OR "People Manager" "financial services" Johannesburg site:linkedin.com', tag: 'linkedin-hr-fsi' },
@@ -65,10 +69,8 @@ const SEARCH_QUERIES = [
   { query: 'site:pnet.co.za "HR Manager" OR "L&D Manager" financial services', tag: 'pnet-hr-fsi' },
   { query: 'site:careerjunction.co.za "HR" OR "people" manager insurance OR accounting', tag: 'careerjunction-hr' },
 ];
-
 const QUERIES_PER_RUN = 4;
 
-// Domains to always skip
 const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
   "tiktok.com", "pinterest.com", "reddit.com",
@@ -127,15 +129,11 @@ function isQualityEmail(email: string, companyDomain: string): boolean {
   if (!email || !email.includes("@")) return false;
   const prefix = email.split("@")[0].toLowerCase();
   const emailDomain = email.split("@")[1].toLowerCase();
-
   if (GENERIC_PREFIXES.some((g) => prefix === g || prefix.startsWith(g + "."))) return false;
-
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
-
   if (prefix.length < 3) return false;
   if (!prefix.includes(".") && !prefix.includes("_")) return false;
-
   return true;
 }
 
@@ -176,7 +174,7 @@ function passesHeadcountFilter(content: string): boolean {
     const match = content.match(p);
     if (match) {
       const count = parseInt(match[1].replace(/,/g, ""), 10);
-      if (count < 100 || count > 500) return false; // Updated: 100-500 preferred
+      if (count < 100 || count > 500) return false;
     }
   }
   return true;
@@ -192,6 +190,9 @@ function extractCompanyName(content: string, domain: string): string {
   return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
 }
 
+// ═══════════════════════════════════════════════════════════════
+// MAIN HANDLER
+// ═══════════════════════════════════════════════════════════════
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -201,24 +202,12 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
   const firecrawlKey = Deno.env.get("FIRECRAWL_API_KEY");
-
-  if (!firecrawlKey) {
-    return new Response(JSON.stringify({ error: "Missing FIRECRAWL_API_KEY" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
+  const apolloApiKey = Deno.env.get("APOLLO_API_KEY");
 
   try {
     console.log("🚀 web-scraper-leads invoked at", new Date().toISOString());
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    const startIdx = (dayOfYear * QUERIES_PER_RUN) % SEARCH_QUERIES.length;
-    const runQueries: typeof SEARCH_QUERIES = [];
-    for (let i = 0; i < QUERIES_PER_RUN; i++) {
-      runQueries.push(SEARCH_QUERIES[(startIdx + i) % SEARCH_QUERIES.length]);
-    }
 
-    console.log(`🔍 Signal search — ${runQueries.length} queries: ${runQueries.map(q => q.tag).join(", ")}`);
-
+    // Load existing emails and domains for dedup
     const { data: existingRows } = await supabase
       .from("warm_outreach_queue")
       .select("contact_email, company_website")
@@ -233,170 +222,293 @@ Deno.serve(async (req) => {
       }).filter(Boolean)
     );
 
-    let addedCount = 0;
-    let skippedDup = 0;
-    let skippedQuality = 0;
+    let apolloAdded = 0;
+    let apolloSkipped = 0;
+    let firecrawlAdded = 0;
+    let firecrawlSkippedDup = 0;
+    let firecrawlSkippedQuality = 0;
     let disqualifiedCount = 0;
-    let domainsDiscovered = 0;
-    let pagesScraped = 0;
     const industriesFound: string[] = [];
 
-    for (const sq of runQueries) {
-      console.log(`\n🔎 Query [${sq.tag}]: ${sq.query.substring(0, 80)}...`);
+    // ═══════════════════════════════════════════════════════════
+    // PHASE 1: APOLLO — primary source for named decision-makers
+    // ═══════════════════════════════════════════════════════════
+    if (apolloApiKey) {
+      // Rotate industry daily
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+      const industryIdx = dayOfYear % APOLLO_INDUSTRIES.length;
+      const targetIndustry = APOLLO_INDUSTRIES[industryIdx];
 
-      let searchResults: any[] = [];
+      console.log(`\n🔷 PHASE 1: Apollo search — ${targetIndustry}`);
+
       try {
-        const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
+        const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
           method: "POST",
-          headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ query: sq.query, limit: 10 }),
+          headers: { "Content-Type": "application/json", "X-Api-Key": apolloApiKey },
+          body: JSON.stringify({
+            page: 1,
+            per_page: 15,
+            person_titles: APOLLO_TITLES,
+            person_locations: ["Gauteng, South Africa", "South Africa"],
+            organization_num_employees_ranges: ["101-500"],
+            q_keywords: targetIndustry,
+          }),
         });
 
-        if (searchRes.ok) {
-          const searchData = await searchRes.json();
-          searchResults = searchData.data || searchData.results || [];
-          console.log(`  📊 Got ${searchResults.length} search results`);
+        if (!apolloRes.ok) {
+          const errText = await apolloRes.text();
+          console.error(`Apollo API error [${apolloRes.status}]: ${errText}`);
         } else {
-          console.error(`  ❌ Search failed: ${searchRes.status}`);
-          continue;
+          const apolloData = await apolloRes.json();
+          const people = apolloData.people || [];
+          console.log(`  📊 Apollo returned ${people.length} contacts`);
+
+          for (const p of people) {
+            const email = (p.email || "").toLowerCase().trim();
+            if (!email || !email.includes("@")) {
+              apolloSkipped++;
+              continue;
+            }
+
+            // Skip generic emails
+            const prefix = email.split("@")[0];
+            if (GENERIC_PREFIXES.some(g => prefix === g)) {
+              apolloSkipped++;
+              continue;
+            }
+
+            // Skip kevin@ and own domain
+            if (email.includes("kevin@") || email.includes("leadershipbydesign")) {
+              apolloSkipped++;
+              continue;
+            }
+
+            // Dedup
+            if (existingEmails.has(email)) {
+              apolloSkipped++;
+              continue;
+            }
+
+            const companyName = p.organization?.name || "";
+            const companyWebsite = p.organization?.website_url || "";
+            const contactName = `${p.first_name || ""} ${p.last_name || ""}`.trim();
+            const contactTitle = p.title || "";
+            const phone = p.phone_numbers?.[0]?.sanitized_number || "";
+            const linkedinUrl = p.linkedin_url || "";
+
+            // Industry classification
+            const classification = classifyIndustry(
+              companyName, companyWebsite, contactTitle, targetIndustry, ""
+            );
+
+            if (!classification.qualified) {
+              // Insert as disqualified for tracking
+              await supabase.from("warm_outreach_queue").insert({
+                company_name: companyName,
+                company_website: companyWebsite || null,
+                contact_name: contactName,
+                contact_email: email,
+                contact_title: contactTitle,
+                contact_phone: phone,
+                source_keyword: `apollo:${targetIndustry}`,
+                status: "disqualified",
+                industry: classification.industry,
+                disqualified: true,
+                disqualified_reason: classification.reason,
+              });
+              disqualifiedCount++;
+              continue;
+            }
+
+            const { error } = await supabase.from("warm_outreach_queue").insert({
+              company_name: companyName,
+              company_website: companyWebsite || null,
+              contact_name: contactName,
+              contact_email: email,
+              contact_title: contactTitle,
+              contact_phone: phone,
+              source_keyword: `apollo:${targetIndustry}`,
+              status: "pending",
+              industry: classification.industry,
+              score: 70, // Apollo contacts score higher — named decision-makers
+            });
+
+            if (!error) {
+              apolloAdded++;
+              existingEmails.add(email);
+              if (companyWebsite) {
+                try { existingDomains.add(getRootDomain(new URL(companyWebsite).hostname)); } catch {}
+              }
+              console.log(`  ✅ Apollo: ${contactName} (${contactTitle}) @ ${companyName} — ${email}`);
+              if (!industriesFound.includes(classification.industry)) industriesFound.push(classification.industry);
+            } else {
+              console.error(`  ❌ Insert error: ${error.message}`);
+            }
+          }
         }
       } catch (e) {
-        console.error(`  ❌ Search error:`, e);
-        continue;
+        console.error("Apollo search error:", e);
       }
 
-      const discoveredDomains = new Map<string, { url: string; title: string; snippet: string }>();
-      for (const result of searchResults) {
-        const url = result.url || result.link || "";
-        const domain = extractDomainFromUrl(url);
-        if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain)) continue;
-        discoveredDomains.set(domain, {
-          url,
-          title: result.title || "",
-          snippet: result.description || result.markdown || "",
-        });
-      }
-
-      domainsDiscovered += discoveredDomains.size;
-      console.log(`  🏢 ${discoveredDomains.size} new company domains found`);
-
-      for (const [domain, info] of discoveredDomains) {
-        if (existingDomains.has(domain)) { skippedDup++; continue; }
-
-        let bestEmails: string[] = [];
-        let pageContent = info.snippet;
-
-        if (!passesHeadcountFilter(info.snippet)) {
-          console.log(`  ⏭️ ${domain} — headcount outside 100-500`);
-          continue;
-        }
-
-        for (const path of CONTACT_PATHS) {
-          if (bestEmails.length >= 2) break;
-          try {
-            const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
-              body: JSON.stringify({
-                url: `https://${domain}${path}`,
-                formats: ["markdown"],
-                onlyMainContent: false,
-                timeout: 15000,
-              }),
-            });
-            pagesScraped++;
-
-            if (scrapeRes.ok) {
-              const scrapeData = await scrapeRes.json();
-              const content = scrapeData.data?.markdown || scrapeData.markdown || "";
-              pageContent += " " + content;
-
-              if (!passesHeadcountFilter(content)) {
-                console.log(`  ⏭️ ${domain} — headcount outside 100-500 (from ${path})`);
-                bestEmails = [];
-                break;
-              }
-
-              const emails = extractEmails(content).filter((e) => isQualityEmail(e, domain));
-              for (const email of emails) {
-                if (!bestEmails.includes(email)) bestEmails.push(email);
-              }
-
-              if (bestEmails.length > 0) {
-                console.log(`  📧 Found ${bestEmails.length} email(s) on ${domain}${path}`);
-                break;
-              }
-            }
-          } catch { /* skip failed scrape */ }
-        }
-
-        // ── INDUSTRY QUALIFICATION GATE ──
-        const companyName = extractCompanyName(pageContent, domain);
-        const classification = classifyIndustry(companyName, domain, "", sq.tag, pageContent.substring(0, 2000));
-
-        if (!classification.qualified) {
-          console.log(`  ❌ Disqualified: ${companyName} — ${classification.reason}`);
-          disqualifiedCount++;
-
-          // Still insert but mark as disqualified for tracking
-          if (bestEmails.length > 0) {
-            await supabase.from("warm_outreach_queue").insert({
-              company_name: companyName,
-              company_website: `https://${domain}`,
-              contact_name: extractNameFromEmail(bestEmails[0]),
-              contact_email: bestEmails[0],
-              source_keyword: `signal-search:${sq.tag}`,
-              status: "disqualified",
-              industry: classification.industry,
-              disqualified: true,
-              disqualified_reason: classification.reason,
-            });
-          }
-          continue;
-        }
-
-        if (!industriesFound.includes(classification.industry)) {
-          industriesFound.push(classification.industry);
-        }
-
-        for (const email of bestEmails.slice(0, 2)) {
-          if (existingEmails.has(email)) { skippedDup++; continue; }
-
-          const title = findTitleNearEmail(pageContent, email);
-          const contactName = extractNameFromEmail(email);
-
-          const { error } = await supabase.from("warm_outreach_queue").insert({
-            company_name: companyName,
-            company_website: `https://${domain}`,
-            contact_name: contactName,
-            contact_title: title || "",
-            contact_email: email,
-            source_keyword: `signal-search:${sq.tag}`,
-            status: "pending",
-            industry: classification.industry,
-            score: 60, // Default score for scraper leads
-          });
-
-          if (!error) {
-            addedCount++;
-            existingEmails.add(email);
-            existingDomains.add(domain);
-            console.log(`  ✅ Added: ${email} (${contactName}) @ ${companyName} [${classification.industry}]`);
-          } else {
-            console.error(`  ❌ Insert error for ${email}:`, error.message);
-          }
-        }
-
-        if (bestEmails.length === 0) {
-          skippedQuality++;
-        }
-      }
+      console.log(`  📊 Apollo result: ${apolloAdded} added, ${apolloSkipped} skipped`);
+    } else {
+      console.log("⚠️ APOLLO_API_KEY not set — skipping Phase 1");
     }
 
-    const summary = `Signal Search Prospecting\nQueries: ${runQueries.map(q => q.tag).join(", ")}\nDomains found: ${domainsDiscovered} | Pages scraped: ${pagesScraped} | Added: ${addedCount} | Disqualified: ${disqualifiedCount} | Dup: ${skippedDup} | No email: ${skippedQuality}`;
+    // ═══════════════════════════════════════════════════════════
+    // PHASE 2: FIRECRAWL — fallback for additional leads
+    // ═══════════════════════════════════════════════════════════
+    if (firecrawlKey) {
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+      const startIdx = (dayOfYear * QUERIES_PER_RUN) % SEARCH_QUERIES.length;
+      const runQueries: typeof SEARCH_QUERIES = [];
+      for (let i = 0; i < QUERIES_PER_RUN; i++) {
+        runQueries.push(SEARCH_QUERIES[(startIdx + i) % SEARCH_QUERIES.length]);
+      }
+
+      console.log(`\n🔶 PHASE 2: Firecrawl signal search — ${runQueries.map(q => q.tag).join(", ")}`);
+
+      let domainsDiscovered = 0;
+      let pagesScraped = 0;
+
+      for (const sq of runQueries) {
+        console.log(`\n  🔎 Query [${sq.tag}]`);
+
+        let searchResults: any[] = [];
+        try {
+          const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ query: sq.query, limit: 10 }),
+          });
+
+          if (searchRes.ok) {
+            const searchData = await searchRes.json();
+            searchResults = searchData.data || searchData.results || [];
+            console.log(`    📊 Got ${searchResults.length} search results`);
+          } else {
+            console.error(`    ❌ Search failed: ${searchRes.status}`);
+            continue;
+          }
+        } catch (e) {
+          console.error(`    ❌ Search error:`, e);
+          continue;
+        }
+
+        const discoveredDomains = new Map<string, { url: string; title: string; snippet: string }>();
+        for (const result of searchResults) {
+          const url = result.url || result.link || "";
+          const domain = extractDomainFromUrl(url);
+          if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain)) continue;
+          discoveredDomains.set(domain, {
+            url, title: result.title || "", snippet: result.description || result.markdown || "",
+          });
+        }
+        domainsDiscovered += discoveredDomains.size;
+
+        for (const [domain, info] of discoveredDomains) {
+          if (existingDomains.has(domain)) { firecrawlSkippedDup++; continue; }
+
+          let bestEmails: string[] = [];
+          let pageContent = info.snippet;
+
+          if (!passesHeadcountFilter(info.snippet)) continue;
+
+          for (const path of CONTACT_PATHS) {
+            if (bestEmails.length >= 2) break;
+            try {
+              const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  url: `https://${domain}${path}`,
+                  formats: ["markdown"],
+                  onlyMainContent: false,
+                  timeout: 15000,
+                }),
+              });
+              pagesScraped++;
+
+              if (scrapeRes.ok) {
+                const scrapeData = await scrapeRes.json();
+                const content = scrapeData.data?.markdown || scrapeData.markdown || "";
+                pageContent += " " + content;
+
+                if (!passesHeadcountFilter(content)) { bestEmails = []; break; }
+
+                const emails = extractEmails(content).filter((e) => isQualityEmail(e, domain));
+                for (const email of emails) {
+                  if (!bestEmails.includes(email)) bestEmails.push(email);
+                }
+                if (bestEmails.length > 0) break;
+              }
+            } catch { /* skip */ }
+          }
+
+          const companyName = extractCompanyName(pageContent, domain);
+          const classification = classifyIndustry(companyName, domain, "", sq.tag, pageContent.substring(0, 2000));
+
+          if (!classification.qualified) {
+            disqualifiedCount++;
+            if (bestEmails.length > 0) {
+              await supabase.from("warm_outreach_queue").insert({
+                company_name: companyName,
+                company_website: `https://${domain}`,
+                contact_name: extractNameFromEmail(bestEmails[0]),
+                contact_email: bestEmails[0],
+                source_keyword: `signal-search:${sq.tag}`,
+                status: "disqualified",
+                industry: classification.industry,
+                disqualified: true,
+                disqualified_reason: classification.reason,
+              });
+            }
+            continue;
+          }
+
+          if (!industriesFound.includes(classification.industry)) industriesFound.push(classification.industry);
+
+          for (const email of bestEmails.slice(0, 2)) {
+            if (existingEmails.has(email)) { firecrawlSkippedDup++; continue; }
+            const title = findTitleNearEmail(pageContent, email);
+            const contactName = extractNameFromEmail(email);
+
+            const { error } = await supabase.from("warm_outreach_queue").insert({
+              company_name: companyName,
+              company_website: `https://${domain}`,
+              contact_name: contactName,
+              contact_title: title || "",
+              contact_email: email,
+              source_keyword: `signal-search:${sq.tag}`,
+              status: "pending",
+              industry: classification.industry,
+              score: 60,
+            });
+
+            if (!error) {
+              firecrawlAdded++;
+              existingEmails.add(email);
+              existingDomains.add(domain);
+              console.log(`    ✅ Firecrawl: ${email} @ ${companyName}`);
+            }
+          }
+
+          if (bestEmails.length === 0) firecrawlSkippedQuality++;
+        }
+      }
+
+      console.log(`  📊 Firecrawl result: ${firecrawlAdded} added, ${domainsDiscovered} domains, ${pagesScraped} pages`);
+    } else {
+      console.log("⚠️ FIRECRAWL_API_KEY not set — skipping Phase 2");
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // SUMMARY & SLACK
+    // ═══════════════════════════════════════════════════════════
+    const totalAdded = apolloAdded + firecrawlAdded;
+    const summary = `Lead Prospecting Complete\n🔷 Apollo: ${apolloAdded} added (${apolloSkipped} skipped)\n🔶 Firecrawl: ${firecrawlAdded} added\n❌ Disqualified: ${disqualifiedCount}\n🏭 Industries: ${industriesFound.join(", ") || "none"}`;
     console.log(`\n✅ ${summary}`);
 
-    // Slack notification
     try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
@@ -404,13 +516,11 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           eventType: "daily_pipeline_complete",
           data: {
-            industry: `Signal Search (${industriesFound.join(", ") || "none"})`,
-            added: addedCount,
+            industry: `Apollo + Signal Search (${industriesFound.join(", ") || "none"})`,
+            added: totalAdded,
+            apollo_added: apolloAdded,
+            firecrawl_added: firecrawlAdded,
             disqualified: disqualifiedCount,
-            domains_discovered: domainsDiscovered,
-            pages_scraped: pagesScraped,
-            skipped_dup: skippedDup,
-            skipped_no_email: skippedQuality,
           },
         }),
       });
@@ -419,30 +529,28 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        queries_used: runQueries.map(q => q.tag),
-        domains_discovered: domainsDiscovered,
-        pages_scraped: pagesScraped,
-        prospects_added: addedCount,
+        apollo_added: apolloAdded,
+        apollo_skipped: apolloSkipped,
+        firecrawl_added: firecrawlAdded,
         disqualified: disqualifiedCount,
+        total_added: totalAdded,
         industries: industriesFound,
-        skipped_duplicate: skippedDup,
-        skipped_no_email: skippedQuality,
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : "Unknown error";
     console.error("web-scraper-leads error:", errMsg);
     try {
-      await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/slack-notify`, {
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({ eventType: "system_error", data: { function: "web-scraper-leads", error: errMsg } }),
       });
     } catch { /* best effort */ }
     return new Response(
-      JSON.stringify({ success: false, error: errMsg }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ error: errMsg }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });
