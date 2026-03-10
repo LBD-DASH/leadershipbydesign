@@ -1,97 +1,84 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Phone } from "lucide-react";
-import { motion } from "framer-motion";
-import InterestModal from "@/components/shared/InterestModal";
 import heroImage from "@/assets/hero-leadership-team.jpg";
 import { useBookingLink } from "@/hooks/useBookingLink";
+import { trackScheduleCallClick, trackCTAClick } from "@/utils/gtmEvents";
 
 export default function Hero() {
-  const [showInterestModal, setShowInterestModal] = useState(false);
   const bookingLink = useBookingLink();
 
   return (
-    <>
+    <div className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[85vh] flex flex-col overflow-hidden">
       <div
-        className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[85vh] flex flex-col overflow-hidden"
-      >
-        {/* Background Image with Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `linear-gradient(135deg, rgba(58, 124, 165, 0.85) 0%, rgba(45, 99, 132, 0.75) 100%), url('${heroImage}')`,
-          }}
-        />
-        
-        {/* Main Content - Centered */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-white/70 mb-2 sm:mb-4 font-medium">
-              🇿🇦 South Africa's Manager Coaching Specialist
-            </p>
-            <h1
-              className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-6 leading-tight tracking-tight px-2"
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(135deg, rgba(20, 50, 70, 0.92) 0%, rgba(30, 65, 90, 0.88) 100%), url('${heroImage}')`,
+        }}
+      />
+
+      <div className="relative z-10 flex-1 flex items-center justify-center pt-8 sm:pt-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs sm:text-sm uppercase tracking-widest text-white/60 mb-3 sm:mb-5 font-medium">
+            🇿🇦 South Africa's Manager Coaching Specialist
+          </p>
+
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight px-2">
+            Your managers are managing.{" "}
+            <span className="text-white/70">They're not developing people.</span>
+            <br className="hidden sm:block" />
+            <span className="block mt-2 text-white">That's the gap costing you most.</span>
+          </h1>
+
+          <p className="text-sm sm:text-lg md:text-xl text-white/80 max-w-3xl mx-auto mb-6 sm:mb-10 px-4 font-light leading-relaxed">
+            Leadership by Design works with financial services and professional services firms
+            to install coaching capability into their management layer — structured, practical,
+            and proven over 11 years.
+          </p>
+
+          <div className="mb-4 sm:mb-6">
+            <a
+              href={bookingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackScheduleCallClick({ source: "homepage_hero" })}
             >
-              Turn Your Managers Into Coaches in 90 Days
-            </h1>
-            
-            <p
-              className="text-sm sm:text-lg md:text-2xl text-white/85 max-w-3xl mx-auto mb-4 sm:mb-8 px-4 font-light leading-relaxed"
-            >
-              The 90-Day Manager Coaching Accelerator — a proven system that transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention.
-            </p>
-            
-            {/* Primary CTA - Book a Discovery Call */}
-            <div
-              className="mb-4 sm:mb-6"
-            >
-              <a href={bookingLink} target="_blank" rel="noopener noreferrer">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
-                >
-                  <Phone className="mr-3 w-5 h-5" />
-                  Book a Discovery Call
-                  <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </a>
-            </div>
-            
-            {/* Secondary CTAs */}
-            <div
-              className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4"
-            >
-              <Link to="/leader-as-coach" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
-                >
-                  How Coaching-Ready Is Your Management Layer?
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link to="/leadership-diagnostic" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
-                >
-                  Free Leader Diagnostic
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-xl font-bold rounded-full shadow-2xl transition-all duration-300 group w-full sm:w-auto"
+              >
+                <Phone className="mr-3 w-5 h-5" />
+                Book a Discovery Call
+                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </a>
           </div>
+
+          <Link
+            to="/leader-as-coach-diagnostic"
+            onClick={() => trackCTAClick({ cta_label: "Coaching Readiness Assessment", cta_location: "homepage_hero" })}
+          >
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:border-white/50 px-5 sm:px-8 py-3 sm:py-5 text-xs sm:text-base font-medium rounded-full transition-all duration-300 group"
+            >
+              How Coaching-Ready Is Your Management Layer?
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </div>
 
-      <InterestModal 
-        open={showInterestModal} 
-        onOpenChange={setShowInterestModal}
-        context="Homepage Hero"
-      />
-    </>
+      {/* Social proof bar */}
+      <div className="relative z-10 py-4 sm:py-6 border-t border-white/10">
+        <div className="max-w-4xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-12 text-white/70 text-xs sm:text-sm font-medium tracking-wide">
+          <span>4,000+ Leaders</span>
+          <span>50+ Organisations</span>
+          <span>750+ Programmes</span>
+          <span>11 Years</span>
+        </div>
+      </div>
+    </div>
   );
 }
