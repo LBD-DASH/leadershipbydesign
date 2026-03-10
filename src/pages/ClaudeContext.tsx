@@ -11,8 +11,8 @@ export default function ClaudeContext() {
       const today = format(now, 'yyyy-MM-dd');
       const sevenDaysAgo = format(subDays(now, 7), "yyyy-MM-dd'T'00:00:00");
       const weekStart = format(startOfWeek(now, { weekStartsOn: 1 }), "yyyy-MM-dd'T'00:00:00");
+      const last24h = format(subDays(now, 1), "yyyy-MM-dd'T'HH:mm:ss");
 
-      // Parallel queries
       const [
         campaignRes,
         queueRes,
@@ -25,6 +25,8 @@ export default function ClaudeContext() {
         bookings7dRes,
         contacts7dRes,
         projectsRes,
+        activeSequencesRes,
+        sequenceEmailsTodayRes,
       ] = await Promise.all([
         supabase.from('admin_settings').select('setting_value').eq('setting_key', 'outreach_campaign_mode').maybeSingle(),
         supabase.from('warm_lead_sequences').select('*', { count: 'exact', head: true }).eq('status', 'awaiting_first_contact'),
@@ -37,6 +39,8 @@ export default function ClaudeContext() {
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('contact_form_submissions').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('active_projects').select('*').order('priority', { ascending: true }),
+        supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+        supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('diagnostic_type', 'lac').gte('updated_at', today + 'T00:00:00'),
       ]);
 
       const campaign = campaignRes.data?.setting_value || 'unknown';
@@ -50,14 +54,16 @@ Last updated: ${format(now, 'yyyy-MM-dd HH:mm')} SAST
 COMMERCIAL OFFER
 Primary: Leader as Coach — 90-Day Manager Coaching Accelerator
 Campaign mode: ${campaign.replace(/_/g, ' ')}
-Target: HR Directors, L&D Heads at 100-500 person FSI/Professional Services firms SA
+Target: HR Directors, L&D Heads, 100-500 person FSI/Professional Services SA
 
-PIPELINE — LIVE STATS
-Queue depth (pending): ${queueRes.count ?? 0}
+PIPELINE LIVE STATS
+Queue pending: ${queueRes.count ?? 0}
 Emails sent today: ${emailsTodayRes.count ?? 0}
 Interested replies today: – (reply monitor pending)
 Bookings this week: ${bookingsWeekRes.count ?? 0}
-LAC Assessments completed (all time): ${lacAllRes.count ?? 0}
+LAC Assessments all time: ${lacAllRes.count ?? 0}
+Active sequences: ${activeSequencesRes.count ?? 0}
+Follow-up emails sent today: ${sequenceEmailsTodayRes.count ?? 0}
 
 SYSTEM STATUS
 Firecrawl scraper: check edge function logs
@@ -88,6 +94,7 @@ WEBSITE PAGES LIVE
 /products — Products store
 /contact — Contact form
 /blog — Blog
+/claude-context — This page
 
 FRAMEWORKS
 SHIFT: Self-Management, Human Intelligence, Innovation, Focus, Thinking, Your AI Edge
