@@ -103,8 +103,8 @@ export default function LeaderAsCoachSales() {
   return (
     <>
       <SEO
-        title="Leader as Coach — 90-Day Manager Coaching Accelerator | Leadership by Design"
-        description="Your managers are managing, not coaching. The 90-Day Manager Coaching Accelerator installs coaching capability into your management layer — structured, practical, and proven across 50+ organisations."
+        title="Leader as Coach — 90-Day Manager Coaching Accelerator | South Africa"
+        description="The only structured manager coaching programme built for financial services and professional services firms in South Africa. HR Directors — book a discovery call."
         canonicalUrl="/leader-as-coach"
         ogImage="https://leadershipbydesign.co/og-leader-as-coach.jpg"
         keywords="manager coaching programme, leader as coach, coaching capability, manager training South Africa, HR leadership development, financial services coaching"

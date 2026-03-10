@@ -169,8 +169,8 @@ export default function LeaderAsCoachDiagnostic() {
   return (
     <>
       <SEO
-        title="Leader as Coach Readiness Assessment | Leadership by Design"
-        description="Assess your management layer's coaching readiness in under 5 minutes. Get a clear profile and actionable recommendations for building a coaching culture."
+        title="Free Manager Coaching Readiness Assessment | Leadership by Design"
+        description="Is your management layer coaching or just managing? Answer 15 questions and find out. Free for HR Directors and L&D Heads in South African financial services."
         canonicalUrl="/leader-as-coach-diagnostic"
         keywords="leader as coach assessment, coaching readiness, management coaching, leadership development, South Africa"
       />

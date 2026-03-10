@@ -41,6 +41,24 @@ export function trackDiagnosticComplete(meta: { diagnostic_type: string }) {
   });
 }
 
+/** Fires when a user starts a diagnostic */
+export function trackDiagnosticStarted(meta: { diagnostic_type: string }) {
+  push({
+    event: 'diagnostic_started',
+    event_category: 'engagement',
+    diagnostic_type: meta.diagnostic_type,
+  });
+}
+
+/** Fires when a user abandons a diagnostic after starting (called after timeout) */
+export function trackDiagnosticAbandoned(meta: { diagnostic_type: string }) {
+  push({
+    event: 'diagnostic_abandoned',
+    event_category: 'engagement',
+    diagnostic_type: meta.diagnostic_type,
+  });
+}
+
 /** Fires when a user downloads a lead magnet */
 export function trackLeadMagnetDownload(meta: { lead_magnet: string }) {
   push({
@@ -50,7 +68,7 @@ export function trackLeadMagnetDownload(meta: { lead_magnet: string }) {
   });
 }
 
-/** Fires when a CTA to schedule a call is clicked (already used in Leader as Coach) */
+/** Fires when a CTA to schedule a call is clicked */
 export function trackScheduleCallClick(meta?: { source?: string }) {
   push({
     event: 'schedule_call_click',
@@ -64,6 +82,24 @@ export function trackCTAClick(meta: { cta_label: string; cta_location?: string; 
   push({
     event: 'cta_click',
     event_category: 'engagement',
+    ...meta,
+  });
+}
+
+/** Fires when a high-intent page is viewed multiple times in a session */
+export function trackHighIntentPageView(meta: { page: string; view_count: number }) {
+  push({
+    event: 'high_intent_page_view',
+    event_category: 'intent',
+    ...meta,
+  });
+}
+
+/** Fires when user scrolls past 80% of a key page without converting */
+export function trackBookingIntent(meta: { page: string }) {
+  push({
+    event: 'booking_intent',
+    event_category: 'intent',
     ...meta,
   });
 }
