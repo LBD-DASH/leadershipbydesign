@@ -179,7 +179,7 @@ function parseXmlCaptions(text: string): string {
   return segments.join(" ").replace(/\s+/g, " ").trim();
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

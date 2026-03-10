@@ -363,7 +363,7 @@ function generateCoolLeadEmail(data: LeadNotificationRequest): string {
 </html>`;
 }
 
-serve(async (req: Request): Promise<Response> => {
+Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

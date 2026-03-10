@@ -42,7 +42,7 @@ Kevin Britz helps organisations transform managers into leaders who scale busine
 - If you don't know something, offer to connect them with Kevin
 - IMPORTANT: When the conversation reaches a point where human assistance would be valuable, end your message with: "Would you be able to point me to the correct person to chat to with regards to this?" to help gather lead information`;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

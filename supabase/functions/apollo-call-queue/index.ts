@@ -10,7 +10,7 @@ const corsHeaders = {
  * Returns prioritized call queue with full context for agents
  * Also handles queue actions: assign, complete, skip
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }

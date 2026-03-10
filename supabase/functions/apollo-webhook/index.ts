@@ -10,7 +10,7 @@ const corsHeaders = {
  * Receives events from Apollo via Zapier/Make/direct webhook
  * Events: contact_added, email_sent, email_opened, email_clicked, email_replied, email_bounced
  */
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
