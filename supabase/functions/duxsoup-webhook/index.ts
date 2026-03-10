@@ -145,11 +145,19 @@ Deno.serve(async (req) => {
             if (contactEmail && contactEmail.includes('@')) {
               const { data: existing } = await supabase
                 .from('warm_outreach_queue')
-                .select('id')
+                .select('id, score')
                 .eq('contact_email', contactEmail)
                 .limit(1);
 
-              if (!existing?.length) {
+              if (existing?.length) {
+                // Bump score by 15 and add note
+                const newScore = Math.min((existing[0].score || 0) + 15, 100);
+                await supabase.from('warm_outreach_queue').update({
+                  score: newScore,
+                  updated_at: new Date().toISOString(),
+                }).eq('id', existing[0].id);
+                results.push(`bumped:${contactName}:+15`);
+              } else {
                 await supabase.from('warm_outreach_queue').insert({
                   company_name: contact.company || '',
                   contact_name: contactName,
@@ -159,11 +167,9 @@ Deno.serve(async (req) => {
                   source_keyword: `duxsoup:${resolvedEventType}`,
                   status: 'pending',
                   industry: contact.industry || '',
-                  score: resolvedEventType === 'connection_accept' ? 75 : 65,
+                  score: resolvedEventType === 'connection_accept' ? 70 : 65,
                 });
                 results.push(`queued:${contactName}`);
-              } else {
-                results.push(`dup:${contactName}`);
               }
             }
 
