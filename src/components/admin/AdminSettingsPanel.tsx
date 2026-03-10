@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Save, Loader2, Megaphone, Rocket } from 'lucide-react';
+import { Settings, Save, Loader2, Megaphone, Rocket, Target } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CAMPAIGN_MODES = [
@@ -22,6 +22,7 @@ export default function AdminSettingsPanel() {
   const [saving, setSaving] = useState(false);
   const [savingCampaign, setSavingCampaign] = useState(false);
   const [runningProspecting, setRunningProspecting] = useState(false);
+  const [runningApolloImport, setRunningApolloImport] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -92,6 +93,26 @@ export default function AdminSettingsPanel() {
     setRunningProspecting(false);
   };
 
+  const runApolloImport = async () => {
+    setRunningApolloImport(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('apollo-prospect-import', {
+        body: {},
+      });
+
+      if (error) {
+        toast.error(`Apollo import failed: ${error.message}`);
+      } else if (data?.success) {
+        toast.success(`Apollo import complete: ${data.added} contacts added to queue (${data.skipped_duplicate} duplicates skipped)`);
+      } else {
+        toast.error(data?.error || 'Apollo import returned an error');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to run Apollo import: ${err.message}`);
+    }
+    setRunningApolloImport(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-32">
@@ -133,6 +154,36 @@ export default function AdminSettingsPanel() {
           </Button>
           <p className="text-xs text-muted-foreground mt-2">
             Runs automatically at 7:00 AM SAST. Pipeline status reports post to Slack at 07:00, 13:00, and 18:00 SAST.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Target className="w-4 h-4 text-primary" />
+            <CardTitle className="text-base">Apollo Decision-Maker Import</CardTitle>
+          </div>
+          <CardDescription>
+            Pulls 50 named HR/L&D decision-makers from Apollo.io (Financial Services, Insurance, Banking, Accounting, Legal, Professional Services — SA, 100-500 employees). Feeds directly into the outreach queue.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={runApolloImport} disabled={runningApolloImport} className="w-full" variant="outline">
+            {runningApolloImport ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Importing from Apollo…
+              </>
+            ) : (
+              <>
+                <Target className="w-4 h-4 mr-2" />
+                Run Apollo Import Now
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Imports up to 50 qualified contacts per run. Results posted to #mission-control.
           </p>
         </CardContent>
       </Card>
