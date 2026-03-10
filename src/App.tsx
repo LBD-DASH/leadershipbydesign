@@ -92,6 +92,7 @@ import LeaderAsCoachDiagnostic from "./pages/LeaderAsCoachDiagnostic";
 import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
 import ClaudeContext from "./pages/ClaudeContext";
 import GTMPageViewTracker from "./components/GTMPageViewTracker";
+import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
 const queryClient = new QueryClient();
 
 const App = () => (
