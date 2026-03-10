@@ -129,6 +129,7 @@ export default function LeaderAsCoachDiagnostic() {
 
       // Auto-feed into warm_outreach_queue as high-priority lead
       try {
+        const queueScore = version === 'hr_leader' ? 85 : 70;
         await supabase
           .from('warm_outreach_queue' as any)
           .insert({
@@ -136,13 +137,32 @@ export default function LeaderAsCoachDiagnostic() {
             contact_name: data.name,
             contact_email: data.email,
             contact_title: data.jobTitle,
-            source_keyword: `lac-assessment:${version}`,
+            source_keyword: `diagnostic:lac:${version}`,
             status: 'pending',
-            score: 80,
+            score: queueScore,
             industry: 'assessment-lead',
           } as any);
       } catch (pipelineErr) {
         console.error('Pipeline insert failed:', pipelineErr);
+      }
+
+      // Create LAC follow-up nurture sequence
+      try {
+        const firstSendAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+        await supabase
+          .from('diagnostic_nurture_sequences' as any)
+          .insert({
+            diagnostic_submission_id: (inserted as any)?.id || null,
+            diagnostic_type: 'lac',
+            lead_email: data.email,
+            lead_name: data.name,
+            primary_result: result.profile,
+            current_step: 1,
+            next_send_at: firstSendAt.toISOString(),
+            status: 'active',
+          } as any);
+      } catch (nurtureErr) {
+        console.error('Nurture sequence creation failed:', nurtureErr);
       }
 
       // Process lead (AI analysis + notifications) non-blocking
