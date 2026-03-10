@@ -18,13 +18,6 @@ Deno.serve(async (req) => {
   const headers = { ...corsHeaders, 'Content-Type': 'application/json' };
 
   try {
-    // Validate webhook secret
-    const webhookSecret = req.headers.get('x-webhook-secret');
-    const expectedSecret = Deno.env.get('DUXSOUP_WEBHOOK_SECRET');
-    if (!webhookSecret || webhookSecret.trim() !== expectedSecret?.trim()) {
-      console.error('Dux-Soup webhook: unauthorized request');
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers });
-    }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
