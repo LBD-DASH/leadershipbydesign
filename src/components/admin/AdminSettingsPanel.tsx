@@ -93,6 +93,26 @@ export default function AdminSettingsPanel() {
     setRunningProspecting(false);
   };
 
+  const runApolloImport = async () => {
+    setRunningApolloImport(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('apollo-prospect-import', {
+        body: {},
+      });
+
+      if (error) {
+        toast.error(`Apollo import failed: ${error.message}`);
+      } else if (data?.success) {
+        toast.success(`Apollo import complete: ${data.added} contacts added to queue (${data.skipped_duplicate} duplicates skipped)`);
+      } else {
+        toast.error(data?.error || 'Apollo import returned an error');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to run Apollo import: ${err.message}`);
+    }
+    setRunningApolloImport(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-32">
