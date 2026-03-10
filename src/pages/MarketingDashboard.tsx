@@ -24,6 +24,7 @@ import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
 import CallLogsPanel from '@/components/admin/CallLogsPanel';
 import SalesPipeline from '@/components/marketing/SalesPipeline';
 import GA4Analytics from '@/components/marketing/GA4Analytics';
+import SourceAttribution from '@/components/marketing/SourceAttribution';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
