@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
+import { useDiagnosticTracking } from "@/hooks/useIntentTracking";
 
 type Stage = 'version-select' | 'questionnaire' | 'capture' | 'results';
 
