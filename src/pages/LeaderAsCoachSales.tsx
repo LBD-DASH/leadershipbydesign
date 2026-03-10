@@ -25,8 +25,11 @@ import kevinImage from "@/assets/kevin-britz-facilitator.jpg";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import productTeamHandsAbove from "@/assets/product-team-hands-above.jpg";
 import { useBookingLink } from "@/hooks/useBookingLink";
+import { useHighIntentTracking, useBookingIntentTracking } from "@/hooks/useIntentTracking";
 
 export default function LeaderAsCoachSales() {
+  useHighIntentTracking();
+  useBookingIntentTracking();
   const [bookingOpen, setBookingOpen] = useState(false);
   const bookingLink = useBookingLink();
 

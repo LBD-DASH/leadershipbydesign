@@ -131,6 +131,20 @@ function PipelineStatus() {
             <p className="text-xs text-muted-foreground">Bookings This Week</p>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <ClipboardCheck className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
+            <p className="text-2xl font-bold text-foreground">{lacAssessments ?? '–'}</p>
+            <p className="text-xs text-muted-foreground">LAC Assessments</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <Mail className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
+            <p className="text-2xl font-bold text-foreground">{lacSequencesActive ?? '–'}</p>
+            <p className="text-xs text-muted-foreground">Active Sequences</p>
+          </CardContent>
+        </Card>
         <Card className="border-primary bg-primary/5">
           <CardContent className="pt-4 pb-4 text-center">
             <Activity className="w-5 h-5 mx-auto text-primary mb-1" />

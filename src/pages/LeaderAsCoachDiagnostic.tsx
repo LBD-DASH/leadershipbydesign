@@ -35,6 +35,10 @@ export default function LeaderAsCoachDiagnostic() {
   const [userData, setUserData] = useState<LeadData | null>(null);
   const utmParams = useUtmParams();
 
+  const hasStarted = stage !== 'version-select';
+  const hasCompleted = stage === 'results';
+  useDiagnosticTracking('leader-as-coach', hasStarted, hasCompleted);
+
   const handleVersionSelect = (v: LACVersion) => {
     setVersion(v);
     setStage('questionnaire');
