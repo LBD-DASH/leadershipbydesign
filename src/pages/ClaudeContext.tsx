@@ -108,6 +108,7 @@ WEBSITE PAGES LIVE
 /products — Products store
 /contact — Contact form
 /blog — Blog
+/coaching-readiness-guide — Gated Lead Magnet (email gate → PDF download)
 /claude-context — This page
 
 FRAMEWORKS
