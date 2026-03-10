@@ -56,6 +56,19 @@ Deno.serve(async (req) => {
   }
 
   const headers = { ...corsHeaders, 'Content-Type': 'application/json' };
+  const url = new URL(req.url);
+
+  // ── Query-parameter secret validation ──
+  const expectedSecret = Deno.env.get('DUXSOUP_WEBHOOK_SECRET') || 'duxsoup_lbd_webhook_2026';
+  const providedSecret = url.searchParams.get('secret');
+  if (providedSecret && providedSecret !== expectedSecret) {
+    return new Response(JSON.stringify({ error: 'Invalid secret' }), { status: 401, headers });
+  }
+
+  // ── /ping endpoint for Dux-Soup "Send Sample" connectivity test ──
+  if (url.searchParams.get('ping') === '1' || url.pathname.endsWith('/ping')) {
+    return new Response(JSON.stringify({ status: 'ok', message: 'Dux-Soup webhook is live', timestamp: new Date().toISOString() }), { headers });
+  }
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
