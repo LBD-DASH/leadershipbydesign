@@ -2532,10 +2532,16 @@ export type Database = {
           follow_up_sent_at: string | null
           id: string
           industry: string | null
+          reply_received: boolean | null
           score: number | null
           scrape_summary: string | null
+          sequence_step: number | null
           source_keyword: string | null
           status: string
+          step2_sent_at: string | null
+          step3_sent_at: string | null
+          step4_sent_at: string | null
+          unsubscribed: boolean | null
           updated_at: string
         }
         Insert: {
@@ -2558,10 +2564,16 @@ export type Database = {
           follow_up_sent_at?: string | null
           id?: string
           industry?: string | null
+          reply_received?: boolean | null
           score?: number | null
           scrape_summary?: string | null
+          sequence_step?: number | null
           source_keyword?: string | null
           status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
+          step4_sent_at?: string | null
+          unsubscribed?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -2584,10 +2596,16 @@ export type Database = {
           follow_up_sent_at?: string | null
           id?: string
           industry?: string | null
+          reply_received?: boolean | null
           score?: number | null
           scrape_summary?: string | null
+          sequence_step?: number | null
           source_keyword?: string | null
           status?: string
+          step2_sent_at?: string | null
+          step3_sent_at?: string | null
+          step4_sent_at?: string | null
+          unsubscribed?: boolean | null
           updated_at?: string
         }
         Relationships: []
