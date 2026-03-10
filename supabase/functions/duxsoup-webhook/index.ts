@@ -7,9 +7,49 @@ const corsHeaders = {
 
 /**
  * Dux-Soup Webhook Receiver
- * Receives LinkedIn automation events: profile_visit, connection_request, connection_accept, message_sent, message_received, inmail_sent
- * Routes contacts into warm_outreach_queue + call_list_prospects
+ * 
+ * Dux-Soup payload format:
+ *   { userid, time, type, event, data: { url, profile, first_name, last_name, ... } }
+ * 
+ * Types: visit, connection, message, session, rccommand
+ * Events: sent, received, accepted, requested, create, update, ready
+ * 
+ * Maps to: warm_outreach_queue + call_list_prospects
  */
+
+// Map Dux-Soup's {type, event} to our internal event types
+function mapEventType(type: string, event: string): string | null {
+  const key = `${type}:${event}`;
+  const mapping: Record<string, string> = {
+    'visit:sent': 'profile_visit',
+    'visit:done': 'profile_visit',
+    'connection:sent': 'connection_request',
+    'connection:accepted': 'connection_accept',
+    'connection:received': 'connection_accept',
+    'message:sent': 'message_sent',
+    'message:received': 'message_received',
+    'inmail:sent': 'inmail_sent',
+    'inmail:received': 'message_received',
+  };
+  return mapping[key] || null;
+}
+
+// Extract contact fields from Dux-Soup's nested data object
+function extractContact(data: Record<string, unknown>) {
+  return {
+    first_name: (data.first_name || data.firstName || '') as string,
+    last_name: (data.last_name || data.lastName || '') as string,
+    title: (data.title || data.job_title || data.headline || '') as string,
+    company: (data.company || data.organization || '') as string,
+    email: (data.email || '') as string,
+    phone: (data.phone || '') as string,
+    location: (data.location || '') as string,
+    industry: (data.industry || '') as string,
+    linkedin_url: (data.url || data.profile || data.linkedin_url || '') as string,
+    message_text: (data.message || data.text || data.body || '') as string,
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -18,7 +58,6 @@ Deno.serve(async (req) => {
   const headers = { ...corsHeaders, 'Content-Type': 'application/json' };
 
   try {
-
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -26,45 +65,63 @@ Deno.serve(async (req) => {
     const payload = await req.json();
     const events = Array.isArray(payload) ? payload : [payload];
     let processed = 0;
+    let skipped = 0;
     let errors = 0;
     const results: string[] = [];
 
-    for (const event of events) {
+    for (const raw of events) {
       try {
-        const {
-          event_type,       // profile_visit, connection_request, connection_accept, message_sent, message_received, inmail_sent
-          linkedin_url,     // LinkedIn profile URL
-          first_name,
-          last_name,
-          title,            // Job title
-          company,
-          email,            // If available from LinkedIn
-          phone,            // If available
-          location,
-          industry,
-          connection_degree,
-          message_text,     // For message events
-          timestamp,        // Event timestamp
-          notes,            // Any Dux-Soup notes/tags
-        } = event;
+        // Dux-Soup format: { type, event, data: {...}, time, userid }
+        const dsType = (raw.type || '').toLowerCase();
+        const dsEvent = (raw.event || '').toLowerCase();
+        const dsData = raw.data || {};
+        const dsTime = raw.time || new Date().toISOString();
 
-        if (!event_type) {
-          console.error('Missing event_type in payload:', JSON.stringify(event).slice(0, 200));
-          errors++;
+        // Skip system/session events (not contact-related)
+        if (['session', 'rccommand', 'system', 'queue'].includes(dsType)) {
+          console.log(`⏭️ Skipping system event: ${dsType}:${dsEvent}`);
+          skipped++;
           continue;
         }
 
-        const contactName = `${first_name || ''} ${last_name || ''}`.trim();
-        const contactEmail = (email || '').toLowerCase().trim();
-        const eventTime = timestamp || new Date().toISOString();
+        const eventType = mapEventType(dsType, dsEvent);
+        if (!eventType) {
+          // Also support legacy flat format with event_type field
+          if (raw.event_type) {
+            // Fall through to legacy handling below
+          } else {
+            console.log(`⏭️ Unmapped Dux-Soup event: ${dsType}:${dsEvent}`);
+            skipped++;
+            continue;
+          }
+        }
 
-        console.log(`📥 Dux-Soup event: ${event_type} — ${contactName} @ ${company || 'unknown'}`);
+        // Extract contact info from nested data or flat payload (legacy)
+        const contact = raw.event_type
+          ? {
+              first_name: raw.first_name || '',
+              last_name: raw.last_name || '',
+              title: raw.title || '',
+              company: raw.company || '',
+              email: raw.email || '',
+              phone: raw.phone || '',
+              location: raw.location || '',
+              industry: raw.industry || '',
+              linkedin_url: raw.linkedin_url || '',
+              message_text: raw.message_text || '',
+            }
+          : extractContact(dsData);
+
+        const resolvedEventType = eventType || raw.event_type;
+        const contactName = `${contact.first_name} ${contact.last_name}`.trim();
+        const contactEmail = contact.email.toLowerCase().trim();
+
+        console.log(`📥 Dux-Soup: ${resolvedEventType} — ${contactName || 'unknown'} @ ${contact.company || 'unknown'}`);
 
         // ── HANDLE BY EVENT TYPE ──
-        switch (event_type) {
+        switch (resolvedEventType) {
           case 'profile_visit': {
-            // Log the visit — useful for tracking outreach activity
-            console.log(`  👁️ Profile visited: ${contactName} (${title || ''}) @ ${company || ''}`);
+            console.log(`  👁️ Visited: ${contactName} (${contact.title}) @ ${contact.company}`);
             results.push(`visited:${contactName}`);
             processed++;
             break;
@@ -72,9 +129,7 @@ Deno.serve(async (req) => {
 
           case 'connection_request':
           case 'connection_accept': {
-            // Add to warm_outreach_queue if they have an email
             if (contactEmail && contactEmail.includes('@')) {
-              // Check if already in queue
               const { data: existing } = await supabase
                 .from('warm_outreach_queue')
                 .select('id')
@@ -83,15 +138,15 @@ Deno.serve(async (req) => {
 
               if (!existing?.length) {
                 await supabase.from('warm_outreach_queue').insert({
-                  company_name: company || '',
+                  company_name: contact.company || '',
                   contact_name: contactName,
                   contact_email: contactEmail,
-                  contact_title: title || '',
-                  contact_phone: phone || '',
-                  source_keyword: `duxsoup:${event_type}`,
+                  contact_title: contact.title || '',
+                  contact_phone: contact.phone || '',
+                  source_keyword: `duxsoup:${resolvedEventType}`,
                   status: 'pending',
-                  industry: industry || '',
-                  score: event_type === 'connection_accept' ? 75 : 65,
+                  industry: contact.industry || '',
+                  score: resolvedEventType === 'connection_accept' ? 75 : 65,
                 });
                 results.push(`queued:${contactName}`);
               } else {
@@ -99,45 +154,42 @@ Deno.serve(async (req) => {
               }
             }
 
-            // Also add to call_list_prospects for phone follow-up
             if (contactName) {
               const { data: existingCall } = await supabase
                 .from('call_list_prospects')
                 .select('id')
-                .or(`email.eq.${contactEmail},and(first_name.ilike.${first_name || '__'},company.ilike.${company || '__'})`)
+                .or(`email.eq.${contactEmail},and(first_name.ilike.${contact.first_name || '__'},company.ilike.${contact.company || '__'})`)
                 .limit(1);
 
               if (!existingCall?.length) {
                 await supabase.from('call_list_prospects').insert({
-                  first_name: first_name || contactName,
-                  last_name: last_name || '',
+                  first_name: contact.first_name || contactName,
+                  last_name: contact.last_name || '',
                   email: contactEmail || '',
-                  company: company || '',
-                  phone: phone || '',
-                  title: title || '',
+                  company: contact.company || '',
+                  phone: contact.phone || '',
+                  title: contact.title || '',
                   status: 'pending',
-                  source: `duxsoup-${event_type}`,
+                  source: `duxsoup-${resolvedEventType}`,
                   batch_id: `duxsoup-${new Date().toISOString().slice(0, 10)}`,
                   uploaded_by: 'duxsoup-webhook',
                 });
                 results.push(`call-list:${contactName}`);
               }
             }
-
             processed++;
             break;
           }
 
           case 'message_sent':
           case 'inmail_sent': {
-            // Update status if already in queue
             if (contactEmail) {
               await supabase
                 .from('warm_outreach_queue')
                 .update({
                   status: 'emailed',
-                  email_sent_at: eventTime,
-                  email_body: message_text?.substring(0, 500) || '',
+                  email_sent_at: dsTime,
+                  email_body: contact.message_text?.substring(0, 500) || '',
                   updated_at: new Date().toISOString(),
                 })
                 .eq('contact_email', contactEmail)
@@ -149,7 +201,6 @@ Deno.serve(async (req) => {
           }
 
           case 'message_received': {
-            // Hot signal — they replied! Update queue and alert
             if (contactEmail) {
               await supabase
                 .from('warm_outreach_queue')
@@ -160,7 +211,7 @@ Deno.serve(async (req) => {
                 .eq('contact_email', contactEmail);
             }
 
-            // Send hot lead alert to Slack
+            // Hot lead alert
             try {
               await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
                 method: 'POST',
@@ -170,7 +221,7 @@ Deno.serve(async (req) => {
                   eventType: 'system_error',
                   data: {
                     function: '🔥 LinkedIn Reply Received',
-                    error: `*${contactName}* (${title || ''}) @ ${company || ''}\nMessage: "${(message_text || '').substring(0, 200)}"`,
+                    error: `*${contactName}* (${contact.title}) @ ${contact.company}\nMessage: "${contact.message_text.substring(0, 200)}"`,
                   },
                 }),
               });
@@ -182,9 +233,9 @@ Deno.serve(async (req) => {
           }
 
           default: {
-            console.log(`  ⏭️ Unknown event type: ${event_type}`);
-            results.push(`unknown:${event_type}`);
-            processed++;
+            console.log(`  ⏭️ Unhandled event type: ${resolvedEventType}`);
+            results.push(`unknown:${resolvedEventType}`);
+            skipped++;
           }
         }
       } catch (err) {
@@ -194,16 +245,16 @@ Deno.serve(async (req) => {
       }
     }
 
-    console.log(`✅ Dux-Soup webhook: ${processed} processed, ${errors} errors`);
+    console.log(`✅ Dux-Soup webhook: ${processed} processed, ${skipped} skipped, ${errors} errors`);
 
     // Slack summary if meaningful activity
     const queued = results.filter(r => r.startsWith('queued:')).length;
     const replies = results.filter(r => r.startsWith('reply:')).length;
     if (queued > 0 || replies > 0) {
       try {
-        await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/slack-notify`, {
+        await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseKey}` },
           body: JSON.stringify({
             channel: 'mission-control',
             eventType: 'system_error',
@@ -216,7 +267,7 @@ Deno.serve(async (req) => {
       } catch { /* best effort */ }
     }
 
-    return new Response(JSON.stringify({ success: true, processed, errors, results }), { headers });
+    return new Response(JSON.stringify({ success: true, processed, skipped, errors, results }), { headers });
 
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
