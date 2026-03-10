@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Save, Loader2, Megaphone, Rocket } from 'lucide-react';
+import { Settings, Save, Loader2, Megaphone, Rocket, Target } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CAMPAIGN_MODES = [
