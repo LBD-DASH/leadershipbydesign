@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Activity, Mail, Users, Calendar, Flame } from 'lucide-react';
+import { Activity, Mail, Users, Calendar, Flame, ClipboardCheck } from 'lucide-react';
 import GoogleAnalyticsCard from '@/components/admin/GoogleAnalyticsCard';
 import { Button } from '@/components/ui/button';
 import { format, subDays, startOfWeek } from 'date-fns';
@@ -78,10 +78,31 @@ function PipelineStatus() {
 
   const campaignLabel = (campaignMode || '').replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
 
+  const { data: lacSequencesActive } = useQuery({
+    queryKey: ['pos-lac-sequences'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('diagnostic_nurture_sequences')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active');
+      return count || 0;
+    },
+  });
+
+  const { data: lacAssessments } = useQuery({
+    queryKey: ['pos-lac-all'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('leader_as_coach_assessments')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    },
+  });
+
   return (
     <div>
       <h2 className="text-lg font-bold text-foreground mb-4">Pipeline Status</h2>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         <Card>
           <CardContent className="pt-4 pb-4 text-center">
             <Users className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
@@ -108,6 +129,20 @@ function PipelineStatus() {
             <Calendar className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
             <p className="text-2xl font-bold text-foreground">{bookingsThisWeek ?? '–'}</p>
             <p className="text-xs text-muted-foreground">Bookings This Week</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <ClipboardCheck className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
+            <p className="text-2xl font-bold text-foreground">{lacAssessments ?? '–'}</p>
+            <p className="text-xs text-muted-foreground">LAC Assessments</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <Mail className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
+            <p className="text-2xl font-bold text-foreground">{lacSequencesActive ?? '–'}</p>
+            <p className="text-xs text-muted-foreground">Active Sequences</p>
           </CardContent>
         </Card>
         <Card className="border-primary bg-primary/5">

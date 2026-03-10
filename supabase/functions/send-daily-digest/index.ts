@@ -312,7 +312,6 @@ Deno.serve(async (req) => {
 
     // ── Slack summaries (non-blocking) ──
     try {
-      // Count today's leads & signups across all tables
       const { count: newSubscribers } = await supabase
         .from('email_subscribers')
         .select('*', { count: 'exact', head: true })
@@ -353,9 +352,71 @@ Deno.serve(async (req) => {
         .select('*', { count: 'exact', head: true })
         .gte('downloaded_at', todayStart.toISOString());
 
+      // LAC-specific stats
+      const { count: lacToday } = await supabase
+        .from('leader_as_coach_assessments')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      const { count: lacSequencesActive } = await supabase
+        .from('diagnostic_nurture_sequences')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active');
+
+      const { count: lacFollowUpToday } = await supabase
+        .from('diagnostic_nurture_sequences')
+        .select('*', { count: 'exact', head: true })
+        .eq('diagnostic_type', 'lac')
+        .gte('updated_at', todayStart.toISOString());
+
+      // Outreach step breakdown (today)
+      const { count: step1Today } = await supabase
+        .from('prospect_outreach')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'sent')
+        .eq('sequence_step', 1)
+        .gte('sent_at', todayStart.toISOString());
+
+      const { count: step2Today } = await supabase
+        .from('prospect_outreach')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'sent')
+        .eq('sequence_step', 2)
+        .gte('sent_at', todayStart.toISOString());
+
+      const { count: step3Today } = await supabase
+        .from('prospect_outreach')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'sent')
+        .eq('sequence_step', 3)
+        .gte('sent_at', todayStart.toISOString());
+
+      const { count: step4Today } = await supabase
+        .from('prospect_outreach')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'sent')
+        .eq('sequence_step', 4)
+        .gte('sent_at', todayStart.toISOString());
+
+      // Bookings today
+      const { count: bookingsToday } = await supabase
+        .from('bookings')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', todayStart.toISOString());
+
+      // Queue depth
+      const { count: queueDepth } = await supabase
+        .from('warm_lead_sequences')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'awaiting_first_contact');
+
       const totalDiagnostics = (newDiagnostics || 0) + (newLeadershipDiag || 0) + (newAIDiag || 0) + (newShiftDiag || 0);
 
-      // Post to #leads-and-signups
+      const hour = new Date().getUTCHours() + 2; // SAST
+      const period = hour < 12 ? 'Morning' : hour < 17 ? 'Afternoon' : 'Evening';
+      const dateStr = now.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+
+      // Post enhanced report to #mission-control
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: 'POST',
         headers: {
@@ -363,14 +424,26 @@ Deno.serve(async (req) => {
           'Authorization': `Bearer ${supabaseServiceKey}`,
         },
         body: JSON.stringify({
-          eventType: 'daily_leads_digest',
+          channel: 'mission-control',
+          eventType: 'system_error',
           data: {
-            subscribers: newSubscribers || 0,
-            contacts: newContacts || 0,
-            diagnostics: totalDiagnostics,
-            downloads: newDownloads || 0,
-            purchases: newPurchases || 0,
-            prospects: stats.discoveredToday,
+            function: `🎯 LBD Pipeline — ${period} ${dateStr}`,
+            error: `*PROSPECTING*
+✅ New prospects: ${stats.discoveredToday}
+❌ Disqualified: –
+
+*OUTREACH*
+📧 Emails sent: ${stats.contactedToday} | Day1:${step1Today || 0} Day4:${step2Today || 0} Day9:${step3Today || 0} Day16:${step4Today || 0}
+📅 Bookings today: ${bookingsToday || 0}
+🔄 Queue depth: ${queueDepth || 0}
+
+*DIAGNOSTICS*
+🎯 LAC Assessments today: ${lacToday || 0}
+📧 Follow-up sequences active: ${lacSequencesActive || 0}
+📧 Follow-up emails sent today: ${lacFollowUpToday || 0}
+
+*OTHER*
+📋 Diagnostics: ${totalDiagnostics} | Contacts: ${newContacts || 0} | Downloads: ${newDownloads || 0} | Purchases: ${newPurchases || 0}`,
           },
         }),
       });
@@ -388,6 +461,8 @@ Deno.serve(async (req) => {
             activeSequences: stats.activeSequences,
             outreachSent: stats.contactedToday,
             engaged: stats.engagedThisWeek,
+            lacSequences: lacSequencesActive || 0,
+            dailyEmailLimit: `${stats.contactedToday}/30`,
           },
         }),
       });

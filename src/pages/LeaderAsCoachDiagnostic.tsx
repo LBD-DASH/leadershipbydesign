@@ -15,6 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { calculateLeadScore } from "@/utils/leadScoring";
 import { processLead } from "@/utils/notifications";
+import { useDiagnosticTracking } from "@/hooks/useIntentTracking";
 
 type Stage = 'version-select' | 'questionnaire' | 'capture' | 'results';
 
@@ -33,6 +34,10 @@ export default function LeaderAsCoachDiagnostic() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userData, setUserData] = useState<LeadData | null>(null);
   const utmParams = useUtmParams();
+
+  const hasStarted = stage !== 'version-select';
+  const hasCompleted = stage === 'results';
+  useDiagnosticTracking('leader-as-coach', hasStarted, hasCompleted);
 
   const handleVersionSelect = (v: LACVersion) => {
     setVersion(v);
