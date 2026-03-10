@@ -109,7 +109,7 @@ Remember:
 - Product CTAs should feel natural, not salesy
 - All links should use leadershipbydesign.co domain`;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
