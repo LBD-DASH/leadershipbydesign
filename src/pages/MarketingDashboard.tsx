@@ -24,6 +24,7 @@ import WarmLeadCadence from '@/components/marketing/WarmLeadCadence';
 import CallLogsPanel from '@/components/admin/CallLogsPanel';
 import SalesPipeline from '@/components/marketing/SalesPipeline';
 import GA4Analytics from '@/components/marketing/GA4Analytics';
+import SourceAttribution from '@/components/marketing/SourceAttribution';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -276,16 +277,10 @@ export default function MarketingDashboard() {
               <TabsContent value="analytics" className="mt-6">
                 <div className="space-y-8">
                   <GA4Analytics />
+                  <SourceAttribution />
                   <SalesPipeline />
                   <div className="grid gap-6 lg:grid-cols-2">
                     <PipelineFunnel />
-                    <div className="bg-card rounded-xl border border-border p-8 text-center">
-                      <BarChart3 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Prospect Pipeline</h3>
-                      <p className="text-muted-foreground">
-                        Track prospect engagement and conversion metrics.
-                      </p>
-                    </div>
                   </div>
                 </div>
               </TabsContent>
