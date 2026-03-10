@@ -161,6 +161,36 @@ export default function AdminSettingsPanel() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
+            <Target className="w-4 h-4 text-primary" />
+            <CardTitle className="text-base">Apollo Decision-Maker Import</CardTitle>
+          </div>
+          <CardDescription>
+            Pulls 50 named HR/L&D decision-makers from Apollo.io (Financial Services, Insurance, Banking, Accounting, Legal, Professional Services — SA, 100-500 employees). Feeds directly into the outreach queue.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={runApolloImport} disabled={runningApolloImport} className="w-full" variant="outline">
+            {runningApolloImport ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Importing from Apollo…
+              </>
+            ) : (
+              <>
+                <Target className="w-4 h-4 mr-2" />
+                Run Apollo Import Now
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Imports up to 50 qualified contacts per run. Results posted to #mission-control.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
             <Megaphone className="w-4 h-4 text-primary" />
             <CardTitle className="text-base">Outreach Campaign Mode</CardTitle>
           </div>
