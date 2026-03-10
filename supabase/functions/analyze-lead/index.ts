@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// Native Deno.serve
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,7 +27,7 @@ interface LeadAnalysisRequest {
   diagnosticContext?: string;
 }
 
-serve(async (req: Request): Promise<Response> => {
+Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
