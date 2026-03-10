@@ -120,3 +120,6 @@ verify_jwt = false
 [functions.daily-pipeline-report]
 verify_jwt = false
 
+[functions.apollo-prospect-import]
+verify_jwt = false
+

@@ -22,6 +22,7 @@ export default function AdminSettingsPanel() {
   const [saving, setSaving] = useState(false);
   const [savingCampaign, setSavingCampaign] = useState(false);
   const [runningProspecting, setRunningProspecting] = useState(false);
+  const [runningApolloImport, setRunningApolloImport] = useState(false);
 
   useEffect(() => {
     loadSettings();
