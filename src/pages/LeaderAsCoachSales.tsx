@@ -238,7 +238,7 @@ export default function LeaderAsCoachSales() {
                   title: "Foundation",
                   subtitle: "Month 1",
                   icon: BarChart3,
-                  description: "Leadership Index assessment + behavioural baseline. Coaching mindset installed. Managers learn conversation frameworks, accountability tools, and the shift from 'doer' to 'leader'.",
+                  description: "Leadership Index + Enneagram assessment to map each manager's behavioural baseline and leadership style. Coaching mindset installed. Managers learn conversation frameworks, accountability tools, and the shift from 'doer' to 'leader'.",
                 },
                 {
                   num: "02",
