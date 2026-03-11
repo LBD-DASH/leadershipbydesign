@@ -48,7 +48,6 @@ Deno.serve(async (req) => {
       // Build enrichment request
       const enrichBody: Record<string, any> = {
         reveal_personal_emails: true,
-        reveal_phone_number: true,
         first_name: firstName,
         last_name: lastName,
       };

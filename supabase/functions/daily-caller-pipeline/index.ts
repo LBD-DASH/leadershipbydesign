@@ -9,7 +9,6 @@ async function enrichPerson(apolloApiKey: string, person: any): Promise<{ email:
   try {
     const enrichBody: Record<string, any> = {
       reveal_personal_emails: true,
-      reveal_phone_number: true,
     };
 
     if (person.id) {

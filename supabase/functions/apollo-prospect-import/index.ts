@@ -32,7 +32,6 @@ async function enrichPerson(apolloApiKey: string, person: any): Promise<string |
   try {
     const enrichBody: Record<string, any> = {
       reveal_personal_emails: true,
-      reveal_phone_number: true,
     };
 
     // Use Apollo ID if available for best match
