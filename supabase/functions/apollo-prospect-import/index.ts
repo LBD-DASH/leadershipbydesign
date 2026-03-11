@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
           contact_email: email,
           contact_title: contactTitle,
           contact_phone: phone,
-          source_keyword: "apollo:enriched",
+          source_keyword: "apollo:sequence",
           status: "pending",
           industry: "financial services",
           score: 70,
