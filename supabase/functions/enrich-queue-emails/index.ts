@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
       .select("id, contact_name, company_name, contact_title")
       .or("contact_email.is.null,contact_email.eq.")
       .eq("status", "pending")
-      .limit(20);
+      .limit(250);
 
     if (fetchErr) throw fetchErr;
     if (!prospects || prospects.length === 0) {
