@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search, Zap, Settings } from 'lucide-react';
+import { LogOut, Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock, Megaphone, Search, Zap, Settings, Mail } from 'lucide-react';
 import AdminSettingsPanel from './AdminSettingsPanel';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
@@ -14,6 +14,7 @@ import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 import ProspectingTool from '@/components/marketing/ProspectingTool';
 import ProspectList from '@/components/marketing/ProspectList';
 import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
+import OutreachLogPanel from './OutreachLogPanel';
 interface AdminDashboardContentProps {
   onLogout: () => void;
 }
@@ -198,6 +199,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             <Zap className="w-4 h-4" />
             Automation
           </TabsTrigger>
+          <TabsTrigger value="outreach-log" className="flex items-center gap-2">
+            <Mail className="w-4 h-4" />
+            Outreach Log
+          </TabsTrigger>
           <TabsTrigger value="google-ads" className="flex items-center gap-2">
             <Megaphone className="w-4 h-4" />
             Google Ads
@@ -374,6 +379,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
 
         <TabsContent value="automation" className="mt-6">
           <ProspectingAutomation />
+        </TabsContent>
+
+        <TabsContent value="outreach-log" className="mt-6">
+          <OutreachLogPanel />
         </TabsContent>
 
         <TabsContent value="google-ads" className="mt-6">
