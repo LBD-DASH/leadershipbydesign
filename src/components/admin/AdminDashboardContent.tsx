@@ -199,6 +199,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
             <Zap className="w-4 h-4" />
             Automation
           </TabsTrigger>
+          <TabsTrigger value="outreach-log" className="flex items-center gap-2">
+            <Mail className="w-4 h-4" />
+            Outreach Log
+          </TabsTrigger>
           <TabsTrigger value="google-ads" className="flex items-center gap-2">
             <Megaphone className="w-4 h-4" />
             Google Ads
