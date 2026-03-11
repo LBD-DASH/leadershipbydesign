@@ -376,6 +376,10 @@ export default function AdminDashboardContent({ onLogout }: AdminDashboardConten
           <ProspectingAutomation />
         </TabsContent>
 
+        <TabsContent value="outreach-log" className="mt-6">
+          <OutreachLogPanel />
+        </TabsContent>
+
         <TabsContent value="google-ads" className="mt-6">
           <GoogleAdsGenerator />
         </TabsContent>
