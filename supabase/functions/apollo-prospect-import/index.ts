@@ -8,7 +8,8 @@ const corsHeaders = {
 const APOLLO_TITLES = [
   "HR Director", "Head of L&D", "Learning and Development Manager",
   "Talent Director", "HR Executive", "Chief People Officer", "CHRO",
-  "Head of People", "Head of Human Resources", "COO",
+  "Head of People", "Head of Human Resources", "COO", "HR Manager",
+  "People Director", "Talent Lead",
 ];
 
 const APOLLO_INDUSTRIES = [
@@ -25,6 +26,54 @@ const GENERIC_PREFIXES = [
   "accounts", "billing", "general", "team", "group", "corporate",
   "investor", "shareholders", "communications", "procurement", "pr",
 ];
+
+async function enrichPerson(apolloApiKey: string, person: any): Promise<string | null> {
+  // Use Apollo People Enrichment to reveal the email
+  try {
+    const enrichBody: Record<string, any> = {
+      reveal_personal_emails: true,
+    };
+
+    // Use Apollo ID if available for best match
+    if (person.id) {
+      enrichBody.id = person.id;
+    } else {
+      // Fallback to name + company domain
+      if (person.first_name) enrichBody.first_name = person.first_name;
+      if (person.last_name) enrichBody.last_name = person.last_name;
+      if (person.organization?.primary_domain) {
+        enrichBody.domain = person.organization.primary_domain;
+      } else if (person.organization?.website_url) {
+        try {
+          enrichBody.domain = new URL(person.organization.website_url).hostname.replace("www.", "");
+        } catch { /* skip */ }
+      }
+      if (person.linkedin_url) enrichBody.linkedin_url = person.linkedin_url;
+    }
+
+    const res = await fetch("https://api.apollo.io/api/v1/people/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Api-Key": apolloApiKey },
+      body: JSON.stringify(enrichBody),
+    });
+
+    if (!res.ok) {
+      console.error(`  Enrich API error [${res.status}]: ${await res.text()}`);
+      return null;
+    }
+
+    const data = await res.json();
+    const match = data.person;
+    if (!match) return null;
+
+    // Return the best email: work email first, then personal
+    const email = match.email || match.personal_emails?.[0] || null;
+    return email ? email.toLowerCase().trim() : null;
+  } catch (err) {
+    console.error("  Enrich error:", err);
+    return null;
+  }
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -55,12 +104,13 @@ Deno.serve(async (req) => {
     );
 
     let totalPulled = 0;
-    let passedGate = 0;
+    let enriched = 0;
+    let enrichFailed = 0;
     let added = 0;
     let skippedDup = 0;
     let skippedQuality = 0;
 
-    // Search Apollo across all target industries — 2 pages to get ~50 contacts
+    // Search Apollo — 3 pages to get ~75 contacts, then enrich for emails
     for (let page = 1; page <= 3; page++) {
       if (added >= 50) break;
 
@@ -76,7 +126,6 @@ Deno.serve(async (req) => {
           person_locations: ["South Africa"],
           organization_num_employees_ranges: ["101-500"],
           q_keywords: APOLLO_INDUSTRIES.join(" OR "),
-          contact_email_status: ["verified", "likely"],
         }),
       });
 
@@ -96,8 +145,25 @@ Deno.serve(async (req) => {
       for (const p of people) {
         if (added >= 50) break;
 
-        const email = (p.email || "").toLowerCase().trim();
-        if (!email || !email.includes("@")) { skippedQuality++; continue; }
+        // First check if the search already returned an email
+        let email = (p.email || "").toLowerCase().trim();
+
+        // If no email from search, enrich to reveal it
+        if (!email || !email.includes("@")) {
+          console.log(`  🔍 Enriching ${p.first_name} ${p.last_name} @ ${p.organization?.name}...`);
+          const revealedEmail = await enrichPerson(apolloApiKey, p);
+          if (revealedEmail) {
+            email = revealedEmail;
+            enriched++;
+            console.log(`  📧 Revealed: ${email}`);
+          } else {
+            enrichFailed++;
+            console.log(`  ⚠️ No email found for ${p.first_name} ${p.last_name}`);
+            continue; // Skip contacts we can't get emails for
+          }
+          // Rate limit enrichment calls
+          await new Promise(r => setTimeout(r, 500));
+        }
 
         // Generic prefix check
         const prefix = email.split("@")[0];
@@ -118,8 +184,6 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        passedGate++;
-
         const companyName = p.organization?.name || "";
         const companyWebsite = p.organization?.website_url || "";
         const contactName = `${p.first_name || ""} ${p.last_name || ""}`.trim();
@@ -133,7 +197,7 @@ Deno.serve(async (req) => {
           contact_email: email,
           contact_title: contactTitle,
           contact_phone: phone,
-          source_keyword: "apollo:first-batch",
+          source_keyword: "apollo:enriched",
           status: "pending",
           industry: "financial services",
           score: 70,
@@ -149,7 +213,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const summary = `🎯 Apollo Import Complete\nContacts pulled: ${totalPulled}\nPassed quality gate: ${passedGate}\nAdded to queue: ${added}\nSkipped (duplicate): ${skippedDup}\nSkipped (quality): ${skippedQuality}`;
+    const summary = `🎯 Apollo Import Complete\nContacts searched: ${totalPulled}\nEmails enriched: ${enriched}\nEnrich failed: ${enrichFailed}\nAdded to queue: ${added}\nSkipped (duplicate): ${skippedDup}\nSkipped (quality): ${skippedQuality}`;
     console.log(summary);
 
     // Post to #mission-control
@@ -162,7 +226,7 @@ Deno.serve(async (req) => {
           eventType: "system_error",
           data: {
             function: "🎯 Apollo Import Complete",
-            error: `Contacts pulled: ${totalPulled}\nPassed quality gate: ${passedGate}\nAdded to queue: ${added}\nSkipped (duplicate): ${skippedDup}`,
+            error: `Searched: ${totalPulled} | Enriched: ${enriched} | Added: ${added} | Dup: ${skippedDup} | No email: ${enrichFailed}`,
           },
         }),
       });
@@ -171,7 +235,8 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({
       success: true,
       total_pulled: totalPulled,
-      passed_gate: passedGate,
+      emails_enriched: enriched,
+      enrich_failed: enrichFailed,
       added,
       skipped_duplicate: skippedDup,
       skipped_quality: skippedQuality,

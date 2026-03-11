@@ -5,6 +5,48 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+async function enrichPerson(apolloApiKey: string, person: any): Promise<{ email: string | null; phone: string | null }> {
+  try {
+    const enrichBody: Record<string, any> = {
+      reveal_personal_emails: true,
+    };
+
+    if (person.id) {
+      enrichBody.id = person.id;
+    } else {
+      if (person.first_name) enrichBody.first_name = person.first_name;
+      if (person.last_name) enrichBody.last_name = person.last_name;
+      if (person.linkedin_url) enrichBody.linkedin_url = person.linkedin_url;
+      // Try to extract domain from company
+      if (person.organization?.primary_domain) {
+        enrichBody.domain = person.organization.primary_domain;
+      } else if (person.organization?.website_url) {
+        try {
+          enrichBody.domain = new URL(person.organization.website_url).hostname.replace("www.", "");
+        } catch { /* skip */ }
+      }
+    }
+
+    const res = await fetch("https://api.apollo.io/api/v1/people/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Api-Key": apolloApiKey },
+      body: JSON.stringify(enrichBody),
+    });
+
+    if (!res.ok) return { email: null, phone: null };
+
+    const data = await res.json();
+    const match = data.person;
+    if (!match) return { email: null, phone: null };
+
+    const email = (match.email || match.personal_emails?.[0] || "").toLowerCase().trim() || null;
+    const phone = match.phone_numbers?.[0]?.sanitized_number || null;
+    return { email, phone };
+  } catch {
+    return { email: null, phone: null };
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -14,12 +56,11 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   const apolloApiKey = Deno.env.get("APOLLO_API_KEY");
-  const firecrawlKey = Deno.env.get("FIRECRAWL_API_KEY");
   const supabase = createClient(supabaseUrl, serviceKey);
   const headers = { ...corsHeaders, "Content-Type": "application/json" };
 
   try {
-    // 1. Pick the next active industry from prospecting_config (round-robin by last_run_at)
+    // 1. Pick the next active industry from prospecting_config
     const { data: configs, error: cfgErr } = await supabase
       .from("prospecting_config")
       .select("*")
@@ -37,24 +78,20 @@ Deno.serve(async (req) => {
     const location = config.location || "Gauteng";
     console.log(`🏭 Pipeline running for: ${industry} in ${location}`);
 
-    // 2. Search Apollo for 20 contacts
+    // 2. Search Apollo for contacts
     if (!apolloApiKey) throw new Error("APOLLO_API_KEY not configured");
-
-    const apolloBody = {
-      page: 1,
-      per_page: 20,
-      person_titles: ["Head of HR", "People Director", "L&D Manager", "Talent Lead", "HR Director", "HR Manager", "Chief People Officer"],
-      person_locations: [location, "South Africa"],
-      organization_num_employees_ranges: ["201-500"],
-      q_keywords: industry,
-    };
-
-    console.log("Searching Apollo...", JSON.stringify(apolloBody));
 
     const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Api-Key": apolloApiKey },
-      body: JSON.stringify(apolloBody),
+      body: JSON.stringify({
+        page: 1,
+        per_page: 20,
+        person_titles: ["Head of HR", "People Director", "L&D Manager", "Talent Lead", "HR Director", "HR Manager", "Chief People Officer"],
+        person_locations: [location, "South Africa"],
+        organization_num_employees_ranges: ["201-500"],
+        q_keywords: industry,
+      }),
     });
 
     if (!apolloRes.ok) {
@@ -63,107 +100,68 @@ Deno.serve(async (req) => {
     }
 
     const apolloData = await apolloRes.json();
-    const people = (apolloData.people || []).map((p: any) => ({
-      first_name: p.first_name || "",
-      last_name: p.last_name || "",
-      title: p.title || "",
-      email: p.email || "",
-      phone: p.phone_numbers?.[0]?.sanitized_number || "",
-      company: p.organization?.name || "",
-      linkedin_url: p.linkedin_url || "",
-    }));
+    const rawPeople = apolloData.people || [];
+    console.log(`Apollo returned ${rawPeople.length} contacts`);
 
-    console.log(`Apollo returned ${people.length} contacts`);
-
-    if (people.length === 0) {
-      // Mark config as run anyway
+    if (rawPeople.length === 0) {
       await supabase.from("prospecting_config").update({ last_run_at: new Date().toISOString() }).eq("id", config.id);
-      await notifySlack(supabaseUrl, anonKey, 0, 0, industry, "No contacts found in Apollo");
+      await notifySlack(supabaseUrl, anonKey, 0, 0, 0, industry, "No contacts found in Apollo");
       return new Response(JSON.stringify({ success: true, found: 0, industry }), { headers });
     }
 
-    // 3. Deduplicate against existing call list (by email OR first_name+company)
+    // 3. Enrich contacts to get emails
+    const people = [];
+    let enrichedCount = 0;
+    for (const p of rawPeople) {
+      const person: any = {
+        first_name: p.first_name || "",
+        last_name: p.last_name || "",
+        title: p.title || "",
+        email: (p.email || "").toLowerCase().trim(),
+        phone: p.phone_numbers?.[0]?.sanitized_number || "",
+        company: p.organization?.name || "",
+        linkedin_url: p.linkedin_url || "",
+      };
+
+      // If no email from search, enrich to reveal it
+      if (!person.email) {
+        console.log(`  🔍 Enriching ${person.first_name} ${person.last_name}...`);
+        const enriched = await enrichPerson(apolloApiKey, p);
+        if (enriched.email) {
+          person.email = enriched.email;
+          enrichedCount++;
+          console.log(`  📧 Revealed: ${enriched.email}`);
+        }
+        if (enriched.phone && !person.phone) {
+          person.phone = enriched.phone;
+        }
+        await new Promise(r => setTimeout(r, 400));
+      }
+
+      // Only add contacts with emails
+      if (person.email) {
+        people.push(person);
+      }
+    }
+
+    console.log(`${people.length} contacts with emails (${enrichedCount} enriched)`);
+
+    // 4. Deduplicate against existing call list
     const emails = people.filter((p: any) => p.email).map((p: any) => p.email.toLowerCase());
     const { data: existingByEmail } = await supabase
       .from("call_list_prospects")
       .select("email, first_name, company")
       .in("email", emails.length > 0 ? emails : ["__none__"]);
 
-    // Also check by first_name + company for contacts without email matches
-    const nameCompanyPairs = people.map((p: any) => ({
-      first_name: (p.first_name || "").toLowerCase().trim(),
-      company: (p.company || "").toLowerCase().trim(),
-    }));
-    const uniqueCompanies = [...new Set(nameCompanyPairs.map(nc => nc.company).filter(Boolean))];
-    const { data: existingByCompany } = await supabase
-      .from("call_list_prospects")
-      .select("email, first_name, company")
-      .in("company", uniqueCompanies.length > 0 ? uniqueCompanies : ["__none__"]);
-
     const existingEmails = new Set((existingByEmail || []).map((e: any) => e.email?.toLowerCase()));
-    const existingNameCompany = new Set(
-      (existingByCompany || []).map((e: any) => 
-        `${(e.first_name || "").toLowerCase().trim()}||${(e.company || "").toLowerCase().trim()}`
-      )
-    );
 
     const newPeople = people.filter((p: any) => {
       const email = (p.email || "").toLowerCase();
-      const nameCompanyKey = `${(p.first_name || "").toLowerCase().trim()}||${(p.company || "").toLowerCase().trim()}`;
-      
-      // Skip if email already exists
       if (email && existingEmails.has(email)) return false;
-      // Skip if first_name + company already exists
-      if (p.first_name && p.company && existingNameCompany.has(nameCompanyKey)) return false;
       return true;
     });
 
-    console.log(`${newPeople.length} new contacts after dedup (${existingEmails.size} email matches, ${existingNameCompany.size} name+company matches)`);
-
-    // 4. Scrape phone numbers for contacts missing them
-    let phonesFound = 0;
-    if (firecrawlKey) {
-      const needPhones = newPeople.filter((p: any) => !p.phone && p.company);
-      if (needPhones.length > 0) {
-        console.log(`Scraping phones for ${needPhones.length} contacts...`);
-        for (const person of needPhones.slice(0, 10)) {
-          try {
-            const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
-              method: "POST",
-              headers: {
-                "Authorization": `Bearer ${firecrawlKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                query: `${person.company} South Africa phone number contact`,
-                limit: 3,
-                scrapeOptions: { formats: ["markdown"] },
-              }),
-            });
-
-            if (searchRes.ok) {
-              const searchData = await searchRes.json();
-              const pages = searchData.data || [];
-              for (const page of pages) {
-                const content = page.markdown || page.description || "";
-                const phoneMatch = content.match(/(?:\+27|0)\s?\d{2}\s?\d{3}\s?\d{4}/) ||
-                  content.match(/(?:\+\d{1,3})[\s.-]?\(?\d{1,4}\)?[\s.-]?\d{2,4}[\s.-]?\d{2,4}/);
-                if (phoneMatch) {
-                  person.phone = phoneMatch[0].replace(/[\s-]/g, "").trim();
-                  phonesFound++;
-                  break;
-                }
-              }
-            }
-            // Rate limit
-            await new Promise(r => setTimeout(r, 800));
-          } catch (err) {
-            console.error(`Phone scrape error for ${person.company}:`, err);
-          }
-        }
-        console.log(`Scraped ${phonesFound} phone numbers`);
-      }
-    }
+    console.log(`${newPeople.length} new contacts after dedup`);
 
     // 5. Insert into call_list_prospects
     if (newPeople.length > 0) {
@@ -190,33 +188,27 @@ Deno.serve(async (req) => {
       console.log(`✅ Inserted ${inserted?.length || 0} prospects into call list`);
     }
 
-    // 6. Update last_run_at on the config
-    await supabase
-      .from("prospecting_config")
-      .update({ last_run_at: new Date().toISOString() })
-      .eq("id", config.id);
+    // 6. Update last_run_at
+    await supabase.from("prospecting_config").update({ last_run_at: new Date().toISOString() }).eq("id", config.id);
 
-    // 7. Send Slack notification
+    // 7. Slack notification
     const withPhones = newPeople.filter((p: any) => p.phone).length;
-    await notifySlack(supabaseUrl, anonKey, newPeople.length, withPhones, industry, null);
+    await notifySlack(supabaseUrl, anonKey, newPeople.length, withPhones, enrichedCount, industry, null);
 
     return new Response(JSON.stringify({
       success: true,
       industry,
-      apolloResults: people.length,
+      apolloResults: rawPeople.length,
+      enrichedEmails: enrichedCount,
       newProspects: newPeople.length,
-      phonesScraped: phonesFound,
       withPhones,
     }), { headers });
 
   } catch (error: any) {
     console.error("Pipeline error:", error);
-
-    // Notify Slack of failure
     try {
-      await notifySlack(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, 0, 0, "unknown", error.message);
+      await notifySlack(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, 0, 0, 0, "unknown", error.message);
     } catch (_) {}
-
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers });
   }
 });
@@ -226,27 +218,20 @@ async function notifySlack(
   anonKey: string,
   added: number,
   withPhones: number,
+  enrichedEmails: number,
   industry: string,
   errorMsg: string | null,
 ) {
   try {
-    const isError = !!errorMsg;
-    const payload = isError
+    const payload = errorMsg
       ? {
           eventType: "system_error",
-          data: {
-            function: "daily-caller-pipeline",
-            error: errorMsg,
-          },
+          data: { function: "daily-caller-pipeline", error: errorMsg },
         }
       : {
           eventType: "daily_pipeline_complete",
           channel: "mission-control",
-          data: {
-            added,
-            withPhones,
-            industry,
-          },
+          data: { added, withPhones, enrichedEmails, industry },
         };
 
     await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
