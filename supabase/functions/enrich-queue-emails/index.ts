@@ -100,8 +100,9 @@ Deno.serve(async (req) => {
             console.log(`  🗑️ ${p.contact_name}: no match, removed`);
           }
         } else {
+          const errBody = await res.text();
           failed++;
-          console.error(`  ❌ API error for ${p.contact_name}: ${res.status}`);
+          console.error(`  ❌ API error for ${p.contact_name} [${res.status}]: ${errBody}`);
         }
       } catch (err) {
         failed++;
