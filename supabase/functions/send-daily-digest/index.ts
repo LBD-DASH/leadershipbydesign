@@ -161,6 +161,48 @@ Deno.serve(async (req) => {
       .order('engaged_at', { ascending: false })
       .limit(5);
 
+    // ── Newsletter sends today ──
+    const { data: newslettersToday } = await supabase
+      .from('newsletter_sends')
+      .select('subject, recipient_count, status, sent_at')
+      .gte('sent_at', todayStart.toISOString())
+      .order('sent_at', { ascending: false });
+
+    // ── Diagnostic nurture emails sent today ──
+    const { data: nurtureToday } = await supabase
+      .from('diagnostic_nurture_sequences')
+      .select('diagnostic_type, lead_email, current_step')
+      .eq('status', 'active')
+      .gte('updated_at', todayStart.toISOString());
+
+    // ── Contact form submissions today ──
+    const { data: contactsToday } = await supabase
+      .from('contact_form_submissions')
+      .select('name, email, service_interest, lead_temperature')
+      .gte('created_at', todayStart.toISOString())
+      .order('created_at', { ascending: false });
+
+    // ── Lead magnet downloads today ──
+    const { data: downloadsToday } = await supabase
+      .from('lead_magnet_downloads')
+      .select('name, email, lead_magnet')
+      .gte('downloaded_at', todayStart.toISOString())
+      .order('downloaded_at', { ascending: false });
+
+    // ── Purchases today ──
+    const { data: purchasesToday } = await supabase
+      .from('product_purchases')
+      .select('product_name, customer_email, amount')
+      .gte('created_at', todayStart.toISOString())
+      .order('created_at', { ascending: false });
+
+    // ── LAC assessments today ──
+    const { data: lacToday } = await supabase
+      .from('leader_as_coach_assessments')
+      .select('name, email, profile, total_score')
+      .gte('created_at', todayStart.toISOString())
+      .order('created_at', { ascending: false });
+
     // Build email content
     const dashboardUrl = 'https://leadershipbydesign.lovable.app/marketing';
     const dateStr = now.toLocaleDateString('en-ZA', { 
@@ -170,55 +212,103 @@ Deno.serve(async (req) => {
       day: 'numeric' 
     });
 
+    // Calculate total emails sent today
+    const totalNewsletterEmails = (newslettersToday || []).reduce((sum, n) => sum + (n.recipient_count || 0), 0);
+    const totalOutreachEmails = stats.contactedToday;
+    const totalNurtureEmails = (nurtureToday || []).length;
+    const totalContactReplies = (contactsToday || []).length;
+    const totalDownloadEmails = (downloadsToday || []).length;
+    const grandTotalEmails = totalNewsletterEmails + totalOutreachEmails + totalNurtureEmails + totalContactReplies + totalDownloadEmails;
+
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-        <h1 style="color: #2563eb; margin-bottom: 8px;">🎯 Daily Prospecting Digest</h1>
+        <h1 style="color: #2563eb; margin-bottom: 8px;">🎯 Daily Command Centre Digest</h1>
         <p style="color: #666; margin-top: 0;">${dateStr}</p>
         
+        <div style="background: #f0f9ff; border-left: 4px solid #2563eb; padding: 16px; margin: 16px 0; border-radius: 4px;">
+          <p style="margin: 0; font-size: 24px; font-weight: bold; color: #2563eb;">${grandTotalEmails}</p>
+          <p style="margin: 4px 0 0; color: #666;">Total emails sent today</p>
+        </div>
+
         <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
-        
-        <h2 style="font-size: 18px; margin-bottom: 12px;">📊 Today's Activity</h2>
+
+        <h2 style="font-size: 18px; margin-bottom: 12px;">📧 Email Breakdown</h2>
         <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 8px 0;">New Prospects Discovered</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold;">${stats.discoveredToday}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0;">Outreach Emails Sent</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold;">${stats.contactedToday}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0;">Active Sequences</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold;">${stats.activeSequences}</td>
-          </tr>
+          <tr><td style="padding: 6px 0;">Newsletter campaigns</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${totalNewsletterEmails}</td></tr>
+          <tr><td style="padding: 6px 0;">Outreach sequences</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${totalOutreachEmails}</td></tr>
+          <tr><td style="padding: 6px 0;">Diagnostic nurture</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${totalNurtureEmails}</td></tr>
+          <tr><td style="padding: 6px 0;">Contact form replies</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${totalContactReplies}</td></tr>
+          <tr><td style="padding: 6px 0;">Download confirmations</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${totalDownloadEmails}</td></tr>
         </table>
+
+        ${(newslettersToday || []).length > 0 ? `
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+          <h2 style="font-size: 18px; margin-bottom: 12px;">📰 Newsletters Sent</h2>
+          ${newslettersToday!.map(n => `
+            <div style="background: #f8f8f8; padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+              <strong>${n.subject}</strong><br>
+              <span style="color: #666; font-size: 13px;">→ ${n.recipient_count} recipients • ${n.status}</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${(purchasesToday || []).length > 0 ? `
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+          <h2 style="font-size: 18px; margin-bottom: 12px;">💰 Purchases Today</h2>
+          ${purchasesToday!.map(p => `
+            <div style="background: #f0fdf4; padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+              <strong>${p.product_name}</strong> — ${p.customer_email}<br>
+              <span style="color: #16a34a; font-weight: bold;">R${p.amount || 0}</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${(contactsToday || []).length > 0 ? `
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+          <h2 style="font-size: 18px; margin-bottom: 12px;">📋 Contact Form Leads</h2>
+          ${contactsToday!.map(c => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+              <strong>${c.name}</strong> (${c.email})<br>
+              <span style="color: #666; font-size: 13px;">${c.service_interest || 'General'} • ${c.lead_temperature ? `🌡️ ${c.lead_temperature}` : ''}</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${(lacToday || []).length > 0 ? `
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+          <h2 style="font-size: 18px; margin-bottom: 12px;">🎯 LAC Assessments</h2>
+          ${lacToday!.map(l => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+              <strong>${l.name || 'Anonymous'}</strong> ${l.email ? `(${l.email})` : ''}<br>
+              <span style="color: #666; font-size: 13px;">Profile: ${l.profile} • Score: ${l.total_score}/75</span>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${(downloadsToday || []).length > 0 ? `
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
+          <h2 style="font-size: 18px; margin-bottom: 12px;">📥 Lead Magnet Downloads</h2>
+          ${downloadsToday!.map(d => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+              <strong>${d.name}</strong> (${d.email}) — ${d.lead_magnet}
+            </div>
+          `).join('')}
+        ` : ''}
         
         <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
         
-        <h2 style="font-size: 18px; margin-bottom: 12px;">📈 This Week's Stats</h2>
+        <h2 style="font-size: 18px; margin-bottom: 12px;">📊 Prospecting Pipeline</h2>
         <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 8px 0;">Prospects Engaged</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.engagedThisWeek}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0;">Replies Received</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.repliedThisWeek}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0;">Converted</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.convertedThisWeek}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0;">Sequences Completed</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold;">${stats.completedSequences}</td>
-          </tr>
+          <tr><td style="padding: 6px 0;">New Prospects Discovered</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${stats.discoveredToday}</td></tr>
+          <tr><td style="padding: 6px 0;">Active Sequences</td><td style="padding: 6px 0; text-align: right; font-weight: bold;">${stats.activeSequences}</td></tr>
+          <tr><td style="padding: 6px 0;">Engaged This Week</td><td style="padding: 6px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.engagedThisWeek}</td></tr>
+          <tr><td style="padding: 6px 0;">Replies This Week</td><td style="padding: 6px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.repliedThisWeek}</td></tr>
+          <tr><td style="padding: 6px 0;">Converted This Week</td><td style="padding: 6px 0; text-align: right; font-weight: bold; color: #16a34a;">${stats.convertedThisWeek}</td></tr>
         </table>
         
         ${followupsToday && followupsToday.length > 0 ? `
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
-          
-          <h2 style="font-size: 18px; margin-bottom: 12px;">📧 Follow-ups Sent Today</h2>
+          <h2 style="font-size: 18px; margin-bottom: 12px;">📧 Outreach Follow-ups Sent</h2>
           <ul style="padding-left: 20px; margin: 0;">
             ${followupsToday.map(f => `
               <li style="padding: 4px 0;">${(f.prospect as {company_name: string})?.company_name || 'Unknown'} - Step ${f.sequence_step || 1}</li>
@@ -228,7 +318,6 @@ Deno.serve(async (req) => {
         
         ${engagedProspects && engagedProspects.length > 0 ? `
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
-          
           <h2 style="font-size: 18px; margin-bottom: 12px;">🔥 Recently Engaged</h2>
           <ul style="padding-left: 20px; margin: 0;">
             ${engagedProspects.map(p => `
@@ -242,8 +331,7 @@ Deno.serve(async (req) => {
         
         ${topLeads.length > 0 ? `
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 20px 0;">
-          
-          <h2 style="font-size: 18px; margin-bottom: 12px;">⭐ Top Hot Leads Ready for Outreach</h2>
+          <h2 style="font-size: 18px; margin-bottom: 12px;">⭐ Top Hot Leads</h2>
           <table style="width: 100%; border-collapse: collapse;">
             ${topLeads.map((lead, i) => `
               <tr style="border-bottom: 1px solid #f0f0f0;">
@@ -252,12 +340,6 @@ Deno.serve(async (req) => {
                   <span style="color: #666; font-size: 14px;">
                     ${lead.contact_name || 'No contact'} • ${lead.industry || 'Unknown industry'} • Score: ${lead.score}
                   </span>
-                </td>
-                <td style="padding: 12px 0; text-align: right;">
-                  <a href="${dashboardUrl}?action=outreach&prospect=${lead.id}" 
-                     style="background: #2563eb; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 14px;">
-                    Send Outreach
-                  </a>
                 </td>
               </tr>
             `).join('')}
@@ -274,7 +356,7 @@ Deno.serve(async (req) => {
         </p>
         
         <p style="color: #999; font-size: 12px; text-align: center; margin-top: 30px;">
-          Leadership by Design • Automated Prospecting Digest
+          Leadership by Design • Daily Command Centre Digest
         </p>
       </div>
     `;
