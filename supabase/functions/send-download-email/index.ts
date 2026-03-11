@@ -39,7 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to Kevin
     const notificationResponse = await resend.emails.send({
-      from: "Leadership By Design <onboarding@resend.dev>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: ["kevin@kevinbritz.com", "lauren@kevinbritz.com"],
       subject: `📥 New Workshop Download: ${workshop}`,
       html: `
