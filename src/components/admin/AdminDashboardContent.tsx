@@ -14,6 +14,7 @@ import GoogleAdsGenerator from '@/components/marketing/GoogleAdsGenerator';
 import ProspectingTool from '@/components/marketing/ProspectingTool';
 import ProspectList from '@/components/marketing/ProspectList';
 import ProspectingAutomation from '@/components/marketing/ProspectingAutomation';
+import OutreachLogPanel from './OutreachLogPanel';
 interface AdminDashboardContentProps {
   onLogout: () => void;
 }
