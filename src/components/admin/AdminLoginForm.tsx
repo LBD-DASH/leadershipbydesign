@@ -15,11 +15,11 @@ export default function AdminLoginForm({ onAuthenticate }: AdminLoginFormProps) 
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const success = onAuthenticate(email, token);
+    const success = await onAuthenticate(email, token);
     
     if (success) {
       toast.success('Welcome to the Admin Dashboard');
