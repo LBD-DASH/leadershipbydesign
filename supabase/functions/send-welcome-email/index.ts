@@ -212,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email to the user
     const emailResponse = await sendEmail({
-      from: "Leadership by Design <onboarding@resend.dev>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: [email],
       subject: `Welcome to the Priority Insight Waiting List, ${firstName}!`,
       html: emailHtml,
