@@ -113,67 +113,133 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Step 2: Claude generates personalized email — ALWAYS Leader as Coach mode
+        // Step 2: Claude generates personalized email
         const firstName = prospect.contact_name?.split(" ")[0] || "there";
+        const industry = prospect.industry || "professional services";
+        const companySize = prospect.company_size || "";
 
-        const campaignPrompt = `Write a personalized outreach email from Kevin Britz — South Africa's Manager Coaching Specialist — who's worked with 4,000+ leaders across 50+ organisations over 11 years.
+        const systemPrompt = `You are Kevin Britz, founder of Leadership by Design, writing a cold email to a senior HR or L&D decision maker in South Africa.
 
-CONTEXT: Most managers were promoted for technical excellence, not people skills. They default to command-and-control instead of coaching their teams. This kills engagement, drives turnover, and stalls productivity. Kevin runs a 90-Day Manager Coaching Accelerator — a proven system that transforms command-and-control managers into leader-coaches who drive engagement, performance, and retention.
+VOICE: Direct, warm, no corporate language. First person "I" throughout. You are a practitioner, not a vendor. Write like a peer, not a salesperson.
 
-RULES:
-- First paragraph: ONE specific observation about their company's management layer, team growth, or retention challenges (2 sentences max)
-- Second paragraph: Connect to the problem of managers defaulting to command-and-control instead of coaching. Most were promoted for technical ability, not people skills — and it's costing the business in engagement, turnover, and stalled productivity. Position Kevin's 90-Day Manager Coaching Accelerator as the fix. Use "What I've noticed..." or "The thing is..." (2-3 sentences)
-- Third paragraph: Casual zero-pressure ask with the booking link. "Would you be up for a quick chat about how this could work for your team?" style.`;
+SUBJECT LINE RULES:
+- Max 6 words
+- Never use the company name
+- Never use "leadership development", "training", "programme"
+- Create tension or curiosity around a management problem
+- Examples of the RIGHT direction:
+  "Your managers are flying blind"
+  "Coaching culture or command culture?"
+  "Most managers default to this"
+  "What happens after the training ends"
+  "The gap nobody talks about"
 
-        const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": anthropicKey,
-            "anthropic-version": "2023-06-01",
-          },
-          body: JSON.stringify({
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 600,
-            messages: [
-              {
-                role: "user",
-                content: `${campaignPrompt}
+BODY RULES:
+- Under 80 words total. Hard limit.
+- Never use: "impressive", "remarkable", "commitment to excellence", "particularly caught my attention", "I noticed your", "we", "our programme", "our approach"
+- No flattery. No preamble. Get to the point in sentence one.
+- Use "I" not "we"
+- One idea only. No lists. No headers.
 
-PROSPECT: ${prospect.contact_name || "Unknown"}, ${prospect.contact_title || ""} at ${prospect.company_name}
-COMPANY WEBSITE CONTENT: ${companyContext || "No website content available"}
-BOOKING LINK: ${bookingLink}
+STRUCTURE:
+Sentence 1-2: Name a specific management problem relevant to their industry or company size. Make it feel like an observation, not research. Use "What I've seen in [industry]..." or "The pattern I keep running into..."
+Sentence 3-4: Connect that problem to what happens when managers coach instead of control. One concrete outcome only: retention, performance, or speed of execution.
+Sentence 5: CTA. Offer the diagnostic as a gift, not a meeting request. "I built a 2-min diagnostic that shows exactly where your management layer sits. Want me to send it across?"
 
-GLOBAL RULES:
-- Subject line: Short, personal, no corporate fluff. Max 6 words.
-- Body: Under 100 words. Written in first person as Kevin.
-- Sign off as: — Kevin, Leadership by Design
-- NEVER use: "I noticed your impressive...", "particularly caught my attention", "Would you be open to a brief 15-minute conversation"
-- Be warm, direct, human. NOT corporate sales.
+SIGN-OFF:
+Kevin
+Leadership by Design
 
-Respond as JSON: {"subject": "...", "body": "..."}
-Only valid JSON, no markdown.`,
-              },
-            ],
-          }),
-        });
+CRITICAL: If the scraped signal contains words like "committed to", "passionate about", "excellence", "world-class", "journey" -- DISCARD IT. Use industry pattern instead.
 
-        if (!aiRes.ok) {
-          const errDetail = await aiRes.text();
-          console.error(`Claude API failed for ${prospect.company_name}: ${aiRes.status} — ${errDetail}`);
-          errors.push(`Claude ${aiRes.status} for ${prospect.company_name}`);
-          continue;
+OUTPUT FORMAT (respond ONLY with this, nothing else):
+Subject: [subject line]
+
+Hi [first name],
+
+[email body]
+
+Kevin
+Leadership by Design`;
+
+        const userPrompt = `PROSPECT:
+- First name: ${firstName}
+- Full name: ${prospect.contact_name || "Unknown"}
+- Job title: ${prospect.contact_title || "HR Leader"}
+- Company: ${prospect.company_name}
+- Industry: ${industry}
+- Company size: ${companySize}
+- Scraped signal: ${companyContext || "None available"}
+
+Write the email now. Only the subject and body. Nothing else.`;
+
+        // Generation with validation retry
+        let emailContent: { subject: string; body: string } | null = null;
+        const BANNED_SUBJECT = ["leadership development", "training", "programme"];
+        const BANNED_BODY = ["we ", "we'", "our programme", "our approach", "impressive", "remarkable", "commitment to excellence", "commitment"];
+
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": anthropicKey,
+              "anthropic-version": "2023-06-01",
+            },
+            body: JSON.stringify({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 400,
+              messages: [
+                { role: "user", content: `${systemPrompt}\n\n${userPrompt}` },
+              ],
+            }),
+          });
+
+          if (!aiRes.ok) {
+            const errDetail = await aiRes.text();
+            console.error(`Claude API failed for ${prospect.company_name}: ${aiRes.status} — ${errDetail}`);
+            errors.push(`Claude ${aiRes.status} for ${prospect.company_name}`);
+            break;
+          }
+
+          const aiData = await aiRes.json();
+          const aiText = (aiData.content?.[0]?.text || "").trim();
+
+          // Parse "Subject: ...\n\n...body..." format
+          const subjectMatch = aiText.match(/^Subject:\s*(.+)/i);
+          if (!subjectMatch) {
+            console.error("No subject line found in AI response:", aiText.slice(0, 200));
+            if (attempt === 0) continue;
+            errors.push(`Parse fail for ${prospect.company_name}`);
+            break;
+          }
+
+          const subject = subjectMatch[1].trim();
+          const body = aiText.slice(aiText.indexOf("\n", aiText.indexOf(subject)) + 1).trim();
+          const wordCount = body.split(/\s+/).length;
+
+          // Validation checks
+          const companyLower = (prospect.company_name || "").toLowerCase();
+          const subjectLower = subject.toLowerCase();
+          const bodyLower = body.toLowerCase();
+
+          const subjectBad = BANNED_SUBJECT.some(b => subjectLower.includes(b)) ||
+            (companyLower.length > 2 && subjectLower.includes(companyLower));
+          const bodyBad = BANNED_BODY.some(b => bodyLower.includes(b));
+          const tooLong = wordCount > 120;
+
+          if ((subjectBad || bodyBad || tooLong) && attempt === 0) {
+            console.log(`  ♻️ Regenerating for ${prospect.company_name} (subject_bad=${subjectBad}, body_bad=${bodyBad}, words=${wordCount})`);
+            await new Promise(r => setTimeout(r, 1000));
+            continue;
+          }
+
+          emailContent = { subject, body };
+          break;
         }
 
-        const aiData = await aiRes.json();
-        const aiText = aiData.content?.[0]?.text || "";
-        let emailContent: { subject: string; body: string };
-
-        try {
-          emailContent = JSON.parse(aiText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim());
-        } catch {
-          console.error("Failed to parse AI email response:", aiText);
-          errors.push(`Parse fail for ${prospect.company_name}`);
+        if (!emailContent) {
+          errors.push(`Generation failed for ${prospect.company_name}`);
           continue;
         }
 
