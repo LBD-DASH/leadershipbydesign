@@ -7,7 +7,7 @@ import { Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AdminLoginFormProps {
-  onAuthenticate: (email: string, token: string) => boolean;
+  onAuthenticate: (email: string, token: string) => Promise<boolean> | boolean;
 }
 
 export default function AdminLoginForm({ onAuthenticate }: AdminLoginFormProps) {
