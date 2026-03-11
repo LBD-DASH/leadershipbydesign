@@ -33,7 +33,7 @@ const ZenMode = ({ isActive, onClose, currentTask, onCompleteTask }: ZenModeProp
 
   // Timer logic
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isActive) {
       interval = setInterval(() => {
         setElapsedSeconds((prev) => prev + 1);
