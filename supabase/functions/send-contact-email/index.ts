@@ -143,7 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send auto-reply confirmation to the user
     const userEmailResponse = await resend.emails.send({
-      from: "Leadership by Design <onboarding@resend.dev>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: [email],
       subject: "Thank you for contacting Leadership by Design",
       html: `

@@ -95,7 +95,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation to the user
     const userResponse = await resend.emails.send({
-      from: "Leadership By Design <onboarding@resend.dev>",
+      from: "Leadership by Design <hello@leadershipbydesign.co>",
       to: [email],
       subject: `Your ${workshop} Overview`,
       html: `
