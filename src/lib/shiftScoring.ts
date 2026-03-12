@@ -1,4 +1,5 @@
 import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions } from '@/data/shiftQuestions';
+import { aiReadinessQuestions as detailedAIQuestions, aiReadinessCategories as detailedAICategories, type AIReadinessCategory } from '@/data/aiReadinessQuestions';
 
 export interface ShiftScores {
   S: number;
@@ -8,6 +9,14 @@ export interface ShiftScores {
   T: number;
 }
 
+export interface AIReadinessCategoryScores {
+  awareness: number;
+  collaboration: number;
+  change: number;
+  ethics: number;
+  human_skills: number;
+}
+
 export interface ShiftResult {
   scores: ShiftScores;
   primaryDevelopment: ShiftSkill;
@@ -15,6 +24,7 @@ export interface ShiftResult {
   primaryStrength: ShiftSkill;
   aiReadinessScore: number;
   aiReadinessLevel: 'strong' | 'developing' | 'foundation';
+  aiCategoryScores: AIReadinessCategoryScores;
 }
 
 export interface SkillDetail {
