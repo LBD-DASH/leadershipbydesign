@@ -25,6 +25,14 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
   const maxScore = 20;
   const aiMaxScore = 25;
 
+  const skillColors: Record<ShiftSkill, { bg: string; text: string; badge: string; bar: string }> = {
+    S: { bg: 'bg-rose-100', text: 'text-rose-600', badge: 'bg-rose-100 text-rose-600', bar: 'bg-rose-500' },
+    H: { bg: 'bg-emerald-100', text: 'text-emerald-600', badge: 'bg-emerald-100 text-emerald-600', bar: 'bg-emerald-500' },
+    I: { bg: 'bg-sky-100', text: 'text-sky-600', badge: 'bg-sky-100 text-sky-600', bar: 'bg-sky-500' },
+    F: { bg: 'bg-violet-100', text: 'text-violet-600', badge: 'bg-violet-100 text-violet-600', bar: 'bg-violet-500' },
+    T: { bg: 'bg-amber-100', text: 'text-amber-600', badge: 'bg-amber-100 text-amber-600', bar: 'bg-amber-500' },
+  };
+
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
       {/* Behaviour-Based Confirmation */}
