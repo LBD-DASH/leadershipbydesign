@@ -84,6 +84,7 @@ export default function ShiftDiagnostic() {
           primary_strength: result.primaryStrength,
           name: data.name,
           email: data.email,
+          phone: data.phone || null,
           organisation: data.organisation || null,
           role: data.role || null,
           follow_up_preference: data.followUpPreference,
@@ -93,17 +94,16 @@ export default function ShiftDiagnostic() {
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
           utm_term: utmParams.utm_term,
-          // Lead scoring data
           lead_score: leadScore.score,
           lead_temperature: leadScore.temperature,
           buyer_persona: leadScore.buyerPersona,
           company_size: leadScore.companySize,
           urgency: leadScore.urgency,
           next_action: leadScore.nextAction,
-          scoring_breakdown: leadScore.breakdown
+          scoring_breakdown: leadScore.breakdown as any
         })
-        .select()
-        .single();
+        .select('id')
+        .maybeSingle();
 
       if (error) throw error;
       setSubmissionId(submission?.id || null);
