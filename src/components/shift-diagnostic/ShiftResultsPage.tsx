@@ -8,6 +8,7 @@ import type { AIReadinessCategory } from '@/data/aiReadinessQuestions';
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
+import AIDetailCard from './AIDetailCard';
 import BookingWidget from '@/components/shared/BookingWidget';
 
 interface ShiftResultsPageProps {
@@ -294,6 +295,41 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
               isStrength={skill === result.primaryStrength}
             />
           ))}
+        </div>
+      </motion.div>
+
+      {/* AI Readiness Detail Cards */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+      >
+        <div className="text-center mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">AI Readiness Details</h2>
+          <p className="text-sm text-muted-foreground">
+            Explore each AI readiness category and your development recommendations
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(Object.keys(result.aiCategoryScores) as AIReadinessCategory[]).map((cat) => {
+            const detail = aiCategoryDetails[cat];
+            const score = result.aiCategoryScores[cat];
+            const maxCatScore = 20;
+            const isLowest = Object.values(result.aiCategoryScores).every(v => score <= v);
+            const isHighest = Object.values(result.aiCategoryScores).every(v => score >= v);
+            return (
+              <AIDetailCard
+                key={cat}
+                category={cat}
+                detail={detail}
+                score={score}
+                maxScore={maxCatScore}
+                isStrength={isHighest}
+                isFocusArea={isLowest && score !== maxCatScore}
+              />
+            );
+          })}
         </div>
       </motion.div>
 
