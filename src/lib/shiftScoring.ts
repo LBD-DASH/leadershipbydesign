@@ -184,6 +184,25 @@ export function calculateAIReadinessScore(answers: Record<number, number>): numb
   return total;
 }
 
+export function calculateAIReadinessCategoryScores(answers: Record<number, number>): AIReadinessCategoryScores {
+  const scores: AIReadinessCategoryScores = { awareness: 0, collaboration: 0, change: 0, ethics: 0, human_skills: 0 };
+  detailedAIQuestions.forEach((q) => {
+    const answer = answers[q.id];
+    if (answer !== undefined) {
+      scores[q.category] += answer;
+    }
+  });
+  return scores;
+}
+
+export const aiCategoryDetails: Record<AIReadinessCategory, { title: string; icon: string; description: string }> = {
+  awareness: { title: 'AI Awareness', icon: '🔍', description: 'Understanding AI capabilities and limitations' },
+  collaboration: { title: 'Human-AI Collaboration', icon: '🤝', description: 'Working effectively with AI tools' },
+  change: { title: 'Change Readiness', icon: '🔄', description: 'Preparing teams for AI adoption' },
+  ethics: { title: 'Ethical AI Leadership', icon: '⚖️', description: 'Responsible AI use and compliance' },
+  human_skills: { title: 'Human Skills Investment', icon: '💡', description: 'Developing uniquely human capabilities' },
+};
+
 export function getAIReadinessLevel(score: number): 'strong' | 'developing' | 'foundation' {
   if (score >= 20) return 'strong';
   if (score >= 13) return 'developing';
