@@ -134,12 +134,12 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
             <p className="text-sm text-muted-foreground">
-              {answeredCount} of {totalDiagnosticQuestions} questions answered
+              {answeredCount} of {totalQuestions} questions answered
             </p>
             <div className="w-full sm:w-48 h-2 bg-muted rounded-full mt-2">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-300"
-                style={{ width: `${(answeredCount / totalDiagnosticQuestions) * 100}%` }}
+                style={{ width: `${(answeredCount / totalQuestions) * 100}%` }}
               />
             </div>
           </div>
