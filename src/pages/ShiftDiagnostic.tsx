@@ -70,7 +70,7 @@ export default function ShiftDiagnostic() {
       const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'shift' });
 
-      const { data: submission, error } = await supabase
+      const { error } = await supabase
         .from('shift_diagnostic_submissions')
         .insert({
           answers: pendingAnswers,
@@ -101,12 +101,9 @@ export default function ShiftDiagnostic() {
           urgency: leadScore.urgency,
           next_action: leadScore.nextAction,
           scoring_breakdown: leadScore.breakdown as any
-        })
-        .select('id')
-        .maybeSingle();
+        });
 
       if (error) throw error;
-      setSubmissionId(submission?.id || null);
 
       // Trigger welcome email for waiting list
       if (data.followUpPreference === 'yes' || data.followUpPreference === 'maybe') {
