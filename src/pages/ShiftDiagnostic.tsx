@@ -120,16 +120,7 @@ export default function ShiftDiagnostic() {
       }
 
       // Process lead for AI analysis and notification (non-blocking)
-      processLead(leadData, diagnosticContext).then(({ aiAnalysis }) => {
-        // Update the submission with AI analysis
-        if (submission?.id && aiAnalysis) {
-          supabase
-            .from('shift_diagnostic_submissions')
-            .update({ ai_analysis: aiAnalysis })
-            .eq('id', submission.id)
-            .then(() => console.log('💾 AI analysis saved'));
-        }
-      }).catch(err => console.error('Lead processing error:', err));
+      processLead(leadData, diagnosticContext).catch(err => console.error('Lead processing error:', err));
 
       // Check if this came from a prospect outreach email (UTM tracking)
       if (utmParams.utm_campaign?.startsWith('prospect_') || utmParams.utm_source === 'outreach') {
