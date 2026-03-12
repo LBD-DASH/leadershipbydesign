@@ -137,7 +137,7 @@ export default function ShiftDiagnostic() {
                 'Focus': result.scores.F,
                 'Thinking': result.scores.T
               },
-              submissionId: submission?.id
+              submissionId: null
             }
           });
           console.log('🎯 Prospect engagement check triggered');
