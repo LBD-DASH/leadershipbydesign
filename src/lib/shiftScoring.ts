@@ -232,7 +232,7 @@ export function getAIReadinessLevelInfo(level: 'strong' | 'developing' | 'founda
   }
 }
 
-export function getShiftResult(scores: ShiftScores, aiScore: number = 0): ShiftResult {
+export function getShiftResult(scores: ShiftScores, aiScore: number = 0, aiCategoryScores?: AIReadinessCategoryScores): ShiftResult {
   const skillScores: { skill: ShiftSkill; score: number }[] = [
     { skill: 'S', score: scores.S },
     { skill: 'H', score: scores.H },
@@ -259,6 +259,7 @@ export function getShiftResult(scores: ShiftScores, aiScore: number = 0): ShiftR
     primaryStrength,
     aiReadinessScore: aiScore,
     aiReadinessLevel: getAIReadinessLevel(aiScore),
+    aiCategoryScores: aiCategoryScores || { awareness: 0, collaboration: 0, change: 0, ethics: 0, human_skills: 0 },
   };
 }
 
