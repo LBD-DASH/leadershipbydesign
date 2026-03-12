@@ -93,6 +93,7 @@ import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
 import ClaudeContext from "./pages/ClaudeContext";
 import GTMPageViewTracker from "./components/GTMPageViewTracker";
 import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
+import Brand from "./pages/Brand";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -208,6 +209,14 @@ const App = () => (
           <Route path="/ad/executive-coaching" element={<ExecutiveCoachingAd />} />
           <Route path="/leader-as-coach-diagnostic" element={<LeaderAsCoachDiagnostic />} />
           <Route path="/coaching-readiness-guide" element={<CoachingReadinessGuide />} />
+          <Route
+            path="/brand"
+            element={
+              <AdminProtectedRoute>
+                <Brand />
+              </AdminProtectedRoute>
+            }
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
