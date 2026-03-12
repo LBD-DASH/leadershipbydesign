@@ -105,9 +105,7 @@ export default function SkillDetailCard({ skill, score, isPrimary, isStrength }:
                   transition={{ duration: 0.8 }}
                   className={cn(
                     'h-full rounded-full',
-                    isStrength && 'bg-green-500',
-                    isPrimary && 'bg-amber-500',
-                    !isPrimary && !isStrength && 'bg-primary/60'
+                    skillBarColors[skill.key]
                   )}
                 />
               </div>
