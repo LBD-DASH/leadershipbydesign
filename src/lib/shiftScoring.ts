@@ -173,21 +173,33 @@ export function calculateShiftScores(answers: Record<number, number>): ShiftScor
   return scores;
 }
 
+export const AI_ID_OFFSET = 100;
+
 export function calculateAIReadinessScore(answers: Record<number, number>): number {
   let total = 0;
-  aiReadinessQuestions.forEach((question) => {
-    const answer = answers[question.id];
+  // Support both old 5-question format (IDs 21-25) and new 20-question format (IDs 101-120)
+  detailedAIQuestions.forEach((question) => {
+    const answer = answers[question.id + AI_ID_OFFSET];
     if (answer !== undefined) {
       total += answer;
     }
   });
+  // Fallback to old format
+  if (total === 0) {
+    aiReadinessQuestions.forEach((question) => {
+      const answer = answers[question.id];
+      if (answer !== undefined) {
+        total += answer;
+      }
+    });
+  }
   return total;
 }
 
 export function calculateAIReadinessCategoryScores(answers: Record<number, number>): AIReadinessCategoryScores {
   const scores: AIReadinessCategoryScores = { awareness: 0, collaboration: 0, change: 0, ethics: 0, human_skills: 0 };
   detailedAIQuestions.forEach((q) => {
-    const answer = answers[q.id];
+    const answer = answers[q.id + AI_ID_OFFSET];
     if (answer !== undefined) {
       scores[q.category] += answer;
     }
