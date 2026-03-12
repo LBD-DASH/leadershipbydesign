@@ -25,9 +25,12 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  // AI questions use offset IDs (100+) to avoid collision with SHIFT question IDs
+  const AI_ID_OFFSET = 100;
   const allShiftAnswered = shiftQuestions.every((q) => answers[q.id] !== undefined);
-  const allAIAnswered = aiReadinessQuestions.every((q) => answers[q.id] !== undefined);
+  const allAIAnswered = detailedAIQuestions.every((q) => answers[q.id + AI_ID_OFFSET] !== undefined);
   const allAnswered = allShiftAnswered && allAIAnswered;
+  const totalQuestions = shiftQuestions.length + detailedAIQuestions.length;
   const answeredCount = Object.keys(answers).length;
 
   const handleSubmit = (e: React.FormEvent) => {
