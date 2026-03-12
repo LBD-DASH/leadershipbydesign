@@ -74,9 +74,7 @@ export default function SkillDetailCard({ skill, score, isPrimary, isStrength }:
           <div
             className={cn(
               'w-12 h-12 rounded-full flex-shrink-0 overflow-hidden ring-2',
-              isStrength && 'ring-green-500',
-              isPrimary && 'ring-amber-500',
-              !isPrimary && !isStrength && 'ring-primary/30'
+              skillRingColors[skill.key]
             )}
           >
             <img
