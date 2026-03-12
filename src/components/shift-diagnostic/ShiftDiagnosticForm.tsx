@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions, aiReadinessCategories, totalDiagnosticQuestions } from '@/data/shiftQuestions';
+import { ShiftSkill, shiftQuestions, shiftCategories } from '@/data/shiftQuestions';
+import { aiReadinessQuestions as detailedAIQuestions, aiReadinessCategories as detailedAICategories } from '@/data/aiReadinessQuestions';
 import ShiftQuestionRating from './ShiftQuestionRating';
 import { ArrowRight, CheckCircle, Bot } from 'lucide-react';
 
@@ -24,9 +25,12 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  // AI questions use offset IDs (100+) to avoid collision with SHIFT question IDs
+  const AI_ID_OFFSET = 100;
   const allShiftAnswered = shiftQuestions.every((q) => answers[q.id] !== undefined);
-  const allAIAnswered = aiReadinessQuestions.every((q) => answers[q.id] !== undefined);
+  const allAIAnswered = detailedAIQuestions.every((q) => answers[q.id + AI_ID_OFFSET] !== undefined);
   const allAnswered = allShiftAnswered && allAIAnswered;
+  const totalQuestions = shiftQuestions.length + detailedAIQuestions.length;
   const answeredCount = Object.keys(answers).length;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -82,53 +86,60 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
         );
       })}
 
-      {/* AI Readiness Section */}
-      <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-primary" />
+      {/* AI Readiness Sections by Category */}
+      {detailedAICategories.map((cat) => {
+        const catQuestions = detailedAIQuestions.filter((q) => q.category === cat.key);
+        const catAnswered = catQuestions.filter((q) => answers[q.id + AI_ID_OFFSET] !== undefined).length;
+
+        return (
+          <div key={cat.key} className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-semibold text-foreground">{cat.title}</h3>
+                  <p className="text-muted-foreground text-sm mt-1">{cat.description}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                {catAnswered === catQuestions.length ? (
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                  <span className="text-muted-foreground">
+                    {catAnswered}/{catQuestions.length}
+                  </span>
+                )}
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-foreground">AI Readiness</h3>
-              <p className="text-muted-foreground text-sm mt-1">Your team's ability to lead effectively in an AI-augmented workplace.</p>
+
+            <div className="space-y-2">
+              {catQuestions.map((question) => (
+                <ShiftQuestionRating
+                  key={question.id}
+                  questionId={question.id + AI_ID_OFFSET}
+                  questionText={question.text}
+                  value={answers[question.id + AI_ID_OFFSET]}
+                  onChange={handleRatingChange}
+                />
+              ))}
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            {allAIAnswered ? (
-              <CheckCircle className="w-5 h-5 text-green-500" />
-            ) : (
-              <span className="text-muted-foreground">
-                {aiReadinessQuestions.filter((q) => answers[q.id] !== undefined).length}/{aiReadinessQuestions.length}
-              </span>
-            )}
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          {aiReadinessQuestions.map((question) => (
-            <ShiftQuestionRating
-              key={question.id}
-              questionId={question.id}
-              questionText={question.text}
-              value={answers[question.id]}
-              onChange={handleRatingChange}
-            />
-          ))}
-        </div>
-      </div>
+        );
+      })}
 
       {/* Progress and Submit */}
       <div className="sticky bottom-4 bg-background/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-border">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
             <p className="text-sm text-muted-foreground">
-              {answeredCount} of {totalDiagnosticQuestions} questions answered
+              {answeredCount} of {totalQuestions} questions answered
             </p>
             <div className="w-full sm:w-48 h-2 bg-muted rounded-full mt-2">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-300"
-                style={{ width: `${(answeredCount / totalDiagnosticQuestions) * 100}%` }}
+                style={{ width: `${(answeredCount / totalQuestions) * 100}%` }}
               />
             </div>
           </div>

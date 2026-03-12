@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Target, Users, TrendingUp, Brain, Sparkles, Zap, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInterpretation, getAIReadinessLevelInfo } from '@/lib/shiftScoring';
+import { ShiftResult, skillDetails, getSkillTitle, getShiftInsights, getScoreInterpretation, getAIReadinessLevelInfo, aiCategoryDetails } from '@/lib/shiftScoring';
+import type { AIReadinessCategory } from '@/data/aiReadinessQuestions';
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
@@ -23,7 +24,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
 
   const skillOrder: ShiftSkill[] = ['S', 'H', 'I', 'F', 'T'];
   const maxScore = 20;
-  const aiMaxScore = 25;
+  const aiMaxScore = 100; // 20 questions × 5 max
 
   const skillColors: Record<ShiftSkill, { bg: string; text: string; badge: string; bar: string }> = {
     S: { bg: 'bg-rose-100', text: 'text-rose-600', badge: 'bg-rose-100 text-rose-600', bar: 'bg-rose-500' },
@@ -138,6 +139,37 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
               result.aiReadinessLevel === 'developing' ? "bg-blue-500" : "bg-amber-400"
             )}
           />
+        </div>
+
+        {/* AI Category Breakdown */}
+        <div className="mt-6 pt-6 border-t border-primary/10">
+          <h4 className="text-sm font-semibold text-foreground mb-4">Category Breakdown</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            {(Object.keys(result.aiCategoryScores) as AIReadinessCategory[]).map((cat) => {
+              const detail = aiCategoryDetails[cat];
+              const score = result.aiCategoryScores[cat];
+              const maxCatScore = 20; // 4 questions × 5 max
+              const pct = (score / maxCatScore) * 100;
+              return (
+                <div key={cat} className="bg-background/60 rounded-xl p-3 border border-border/50">
+                  <div className="text-lg mb-1">{detail.icon}</div>
+                  <p className="text-xs font-semibold text-foreground leading-tight">{detail.title}</p>
+                  <div className="text-lg font-bold text-primary mt-1">{score}/{maxCatScore}</div>
+                  <div className="h-1.5 bg-muted rounded-full overflow-hidden mt-2">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pct}%` }}
+                      transition={{ delay: 0.7, duration: 0.6 }}
+                      className={cn(
+                        "h-full rounded-full",
+                        pct >= 75 ? "bg-green-500" : pct >= 50 ? "bg-blue-500" : "bg-amber-400"
+                      )}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </motion.div>
 

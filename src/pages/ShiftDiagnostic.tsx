@@ -10,7 +10,7 @@ import ShiftDiagnosticForm from '@/components/shift-diagnostic/ShiftDiagnosticFo
 import ShiftResultsPage from '@/components/shift-diagnostic/ShiftResultsPage';
 import LeadCaptureGate, { LeadCaptureData } from '@/components/shared/LeadCaptureGate';
 import { supabase } from '@/integrations/supabase/client';
-import { calculateShiftScores, calculateAIReadinessScore, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
+import { calculateShiftScores, calculateAIReadinessScore, calculateAIReadinessCategoryScores, getShiftResult, ShiftResult } from '@/lib/shiftScoring';
 import { totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import { useUtmParams } from '@/hooks/useUtmParams';
 import { calculateLeadScore, formatDiagnosticContext } from '@/utils/leadScoring';
@@ -30,7 +30,8 @@ export default function ShiftDiagnostic() {
   const handleQuestionnaireSubmit = async (answers: Record<number, number>) => {
     const scores = calculateShiftScores(answers);
     const aiScore = calculateAIReadinessScore(answers);
-    const shiftResult = getShiftResult(scores, aiScore);
+    const aiCategoryScores = calculateAIReadinessCategoryScores(answers);
+    const shiftResult = getShiftResult(scores, aiScore, aiCategoryScores);
     setResult(shiftResult);
     setPendingAnswers(answers);
     setStage('capture');
@@ -200,11 +201,11 @@ export default function ShiftDiagnostic() {
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Clock className="w-3.5 h-3.5 text-primary" />
-                    <span>4 min</span>
+                    <span>8 min</span>
                   </div>
                    <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Target className="w-3.5 h-3.5 text-primary" />
-                    <span>25 questions</span>
+                    <span>40 questions</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Zap className="w-3.5 h-3.5 text-primary" />
@@ -224,7 +225,7 @@ export default function ShiftDiagnostic() {
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
-                  Rate the 25 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
+                  Rate the 40 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
                 </p>
                 
                 <p className="text-xs sm:text-sm text-muted-foreground italic px-2">

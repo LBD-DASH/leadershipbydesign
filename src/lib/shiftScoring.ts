@@ -1,4 +1,5 @@
 import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions } from '@/data/shiftQuestions';
+import { aiReadinessQuestions as detailedAIQuestions, aiReadinessCategories as detailedAICategories, type AIReadinessCategory } from '@/data/aiReadinessQuestions';
 
 export interface ShiftScores {
   S: number;
@@ -8,6 +9,14 @@ export interface ShiftScores {
   T: number;
 }
 
+export interface AIReadinessCategoryScores {
+  awareness: number;
+  collaboration: number;
+  change: number;
+  ethics: number;
+  human_skills: number;
+}
+
 export interface ShiftResult {
   scores: ShiftScores;
   primaryDevelopment: ShiftSkill;
@@ -15,6 +24,7 @@ export interface ShiftResult {
   primaryStrength: ShiftSkill;
   aiReadinessScore: number;
   aiReadinessLevel: 'strong' | 'developing' | 'foundation';
+  aiCategoryScores: AIReadinessCategoryScores;
 }
 
 export interface SkillDetail {
@@ -163,20 +173,51 @@ export function calculateShiftScores(answers: Record<number, number>): ShiftScor
   return scores;
 }
 
+export const AI_ID_OFFSET = 100;
+
 export function calculateAIReadinessScore(answers: Record<number, number>): number {
   let total = 0;
-  aiReadinessQuestions.forEach((question) => {
-    const answer = answers[question.id];
+  // Support both old 5-question format (IDs 21-25) and new 20-question format (IDs 101-120)
+  detailedAIQuestions.forEach((question) => {
+    const answer = answers[question.id + AI_ID_OFFSET];
     if (answer !== undefined) {
       total += answer;
     }
   });
+  // Fallback to old format
+  if (total === 0) {
+    aiReadinessQuestions.forEach((question) => {
+      const answer = answers[question.id];
+      if (answer !== undefined) {
+        total += answer;
+      }
+    });
+  }
   return total;
 }
 
+export function calculateAIReadinessCategoryScores(answers: Record<number, number>): AIReadinessCategoryScores {
+  const scores: AIReadinessCategoryScores = { awareness: 0, collaboration: 0, change: 0, ethics: 0, human_skills: 0 };
+  detailedAIQuestions.forEach((q) => {
+    const answer = answers[q.id + AI_ID_OFFSET];
+    if (answer !== undefined) {
+      scores[q.category] += answer;
+    }
+  });
+  return scores;
+}
+
+export const aiCategoryDetails: Record<AIReadinessCategory, { title: string; icon: string; description: string }> = {
+  awareness: { title: 'AI Awareness', icon: '🔍', description: 'Understanding AI capabilities and limitations' },
+  collaboration: { title: 'Human-AI Collaboration', icon: '🤝', description: 'Working effectively with AI tools' },
+  change: { title: 'Change Readiness', icon: '🔄', description: 'Preparing teams for AI adoption' },
+  ethics: { title: 'Ethical AI Leadership', icon: '⚖️', description: 'Responsible AI use and compliance' },
+  human_skills: { title: 'Human Skills Investment', icon: '💡', description: 'Developing uniquely human capabilities' },
+};
+
 export function getAIReadinessLevel(score: number): 'strong' | 'developing' | 'foundation' {
-  if (score >= 20) return 'strong';
-  if (score >= 13) return 'developing';
+  if (score >= 70) return 'strong';
+  if (score >= 45) return 'developing';
   return 'foundation';
 }
 
@@ -203,7 +244,7 @@ export function getAIReadinessLevelInfo(level: 'strong' | 'developing' | 'founda
   }
 }
 
-export function getShiftResult(scores: ShiftScores, aiScore: number = 0): ShiftResult {
+export function getShiftResult(scores: ShiftScores, aiScore: number = 0, aiCategoryScores?: AIReadinessCategoryScores): ShiftResult {
   const skillScores: { skill: ShiftSkill; score: number }[] = [
     { skill: 'S', score: scores.S },
     { skill: 'H', score: scores.H },
@@ -230,6 +271,7 @@ export function getShiftResult(scores: ShiftScores, aiScore: number = 0): ShiftR
     primaryStrength,
     aiReadinessScore: aiScore,
     aiReadinessLevel: getAIReadinessLevel(aiScore),
+    aiCategoryScores: aiCategoryScores || { awareness: 0, collaboration: 0, change: 0, ethics: 0, human_skills: 0 },
   };
 }
 
