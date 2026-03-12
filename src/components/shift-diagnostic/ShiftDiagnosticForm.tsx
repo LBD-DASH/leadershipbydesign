@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { shiftQuestions, shiftCategories, aiReadinessQuestions, aiReadinessCategories, totalDiagnosticQuestions } from '@/data/shiftQuestions';
+import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions, aiReadinessCategories, totalDiagnosticQuestions } from '@/data/shiftQuestions';
 import ShiftQuestionRating from './ShiftQuestionRating';
 import { ArrowRight, CheckCircle, Bot } from 'lucide-react';
+
+const categoryColors: Record<ShiftSkill, { bg: string; text: string; border: string; cardBg: string }> = {
+  S: { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-600', border: 'border-rose-200 dark:border-rose-800', cardBg: 'bg-gradient-to-br from-rose-50/50 to-transparent dark:from-rose-950/20' },
+  H: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-600', border: 'border-emerald-200 dark:border-emerald-800', cardBg: 'bg-gradient-to-br from-emerald-50/50 to-transparent dark:from-emerald-950/20' },
+  I: { bg: 'bg-sky-100 dark:bg-sky-900/30', text: 'text-sky-600', border: 'border-sky-200 dark:border-sky-800', cardBg: 'bg-gradient-to-br from-sky-50/50 to-transparent dark:from-sky-950/20' },
+  F: { bg: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-600', border: 'border-violet-200 dark:border-violet-800', cardBg: 'bg-gradient-to-br from-violet-50/50 to-transparent dark:from-violet-950/20' },
+  T: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-600', border: 'border-amber-200 dark:border-amber-800', cardBg: 'bg-gradient-to-br from-amber-50/50 to-transparent dark:from-amber-950/20' },
+};
 
 interface ShiftDiagnosticFormProps {
   onSubmit: (answers: Record<number, number>) => void;
