@@ -200,6 +200,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
             const isStrength = skill === result.primaryStrength;
             const details = skillDetails[skill];
             
+            const colors = skillColors[skill];
             return (
               <div key={skill} className="space-y-1">
                 <div className="flex items-center justify-between gap-2">
@@ -207,24 +208,16 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
                     <span
                       className={cn(
                         'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold',
-                        isStrength && 'bg-green-100 text-green-600',
-                        isPrimary && 'bg-amber-100 text-amber-600',
-                        !isPrimary && !isStrength && 'bg-muted text-muted-foreground'
+                        colors.badge
                       )}
                     >
                       {skill}
                     </span>
-                    <span className={cn(
-                      "font-medium text-sm sm:text-base truncate",
-                      isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
-                    )}>
+                    <span className={cn("font-medium text-sm sm:text-base truncate", colors.text)}>
                       {details.title}
                     </span>
                   </div>
-                  <span className={cn(
-                    "font-bold text-sm sm:text-base flex-shrink-0",
-                    isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
-                  )}>
+                  <span className={cn("font-bold text-sm sm:text-base flex-shrink-0", colors.text)}>
                     {score}/{maxScore}
                   </span>
                 </div>
@@ -233,10 +226,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
                     transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                    className={cn(
-                      "h-full rounded-full",
-                      isStrength ? "bg-green-500" : isPrimary ? "bg-amber-400" : "bg-muted-foreground/30"
-                    )}
+                    className={cn("h-full rounded-full", colors.bar)}
                   />
                 </div>
               </div>
