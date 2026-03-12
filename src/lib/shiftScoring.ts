@@ -207,12 +207,52 @@ export function calculateAIReadinessCategoryScores(answers: Record<number, numbe
   return scores;
 }
 
-export const aiCategoryDetails: Record<AIReadinessCategory, { title: string; icon: string; description: string }> = {
-  awareness: { title: 'AI Awareness', icon: '🔍', description: 'Understanding AI capabilities and limitations' },
-  collaboration: { title: 'Human-AI Collaboration', icon: '🤝', description: 'Working effectively with AI tools' },
-  change: { title: 'Change Readiness', icon: '🔄', description: 'Preparing teams for AI adoption' },
-  ethics: { title: 'Ethical AI Leadership', icon: '⚖️', description: 'Responsible AI use and compliance' },
-  human_skills: { title: 'Human Skills Investment', icon: '💡', description: 'Developing uniquely human capabilities' },
+export const aiCategoryDetails: Record<AIReadinessCategory, { title: string; icon: string; description: string; whenStrong: string[]; needsDevelopment: string[]; howToStrengthen: string[]; workshopConnection: string }> = {
+  awareness: {
+    title: 'AI Awareness',
+    icon: '🔍',
+    description: 'Understanding AI capabilities, limitations, and appropriate applications in your workplace.',
+    whenStrong: ['You know which tasks AI handles well vs. poorly', 'You spot AI opportunities others miss', 'You stay current on relevant AI developments', 'You set realistic expectations for AI outcomes'],
+    needsDevelopment: ['Over-estimating or under-estimating AI capabilities', 'Missing obvious AI use cases', 'Falling behind on AI developments', 'Unrealistic expectations of AI tools'],
+    howToStrengthen: ['Experiment with AI tools in low-risk settings', 'Follow industry-specific AI case studies', 'Attend AI literacy workshops', 'Map your workflows for AI augmentation potential'],
+    workshopConnection: 'The SHIFT AI Leadership module builds foundational AI awareness through hands-on exploration.',
+  },
+  collaboration: {
+    title: 'Human-AI Collaboration',
+    icon: '🤝',
+    description: 'Effectively working WITH AI tools while maintaining human oversight and critical evaluation.',
+    whenStrong: ['Your team uses AI without over-relying on it', 'AI outputs are critically evaluated before action', 'You know when to trust AI vs. apply human judgment', 'Human oversight is maintained over AI processes'],
+    needsDevelopment: ['Blind trust in AI-generated outputs', 'Under-utilising available AI tools', 'No quality checks on AI recommendations', 'Losing human agency in AI-assisted workflows'],
+    howToStrengthen: ['Establish AI output review protocols', 'Create human-in-the-loop checkpoints', 'Train teams on prompt engineering basics', 'Define clear AI vs. human decision boundaries'],
+    workshopConnection: 'The AI-Ready Leadership programme develops practical human-AI collaboration frameworks.',
+  },
+  change: {
+    title: 'Change Readiness',
+    icon: '🔄',
+    description: 'Preparing teams for technological changes and building adaptive capacity for AI adoption.',
+    whenStrong: ['You proactively prepare your team for AI changes', 'AI anxiety is addressed constructively', 'Clear communication about AI\'s impact on roles', 'Psychological safety for AI experimentation exists'],
+    needsDevelopment: ['Reactive approach to AI adoption', 'Unaddressed team anxiety about AI', 'Poor communication about AI changes', 'Fear of failure prevents AI experimentation'],
+    howToStrengthen: ['Create safe spaces for AI experimentation', 'Communicate transparently about AI strategy', 'Address concerns before rolling out AI tools', 'Celebrate learning from AI experiments, even failures'],
+    workshopConnection: 'The Alignment Workshop builds change readiness through clarity on purpose and priorities.',
+  },
+  ethics: {
+    title: 'Ethical AI Leadership',
+    icon: '⚖️',
+    description: 'Ensuring compliance, recognising bias, and making responsible AI decisions (including POPI Act).',
+    whenStrong: ['AI use complies with data protection requirements', 'You can identify bias in AI systems', 'Clear guidelines for responsible AI use exist', 'Ethical implications are considered before implementation'],
+    needsDevelopment: ['Data protection gaps in AI workflows', 'Inability to spot AI bias', 'No governance framework for AI use', 'Ethics treated as afterthought'],
+    howToStrengthen: ['Audit current AI tools for POPI compliance', 'Learn to identify common AI biases', 'Create an AI ethics checklist for your team', 'Include ethical review in AI project planning'],
+    workshopConnection: 'The Ethical AI Leadership module covers POPI Act compliance and responsible AI governance.',
+  },
+  human_skills: {
+    title: 'Human Skills Investment',
+    icon: '💡',
+    description: 'Developing the uniquely human skills that AI cannot replicate — empathy, creativity, judgment.',
+    whenStrong: ['You invest in empathy, creativity, and judgment', 'Self-management and emotional regulation are priorities', 'Human connection and relationships are strengthened', 'Critical thinking skills are actively developed'],
+    needsDevelopment: ['Over-investing in technical skills, under-investing in human ones', 'Emotional intelligence neglected', 'Relationships deprioritised for efficiency', 'Critical thinking delegated to AI'],
+    howToStrengthen: ['Dedicate development time to SHIFT skills', 'Create mentoring and coaching opportunities', 'Practise deliberate relationship-building', 'Use AI to handle routine work, freeing time for human skills'],
+    workshopConnection: 'The full SHIFT programme is designed to develop exactly these uniquely human capabilities.',
+  },
 };
 
 export function getAIReadinessLevel(score: number): 'strong' | 'developing' | 'foundation' {
