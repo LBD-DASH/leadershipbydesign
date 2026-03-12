@@ -21,10 +21,26 @@ const skillImages: Record<ShiftSkill, string> = {
 
 const skillTints: Record<ShiftSkill, string> = {
   S: 'bg-rose-50/50 dark:bg-rose-950/20',
-  H: 'bg-sky-50/50 dark:bg-sky-950/20',
-  I: 'bg-amber-50/50 dark:bg-amber-950/20',
-  F: 'bg-emerald-50/50 dark:bg-emerald-950/20',
-  T: 'bg-violet-50/50 dark:bg-violet-950/20',
+  H: 'bg-emerald-50/50 dark:bg-emerald-950/20',
+  I: 'bg-sky-50/50 dark:bg-sky-950/20',
+  F: 'bg-violet-50/50 dark:bg-violet-950/20',
+  T: 'bg-amber-50/50 dark:bg-amber-950/20',
+};
+
+const skillBarColors: Record<ShiftSkill, string> = {
+  S: 'bg-rose-500',
+  H: 'bg-emerald-500',
+  I: 'bg-sky-500',
+  F: 'bg-violet-500',
+  T: 'bg-amber-500',
+};
+
+const skillRingColors: Record<ShiftSkill, string> = {
+  S: 'ring-rose-500',
+  H: 'ring-emerald-500',
+  I: 'ring-sky-500',
+  F: 'ring-violet-500',
+  T: 'ring-amber-500',
 };
 
 interface SkillDetailCardProps {
