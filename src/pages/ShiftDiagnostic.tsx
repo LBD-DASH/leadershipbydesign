@@ -160,8 +160,14 @@ export default function ShiftDiagnostic() {
 
       setStage('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (error) {
-      console.error('Error saving submission:', error);
+    } catch (error: any) {
+      console.error('Error saving shift submission:', error);
+      const { toast } = await import('@/hooks/use-toast');
+      toast({
+        title: 'Something went wrong',
+        description: error?.message || 'Could not save your results. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setIsSubmitting(false);
     }
