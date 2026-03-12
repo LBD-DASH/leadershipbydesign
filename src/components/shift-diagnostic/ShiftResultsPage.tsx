@@ -25,6 +25,14 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
   const maxScore = 20;
   const aiMaxScore = 25;
 
+  const skillColors: Record<ShiftSkill, { bg: string; text: string; badge: string; bar: string }> = {
+    S: { bg: 'bg-rose-100', text: 'text-rose-600', badge: 'bg-rose-100 text-rose-600', bar: 'bg-rose-500' },
+    H: { bg: 'bg-emerald-100', text: 'text-emerald-600', badge: 'bg-emerald-100 text-emerald-600', bar: 'bg-emerald-500' },
+    I: { bg: 'bg-sky-100', text: 'text-sky-600', badge: 'bg-sky-100 text-sky-600', bar: 'bg-sky-500' },
+    F: { bg: 'bg-violet-100', text: 'text-violet-600', badge: 'bg-violet-100 text-violet-600', bar: 'bg-violet-500' },
+    T: { bg: 'bg-amber-100', text: 'text-amber-600', badge: 'bg-amber-100 text-amber-600', bar: 'bg-amber-500' },
+  };
+
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
       {/* Behaviour-Based Confirmation */}
@@ -192,6 +200,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
             const isStrength = skill === result.primaryStrength;
             const details = skillDetails[skill];
             
+            const colors = skillColors[skill];
             return (
               <div key={skill} className="space-y-1">
                 <div className="flex items-center justify-between gap-2">
@@ -199,24 +208,16 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
                     <span
                       className={cn(
                         'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold',
-                        isStrength && 'bg-green-100 text-green-600',
-                        isPrimary && 'bg-amber-100 text-amber-600',
-                        !isPrimary && !isStrength && 'bg-muted text-muted-foreground'
+                        colors.badge
                       )}
                     >
                       {skill}
                     </span>
-                    <span className={cn(
-                      "font-medium text-sm sm:text-base truncate",
-                      isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
-                    )}>
+                    <span className={cn("font-medium text-sm sm:text-base truncate", colors.text)}>
                       {details.title}
                     </span>
                   </div>
-                  <span className={cn(
-                    "font-bold text-sm sm:text-base flex-shrink-0",
-                    isStrength ? "text-green-600" : isPrimary ? "text-amber-600" : "text-muted-foreground"
-                  )}>
+                  <span className={cn("font-bold text-sm sm:text-base flex-shrink-0", colors.text)}>
                     {score}/{maxScore}
                   </span>
                 </div>
@@ -225,10 +226,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
                     transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                    className={cn(
-                      "h-full rounded-full",
-                      isStrength ? "bg-green-500" : isPrimary ? "bg-amber-400" : "bg-muted-foreground/30"
-                    )}
+                    className={cn("h-full rounded-full", colors.bar)}
                   />
                 </div>
               </div>
