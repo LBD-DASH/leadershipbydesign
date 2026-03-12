@@ -8,6 +8,7 @@ import type { AIReadinessCategory } from '@/data/aiReadinessQuestions';
 import { ShiftSkill } from '@/data/shiftQuestions';
 import SocialShareButtons from '@/components/shared/SocialShareButtons';
 import SkillDetailCard from './SkillDetailCard';
+import AIDetailCard from './AIDetailCard';
 import BookingWidget from '@/components/shared/BookingWidget';
 
 interface ShiftResultsPageProps {
