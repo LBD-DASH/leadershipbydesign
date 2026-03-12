@@ -70,7 +70,7 @@ export default function ShiftDiagnostic() {
       const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'shift' });
 
-      const { data: submission, error } = await supabase
+      const { error } = await supabase
         .from('shift_diagnostic_submissions')
         .insert({
           answers: pendingAnswers,
@@ -84,6 +84,7 @@ export default function ShiftDiagnostic() {
           primary_strength: result.primaryStrength,
           name: data.name,
           email: data.email,
+          phone: data.phone || null,
           organisation: data.organisation || null,
           role: data.role || null,
           follow_up_preference: data.followUpPreference,
@@ -93,20 +94,16 @@ export default function ShiftDiagnostic() {
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
           utm_term: utmParams.utm_term,
-          // Lead scoring data
           lead_score: leadScore.score,
           lead_temperature: leadScore.temperature,
           buyer_persona: leadScore.buyerPersona,
           company_size: leadScore.companySize,
           urgency: leadScore.urgency,
           next_action: leadScore.nextAction,
-          scoring_breakdown: leadScore.breakdown
-        })
-        .select()
-        .single();
+          scoring_breakdown: leadScore.breakdown as any
+        });
 
       if (error) throw error;
-      setSubmissionId(submission?.id || null);
 
       // Trigger welcome email for waiting list
       if (data.followUpPreference === 'yes' || data.followUpPreference === 'maybe') {
@@ -123,16 +120,7 @@ export default function ShiftDiagnostic() {
       }
 
       // Process lead for AI analysis and notification (non-blocking)
-      processLead(leadData, diagnosticContext).then(({ aiAnalysis }) => {
-        // Update the submission with AI analysis
-        if (submission?.id && aiAnalysis) {
-          supabase
-            .from('shift_diagnostic_submissions')
-            .update({ ai_analysis: aiAnalysis })
-            .eq('id', submission.id)
-            .then(() => console.log('💾 AI analysis saved'));
-        }
-      }).catch(err => console.error('Lead processing error:', err));
+      processLead(leadData, diagnosticContext).catch(err => console.error('Lead processing error:', err));
 
       // Check if this came from a prospect outreach email (UTM tracking)
       if (utmParams.utm_campaign?.startsWith('prospect_') || utmParams.utm_source === 'outreach') {
@@ -149,7 +137,7 @@ export default function ShiftDiagnostic() {
                 'Focus': result.scores.F,
                 'Thinking': result.scores.T
               },
-              submissionId: submission?.id
+              submissionId: null
             }
           });
           console.log('🎯 Prospect engagement check triggered');
@@ -160,8 +148,14 @@ export default function ShiftDiagnostic() {
 
       setStage('results');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (error) {
-      console.error('Error saving submission:', error);
+    } catch (error: any) {
+      console.error('Error saving shift submission:', error);
+      const { toast } = await import('@/hooks/use-toast');
+      toast({
+        title: 'Something went wrong',
+        description: error?.message || 'Could not save your results. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setIsSubmitting(false);
     }
