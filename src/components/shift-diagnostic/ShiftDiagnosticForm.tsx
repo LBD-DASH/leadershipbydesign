@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ShiftSkill, shiftQuestions, shiftCategories, aiReadinessQuestions, aiReadinessCategories, totalDiagnosticQuestions } from '@/data/shiftQuestions';
+import { ShiftSkill, shiftQuestions, shiftCategories } from '@/data/shiftQuestions';
+import { aiReadinessQuestions as detailedAIQuestions, aiReadinessCategories as detailedAICategories } from '@/data/aiReadinessQuestions';
 import ShiftQuestionRating from './ShiftQuestionRating';
 import { ArrowRight, CheckCircle, Bot } from 'lucide-react';
 
