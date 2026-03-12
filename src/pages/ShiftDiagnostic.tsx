@@ -225,7 +225,7 @@ export default function ShiftDiagnostic() {
                 </h1>
                 
                 <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-3 sm:mb-4 px-2">
-                  Rate the 25 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
+                  Rate the 40 statements below to uncover your team's human skills strengths and AI readiness — in one diagnostic.
                 </p>
                 
                 <p className="text-xs sm:text-sm text-muted-foreground italic px-2">

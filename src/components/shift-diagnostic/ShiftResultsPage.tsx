@@ -24,7 +24,7 @@ export default function ShiftResultsPage({ result, submissionId, userName }: Shi
 
   const skillOrder: ShiftSkill[] = ['S', 'H', 'I', 'F', 'T'];
   const maxScore = 20;
-  const aiMaxScore = 25;
+  const aiMaxScore = 100; // 20 questions × 5 max
 
   const skillColors: Record<ShiftSkill, { bg: string; text: string; badge: string; bar: string }> = {
     S: { bg: 'bg-rose-100', text: 'text-rose-600', badge: 'bg-rose-100 text-rose-600', bar: 'bg-rose-500' },
