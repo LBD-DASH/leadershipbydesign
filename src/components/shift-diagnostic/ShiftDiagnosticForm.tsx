@@ -35,12 +35,13 @@ export default function ShiftDiagnosticForm({ onSubmit, isSubmitting }: ShiftDia
         const categoryQuestions = shiftQuestions.filter((q) => q.skill === category.key);
         const categoryAnswered = categoryQuestions.filter((q) => answers[q.id] !== undefined).length;
         
+          const colors = categoryColors[category.key];
         return (
-          <div key={category.key} className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border">
+          <div key={category.key} className={`rounded-2xl p-6 sm:p-8 shadow-sm border ${colors.border} ${colors.cardBg}`}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-primary font-bold text-lg">{category.key}</span>
+                <div className={`w-10 h-10 rounded-full ${colors.bg} flex items-center justify-center`}>
+                  <span className={`${colors.text} font-bold text-lg`}>{category.key}</span>
                 </div>
                 <div>
                   <h3 className="text-xl sm:text-2xl font-semibold text-foreground">{category.title}</h3>
