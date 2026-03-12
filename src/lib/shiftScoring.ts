@@ -216,8 +216,8 @@ export const aiCategoryDetails: Record<AIReadinessCategory, { title: string; ico
 };
 
 export function getAIReadinessLevel(score: number): 'strong' | 'developing' | 'foundation' {
-  if (score >= 20) return 'strong';
-  if (score >= 13) return 'developing';
+  if (score >= 70) return 'strong';
+  if (score >= 45) return 'developing';
   return 'foundation';
 }
 
