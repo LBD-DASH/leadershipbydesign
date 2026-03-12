@@ -201,7 +201,7 @@ export default function ShiftDiagnostic() {
                 <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                   <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Clock className="w-3.5 h-3.5 text-primary" />
-                    <span>4 min</span>
+                    <span>8 min</span>
                   </div>
                    <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-full px-3 py-1.5">
                     <Target className="w-3.5 h-3.5 text-primary" />
