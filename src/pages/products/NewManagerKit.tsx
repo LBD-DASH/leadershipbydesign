@@ -436,7 +436,7 @@ export default function NewManagerKit() {
       {/* FOOTER */}
       <footer className="py-6 sm:py-8 px-4 border-t bg-primary border-primary-foreground/20">
         <p className="text-center text-white/60 text-[11px] sm:text-sm">
-          © 2026 Leadership by Design • 11 Years • 4,000+ Leaders • 50+ Organisations • South Africa
+          © 2026 Leadership by Design • 11 Years • 4,000+ Leaders • 30+ Organisations • South Africa
         </p>
       </footer>
 

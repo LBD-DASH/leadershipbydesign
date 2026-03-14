@@ -475,7 +475,7 @@ export default function LeaderAsCoachSales() {
               Your Managers Won't Coach Themselves.<br className="hidden sm:block" /> Let's Fix That in 90 Days.
             </h2>
             <p className="text-primary-foreground/70 text-sm mb-8">
-              4,000+ leaders. 50+ organisations. 11 years of proven results.
+              4,000+ leaders. 30+ organisations. 11 years of proven results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <Button

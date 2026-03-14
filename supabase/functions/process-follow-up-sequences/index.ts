@@ -84,7 +84,7 @@ function getStep1WarmTemplate(data: ProspectData): { subject: string; body: stri
 
 I put together a team diagnostic that helps HR and People leaders identify their biggest leadership skill gaps in about 5 minutes.
 
-No sales pitch attached — it's a genuine tool we built based on 11 years of data from 50+ organisations and 4,000+ leaders.
+No sales pitch attached — it's a genuine tool we built based on 11 years of data from 30+ organisations and 4,000+ leaders.
 
 Thought it might be useful for ${data.companyName}, ${painPointRef}.
 
