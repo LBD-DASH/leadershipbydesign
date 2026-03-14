@@ -371,7 +371,7 @@ export default function LeaderAsCoachSales() {
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-y-1 gap-x-6 text-xs sm:text-sm text-muted-foreground font-medium text-center">
               <span>4,000+ leaders developed</span>
               <span className="hidden sm:inline">·</span>
-              <span>50+ organisations</span>
+              <span>30+ organisations</span>
               <span className="hidden sm:inline">·</span>
               <span>11 years</span>
               <span className="hidden sm:inline">·</span>
