@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { processLead } from "@/utils/notifications";
 import SEO from "@/components/SEO";
-import { ServiceSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { ServiceSchema, BreadcrumbSchema, ProductSchema } from "@/components/StructuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StatsBar from "@/components/StatsBar";
