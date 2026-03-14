@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUtmParams } from "@/hooks/useUtmParams";
 import { processLead } from "@/utils/notifications";
 import SEO from "@/components/SEO";
-import { ServiceSchema, BreadcrumbSchema } from "@/components/StructuredData";
+import { ServiceSchema, BreadcrumbSchema, ProductSchema } from "@/components/StructuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StatsBar from "@/components/StatsBar";
@@ -118,36 +118,15 @@ export default function LeaderAsCoachSales() {
         areaServed="South Africa"
         url="/leader-as-coach"
       />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Product",
-        "name": "Leader as Coach — 90-Day Manager Coaching Accelerator",
-        "description": "A structured 90-day programme that installs coaching capability into your management layer. Equips managers with practical coaching tools for performance conversations, accountability frameworks, and needs-based coaching.",
-        "image": "https://www.leadershipbydesign.co/og-leader-as-coach.jpg",
-        "brand": {
-          "@type": "Brand",
-          "name": "Leadership by Design"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": "https://www.leadershipbydesign.co/leader-as-coach",
-          "priceCurrency": "ZAR",
-          "price": "35000",
-          "priceValidUntil": "2026-12-31",
-          "availability": "https://schema.org/InStock",
-          "seller": {
-            "@type": "Organization",
-            "name": "Leadership by Design"
-          }
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "30",
-          "bestRating": "5"
-        },
-        "category": "Leadership Development Programme"
-      }) }} />
+      <ProductSchema
+        name="Leader as Coach — 90-Day Manager Coaching Accelerator"
+        description="A structured 90-day programme that installs coaching capability into your management layer. Equips managers with practical coaching tools for performance conversations, accountability frameworks, and needs-based coaching."
+        image="https://leadershipbydesign.co/og-leader-as-coach.jpg"
+        url="/leader-as-coach"
+        price="35000"
+        priceCurrency="ZAR"
+        availability="InStock"
+      />
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "/" },
