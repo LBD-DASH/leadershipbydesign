@@ -114,7 +114,7 @@ export default function LeaderAsCoachSales() {
       />
       <ServiceSchema
         name="Leader as Coach — 90-Day Manager Coaching Accelerator"
-        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 50+ organisations and 4,000+ leaders."
+        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 30+ organisations and 4,000+ leaders."
         areaServed="South Africa"
         url="/leader-as-coach"
       />
