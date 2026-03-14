@@ -67,7 +67,7 @@ export default function CorporateTraining() {
     <>
       <SEO
         title="Corporate Leadership Training | Workshops & Programmes for Organisations"
-        description="Bespoke corporate leadership training for HR Directors and L&D teams. Workshops, programmes, and retained advisory from Leadership by Design. 11 years, 4,000+ leaders, 50+ organisations."
+        description="Bespoke corporate leadership training for HR Directors and L&D teams. Workshops, programmes, and retained advisory from Leadership by Design. 11 years, 4,000+ leaders, 30+ organisations."
         canonicalUrl="/corporate-training"
         keywords="corporate leadership training, leadership development for organisations, HR leadership programmes, L&D training South Africa, corporate workshops"
       />
