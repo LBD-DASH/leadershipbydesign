@@ -363,7 +363,7 @@ export default function LeadershipDevelopmentSales() {
               <p className="text-sm leading-relaxed mb-4" style={{ color: `${navy}99` }}>
                 Kevin is the architect of the L1–L5 Leadership System and the SHIFT Methodology™. 
                 With over 4,000 leaders developed, 750+ workshops delivered, and 11 years of experience across 
-                50+ organisations, Kevin brings a rare combination of scientific rigour and practical wisdom.
+                30+ organisations, Kevin brings a rare combination of scientific rigour and practical wisdom.
               </p>
               <p className="text-sm leading-relaxed mb-6" style={{ color: `${navy}99` }}>
                 Master Practitioner in NLP, Time Line Therapy & Hypnotherapy. Published author. 

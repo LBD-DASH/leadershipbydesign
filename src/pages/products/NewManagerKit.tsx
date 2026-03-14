@@ -259,7 +259,7 @@ export default function NewManagerKit() {
       {/* SOCIAL PROOF BAR — compact */}
       <section className="py-3 sm:py-6 px-4 bg-background border-y border-border">
         <p className="text-center text-muted-foreground text-xs sm:text-sm font-medium">
-          Built on 11 years developing 4,000+ leaders across 50+ organisations
+          Built on 11 years developing 4,000+ leaders across 30+ organisations
         </p>
       </section>
 
@@ -426,7 +426,7 @@ export default function NewManagerKit() {
           </h2>
 
           <p className="text-white/80 text-sm sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed">
-            Your team is watching. The first 90 days set the tone for everything. Get the scripts & frameworks trusted by 50+ leading organisations.
+            Your team is watching. The first 90 days set the tone for everything. Get the scripts & frameworks trusted by 30+ leading organisations.
           </p>
 
           <PricingCTA onCheckout={handleOpenCheckout} />
@@ -436,7 +436,7 @@ export default function NewManagerKit() {
       {/* FOOTER */}
       <footer className="py-6 sm:py-8 px-4 border-t bg-primary border-primary-foreground/20">
         <p className="text-center text-white/60 text-[11px] sm:text-sm">
-          © 2026 Leadership by Design • 11 Years • 4,000+ Leaders • 50+ Organisations • South Africa
+          © 2026 Leadership by Design • 11 Years • 4,000+ Leaders • 30+ Organisations • South Africa
         </p>
       </footer>
 

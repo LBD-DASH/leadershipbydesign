@@ -114,7 +114,7 @@ export default function LeaderAsCoachSales() {
       />
       <ServiceSchema
         name="Leader as Coach — 90-Day Manager Coaching Accelerator"
-        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 50+ organisations and 4,000+ leaders."
+        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 30+ organisations and 4,000+ leaders."
         areaServed="South Africa"
         url="/leader-as-coach"
       />
@@ -371,7 +371,7 @@ export default function LeaderAsCoachSales() {
             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-y-1 gap-x-6 text-xs sm:text-sm text-muted-foreground font-medium text-center">
               <span>4,000+ leaders developed</span>
               <span className="hidden sm:inline">·</span>
-              <span>50+ organisations</span>
+              <span>30+ organisations</span>
               <span className="hidden sm:inline">·</span>
               <span>11 years</span>
               <span className="hidden sm:inline">·</span>
@@ -412,7 +412,7 @@ export default function LeaderAsCoachSales() {
               <div className="md:col-span-3 text-center md:text-left">
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">Your Facilitator: Kevin Britz</h3>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 50+ organisations.
+                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 30+ organisations.
                 </p>
                 <Link to="/about">
                   <Button variant="outline" className="rounded-full group">
@@ -475,7 +475,7 @@ export default function LeaderAsCoachSales() {
               Your Managers Won't Coach Themselves.<br className="hidden sm:block" /> Let's Fix That in 90 Days.
             </h2>
             <p className="text-primary-foreground/70 text-sm mb-8">
-              4,000+ leaders. 50+ organisations. 11 years of proven results.
+              4,000+ leaders. 30+ organisations. 11 years of proven results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <Button

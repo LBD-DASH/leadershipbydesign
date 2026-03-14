@@ -67,7 +67,7 @@ export default function CorporateTraining() {
     <>
       <SEO
         title="Corporate Leadership Training | Workshops & Programmes for Organisations"
-        description="Bespoke corporate leadership training for HR Directors and L&D teams. Workshops, programmes, and retained advisory from Leadership by Design. 11 years, 4,000+ leaders, 50+ organisations."
+        description="Bespoke corporate leadership training for HR Directors and L&D teams. Workshops, programmes, and retained advisory from Leadership by Design. 11 years, 4,000+ leaders, 30+ organisations."
         canonicalUrl="/corporate-training"
         keywords="corporate leadership training, leadership development for organisations, HR leadership programmes, L&D training South Africa, corporate workshops"
       />
@@ -218,7 +218,7 @@ export default function CorporateTraining() {
               <div className="md:col-span-3 text-center md:text-left">
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">Your Facilitator: Kevin Britz</h3>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™ and L1–L5 Leadership System. 750+ workshops. 4,000+ leaders developed across 50+ organisations including Discovery, FNB, and MIT Management School.
+                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™ and L1–L5 Leadership System. 750+ workshops. 4,000+ leaders developed across 30+ organisations including Discovery, FNB, and MIT Management School.
                 </p>
                 <Link to="/about">
                   <Button variant="outline" className="rounded-full group">
