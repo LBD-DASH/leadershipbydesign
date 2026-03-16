@@ -154,7 +154,7 @@ export default function ProgrammesArchive() {
     <>
       <SEO
         title="Programme Archive | Leadership by Design"
-        description="11 years of leadership development across 50+ organisations"
+        description="11 years of leadership development across 30+ organisations"
       />
       <div className="min-h-screen bg-background text-foreground">
         {/* Header */}
