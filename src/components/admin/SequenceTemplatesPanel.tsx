@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { Copy, Save, Mail, Clock, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
+import { Copy, Save, Mail, Clock, RefreshCw, CheckCircle2, XCircle, ArrowRightLeft } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface SequenceTemplate {
