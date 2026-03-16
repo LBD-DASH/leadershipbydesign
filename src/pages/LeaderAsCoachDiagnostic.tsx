@@ -85,7 +85,7 @@ export default function LeaderAsCoachDiagnostic() {
       }
 
       // Save to database
-      const { data: inserted } = await supabase
+      const { error: insertError } = await supabase
         .from('leader_as_coach_assessments' as any)
         .insert({
           version,
@@ -109,9 +109,13 @@ export default function LeaderAsCoachDiagnostic() {
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
           utm_term: utmParams.utm_term,
-        } as any)
-        .select('id')
-        .single();
+        } as any);
+
+      if (insertError) {
+        console.error('LAC insert error:', insertError);
+      } else {
+        console.log('✅ LAC assessment saved successfully');
+      }
 
       // Send Slack HOT lead alert
       try {
