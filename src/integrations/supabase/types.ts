@@ -2742,6 +2742,7 @@ export type Database = {
           follow_up_sent_at: string | null
           id: string
           industry: string | null
+          needs_day1: boolean
           reply_received: boolean | null
           score: number | null
           scrape_summary: string | null
@@ -2774,6 +2775,7 @@ export type Database = {
           follow_up_sent_at?: string | null
           id?: string
           industry?: string | null
+          needs_day1?: boolean
           reply_received?: boolean | null
           score?: number | null
           scrape_summary?: string | null
@@ -2806,6 +2808,7 @@ export type Database = {
           follow_up_sent_at?: string | null
           id?: string
           industry?: string | null
+          needs_day1?: boolean
           reply_received?: boolean | null
           score?: number | null
           scrape_summary?: string | null
