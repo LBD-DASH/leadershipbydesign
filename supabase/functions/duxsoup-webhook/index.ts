@@ -290,7 +290,7 @@ Deno.serve(async (req) => {
                   eventType: 'system_error',
                   data: {
                     function: '🔥 Prospect Replied on LinkedIn',
-                    error: `*${contactName}* (${contact.title}) @ ${contact.company}\nMessage: "${(contact.message_text || '').substring(0, 200)}"`,
+                    error: `*${contactName}* from *${contact.company || 'Unknown'}* has replied to your Dux-Soup message. Check LinkedIn and respond within 2 hours.\n\n>${(contact.message_text || '').substring(0, 200)}`,
                   },
                 }),
               });
