@@ -175,11 +175,10 @@ export default function LeaderAsCoachSales() {
               <span style={{ color: "rgba(248,246,241,0.6)" }}>That's Costing You More Than You Think.</span>
             </h1>
             <p
-              className="mb-10 mx-auto"
+              className="mb-8 sm:mb-10 mx-auto text-base sm:text-lg md:text-xl"
               style={{
                 color: "rgba(248,246,241,0.7)",
                 fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: 20,
                 maxWidth: 600,
                 lineHeight: 1.6,
               }}
