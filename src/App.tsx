@@ -93,6 +93,7 @@ import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
 import ClaudeContext from "./pages/ClaudeContext";
 import GTMPageViewTracker from "./components/GTMPageViewTracker";
 import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
+import CoachingGapReport from "./pages/products/CoachingGapReport";
 import Brand from "./pages/Brand";
 const queryClient = new QueryClient();
 
@@ -209,6 +210,7 @@ const App = () => (
           <Route path="/ad/executive-coaching" element={<ExecutiveCoachingAd />} />
           <Route path="/leader-as-coach-diagnostic" element={<LeaderAsCoachDiagnostic />} />
           <Route path="/coaching-readiness-guide" element={<CoachingReadinessGuide />} />
+          <Route path="/coaching-gap-report" element={<CoachingGapReport />} />
           <Route
             path="/brand"
             element={
