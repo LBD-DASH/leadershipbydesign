@@ -99,6 +99,25 @@ export default function SequenceTemplatesPanel() {
     },
   });
 
+  const migrateMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('apollo-sequence-migrate');
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error || 'Migration failed');
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      setShowMigrateModal(false);
+      toast({ title: 'Contacts migrated to new sequence', description: `${data.migrated} contacts moved` });
+    },
+    onError: (err: any) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      setShowMigrateModal(false);
+      toast({ title: 'Migration failed', description: err.message, variant: 'destructive' });
+    },
+  });
+
   const copyToClipboard = (template: SequenceTemplate) => {
     const text = `Subject: ${template.subject}\n\n${template.body}`;
     navigator.clipboard.writeText(text);
