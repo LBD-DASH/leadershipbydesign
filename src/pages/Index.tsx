@@ -6,6 +6,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingSocial from "@/components/FloatingSocial";
 import kevinImage from "@/assets/kevin-britz-facilitator.jpg";
+import heroImage from "@/assets/hero-leadership-team.jpg";
+import lacImage from "@/assets/leader-as-coach.jpg";
+import shiftImage from "@/assets/shift-hero-team.jpg";
+import ciImage from "@/assets/contagious-identity-coaching-hero.jpg";
+import problemImage from "@/assets/leadership-feedback.jpg";
 
 const Index = () => {
   return (
@@ -25,10 +30,15 @@ const Index = () => {
           className="min-h-screen flex items-center justify-center relative overflow-hidden"
           style={{ backgroundColor: "#0F1F2E" }}
         >
+          <img
+            src={heroImage}
+            alt="Leadership team in collaborative session"
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+          />
           <div
             className="absolute inset-0 animate-[heroGradient_12s_ease_infinite]"
             style={{
-              background: "linear-gradient(135deg, #0F1F2E 0%, #1a3245 50%, #0F1F2E 100%)",
+              background: "linear-gradient(135deg, rgba(15,31,46,0.85) 0%, rgba(26,50,69,0.75) 50%, rgba(15,31,46,0.85) 100%)",
               backgroundSize: "200% 200%",
             }}
           />
@@ -50,7 +60,7 @@ const Index = () => {
             <p
               className="mb-10 mx-auto"
               style={{
-                color: "rgba(248,246,241,0.6)",
+                color: "rgba(248,246,241,0.7)",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontSize: 20,
                 maxWidth: 600,
@@ -107,40 +117,51 @@ const Index = () => {
 
         {/* SECTION 3 — THE PROBLEM */}
         <section style={{ backgroundColor: "#F8F6F1" }} className="py-20 sm:py-28 px-4 sm:px-6">
-          <div className="max-w-[780px] mx-auto text-center">
-            <p
-              className="uppercase tracking-[0.2em] text-sm mb-4"
-              style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}
-            >
-              The Gap We Close
-            </p>
-            <h2
-              className="font-serif font-bold mb-8 leading-tight"
-              style={{ color: "#0F1F2E", fontSize: "clamp(28px, 3.5vw, 44px)" }}
-            >
-              Your managers were promoted for what they could do.
-              <br className="hidden sm:block" />
-              Not for how they lead people.
-            </h2>
-            <div
-              className="text-left space-y-4 mb-10"
-              style={{ color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif", fontSize: 18, lineHeight: 1.8 }}
-            >
-              <p>
-                The result shows up everywhere. In attrition numbers that nobody can fully explain. In performance reviews that say nothing. In escalations that should never reach your desk. In a culture that talks about development and delivers compliance.
-              </p>
-              <p>
-                This is not a training problem. It is an operating system problem. And no two-day workshop has ever fixed an operating system.
-              </p>
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <p
+                  className="uppercase tracking-[0.2em] text-sm mb-4"
+                  style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}
+                >
+                  The Gap We Close
+                </p>
+                <h2
+                  className="font-serif font-bold mb-8 leading-tight"
+                  style={{ color: "#0F1F2E", fontSize: "clamp(28px, 3.5vw, 44px)" }}
+                >
+                  Your managers were promoted for what they could do.
+                  <br className="hidden sm:block" />
+                  Not for how they lead people.
+                </h2>
+                <div
+                  className="space-y-4 mb-10"
+                  style={{ color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif", fontSize: 18, lineHeight: 1.8 }}
+                >
+                  <p>
+                    The result shows up everywhere. In attrition numbers that nobody can fully explain. In performance reviews that say nothing. In escalations that should never reach your desk. In a culture that talks about development and delivers compliance.
+                  </p>
+                  <p>
+                    This is not a training problem. It is an operating system problem. And no two-day workshop has ever fixed an operating system.
+                  </p>
+                </div>
+                <blockquote
+                  className="pl-6 py-2"
+                  style={{ borderLeft: "4px solid #C8A864" }}
+                >
+                  <p className="font-serif italic" style={{ color: "#0F1F2E", fontSize: 20 }}>
+                    "Behaviour follows identity. Change the identity, change the behaviour."
+                  </p>
+                </blockquote>
+              </div>
+              <div className="rounded-lg overflow-hidden shadow-lg">
+                <img
+                  src={problemImage}
+                  alt="Leadership development feedback session"
+                  className="w-full h-full object-cover aspect-[4/3]"
+                />
+              </div>
             </div>
-            <blockquote
-              className="text-left pl-6 py-2"
-              style={{ borderLeft: "4px solid #C8A864" }}
-            >
-              <p className="font-serif italic" style={{ color: "#0F1F2E", fontSize: 20 }}>
-                "Behaviour follows identity. Change the identity, change the behaviour."
-              </p>
-            </blockquote>
           </div>
         </section>
 
@@ -165,81 +186,96 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* CARD 1 — Leader as Coach (elevated) */}
               <div
-                className="rounded-lg p-8 flex flex-col shadow-xl lg:-mt-4 lg:mb-4"
+                className="rounded-lg overflow-hidden flex flex-col shadow-xl lg:-mt-4 lg:mb-4"
                 style={{ backgroundColor: "#0F1F2E" }}
               >
-                <p className="uppercase tracking-[0.15em] text-xs font-semibold mb-2" style={{ color: "#C8A864", fontFamily: "'Source Sans 3', sans-serif" }}>
-                  Signature Programme
-                </p>
-                <h3 className="font-serif font-bold text-[28px] text-white mb-1">Leader as Coach</h3>
-                <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
-                  90-Day Manager Coaching Accelerator
-                </p>
-                <p className="mb-6" style={{ color: "#F8F6F1", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
-                  The management layer is where leadership culture is won or lost. This is a structured 90-day process that turns your managers into coaches — permanently. Not a workshop. An operating system.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {["Month 1: Foundation", "Month 2: Practice", "Month 3: Embed"].map((phase) => (
-                    <span key={phase} className="px-3 py-1 rounded-full text-xs text-white" style={{ backgroundColor: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
-                      {phase}
-                    </span>
-                  ))}
+                <div className="h-48 overflow-hidden">
+                  <img src={lacImage} alt="Leader as Coach programme session" className="w-full h-full object-cover" />
                 </div>
-                <div className="mt-auto">
-                  <Link to="/leader-as-coach" className="block">
-                    <button className="w-full py-3 rounded-md font-semibold text-base" style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
-                      See the Programme
-                    </button>
-                  </Link>
-                  <p className="text-center mt-2" style={{ color: "rgba(248,246,241,0.6)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
-                    SDL-eligible spend
+                <div className="p-8 flex flex-col flex-1">
+                  <p className="uppercase tracking-[0.15em] text-xs font-semibold mb-2" style={{ color: "#C8A864", fontFamily: "'Source Sans 3', sans-serif" }}>
+                    Signature Programme
                   </p>
+                  <h3 className="font-serif font-bold text-[28px] text-white mb-1">Leader as Coach</h3>
+                  <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
+                    90-Day Manager Coaching Accelerator
+                  </p>
+                  <p className="mb-6" style={{ color: "#F8F6F1", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
+                    The management layer is where leadership culture is won or lost. This is a structured 90-day process that turns your managers into coaches — permanently. Not a workshop. An operating system.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {["Month 1: Foundation", "Month 2: Practice", "Month 3: Embed"].map((phase) => (
+                      <span key={phase} className="px-3 py-1 rounded-full text-xs text-white" style={{ backgroundColor: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
+                        {phase}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-auto">
+                    <Link to="/leader-as-coach" className="block">
+                      <button className="w-full py-3 rounded-md font-semibold text-base" style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
+                        See the Programme
+                      </button>
+                    </Link>
+                    <p className="text-center mt-2" style={{ color: "rgba(248,246,241,0.6)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
+                      SDL-eligible spend
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* CARD 2 — SHIFT */}
-              <div className="rounded-lg p-8 flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
-                <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>SHIFT</h3>
-                <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
-                  The Leadership Operating System for the AI Era
-                </p>
-                <p className="mb-6" style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
-                  Six skills every leader needs to stay relevant in the next decade. Self-Management. Human Intelligence. Innovation. Focus. Thinking. Your AI Edge. Not a framework to learn — a system to run on.
-                </p>
-                <div className="grid grid-cols-2 gap-2 mb-6">
-                  {["Self-Management", "Human Intelligence", "Innovation", "Focus", "Thinking", "Your AI Edge"].map((skill) => (
-                    <span key={skill} className="px-3 py-1.5 rounded text-xs text-white text-center" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
-                      {skill}
-                    </span>
-                  ))}
+              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
+                <div className="h-48 overflow-hidden">
+                  <img src={shiftImage} alt="SHIFT leadership development team" className="w-full h-full object-cover" />
                 </div>
-                <div className="mt-auto">
-                  <Link to="/shift-diagnostic" className="block">
-                    <button className="w-full py-3 rounded-md font-semibold text-base text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
-                      Explore SHIFT
-                    </button>
-                  </Link>
+                <div className="p-8 flex flex-col flex-1">
+                  <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>SHIFT</h3>
+                  <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
+                    The Leadership Operating System for the AI Era
+                  </p>
+                  <p className="mb-6" style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
+                    Six skills every leader needs to stay relevant in the next decade. Self-Management. Human Intelligence. Innovation. Focus. Thinking. Your AI Edge. Not a framework to learn — a system to run on.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 mb-6">
+                    {["Self-Management", "Human Intelligence", "Innovation", "Focus", "Thinking", "Your AI Edge"].map((skill) => (
+                      <span key={skill} className="px-3 py-1.5 rounded text-xs text-white text-center" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-auto">
+                    <Link to="/shift-diagnostic" className="block">
+                      <button className="w-full py-3 rounded-md font-semibold text-base text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
+                        Explore SHIFT
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
               {/* CARD 3 — Contagious Identity */}
-              <div className="rounded-lg p-8 flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
-                <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>Contagious Identity</h3>
-                <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
-                  Executive Coaching for Senior Leaders
-                </p>
-                <p className="mb-4" style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
-                  How a leader sees themselves determines how they lead others. Contagious Identity is a six-session executive coaching programme that works at identity level — because that is where leadership actually lives.
-                </p>
-                <p className="mb-6" style={{ color: "#888888", fontFamily: "'Source Sans 3', sans-serif", fontSize: 14 }}>
-                  6 sessions. One-to-one. Senior leaders only.
-                </p>
-                <div className="mt-auto">
-                  <Link to="/contagious-identity" className="block">
-                    <button className="w-full py-3 rounded-md font-semibold text-base text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
-                      Explore Executive Coaching
-                    </button>
-                  </Link>
+              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
+                <div className="h-48 overflow-hidden">
+                  <img src={ciImage} alt="Executive coaching session" className="w-full h-full object-cover" />
+                </div>
+                <div className="p-8 flex flex-col flex-1">
+                  <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>Contagious Identity</h3>
+                  <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
+                    Executive Coaching for Senior Leaders
+                  </p>
+                  <p className="mb-4" style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
+                    How a leader sees themselves determines how they lead others. Contagious Identity is a six-session executive coaching programme that works at identity level — because that is where leadership actually lives.
+                  </p>
+                  <p className="mb-6" style={{ color: "#888888", fontFamily: "'Source Sans 3', sans-serif", fontSize: 14 }}>
+                    6 sessions. One-to-one. Senior leaders only.
+                  </p>
+                  <div className="mt-auto">
+                    <Link to="/contagious-identity" className="block">
+                      <button className="w-full py-3 rounded-md font-semibold text-base text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}>
+                        Explore Executive Coaching
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
