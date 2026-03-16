@@ -583,7 +583,7 @@ export default function LeaderAsCoachSales() {
         </section>
 
         {/* ───────────── 9. INVESTMENT ───────────── */}
-        <section style={{ backgroundColor: "#FFFFFF" }} className="py-16 sm:py-24 px-4 sm:px-6">
+        <section style={{ backgroundColor: "#FDFCF9" }} className="py-16 sm:py-24 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
             <p
               className="uppercase tracking-[0.2em] text-sm mb-4"
