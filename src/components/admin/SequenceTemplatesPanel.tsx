@@ -197,6 +197,52 @@ export default function SequenceTemplatesPanel() {
         </CardContent>
       </Card>
 
+      {/* Migrate Contacts button */}
+      <Card className="border">
+        <CardContent className="pt-4 pb-4">
+          <Button
+            onClick={() => setShowMigrateModal(true)}
+            disabled={migrateMutation.isPending}
+            className="w-full font-bold text-white"
+            style={{ backgroundColor: '#1B2A4A', fontFamily: "'Source Sans 3', sans-serif" }}
+          >
+            {migrateMutation.isPending ? (
+              <ArrowRightLeft className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <ArrowRightLeft className="w-4 h-4 mr-2" />
+            )}
+            {migrateMutation.isPending ? 'Migrating contacts…' : 'Migrate contacts to new sequence'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Migration Confirmation Modal */}
+      <Dialog open={showMigrateModal} onOpenChange={setShowMigrateModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Migrate Contacts</DialogTitle>
+            <DialogDescription>
+              This will move all non-replied contacts from <strong>Leader as Coach - 1 MAR</strong> into{' '}
+              <strong>Leader as Coach MAR v2</strong> starting at Step 1. This cannot be undone. Continue?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setShowMigrateModal(false)} disabled={migrateMutation.isPending}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => migrateMutation.mutate()}
+              disabled={migrateMutation.isPending}
+              style={{ backgroundColor: '#1B2A4A' }}
+              className="text-white"
+            >
+              {migrateMutation.isPending ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {(templates || []).map((t) => (
         <Card key={t.id} className="border">
           <CardHeader className="pb-2">

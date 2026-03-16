@@ -407,6 +407,10 @@ export default function AdminOperatingSystem() {
                 <FileText className="w-4 h-4" />
                 Sequence Templates
               </TabsTrigger>
+              <TabsTrigger value="manual-outreach" className="gap-2">
+                <Target className="w-4 h-4" />
+                Manual Outreach
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -421,6 +425,10 @@ export default function AdminOperatingSystem() {
 
             <TabsContent value="sequences">
               <SequenceTemplatesPanel />
+            </TabsContent>
+
+            <TabsContent value="manual-outreach">
+              <ManualOutreachKanban />
             </TabsContent>
           </Tabs>
         </div>
