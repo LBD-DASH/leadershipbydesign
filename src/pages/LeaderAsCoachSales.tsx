@@ -221,7 +221,7 @@ export default function LeaderAsCoachSales() {
                   className="text-center sm:border-r last:border-r-0"
                   style={{ borderColor: "rgba(200,168,100,0.3)" }}
                 >
-                  <p className="font-serif font-bold text-2xl sm:text-3xl text-white">{stat.value}</p>
+                  <p className="font-serif font-bold text-xl sm:text-3xl text-white">{stat.value}</p>
                   <p style={{ color: "#F8F6F1", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }} className="mt-1">
                     {stat.label}
                   </p>
