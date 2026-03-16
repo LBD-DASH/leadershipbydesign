@@ -127,12 +127,10 @@ const Index = () => {
                   The Gap We Close
                 </p>
                 <h2
-                  className="font-serif font-bold mb-8 leading-tight"
-                  style={{ color: "#0F1F2E", fontSize: "clamp(28px, 3.5vw, 44px)" }}
+                  className="font-serif font-bold mb-8 leading-snug"
+                  style={{ color: "#0F1F2E", fontSize: "clamp(26px, 3vw, 38px)", maxWidth: 520 }}
                 >
-                  Your managers were promoted for what they could do.
-                  <br className="hidden sm:block" />
-                  Not for how they lead people.
+                  Your managers were promoted for what they could do — not for how they lead people.
                 </h2>
                 <div
                   className="space-y-4 mb-10"
