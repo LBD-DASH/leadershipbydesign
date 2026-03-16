@@ -563,8 +563,8 @@ export default function LeaderAsCoachSales() {
                 <h3 className="font-serif font-bold mb-1 text-xl sm:text-2xl md:text-[28px]" style={{ color: "#0F1F2E" }}>Kevin Britz</h3>
                 <p className="font-serif mb-4 text-base sm:text-lg" style={{ color: "#0F1F2E" }}>Leadership Architect</p>
                 <p
-                  className="mb-6"
-                  style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.8 }}
+                  className="mb-6 text-sm sm:text-base"
+                  style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.8 }}
                 >
                   Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 30+ organisations.
                 </p>
