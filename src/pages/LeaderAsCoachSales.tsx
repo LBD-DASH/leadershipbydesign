@@ -138,7 +138,7 @@ export default function LeaderAsCoachSales() {
         <Header />
 
         {/* ───────────── 1. HERO ───────────── */}
-        <section className="relative overflow-hidden min-h-[85vh] flex items-center" style={{ backgroundColor: "#0F1F2E" }}>
+        <section className="relative overflow-hidden min-h-[70vh] sm:min-h-[85vh] flex items-center" style={{ backgroundColor: "#0F1F2E" }}>
           <img
             src={leaderAsCoachImage}
             alt="Leadership coaching session"
@@ -151,7 +151,7 @@ export default function LeaderAsCoachSales() {
               backgroundSize: "200% 200%",
             }}
           />
-          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-28 sm:py-36">
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-20 sm:py-36">
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
               <span
                 className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border"
@@ -175,11 +175,10 @@ export default function LeaderAsCoachSales() {
               <span style={{ color: "rgba(248,246,241,0.6)" }}>That's Costing You More Than You Think.</span>
             </h1>
             <p
-              className="mb-10 mx-auto"
+              className="mb-8 sm:mb-10 mx-auto text-base sm:text-lg md:text-xl"
               style={{
                 color: "rgba(248,246,241,0.7)",
                 fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: 20,
                 maxWidth: 600,
                 lineHeight: 1.6,
               }}
@@ -189,15 +188,15 @@ export default function LeaderAsCoachSales() {
 
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
-                className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
                 style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
                 onClick={handleCalendarOpen}
               >
                 Book a Discovery Call
               </button>
-              <Link to="/leader-as-coach-diagnostic">
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
                 <button
-                  className="px-8 py-3.5 rounded-md font-semibold text-base border-2 transition-opacity hover:opacity-80 w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base border-2 transition-opacity hover:opacity-80 w-full"
                   style={{ borderColor: "#C8A864", color: "#C8A864", backgroundColor: "transparent", fontFamily: "'Source Sans 3', sans-serif" }}
                 >
                   Take the Free Assessment
@@ -210,7 +209,7 @@ export default function LeaderAsCoachSales() {
         {/* ───────────── PROOF BAR ───────────── */}
         <section style={{ backgroundColor: "#2A7B88" }} className="py-6 sm:py-8">
           <div className="max-w-5xl mx-auto px-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
               {[
                 { value: "4,000+", label: "Leaders Developed" },
                 { value: "750+", label: "Programmes Delivered" },
@@ -222,7 +221,7 @@ export default function LeaderAsCoachSales() {
                   className="text-center sm:border-r last:border-r-0"
                   style={{ borderColor: "rgba(200,168,100,0.3)" }}
                 >
-                  <p className="font-serif font-bold text-2xl sm:text-3xl text-white">{stat.value}</p>
+                  <p className="font-serif font-bold text-xl sm:text-3xl text-white">{stat.value}</p>
                   <p style={{ color: "#F8F6F1", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }} className="mt-1">
                     {stat.label}
                   </p>
@@ -561,11 +560,11 @@ export default function LeaderAsCoachSales() {
                 </div>
               </div>
               <div className="md:col-span-3 text-center md:text-left">
-                <h3 className="font-serif font-bold mb-1" style={{ color: "#0F1F2E", fontSize: 28 }}>Kevin Britz</h3>
-                <p className="font-serif mb-4" style={{ color: "#0F1F2E", fontSize: 18 }}>Leadership Architect</p>
+                <h3 className="font-serif font-bold mb-1 text-xl sm:text-2xl md:text-[28px]" style={{ color: "#0F1F2E" }}>Kevin Britz</h3>
+                <p className="font-serif mb-4 text-base sm:text-lg" style={{ color: "#0F1F2E" }}>Leadership Architect</p>
                 <p
-                  className="mb-6"
-                  style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.8 }}
+                  className="mb-6 text-sm sm:text-base"
+                  style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.8 }}
                 >
                   Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 30+ organisations.
                 </p>
@@ -604,11 +603,11 @@ export default function LeaderAsCoachSales() {
               Discovery call required to confirm fit and scope. We'll map your management capability gaps and design the right cohort structure for your organisation.
             </p>
             <button
-              className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+              className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
               style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
               onClick={handleCalendarOpen}
             >
-              Book a Discovery Call — 30 Minutes, No Obligation
+              Book a Discovery Call — 30 Min, No Obligation
             </button>
           </div>
         </section>
@@ -627,7 +626,7 @@ export default function LeaderAsCoachSales() {
             </p>
             <Link to="/leader-as-coach-diagnostic">
               <button
-                className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
                 style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
               >
                 How Coaching-Ready Is Your Management Layer?
@@ -664,15 +663,15 @@ export default function LeaderAsCoachSales() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
-                className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
                 style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
                 onClick={handleCalendarOpen}
               >
                 Book a Discovery Call
               </button>
-              <Link to="/leader-as-coach-diagnostic">
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
                 <button
-                  className="px-8 py-3.5 rounded-md font-semibold text-base border-2 transition-opacity hover:opacity-80 w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base border-2 transition-opacity hover:opacity-80 w-full"
                   style={{ borderColor: "#C8A864", color: "#C8A864", backgroundColor: "transparent", fontFamily: "'Source Sans 3', sans-serif" }}
                 >
                   Take the Free Assessment
