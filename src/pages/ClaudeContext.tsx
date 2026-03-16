@@ -58,7 +58,7 @@ export default function ClaudeContext() {
         supabase.from('leader_as_coach_assessments').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('contact_form_submissions').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
-        supabase.from('active_projects').select('*').order('priority', { ascending: true }),
+        supabase.from('active_projects').select('*').neq('status', 'done').order('priority', { ascending: true }),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('diagnostic_type', 'lac').gte('updated_at', today + 'T00:00:00'),
         supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('sequence_step', 2).gte('sent_at', sevenDaysAgo),
