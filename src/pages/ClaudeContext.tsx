@@ -192,7 +192,7 @@ Firecrawl scraper: check edge function logs
 Auto-outreach: check edge function logs
 Auto-follow-up: 4-step sequence (Day 1, 4, 9, 16) — active
 LAC nurture: active via lac-follow-up cron
-Gmail monitor: not yet connected
+Gmail monitor: active via gmail-reply-classifier cron (every 30 min)
 Slack: connected via connector
 Google Tag firing: verify in GTM (GTM-TV3SFR3G)
 Google Ads active: ${gadsStatus}
