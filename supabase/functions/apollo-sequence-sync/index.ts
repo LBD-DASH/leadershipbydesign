@@ -39,19 +39,14 @@ Deno.serve(async (req) => {
     if (!templates || templates.length === 0) throw new Error("No active templates found");
 
     // 2. Find the matching sequence in Apollo
-    const searchRes = await fetch(
-      `${APOLLO_BASE}/emailer_campaigns/search`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Api-Key": apolloApiKey,
-        },
-        body: JSON.stringify({
-          q_name: "Leader as Coach — MAR v2",
-        }),
-      }
-    );
+    const searchRes = await fetch(`${APOLLO_BASE}/emailer_campaigns/search`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": apolloApiKey,
+      },
+      body: JSON.stringify({ q_name: "Leader as Coach — MAR v2" }),
+    });
 
     const searchData = await searchRes.json();
     if (!searchRes.ok) {
@@ -63,14 +58,33 @@ Deno.serve(async (req) => {
       throw new Error("No matching Apollo sequence found for 'Leader as Coach — MAR v2'");
     }
 
-    const campaign = campaigns[0];
-    const touches = campaign.emailer_touches || [];
+    const campaignId = campaigns[0].id;
 
-    if (touches.length === 0) {
-      throw new Error("Apollo sequence has no emailer touches");
+    // 3. Fetch full campaign details (search results don't include touches)
+    const detailRes = await fetch(`${APOLLO_BASE}/emailer_campaigns/${campaignId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": apolloApiKey,
+      },
+    });
+
+    const detailData = await detailRes.json();
+    if (!detailRes.ok) {
+      throw new Error(`Apollo campaign detail failed [${detailRes.status}]: ${JSON.stringify(detailData)}`);
     }
 
-    // 3. Match steps by step_number (1-indexed) and update each touch
+    const campaign = detailData.emailer_campaign || detailData;
+    const touches = campaign.emailer_touches || campaign.emailer_steps || [];
+
+    if (touches.length === 0) {
+      throw new Error(
+        `Apollo sequence '${campaigns[0].name || campaignId}' has no emailer touches. ` +
+        `Verify the sequence exists and has email steps configured in Apollo.`
+      );
+    }
+
+    // 4. Match steps by step_number and update each touch
     let stepsSynced = 0;
 
     for (const template of templates) {
@@ -83,22 +97,19 @@ Deno.serve(async (req) => {
       const touch = touches[touchIndex];
       const touchId = touch.id;
 
-      const patchRes = await fetch(
-        `${APOLLO_BASE}/emailer_touches/${touchId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Api-Key": apolloApiKey,
+      const patchRes = await fetch(`${APOLLO_BASE}/emailer_touches/${touchId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": apolloApiKey,
+        },
+        body: JSON.stringify({
+          emailer_touch: {
+            subject: template.subject,
+            email_template: template.body,
           },
-          body: JSON.stringify({
-            emailer_touch: {
-              subject: template.subject,
-              email_template: template.body,
-            },
-          }),
-        }
-      );
+        }),
+      });
 
       const patchData = await patchRes.json();
       if (!patchRes.ok) {
@@ -110,7 +121,7 @@ Deno.serve(async (req) => {
       stepsSynced++;
     }
 
-    // 4. Log success
+    // 5. Log success
     await supabase.from("apollo_sync_log").insert({
       steps_synced: stepsSynced,
       status: "success",
@@ -124,7 +135,6 @@ Deno.serve(async (req) => {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Apollo sync error:", errorMessage);
 
-    // Log error
     await supabase.from("apollo_sync_log").insert({
       steps_synced: 0,
       status: "error",

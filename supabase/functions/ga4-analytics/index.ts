@@ -34,8 +34,8 @@ async function getAccessToken(): Promise<string> {
 }
 
 interface GA4Request {
-  dateRange?: string; // "7d" | "14d" | "28d" | "90d"
-  report?: string;    // "traffic" | "conversions" | "pages"
+  dateRange?: string;
+  report?: string;
 }
 
 function getDateRange(range: string): { startDate: string; endDate: string } {
@@ -50,8 +50,10 @@ function getDateRange(range: string): { startDate: string; endDate: string } {
 }
 
 async function runReport(accessToken: string, propertyId: string, body: Record<string, unknown>) {
+  // Strip any non-numeric characters from property ID
+  const cleanId = propertyId.replace(/\D/g, "");
   const res = await fetch(
-    `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:runReport`,
+    `https://analyticsdata.googleapis.com/v1beta/properties/${cleanId}:runReport`,
     {
       method: "POST",
       headers: {
@@ -65,7 +67,7 @@ async function runReport(accessToken: string, propertyId: string, body: Record<s
   if (!res.ok) {
     const err = await res.text();
     console.error("GA4 API error:", err);
-    throw new Error(`GA4 API error: ${res.status}`);
+    throw new Error(`GA4 API error: ${res.status} - ${err}`);
   }
 
   return res.json();
@@ -100,7 +102,6 @@ Deno.serve(async (req) => {
 
     if (report === "traffic") {
       const [sourceReport, overviewReport] = await Promise.all([
-        // Source/medium breakdown
         runReport(accessToken, propertyId, {
           dateRanges: [{ startDate, endDate }],
           dimensions: [
@@ -111,21 +112,20 @@ Deno.serve(async (req) => {
             { name: "sessions" },
             { name: "totalUsers" },
             { name: "newUsers" },
-            { name: "conversions" },
+            { name: "keyEvents" },
             { name: "engagementRate" },
             { name: "bounceRate" },
           ],
           orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
           limit: 20,
         }),
-        // Daily totals for sparkline
         runReport(accessToken, propertyId, {
           dateRanges: [{ startDate, endDate }],
           dimensions: [{ name: "date" }],
           metrics: [
             { name: "sessions" },
             { name: "totalUsers" },
-            { name: "conversions" },
+            { name: "keyEvents" },
           ],
           orderBys: [{ dimension: { dimensionName: "date" }, desc: false }],
         }),
@@ -193,7 +193,7 @@ Deno.serve(async (req) => {
           { name: "screenPageViews" },
           { name: "totalUsers" },
           { name: "engagementRate" },
-          { name: "conversions" },
+          { name: "keyEvents" },
         ],
         orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
         limit: 20,
