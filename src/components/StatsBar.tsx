@@ -4,7 +4,7 @@ const stats = [
   { value: "11", label: "Years" },
   { value: "750+", label: "Workshops" },
   { value: "4,000+", label: "Leaders Impacted" },
-  { value: "30+", label: "Organisations" },
+  { value: "50+", label: "Organisations" },
   { value: "6", label: "Proprietary Methodologies" },
 ];
 

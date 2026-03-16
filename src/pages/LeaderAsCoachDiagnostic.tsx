@@ -85,7 +85,7 @@ export default function LeaderAsCoachDiagnostic() {
       }
 
       // Save to database
-      const { data: inserted } = await supabase
+      const { error: insertError } = await supabase
         .from('leader_as_coach_assessments' as any)
         .insert({
           version,
@@ -109,9 +109,13 @@ export default function LeaderAsCoachDiagnostic() {
           utm_campaign: utmParams.utm_campaign,
           utm_content: utmParams.utm_content,
           utm_term: utmParams.utm_term,
-        } as any)
-        .select('id')
-        .single();
+        } as any);
+
+      if (insertError) {
+        console.error('LAC insert error:', insertError);
+      } else {
+        console.log('✅ LAC assessment saved successfully');
+      }
 
       // Send Slack HOT lead alert
       try {
@@ -157,7 +161,7 @@ export default function LeaderAsCoachDiagnostic() {
         await supabase
           .from('diagnostic_nurture_sequences' as any)
           .insert({
-            diagnostic_submission_id: (inserted as any)?.id || null,
+            diagnostic_submission_id: null,
             diagnostic_type: 'lac',
             lead_email: data.email,
             lead_name: data.name,
@@ -173,13 +177,8 @@ export default function LeaderAsCoachDiagnostic() {
       // Process lead (AI analysis + notifications) non-blocking
       processLead(leadData, `Leader as Coach Assessment: ${result.profileName} (${result.totalScore}/75). Version: ${version}. Lowest areas: ${result.lowestAreas.map(a => a.theme).join(', ')}.`)
         .then(({ aiAnalysis }) => {
-          if ((inserted as any)?.id && aiAnalysis) {
-            supabase
-              .from('leader_as_coach_assessments' as any)
-              .update({ ai_analysis: aiAnalysis } as any)
-              .eq('id', (inserted as any).id)
-              .then(() => console.log('💾 LAC AI analysis saved'));
-          }
+          // AI analysis update skipped — anon user cannot read back inserted ID
+          // The analysis is captured in the processLead flow instead
         })
         .catch(err => console.error('LAC lead processing error:', err));
     } catch (error) {

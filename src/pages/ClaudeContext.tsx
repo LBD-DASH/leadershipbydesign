@@ -48,7 +48,7 @@ export default function ClaudeContext() {
         googleAdsImpressionsRes,
         googleAdsReviewRes,
       ] = await Promise.all([
-        supabase.from('admin_settings').select('setting_value').eq('setting_key', 'outreach_campaign_mode').maybeSingle(),
+        supabase.from('admin_settings').select('setting_value').eq('setting_key', 'campaign_mode').maybeSingle(),
         supabase.from('warm_lead_sequences').select('*', { count: 'exact', head: true }).eq('status', 'awaiting_first_contact'),
         supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('status', 'sent').gte('sent_at', today + 'T00:00:00'),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', weekStart),
@@ -58,7 +58,7 @@ export default function ClaudeContext() {
         supabase.from('leader_as_coach_assessments').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
         supabase.from('contact_form_submissions').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
-        supabase.from('active_projects').select('*').order('priority', { ascending: true }),
+        supabase.from('active_projects').select('*').neq('status', 'done').order('priority', { ascending: true }),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('diagnostic_nurture_sequences').select('*', { count: 'exact', head: true }).eq('diagnostic_type', 'lac').gte('updated_at', today + 'T00:00:00'),
         supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('sequence_step', 2).gte('sent_at', sevenDaysAgo),
@@ -192,12 +192,12 @@ Firecrawl scraper: check edge function logs
 Auto-outreach: check edge function logs
 Auto-follow-up: 4-step sequence (Day 1, 4, 9, 16) — active
 LAC nurture: active via lac-follow-up cron
-Gmail monitor: not yet connected
+Gmail monitor: active via gmail-reply-classifier cron (every 30 min)
 Slack: connected via connector
 Google Tag firing: verify in GTM (GTM-TV3SFR3G)
 Google Ads active: ${gadsStatus}
 
-ACTIVE PROJECTS
+ACTIVE PROJECTS (excludes DONE)
 ${projectLines}
 
 LAST 7 DAYS
@@ -227,7 +227,7 @@ Leader as Coach: 90-day, 3 months, FSI focus
 Contagious Identity: 6-session executive coaching programme
 
 STATS (never change these)
-4,000+ leaders | 30+ organisations | 750+ programmes | 11 years`;
+4,000+ leaders | 50+ organisations | 750+ programmes | 11 years`;
 
       setText(output);
     }

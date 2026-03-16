@@ -136,3 +136,6 @@ verify_jwt = false
 verify_jwt = false
 
 
+[functions.gmail-reply-classifier]
+verify_jwt = false
+

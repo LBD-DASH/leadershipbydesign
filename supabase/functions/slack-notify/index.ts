@@ -11,6 +11,7 @@ interface SlackNotifyPayload {
   eventType: string;
   sourceApp?: string;
   channel?: string;
+  blocks?: any[];
   data: Record<string, any>;
 }
 
@@ -474,7 +475,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    const blocks = config.buildBlocks(data);
+    // Use custom blocks if provided, otherwise use event config
+    const blocks = payload.blocks || config.buildBlocks(data);
     const text = config.text(data);
 
     // Hot leads also go to mission-control

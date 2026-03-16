@@ -108,7 +108,7 @@ export default function LACResults({ result, version, userName }: Props) {
           Based on your profile, Leader as Coach is the right next step.
         </h3>
         <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-          The 90-Day Manager Coaching Accelerator installs coaching capability into your management layer — structured, practical, and proven across 30+ organisations and 4,000+ leaders in South Africa's financial services and professional services sector.
+          The 90-Day Manager Coaching Accelerator installs coaching capability into your management layer — structured, practical, and proven across 50+ organisations and 4,000+ leaders in South Africa's financial services and professional services sector.
         </p>
       </motion.div>
 

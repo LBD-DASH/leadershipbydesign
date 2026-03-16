@@ -113,7 +113,7 @@ export default function LeaderAsCoachSales() {
       />
       <ServiceSchema
         name="Leader as Coach — 90-Day Manager Coaching Accelerator"
-        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 30+ organisations and 4,000+ leaders."
+        description="A structured 90-day programme that installs coaching capability into your management layer. Proven across 50+ organisations and 4,000+ leaders."
         areaServed="South Africa"
         url="/leader-as-coach"
       />
@@ -213,7 +213,7 @@ export default function LeaderAsCoachSales() {
               {[
                 { value: "4,000+", label: "Leaders Developed" },
                 { value: "750+", label: "Programmes Delivered" },
-                { value: "30+", label: "Organisations" },
+                { value: "50+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
                 <div
@@ -500,7 +500,7 @@ export default function LeaderAsCoachSales() {
             >
               <span>4,000+ leaders developed</span>
               <span className="hidden sm:inline">·</span>
-              <span>30+ organisations</span>
+              <span>50+ organisations</span>
               <span className="hidden sm:inline">·</span>
               <span>11 years</span>
               <span className="hidden sm:inline">·</span>
@@ -566,7 +566,7 @@ export default function LeaderAsCoachSales() {
                   className="mb-6 text-sm sm:text-base"
                   style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.8 }}
                 >
-                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 30+ organisations.
+                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 50+ organisations.
                 </p>
                 <Link to="/about">
                   <button
@@ -659,7 +659,7 @@ export default function LeaderAsCoachSales() {
               Your Managers Won't Coach Themselves.<br className="hidden sm:block" /> Let's Fix That in 90 Days.
             </h2>
             <p className="mb-8" style={{ color: "rgba(248,246,241,0.6)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16 }}>
-              4,000+ leaders. 30+ organisations. 11 years of proven results.
+              4,000+ leaders. 50+ organisations. 11 years of proven results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button

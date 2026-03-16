@@ -97,7 +97,7 @@ const Index = () => {
               {[
                 { value: "4,000+", label: "Leaders Developed" },
                 { value: "750+", label: "Programmes Delivered" },
-                { value: "30+", label: "Organisations" },
+                { value: "50+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
                 <div

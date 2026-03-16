@@ -36,7 +36,7 @@ function PipelineStatus() {
       const { data } = await supabase
         .from('admin_settings')
         .select('setting_value')
-        .eq('setting_key', 'outreach_campaign_mode')
+        .eq('setting_key', 'campaign_mode')
         .maybeSingle();
       return data?.setting_value || 'unknown';
     },
@@ -164,7 +164,7 @@ function SystemHealth() {
   const components = [
     { name: 'Firecrawl Scraper', status: 'unknown' as const, detail: 'Check edge function logs' },
     { name: 'Auto-Outreach', status: 'unknown' as const, detail: 'Check edge function logs' },
-    { name: 'Gmail Reply Monitor', status: 'unknown' as const, detail: 'Not yet connected' },
+    { name: 'Gmail Reply Monitor', status: 'green' as const, detail: 'Active — polls every 30 min via gmail-reply-classifier' },
     { name: 'Slack Notifications', status: 'green' as const, detail: 'Connected via connector' },
     { name: 'Google Tag (GTM-TV3SFR3G)', status: 'amber' as const, detail: 'Verify firing in GTM' },
     { name: 'Google Ads', status: 'amber' as const, detail: 'Credentials pending' },

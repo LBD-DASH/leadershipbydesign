@@ -63,7 +63,7 @@ That's exactly what we install. Happy to show you how: ${bookingLink}
 
 I won't keep sending notes. If developing your management layer's coaching capability ever comes onto the agenda, I'm here: https://www.leadershipbydesign.co/leader-as-coach
 
-4,000+ leaders developed. 30+ organisations. Happy to talk when the time is right.
+4,000+ leaders developed. 50+ organisations. Happy to talk when the time is right.
 
 — Kevin, Leadership by Design`,
   },
@@ -133,15 +133,16 @@ Deno.serve(async (req) => {
         .or("disqualified.is.null,disqualified.eq.false")
         .is("booked_at", null)
         .not("email_sent_at", "is", null)
-        .lt("email_sent_at", cutoffDate);
+        .lt("email_sent_at", cutoffDate)
+        .eq("needs_day1", false); // CRITICAL: never send follow-ups to contacts that need Day 1
 
-      // Step-specific filters
+      // Step-specific filters — each step requires the previous step's timestamp to exist
       if (template.step === 2) {
         query = query.in("status", ["emailed"]).is("step2_sent_at", null);
       } else if (template.step === 3) {
         query = query.in("status", ["followed_up", "emailed"]).not("step2_sent_at", "is", null).is("step3_sent_at", null);
       } else if (template.step === 4) {
-        query = query.not("step3_sent_at", "is", null).is("step4_sent_at", null);
+        query = query.not("step2_sent_at", "is", null).not("step3_sent_at", "is", null).is("step4_sent_at", null);
       }
 
       const { data: prospects } = await query.limit(dailyBudget - totalSent);
