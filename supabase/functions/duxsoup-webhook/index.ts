@@ -28,6 +28,8 @@ function mapEventType(type: string, event: string): string | null {
     'connection:received': 'connection_accept',
     'message:sent': 'message_sent',
     'message:received': 'message_received',
+    'message:reply': 'prospect_replied',
+    'inmail:reply': 'prospect_replied',
     'inmail:sent': 'inmail_sent',
     'inmail:received': 'message_received',
   };
@@ -247,6 +249,54 @@ Deno.serve(async (req) => {
             } catch { /* best effort */ }
 
             results.push(`reply:${contactName}`);
+            processed++;
+            break;
+          }
+
+          case 'prospect_replied': {
+            // Mark as replied and bump score significantly
+            if (contactEmail) {
+              const { data: existing } = await supabase
+                .from('warm_outreach_queue')
+                .select('id, score')
+                .eq('contact_email', contactEmail)
+                .limit(1);
+
+              if (existing?.length) {
+                const newScore = Math.min((existing[0].score || 0) + 25, 100);
+                await supabase.from('warm_outreach_queue').update({
+                  status: 'replied',
+                  score: newScore,
+                  updated_at: new Date().toISOString(),
+                }).eq('id', existing[0].id);
+              }
+            }
+
+            // Update call list prospect status to hot
+            if (contactEmail) {
+              await supabase
+                .from('call_list_prospects')
+                .update({ status: 'hot', call_outcome: 'linkedin_reply' })
+                .eq('email', contactEmail);
+            }
+
+            // Hot lead Slack alert
+            try {
+              await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseKey}` },
+                body: JSON.stringify({
+                  channel: 'leads-and-signups',
+                  eventType: 'system_error',
+                  data: {
+                    function: '🔥 Prospect Replied on LinkedIn',
+                    error: `*${contactName}* (${contact.title}) @ ${contact.company}\nMessage: "${(contact.message_text || '').substring(0, 200)}"`,
+                  },
+                }),
+              });
+            } catch { /* best effort */ }
+
+            results.push(`prospect-reply:${contactName}`);
             processed++;
             break;
           }
