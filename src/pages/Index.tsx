@@ -187,7 +187,7 @@ const Index = () => {
                 className="rounded-lg overflow-hidden flex flex-col shadow-xl lg:-mt-4 lg:mb-4"
                 style={{ backgroundColor: "#0F1F2E" }}
               >
-                <div className="h-48 overflow-hidden">
+                <div className="aspect-[16/9] overflow-hidden">
                   <img src={lacImage} alt="Leader as Coach programme session" className="w-full h-full object-cover" />
                 </div>
                 <div className="p-8 flex flex-col flex-1">
