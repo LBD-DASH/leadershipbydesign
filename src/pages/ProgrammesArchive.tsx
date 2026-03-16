@@ -12,29 +12,55 @@ interface Programme {
   type: string;
   orgsCount: number;
   description: string;
+  role: string;
   status: 'legacy' | 'active';
   highlights?: string[];
 }
 
 const programmes: Programme[] = [
   {
+    name: 'Leader as Coach',
+    yearsActive: '2023–2025',
+    sector: 'Financial Services',
+    type: 'Coaching Culture',
+    orgsCount: 12,
+    role: 'Flagship Programme — Primary commercial offer. Installs coaching capability into the management layer in 90 days.',
+    description: 'Builds coaching capability in middle managers to unlock team performance, reduce dependency, and improve retention. Structured 90-day accelerator with weekly modules.',
+    status: 'active',
+    highlights: ['Current flagship programme', 'Primary commercial focus'],
+  },
+  {
     name: 'High Performing Teams',
     yearsActive: '2018–2024',
     sector: 'Financial Services',
     type: 'Team Development',
     orgsCount: 45,
+    role: 'Core Workhorse — Most-delivered programme in the portfolio. Team alignment and performance using SHIFT methodology.',
     description: 'Comprehensive team alignment and performance programme built on the SHIFT methodology. Delivered across investment management, insurance, and banking.',
     status: 'legacy',
     highlights: ['Most delivered programme', 'Adapted for remote teams in 2020'],
   },
   {
-    name: 'Voice & Service Excellence',
-    yearsActive: '2016–2022',
-    sector: 'Insurance',
-    type: 'Frontline Development',
-    orgsCount: 28,
-    description: 'Customer-facing communication and service delivery training for call centre and branch teams. Focus on empathy, de-escalation, and brand alignment.',
+    name: 'Developing Leaders Programme',
+    yearsActive: '2014–2023',
+    sector: 'Entry-level',
+    type: 'Leadership Development',
+    orgsCount: 42,
+    role: 'Foundation Builder — Entry-level manager development. First programme ever created. Gateway into deeper leadership work.',
+    description: 'First-time manager and emerging leader development. Covers delegation, feedback, accountability, and team motivation fundamentals.',
     status: 'legacy',
+    highlights: ['First programme ever delivered', 'Second highest delivery count'],
+  },
+  {
+    name: 'Human-Centric Leadership',
+    yearsActive: '2015–2024',
+    sector: 'Financial Services',
+    type: 'Leadership Development',
+    orgsCount: 31,
+    role: 'Heritage Programme — Predecessor to Leader as Coach. EQ-driven leadership for mid-to-senior managers. Longest-running programme.',
+    description: 'Foundational leadership programme focusing on emotional intelligence, psychological safety, and people-first management practices.',
+    status: 'legacy',
+    highlights: ['Longest-running programme', 'Evolved into Leader as Coach'],
   },
   {
     name: 'Unconscious Bias & Inclusivity',
@@ -42,7 +68,28 @@ const programmes: Programme[] = [
     sector: 'Financial Services',
     type: 'Culture & Inclusion',
     orgsCount: 35,
+    role: 'Culture Lever — Addresses cognitive bias in leadership decisions, hiring, and team dynamics. High demand from FSI compliance teams.',
     description: 'Workshop-based programme exploring cognitive biases in leadership decision-making, hiring, and team dynamics. Includes personal action planning.',
+    status: 'active',
+  },
+  {
+    name: 'Voice & Service Excellence',
+    yearsActive: '2016–2022',
+    sector: 'Insurance',
+    type: 'Frontline Development',
+    orgsCount: 28,
+    role: 'Frontline Uplift — Communication and service delivery for customer-facing teams. Built for insurance call centres and branch networks.',
+    description: 'Customer-facing communication and service delivery training for call centre and branch teams. Focus on empathy, de-escalation, and brand alignment.',
+    status: 'legacy',
+  },
+  {
+    name: 'Diversity & Inclusion Workshop',
+    yearsActive: '2018–2025',
+    sector: 'Corporate',
+    type: 'Culture & Inclusion',
+    orgsCount: 25,
+    role: 'Compliance & Culture — Half-day to full-day workshops meeting transformation and B-BBEE requirements while building genuine inclusive behaviours.',
+    description: 'Interactive workshops on building inclusive workplaces. Covers systemic bias, allyship, and inclusive leadership behaviours.',
     status: 'active',
   },
   {
@@ -51,46 +98,9 @@ const programmes: Programme[] = [
     sector: 'Multi-sector',
     type: 'Organisational Development',
     orgsCount: 22,
+    role: 'Transformation Support — Structured change readiness framework for leaders driving org-wide change. Diagnostic-led with facilitated design sprints.',
     description: 'Structured change readiness and adoption framework for leaders managing transformation initiatives. Combines diagnostic tools with facilitated design sprints.',
     status: 'legacy',
-  },
-  {
-    name: 'Enneagram & Collaboration',
-    yearsActive: '2020–2025',
-    sector: 'Executive',
-    type: 'Self-Awareness',
-    orgsCount: 18,
-    description: 'Deep-dive into Enneagram personality framework for executive teams. Builds self-awareness, conflict resolution capability, and collaborative intelligence.',
-    status: 'active',
-  },
-  {
-    name: 'Human-Centric Leadership',
-    yearsActive: '2015–2024',
-    sector: 'Financial Services',
-    type: 'Leadership Development',
-    orgsCount: 31,
-    description: 'Foundational leadership programme focusing on emotional intelligence, psychological safety, and people-first management practices.',
-    status: 'legacy',
-    highlights: ['Longest-running programme', 'Evolved into Leader as Coach'],
-  },
-  {
-    name: 'Developing Leaders Programme',
-    yearsActive: '2014–2023',
-    sector: 'Entry-level',
-    type: 'Leadership Development',
-    orgsCount: 42,
-    description: 'First-time manager and emerging leader development. Covers delegation, feedback, accountability, and team motivation fundamentals.',
-    status: 'legacy',
-    highlights: ['First programme ever delivered', 'Second highest delivery count'],
-  },
-  {
-    name: 'Diversity & Inclusion Workshop',
-    yearsActive: '2018–2025',
-    sector: 'Corporate',
-    type: 'Culture & Inclusion',
-    orgsCount: 25,
-    description: 'Half-day to full-day interactive workshops on building inclusive workplaces. Covers systemic bias, allyship, and inclusive leadership behaviours.',
-    status: 'active',
   },
   {
     name: 'Leadership Resilience & Agility',
@@ -98,18 +108,19 @@ const programmes: Programme[] = [
     sector: 'Executive',
     type: 'Leadership Development',
     orgsCount: 20,
+    role: 'Executive Edge — Resilience and adaptive capacity for senior leaders under pressure. Includes mindfulness and cognitive reframing tools.',
     description: 'Executive-level programme building resilience, adaptive capacity, and decision-making under pressure. Includes mindfulness and cognitive reframing tools.',
     status: 'active',
   },
   {
-    name: 'Leader as Coach',
-    yearsActive: '2023–2025',
-    sector: 'Financial Services',
-    type: 'Coaching Culture',
-    orgsCount: 12,
-    description: 'Flagship current programme. Builds coaching capability in middle managers to unlock team performance, reduce dependency, and improve retention.',
+    name: 'Enneagram & Collaboration',
+    yearsActive: '2020–2025',
+    sector: 'Executive',
+    type: 'Self-Awareness',
+    orgsCount: 18,
+    role: 'Self-Awareness Deep Dive — Enneagram-based programme for executive teams. Builds conflict resolution and collaborative intelligence.',
+    description: 'Deep-dive into Enneagram personality framework for executive teams. Builds self-awareness, conflict resolution capability, and collaborative intelligence.',
     status: 'active',
-    highlights: ['Current flagship programme', 'Primary commercial focus'],
   },
 ];
 
@@ -244,6 +255,10 @@ export default function ProgrammesArchive() {
                   <CardTitle className="text-lg font-serif">{p.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col gap-3">
+                  <div className="bg-primary/5 border border-primary/10 rounded-md px-3 py-2">
+                    <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-0.5">Role</p>
+                    <p className="text-sm text-foreground leading-relaxed">{p.role}</p>
+                  </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
                   <div className="flex flex-wrap gap-1.5 mt-auto">
                     <Badge variant="outline" className="text-xs">{p.sector}</Badge>
