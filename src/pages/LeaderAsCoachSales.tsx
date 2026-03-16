@@ -659,7 +659,7 @@ export default function LeaderAsCoachSales() {
               Your Managers Won't Coach Themselves.<br className="hidden sm:block" /> Let's Fix That in 90 Days.
             </h2>
             <p className="mb-8" style={{ color: "rgba(248,246,241,0.6)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16 }}>
-              4,000+ leaders. 30+ organisations. 11 years of proven results.
+              4,000+ leaders. 50+ organisations. 11 years of proven results.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
