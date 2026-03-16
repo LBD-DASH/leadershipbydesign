@@ -182,10 +182,10 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-md md:max-w-none mx-auto">
-              {/* CARD 1 — Leader as Coach (elevated) */}
+              {/* CARD 1 — Leader as Coach */}
               <div
-                className="rounded-lg overflow-hidden flex flex-col shadow-xl"
-                style={{ backgroundColor: "#0F1F2E" }}
+                className="rounded-lg overflow-hidden flex flex-col shadow-md border"
+                style={{ backgroundColor: "#F8F6F1", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}
               >
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={lacImage} alt="Leader as Coach programme session" className="w-full h-full object-cover" />
@@ -194,11 +194,11 @@ const Index = () => {
                   <p className="uppercase tracking-[0.15em] text-xs font-semibold mb-2" style={{ color: "#C8A864", fontFamily: "'Source Sans 3', sans-serif" }}>
                     Signature Programme
                   </p>
-                  <h3 className="font-serif font-bold text-2xl sm:text-[28px] text-white mb-1">Leader as Coach</h3>
+                  <h3 className="font-serif font-bold text-2xl sm:text-[28px] mb-1" style={{ color: "#0F1F2E" }}>Leader as Coach</h3>
                   <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
                     90-Day Manager Coaching Accelerator
                   </p>
-                  <p className="mb-6" style={{ color: "#F8F6F1", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
+                  <p className="mb-6" style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.7 }}>
                     The management layer is where leadership culture is won or lost. This is a structured 90-day process that turns your managers into coaches — permanently. Not a workshop. An operating system.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
@@ -214,7 +214,7 @@ const Index = () => {
                         See the Programme
                       </button>
                     </Link>
-                    <p className="text-center mt-2" style={{ color: "rgba(248,246,241,0.6)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
+                    <p className="text-center mt-2" style={{ color: "rgba(15,31,46,0.5)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
                       SDL-eligible spend
                     </p>
                   </div>
@@ -222,7 +222,7 @@ const Index = () => {
               </div>
 
               {/* CARD 2 — SHIFT */}
-              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
+              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#F8F6F1", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={shiftImage} alt="SHIFT leadership development team" className="w-full h-full object-cover" />
                 </div>
@@ -252,7 +252,7 @@ const Index = () => {
               </div>
 
               {/* CARD 3 — Contagious Identity */}
-              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border md:col-span-2 lg:col-span-1" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
+              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border md:col-span-2 lg:col-span-1" style={{ backgroundColor: "#F8F6F1", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={ciImage} alt="Executive coaching session" className="w-full h-full object-cover" />
                 </div>
