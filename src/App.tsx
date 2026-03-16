@@ -93,6 +93,7 @@ import AdminOperatingSystem from "./pages/admin/AdminOperatingSystem";
 import ClaudeContext from "./pages/ClaudeContext";
 import GTMPageViewTracker from "./components/GTMPageViewTracker";
 import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
+import CoachingGapReport from "./pages/products/CoachingGapReport";
 import Brand from "./pages/Brand";
 const queryClient = new QueryClient();
 
