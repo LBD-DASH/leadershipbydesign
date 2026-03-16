@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Activity, Mail, Users, Calendar, Flame, ClipboardCheck } from 'lucide-react';
+import { Activity, Mail, Users, Calendar, Flame, ClipboardCheck, FileText } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SequenceTemplatesPanel from '@/components/admin/SequenceTemplatesPanel';
 import GoogleAnalyticsCard from '@/components/admin/GoogleAnalyticsCard';
 import { Button } from '@/components/ui/button';
 import { format, subDays, startOfWeek } from 'date-fns';
@@ -394,13 +396,32 @@ export default function AdminOperatingSystem() {
             <Button variant="ghost" size="sm" onClick={logout}>Sign Out</Button>
           </div>
 
-          <div className="space-y-8">
-            <PipelineStatus />
-            <GoogleAnalyticsCard />
-            <SystemHealth />
-            <ActiveProjects />
-            <Last7DaysPerformance />
-          </div>
+          <Tabs defaultValue="overview" className="mt-2">
+            <TabsList className="mb-6">
+              <TabsTrigger value="overview" className="gap-2">
+                <Activity className="w-4 h-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="sequences" className="gap-2">
+                <FileText className="w-4 h-4" />
+                Sequence Templates
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview">
+              <div className="space-y-8">
+                <PipelineStatus />
+                <GoogleAnalyticsCard />
+                <SystemHealth />
+                <ActiveProjects />
+                <Last7DaysPerformance />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="sequences">
+              <SequenceTemplatesPanel />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
       <Footer />
