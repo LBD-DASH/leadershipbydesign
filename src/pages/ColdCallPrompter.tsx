@@ -1029,7 +1029,7 @@ export default function ColdCallPrompter() {
 
               {/* Credibility */}
               <div className="bg-muted/50 border border-border rounded-lg p-3 text-center">
-                <p className="text-xs text-muted-foreground">11 Years · 4,000+ Leaders · 750+ Programmes · 30+ Organisations</p>
+                <p className="text-xs text-muted-foreground">11 Years · 4,000+ Leaders · 750+ Programmes · 50+ Organisations</p>
               </div>
             </div>
           </div>

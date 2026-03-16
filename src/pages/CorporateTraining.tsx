@@ -218,7 +218,7 @@ export default function CorporateTraining() {
               <div className="md:col-span-3 text-center md:text-left">
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-3">Your Facilitator: Kevin Britz</h3>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™ and L1–L5 Leadership System. 750+ workshops. 4,000+ leaders developed across 30+ organisations including Discovery, FNB, and MIT Management School.
+                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™ and L1–L5 Leadership System. 750+ workshops. 4,000+ leaders developed across 50+ organisations including Discovery, FNB, and MIT Management School.
                 </p>
                 <Link to="/about">
                   <Button variant="outline" className="rounded-full group">
