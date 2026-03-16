@@ -74,7 +74,7 @@ export default function Hero() {
       <div className="relative z-10 py-4 sm:py-6 border-t border-white/10">
         <div className="max-w-4xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-12 text-white/70 text-xs sm:text-sm font-medium tracking-wide">
           <span>4,000+ Leaders</span>
-          <span>50+ Organisations</span>
+          <span>30+ Organisations</span>
           <span>750+ Programmes</span>
           <span>11 Years</span>
         </div>

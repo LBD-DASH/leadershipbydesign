@@ -47,7 +47,7 @@ const faqs = [
 const socialProof = [
   { stat: "11 years", label: "Developing leaders" },
   { stat: "4,000+", label: "Leaders trained" },
-  { stat: "50+", label: "Organisations" },
+  { stat: "30+", label: "Organisations" },
 ];
 
 /* ───────────────────── COMPONENT ───────────────────── */
@@ -139,7 +139,7 @@ export default function NewManagerTraining() {
       <section className="bg-primary text-primary-foreground pt-12 pb-16 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <p className="text-xs uppercase tracking-widest text-primary-foreground/60 mb-4">
-            Trusted by 4,000+ leaders across 50+ South African organisations
+            Trusted by 4,000+ leaders across 30+ South African organisations
           </p>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 leading-tight">

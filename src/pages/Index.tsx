@@ -17,7 +17,7 @@ const Index = () => {
     <>
       <SEO
         title="Manager Coaching Programme South Africa | Leader as Coach | Leadership by Design"
-        description="Install coaching capability into your management layer in 90 days. Proven with 4,000+ leaders across 50+ organisations in South African financial services. Book a discovery call."
+        description="Install coaching capability into your management layer in 90 days. Proven with 4,000+ leaders across 30+ organisations in South African financial services. Book a discovery call."
         canonicalUrl="/"
         keywords="manager coaching programme, leader as coach, leadership development, executive coaching, South Africa, financial services, Kevin Britz"
       />
@@ -97,7 +97,7 @@ const Index = () => {
               {[
                 { value: "4,000+", label: "Leaders Developed" },
                 { value: "750+", label: "Programmes Delivered" },
-                { value: "50+", label: "Organisations" },
+                { value: "30+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
                 <div

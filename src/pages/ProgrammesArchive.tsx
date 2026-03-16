@@ -154,7 +154,7 @@ export default function ProgrammesArchive() {
     <>
       <SEO
         title="Programme Archive | Leadership by Design"
-        description="11 years of leadership development across 50+ organisations"
+        description="11 years of leadership development across 30+ organisations"
       />
       <div className="min-h-screen bg-background text-foreground">
         {/* Header */}
@@ -173,7 +173,7 @@ export default function ProgrammesArchive() {
               </div>
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-[hsl(var(--gold))]" />
-                <span>50+ Organisations</span>
+                <span>30+ Organisations</span>
               </div>
               <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-[hsl(var(--gold))]" />

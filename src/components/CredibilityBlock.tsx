@@ -44,7 +44,7 @@ export default function CredibilityBlock() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary mt-0.5">✦</span>
-                Business school faculty · Bespoke programme designer · Trusted by Discovery, FNB, MIT Management School, and 50+ leading organisations
+                Business school faculty · Bespoke programme designer · Trusted by Discovery, FNB, MIT Management School, and 30+ leading organisations
               </li>
             </ul>
 

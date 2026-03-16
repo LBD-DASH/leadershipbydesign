@@ -124,7 +124,7 @@ export default function CoachingReadinessGuide() {
               <p className="text-lg text-muted-foreground mb-6">
                 Most management layers have the same gap. This guide helps you identify it — 
                 and shows you exactly what to do about it. Built from 11 years of working with 
-                50+ organisations in South African financial services.
+                30+ organisations in South African financial services.
               </p>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Download className="w-4 h-4 text-primary" />
