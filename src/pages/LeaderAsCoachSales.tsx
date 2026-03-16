@@ -560,8 +560,8 @@ export default function LeaderAsCoachSales() {
                 </div>
               </div>
               <div className="md:col-span-3 text-center md:text-left">
-                <h3 className="font-serif font-bold mb-1" style={{ color: "#0F1F2E", fontSize: 28 }}>Kevin Britz</h3>
-                <p className="font-serif mb-4" style={{ color: "#0F1F2E", fontSize: 18 }}>Leadership Architect</p>
+                <h3 className="font-serif font-bold mb-1 text-xl sm:text-2xl md:text-[28px]" style={{ color: "#0F1F2E" }}>Kevin Britz</h3>
+                <p className="font-serif mb-4 text-base sm:text-lg" style={{ color: "#0F1F2E" }}>Leadership Architect</p>
                 <p
                   className="mb-6"
                   style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", fontSize: 16, lineHeight: 1.8 }}
