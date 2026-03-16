@@ -65,7 +65,7 @@ I've been working with ${data.industry} companies in ${data.location} on a speci
 
 One question: if you could strengthen one capability across your management team right now, what would it be?
 
-I ask because I've spent 11 years developing 4,000+ leaders across 30+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
+I ask because I've spent 11 years developing 4,000+ leaders across 50+ organisations, and the answer usually points to exactly where leadership development has the biggest impact on retention and engagement.
 
 Happy to share what I've seen working for ${data.industry} companies if you're open to a 15-minute conversation.
 
