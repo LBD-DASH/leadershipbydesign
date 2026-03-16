@@ -173,6 +173,48 @@ export type Database = {
         }
         Relationships: []
       }
+      apollo_sequence_templates: {
+        Row: {
+          body: string
+          created_at: string
+          cta_type: string
+          day_number: number
+          id: string
+          note: string | null
+          sequence_name: string
+          status: string
+          step_number: number
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          cta_type?: string
+          day_number: number
+          id?: string
+          note?: string | null
+          sequence_name?: string
+          status?: string
+          step_number: number
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          cta_type?: string
+          day_number?: number
+          id?: string
+          note?: string | null
+          sequence_name?: string
+          status?: string
+          step_number?: number
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       apollo_sequence_tracking: {
         Row: {
           added_to_call_list_at: string | null
