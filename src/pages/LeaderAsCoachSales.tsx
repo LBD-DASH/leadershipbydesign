@@ -663,15 +663,15 @@ export default function LeaderAsCoachSales() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
-                className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
                 style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
                 onClick={handleCalendarOpen}
               >
                 Book a Discovery Call
               </button>
-              <Link to="/leader-as-coach-diagnostic">
+              <Link to="/leader-as-coach-diagnostic" className="w-full sm:w-auto">
                 <button
-                  className="px-8 py-3.5 rounded-md font-semibold text-base border-2 transition-opacity hover:opacity-80 w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base border-2 transition-opacity hover:opacity-80 w-full"
                   style={{ borderColor: "#C8A864", color: "#C8A864", backgroundColor: "transparent", fontFamily: "'Source Sans 3', sans-serif" }}
                 >
                   Take the Free Assessment
