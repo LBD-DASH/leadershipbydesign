@@ -396,13 +396,32 @@ export default function AdminOperatingSystem() {
             <Button variant="ghost" size="sm" onClick={logout}>Sign Out</Button>
           </div>
 
-          <div className="space-y-8">
-            <PipelineStatus />
-            <GoogleAnalyticsCard />
-            <SystemHealth />
-            <ActiveProjects />
-            <Last7DaysPerformance />
-          </div>
+          <Tabs defaultValue="overview" className="mt-2">
+            <TabsList className="mb-6">
+              <TabsTrigger value="overview" className="gap-2">
+                <Activity className="w-4 h-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="sequences" className="gap-2">
+                <FileText className="w-4 h-4" />
+                Sequence Templates
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview">
+              <div className="space-y-8">
+                <PipelineStatus />
+                <GoogleAnalyticsCard />
+                <SystemHealth />
+                <ActiveProjects />
+                <Last7DaysPerformance />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="sequences">
+              <SequenceTemplatesPanel />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
       <Footer />
