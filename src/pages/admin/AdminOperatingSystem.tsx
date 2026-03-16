@@ -36,7 +36,7 @@ function PipelineStatus() {
       const { data } = await supabase
         .from('admin_settings')
         .select('setting_value')
-        .eq('setting_key', 'outreach_campaign_mode')
+        .eq('setting_key', 'campaign_mode')
         .maybeSingle();
       return data?.setting_value || 'unknown';
     },

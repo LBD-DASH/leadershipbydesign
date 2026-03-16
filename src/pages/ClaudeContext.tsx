@@ -48,7 +48,7 @@ export default function ClaudeContext() {
         googleAdsImpressionsRes,
         googleAdsReviewRes,
       ] = await Promise.all([
-        supabase.from('admin_settings').select('setting_value').eq('setting_key', 'outreach_campaign_mode').maybeSingle(),
+        supabase.from('admin_settings').select('setting_value').eq('setting_key', 'campaign_mode').maybeSingle(),
         supabase.from('warm_lead_sequences').select('*', { count: 'exact', head: true }).eq('status', 'awaiting_first_contact'),
         supabase.from('prospect_outreach').select('*', { count: 'exact', head: true }).eq('status', 'sent').gte('sent_at', today + 'T00:00:00'),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', weekStart),
