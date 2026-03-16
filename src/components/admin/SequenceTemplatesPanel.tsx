@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { Copy, Save, Mail, Clock } from 'lucide-react';
+import { Copy, Save, Mail, Clock, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface SequenceTemplate {
@@ -23,6 +23,14 @@ interface SequenceTemplate {
   status: string;
   updated_at: string;
   created_at: string;
+}
+
+interface SyncLog {
+  id: string;
+  synced_at: string;
+  steps_synced: number;
+  status: string;
+  error_message: string | null;
 }
 
 export default function SequenceTemplatesPanel() {
@@ -44,6 +52,19 @@ export default function SequenceTemplatesPanel() {
     },
   });
 
+  const { data: lastSync } = useQuery({
+    queryKey: ['apollo-sync-log-latest'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('apollo_sync_log' as any)
+        .select('*')
+        .order('synced_at', { ascending: false })
+        .limit(1);
+      if (error) throw error;
+      return (data as any[])?.[0] as SyncLog | undefined;
+    },
+  });
+
   const updateMutation = useMutation({
     mutationFn: async ({ id, subject, body, status }: { id: string; subject: string; body: string; status: string }) => {
       const { error } = await supabase
@@ -56,6 +77,23 @@ export default function SequenceTemplatesPanel() {
       queryClient.invalidateQueries({ queryKey: ['sequence-templates'] });
       setEditingId(null);
       toast({ title: 'Template updated' });
+    },
+  });
+
+  const syncMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('apollo-sequence-sync');
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error || 'Sync failed');
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      toast({ title: 'Sequence synced to Apollo successfully', description: `${data.steps_synced} steps synced` });
+    },
+    onError: (err: any) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      toast({ title: 'Sync failed', description: err.message, variant: 'destructive' });
     },
   });
 
@@ -102,6 +140,41 @@ export default function SequenceTemplatesPanel() {
           <p className="text-sm text-muted-foreground">Approved copy for Apollo. Click Copy to paste directly.</p>
         </div>
       </div>
+
+      {/* Sync to Apollo button */}
+      <Card className="border">
+        <CardContent className="pt-4 pb-4 space-y-3">
+          <Button
+            onClick={() => syncMutation.mutate()}
+            disabled={syncMutation.isPending}
+            className="w-full font-sans font-semibold text-white"
+            style={{ backgroundColor: '#2A7B88' }}
+          >
+            {syncMutation.isPending ? (
+              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4 mr-2" />
+            )}
+            {syncMutation.isPending ? 'Syncing to Apollo…' : 'Sync to Apollo'}
+          </Button>
+
+          {lastSync && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {lastSync.status === 'success' ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              ) : (
+                <XCircle className="w-3.5 h-3.5 text-red-500" />
+              )}
+              <span>
+                Last sync: {format(new Date(lastSync.synced_at), 'dd MMM yyyy HH:mm')} —{' '}
+                {lastSync.status === 'success'
+                  ? `${lastSync.steps_synced} steps synced`
+                  : lastSync.error_message || 'Error'}
+              </span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {(templates || []).map((t) => (
         <Card key={t.id} className="border">
