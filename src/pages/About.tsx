@@ -74,7 +74,7 @@ export default function About() {
     <>
       <SEO
         title="About Leadership by Design | 11 Years of Executive Coaching in South Africa"
-        description="Leadership by Design has developed 4,000+ leaders across 50+ organisations in South Africa through executive coaching, 750+ workshops, and leadership development programmes."
+        description="Leadership by Design has developed 4,000+ leaders across 30+ organisations in South Africa through executive coaching, 750+ workshops, and leadership development programmes."
         canonicalUrl="/about"
         ogImage="https://leadershipbydesign.co/og-about.jpg"
         keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching, South Africa coaching"
