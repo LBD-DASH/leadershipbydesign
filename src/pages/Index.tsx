@@ -181,20 +181,20 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-md md:max-w-none mx-auto">
               {/* CARD 1 — Leader as Coach (elevated) */}
               <div
-                className="rounded-lg overflow-hidden flex flex-col shadow-xl lg:-mt-4 lg:mb-4"
+                className="rounded-lg overflow-hidden flex flex-col shadow-xl"
                 style={{ backgroundColor: "#0F1F2E" }}
               >
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={lacImage} alt="Leader as Coach programme session" className="w-full h-full object-cover" />
                 </div>
-                <div className="p-8 flex flex-col flex-1">
+                <div className="p-6 sm:p-8 flex flex-col flex-1">
                   <p className="uppercase tracking-[0.15em] text-xs font-semibold mb-2" style={{ color: "#C8A864", fontFamily: "'Source Sans 3', sans-serif" }}>
                     Signature Programme
                   </p>
-                  <h3 className="font-serif font-bold text-[28px] text-white mb-1">Leader as Coach</h3>
+                  <h3 className="font-serif font-bold text-2xl sm:text-[28px] text-white mb-1">Leader as Coach</h3>
                   <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
                     90-Day Manager Coaching Accelerator
                   </p>
@@ -226,8 +226,8 @@ const Index = () => {
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={shiftImage} alt="SHIFT leadership development team" className="w-full h-full object-cover" />
                 </div>
-                <div className="p-8 flex flex-col flex-1">
-                  <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>SHIFT</h3>
+                <div className="p-6 sm:p-8 flex flex-col flex-1">
+                  <h3 className="font-serif font-bold text-2xl sm:text-[28px] mb-1" style={{ color: "#0F1F2E" }}>SHIFT</h3>
                   <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
                     The Leadership Operating System for the AI Era
                   </p>
@@ -252,12 +252,12 @@ const Index = () => {
               </div>
 
               {/* CARD 3 — Contagious Identity */}
-              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
+              <div className="rounded-lg overflow-hidden flex flex-col shadow-md border md:col-span-2 lg:col-span-1" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
                 <div className="aspect-[16/9] overflow-hidden">
                   <img src={ciImage} alt="Executive coaching session" className="w-full h-full object-cover" />
                 </div>
-                <div className="p-8 flex flex-col flex-1">
-                  <h3 className="font-serif font-bold text-[28px] mb-1" style={{ color: "#0F1F2E" }}>Contagious Identity</h3>
+                <div className="p-6 sm:p-8 flex flex-col flex-1">
+                  <h3 className="font-serif font-bold text-2xl sm:text-[28px] mb-1" style={{ color: "#0F1F2E" }}>Contagious Identity</h3>
                   <p className="text-sm mb-4" style={{ color: "#2A7B88", fontFamily: "'Source Sans 3', sans-serif" }}>
                     Executive Coaching for Senior Leaders
                   </p>
