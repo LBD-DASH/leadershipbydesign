@@ -197,7 +197,7 @@ Slack: connected via connector
 Google Tag firing: verify in GTM (GTM-TV3SFR3G)
 Google Ads active: ${gadsStatus}
 
-ACTIVE PROJECTS
+ACTIVE PROJECTS (excludes DONE)
 ${projectLines}
 
 LAST 7 DAYS
