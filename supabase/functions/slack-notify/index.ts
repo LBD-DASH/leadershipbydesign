@@ -11,6 +11,7 @@ interface SlackNotifyPayload {
   eventType: string;
   sourceApp?: string;
   channel?: string;
+  blocks?: any[];
   data: Record<string, any>;
 }
 
