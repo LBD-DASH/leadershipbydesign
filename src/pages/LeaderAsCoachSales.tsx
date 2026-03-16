@@ -386,7 +386,7 @@ export default function LeaderAsCoachSales() {
         </section>
 
         {/* ───────────── 5. WHAT CHANGES ───────────── */}
-        <section style={{ backgroundColor: "#FFFFFF" }} className="py-16 sm:py-24 px-4 sm:px-6">
+        <section style={{ backgroundColor: "#FDFCF9" }} className="py-16 sm:py-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
               <p
