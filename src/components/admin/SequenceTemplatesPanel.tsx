@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { Copy, Save, Mail, Clock, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
+import { Copy, Save, Mail, Clock, RefreshCw, CheckCircle2, XCircle, ArrowRightLeft } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface SequenceTemplate {
@@ -39,6 +40,7 @@ export default function SequenceTemplatesPanel() {
   const [editSubject, setEditSubject] = useState('');
   const [editBody, setEditBody] = useState('');
   const [editStatus, setEditStatus] = useState('Active');
+  const [showMigrateModal, setShowMigrateModal] = useState(false);
 
   const { data: templates, isLoading } = useQuery({
     queryKey: ['sequence-templates'],
@@ -94,6 +96,25 @@ export default function SequenceTemplatesPanel() {
     onError: (err: any) => {
       queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
       toast({ title: 'Sync failed', description: err.message, variant: 'destructive' });
+    },
+  });
+
+  const migrateMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('apollo-sequence-migrate');
+      if (error) throw error;
+      if (data && !data.success) throw new Error(data.error || 'Migration failed');
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      setShowMigrateModal(false);
+      toast({ title: 'Contacts migrated to new sequence', description: `${data.migrated} contacts moved` });
+    },
+    onError: (err: any) => {
+      queryClient.invalidateQueries({ queryKey: ['apollo-sync-log-latest'] });
+      setShowMigrateModal(false);
+      toast({ title: 'Migration failed', description: err.message, variant: 'destructive' });
     },
   });
 
@@ -175,6 +196,52 @@ export default function SequenceTemplatesPanel() {
           )}
         </CardContent>
       </Card>
+
+      {/* Migrate Contacts button */}
+      <Card className="border">
+        <CardContent className="pt-4 pb-4">
+          <Button
+            onClick={() => setShowMigrateModal(true)}
+            disabled={migrateMutation.isPending}
+            className="w-full font-bold text-white"
+            style={{ backgroundColor: '#1B2A4A', fontFamily: "'Source Sans 3', sans-serif" }}
+          >
+            {migrateMutation.isPending ? (
+              <ArrowRightLeft className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <ArrowRightLeft className="w-4 h-4 mr-2" />
+            )}
+            {migrateMutation.isPending ? 'Migrating contacts…' : 'Migrate contacts to new sequence'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Migration Confirmation Modal */}
+      <Dialog open={showMigrateModal} onOpenChange={setShowMigrateModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Migrate Contacts</DialogTitle>
+            <DialogDescription>
+              This will move all non-replied contacts from <strong>Leader as Coach - 1 MAR</strong> into{' '}
+              <strong>Leader as Coach MAR v2</strong> starting at Step 1. This cannot be undone. Continue?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" onClick={() => setShowMigrateModal(false)} disabled={migrateMutation.isPending}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => migrateMutation.mutate()}
+              disabled={migrateMutation.isPending}
+              style={{ backgroundColor: '#1B2A4A' }}
+              className="text-white"
+            >
+              {migrateMutation.isPending ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {(templates || []).map((t) => (
         <Card key={t.id} className="border">

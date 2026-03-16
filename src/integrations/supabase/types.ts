@@ -1701,6 +1701,57 @@ export type Database = {
         }
         Relationships: []
       }
+      manual_outreach_leads: {
+        Row: {
+          account_group: string
+          company: string
+          connection_status: string
+          created_at: string
+          first_name: string
+          id: string
+          last_name: string
+          linkedin_url: string
+          location: string
+          message_sent: string | null
+          notes: string | null
+          tier: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          account_group?: string
+          company: string
+          connection_status?: string
+          created_at?: string
+          first_name: string
+          id?: string
+          last_name: string
+          linkedin_url?: string
+          location?: string
+          message_sent?: string | null
+          notes?: string | null
+          tier?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          account_group?: string
+          company?: string
+          connection_status?: string
+          created_at?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          linkedin_url?: string
+          location?: string
+          message_sent?: string | null
+          notes?: string | null
+          tier?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       marketing_campaigns: {
         Row: {
           campaign_type: string

@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Activity, Mail, Users, Calendar, Flame, ClipboardCheck, FileText } from 'lucide-react';
+import { Activity, Mail, Users, Calendar, Flame, ClipboardCheck, FileText, Target } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SequenceTemplatesPanel from '@/components/admin/SequenceTemplatesPanel';
+import ManualOutreachKanban from '@/components/admin/ManualOutreachKanban';
 import GoogleAnalyticsCard from '@/components/admin/GoogleAnalyticsCard';
 import { Button } from '@/components/ui/button';
 import { format, subDays, startOfWeek } from 'date-fns';
@@ -406,6 +407,10 @@ export default function AdminOperatingSystem() {
                 <FileText className="w-4 h-4" />
                 Sequence Templates
               </TabsTrigger>
+              <TabsTrigger value="manual-outreach" className="gap-2">
+                <Target className="w-4 h-4" />
+                Manual Outreach
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -420,6 +425,10 @@ export default function AdminOperatingSystem() {
 
             <TabsContent value="sequences">
               <SequenceTemplatesPanel />
+            </TabsContent>
+
+            <TabsContent value="manual-outreach">
+              <ManualOutreachKanban />
             </TabsContent>
           </Tabs>
         </div>

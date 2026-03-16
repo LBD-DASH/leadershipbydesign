@@ -132,4 +132,7 @@ verify_jwt = false
 [functions.apollo-sequence-sync]
 verify_jwt = false
 
+[functions.apollo-sequence-migrate]
+verify_jwt = false
+
 
