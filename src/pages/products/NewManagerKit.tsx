@@ -259,7 +259,7 @@ export default function NewManagerKit() {
       {/* SOCIAL PROOF BAR — compact */}
       <section className="py-3 sm:py-6 px-4 bg-background border-y border-border">
         <p className="text-center text-muted-foreground text-xs sm:text-sm font-medium">
-          Built on 11 years developing 4,000+ leaders across 30+ organisations
+          Built on 11 years developing 4,000+ leaders across 50+ organisations
         </p>
       </section>
 
