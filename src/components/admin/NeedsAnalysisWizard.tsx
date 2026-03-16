@@ -87,7 +87,7 @@ Pain points identified:
 ${Object.entries(painsByCategory).map(([cat, pains]) => `\n${cat}:\n${pains.map(p => `- ${p}`).join('\n')}`).join('\n')}
 ${additionalNotes ? `\nAdditional context: ${additionalNotes}` : ''}`;
 
-      const systemPrompt = `You are a senior leadership development consultant at Leadership by Design, a South African firm with 11 years experience developing 4,000+ leaders across 50+ organisations. Your single commercial offer is the Leader as Coach — 90-Day Manager Coaching Accelerator.
+      const systemPrompt = `You are a senior leadership development consultant at Leadership by Design, a South African firm with 11 years experience developing 4,000+ leaders across 30+ organisations. Your single commercial offer is the Leader as Coach — 90-Day Manager Coaching Accelerator.
 
 Based on the client's pain points, generate a concise, boardroom-ready proposal summary that includes:
 

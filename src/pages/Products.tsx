@@ -386,7 +386,7 @@ const Products = () => {
             </h1>
             <div className="w-16 md:w-20 h-1 bg-primary mx-auto mb-3 md:mb-6" />
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-              Practical frameworks and templates built from 11 years developing 4,000+ leaders across 50+ organisations.
+              Practical frameworks and templates built from 11 years developing 4,000+ leaders across 30+ organisations.
             </p>
           </motion.div>
 

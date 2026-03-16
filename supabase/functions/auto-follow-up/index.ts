@@ -63,7 +63,7 @@ That's exactly what we install. Happy to show you how: ${bookingLink}
 
 I won't keep sending notes. If developing your management layer's coaching capability ever comes onto the agenda, I'm here: https://www.leadershipbydesign.co/leader-as-coach
 
-4,000+ leaders developed. 50+ organisations. Happy to talk when the time is right.
+4,000+ leaders developed. 30+ organisations. Happy to talk when the time is right.
 
 — Kevin, Leadership by Design`,
   },

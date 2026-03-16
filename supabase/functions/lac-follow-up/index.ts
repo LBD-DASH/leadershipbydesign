@@ -36,8 +36,8 @@ function getHRLeaderSequence(profile: string, name: string, company: string, sco
         delay_days: 3,
       },
       {
-        subject: 'What 50+ organisations did about this',
-        body: `${name || 'Hi'},\n\n4,000+ leaders. 50+ organisations. 11 years.\n\nThe pattern is always the same — managers promoted for technical excellence, struggling to develop people.\n\nThe 90-Day Manager Coaching Accelerator installs the system that fixes it.\n\nhttps://leadershipbydesign.co/leader-as-coach\n\nKevin`,
+        subject: 'What 30+ organisations did about this',
+        body: `${name || 'Hi'},\n\n4,000+ leaders. 30+ organisations. 11 years.\n\nThe pattern is always the same — managers promoted for technical excellence, struggling to develop people.\n\nThe 90-Day Manager Coaching Accelerator installs the system that fixes it.\n\nhttps://leadershipbydesign.co/leader-as-coach\n\nKevin`,
         delay_days: 7,
       },
     ];

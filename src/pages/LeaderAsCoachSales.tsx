@@ -566,7 +566,7 @@ export default function LeaderAsCoachSales() {
                   className="mb-6 text-sm sm:text-base"
                   style={{ color: "#444444", fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.8 }}
                 >
-                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 50+ organisations.
+                  Business school faculty member, Master Practitioner in NLP & Time Line Therapy, and architect of the SHIFT Methodology™. 750+ workshops. 4,000+ leaders developed across Discovery, FNB, and 30+ organisations.
                 </p>
                 <Link to="/about">
                   <button
