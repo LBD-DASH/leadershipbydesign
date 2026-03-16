@@ -47,7 +47,7 @@ const faqs = [
 const socialProof = [
   { stat: "11 years", label: "Developing leaders" },
   { stat: "4,000+", label: "Leaders trained" },
-  { stat: "50+", label: "Organisations" },
+  { stat: "30+", label: "Organisations" },
 ];
 
 /* ───────────────────── COMPONENT ───────────────────── */
