@@ -161,7 +161,7 @@ export default function LeaderAsCoachDiagnostic() {
         await supabase
           .from('diagnostic_nurture_sequences' as any)
           .insert({
-            diagnostic_submission_id: (inserted as any)?.id || null,
+            diagnostic_submission_id: null,
             diagnostic_type: 'lac',
             lead_email: data.email,
             lead_name: data.name,
