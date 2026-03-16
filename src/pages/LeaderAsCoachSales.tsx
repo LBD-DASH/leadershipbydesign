@@ -500,7 +500,7 @@ export default function LeaderAsCoachSales() {
             >
               <span>4,000+ leaders developed</span>
               <span className="hidden sm:inline">·</span>
-              <span>30+ organisations</span>
+              <span>50+ organisations</span>
               <span className="hidden sm:inline">·</span>
               <span>11 years</span>
               <span className="hidden sm:inline">·</span>
