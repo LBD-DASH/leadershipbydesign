@@ -95,6 +95,7 @@ import GTMPageViewTracker from "./components/GTMPageViewTracker";
 import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
 import CoachingGapReport from "./pages/products/CoachingGapReport";
 import Brand from "./pages/Brand";
+import ProgrammesArchive from "./pages/ProgrammesArchive";
 const queryClient = new QueryClient();
 
 const App = () => (
