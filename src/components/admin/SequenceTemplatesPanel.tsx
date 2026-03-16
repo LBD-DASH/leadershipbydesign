@@ -40,6 +40,7 @@ export default function SequenceTemplatesPanel() {
   const [editSubject, setEditSubject] = useState('');
   const [editBody, setEditBody] = useState('');
   const [editStatus, setEditStatus] = useState('Active');
+  const [showMigrateModal, setShowMigrateModal] = useState(false);
 
   const { data: templates, isLoading } = useQuery({
     queryKey: ['sequence-templates'],
