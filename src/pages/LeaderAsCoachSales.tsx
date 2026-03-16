@@ -603,11 +603,11 @@ export default function LeaderAsCoachSales() {
               Discovery call required to confirm fit and scope. We'll map your management capability gaps and design the right cohort structure for your organisation.
             </p>
             <button
-              className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+              className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
               style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
               onClick={handleCalendarOpen}
             >
-              Book a Discovery Call — 30 Minutes, No Obligation
+              Book a Discovery Call — 30 Min, No Obligation
             </button>
           </div>
         </section>
