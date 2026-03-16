@@ -177,13 +177,8 @@ export default function LeaderAsCoachDiagnostic() {
       // Process lead (AI analysis + notifications) non-blocking
       processLead(leadData, `Leader as Coach Assessment: ${result.profileName} (${result.totalScore}/75). Version: ${version}. Lowest areas: ${result.lowestAreas.map(a => a.theme).join(', ')}.`)
         .then(({ aiAnalysis }) => {
-          if ((inserted as any)?.id && aiAnalysis) {
-            supabase
-              .from('leader_as_coach_assessments' as any)
-              .update({ ai_analysis: aiAnalysis } as any)
-              .eq('id', (inserted as any).id)
-              .then(() => console.log('💾 LAC AI analysis saved'));
-          }
+          // AI analysis update skipped — anon user cannot read back inserted ID
+          // The analysis is captured in the processLead flow instead
         })
         .catch(err => console.error('LAC lead processing error:', err));
     } catch (error) {
