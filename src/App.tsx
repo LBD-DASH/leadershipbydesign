@@ -210,6 +210,7 @@ const App = () => (
           <Route path="/ad/executive-coaching" element={<ExecutiveCoachingAd />} />
           <Route path="/leader-as-coach-diagnostic" element={<LeaderAsCoachDiagnostic />} />
           <Route path="/coaching-readiness-guide" element={<CoachingReadinessGuide />} />
+          <Route path="/coaching-gap-report" element={<CoachingGapReport />} />
           <Route
             path="/brand"
             element={

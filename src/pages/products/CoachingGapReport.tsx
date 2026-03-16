@@ -114,7 +114,6 @@ export default function CoachingGapReport() {
       <SEO
         title="The Coaching Gap Report | Leadership by Design"
         description="Free research report: Why manager development fails and what high-performance organisations do differently. International research meets 11 years of South African practice."
-        url="https://leadershipbydesign.co/coaching-gap-report"
       />
       <Header />
 
