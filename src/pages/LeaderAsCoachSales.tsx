@@ -151,7 +151,7 @@ export default function LeaderAsCoachSales() {
               backgroundSize: "200% 200%",
             }}
           />
-          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-28 sm:py-36">
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-20 sm:py-36">
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6">
               <span
                 className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border"
