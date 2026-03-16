@@ -209,7 +209,7 @@ export default function LeaderAsCoachSales() {
         {/* ───────────── PROOF BAR ───────────── */}
         <section style={{ backgroundColor: "#2A7B88" }} className="py-6 sm:py-8">
           <div className="max-w-5xl mx-auto px-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
               {[
                 { value: "4,000+", label: "Leaders Developed" },
                 { value: "750+", label: "Programmes Delivered" },
