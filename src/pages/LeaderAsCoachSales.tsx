@@ -138,7 +138,7 @@ export default function LeaderAsCoachSales() {
         <Header />
 
         {/* ───────────── 1. HERO ───────────── */}
-        <section className="relative overflow-hidden min-h-[85vh] flex items-center" style={{ backgroundColor: "#0F1F2E" }}>
+        <section className="relative overflow-hidden min-h-[70vh] sm:min-h-[85vh] flex items-center" style={{ backgroundColor: "#0F1F2E" }}>
           <img
             src={leaderAsCoachImage}
             alt="Leadership coaching session"
