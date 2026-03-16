@@ -28,6 +28,8 @@ function mapEventType(type: string, event: string): string | null {
     'connection:received': 'connection_accept',
     'message:sent': 'message_sent',
     'message:received': 'message_received',
+    'message:reply': 'prospect_replied',
+    'inmail:reply': 'prospect_replied',
     'inmail:sent': 'inmail_sent',
     'inmail:received': 'message_received',
   };
