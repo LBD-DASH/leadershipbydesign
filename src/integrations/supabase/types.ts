@@ -1701,6 +1701,39 @@ export type Database = {
         }
         Relationships: []
       }
+      linkedin_post_schedule: {
+        Row: {
+          content_preview: string
+          created_at: string
+          full_content: string | null
+          id: string
+          post_date: string
+          published_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          content_preview: string
+          created_at?: string
+          full_content?: string | null
+          id?: string
+          post_date: string
+          published_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          content_preview?: string
+          created_at?: string
+          full_content?: string | null
+          id?: string
+          post_date?: string
+          published_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       manual_outreach_leads: {
         Row: {
           account_group: string
@@ -2065,6 +2098,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      outstanding_items: {
+        Row: {
+          created_at: string
+          id: string
+          item: string
+          priority: string
+          resolved: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item: string
+          priority?: string
+          resolved?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item?: string
+          priority?: string
+          resolved?: boolean
+          updated_at?: string
+        }
+        Relationships: []
       }
       pipeline_deals: {
         Row: {
