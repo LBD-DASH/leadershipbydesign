@@ -626,7 +626,7 @@ export default function LeaderAsCoachSales() {
             </p>
             <Link to="/leader-as-coach-diagnostic">
               <button
-                className="px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base transition-opacity hover:opacity-90 w-full sm:w-auto"
                 style={{ backgroundColor: "#C8A864", color: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif" }}
               >
                 How Coaching-Ready Is Your Management Layer?
