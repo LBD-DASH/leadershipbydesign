@@ -426,7 +426,7 @@ export default function NewManagerKit() {
           </h2>
 
           <p className="text-white/80 text-sm sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed">
-            Your team is watching. The first 90 days set the tone for everything. Get the scripts & frameworks trusted by 30+ leading organisations.
+            Your team is watching. The first 90 days set the tone for everything. Get the scripts & frameworks trusted by 50+ leading organisations.
           </p>
 
           <PricingCTA onCheckout={handleOpenCheckout} />
