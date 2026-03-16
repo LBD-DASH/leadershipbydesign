@@ -253,7 +253,7 @@ const Index = () => {
 
               {/* CARD 3 — Contagious Identity */}
               <div className="rounded-lg overflow-hidden flex flex-col shadow-md border" style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB", borderTop: "3px solid #C8A864" }}>
-                <div className="h-48 overflow-hidden">
+                <div className="aspect-[16/9] overflow-hidden">
                   <img src={ciImage} alt="Executive coaching session" className="w-full h-full object-cover" />
                 </div>
                 <div className="p-8 flex flex-col flex-1">
