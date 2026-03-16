@@ -255,6 +255,10 @@ export default function ProgrammesArchive() {
                   <CardTitle className="text-lg font-serif">{p.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col gap-3">
+                  <div className="bg-primary/5 border border-primary/10 rounded-md px-3 py-2">
+                    <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-0.5">Role</p>
+                    <p className="text-sm text-foreground leading-relaxed">{p.role}</p>
+                  </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
                   <div className="flex flex-wrap gap-1.5 mt-auto">
                     <Badge variant="outline" className="text-xs">{p.sector}</Badge>
