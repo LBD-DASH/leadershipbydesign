@@ -346,6 +346,30 @@ export type Database = {
           },
         ]
       }
+      apollo_sync_log: {
+        Row: {
+          error_message: string | null
+          id: string
+          status: string
+          steps_synced: number
+          synced_at: string
+        }
+        Insert: {
+          error_message?: string | null
+          id?: string
+          status?: string
+          steps_synced?: number
+          synced_at?: string
+        }
+        Update: {
+          error_message?: string | null
+          id?: string
+          status?: string
+          steps_synced?: number
+          synced_at?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string
