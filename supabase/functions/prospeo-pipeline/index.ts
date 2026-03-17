@@ -176,6 +176,9 @@ Deno.serve(async (req) => {
 
       if (results.length === 0) continue;
 
+      // Pause before enrichment to respect rate limits
+      await new Promise((r) => setTimeout(r, 2000));
+
       // Step 2: Bulk enrich to reveal verified emails (batches of 50)
       const enrichPayload = results.map((r, i) => ({
         identifier: `${config.label}-${i}`,
