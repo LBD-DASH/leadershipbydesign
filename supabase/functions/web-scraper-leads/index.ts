@@ -92,14 +92,17 @@ const CONTACT_PATHS = [
 ];
 
 const GENERIC_PREFIXES = [
-  "info", "admin", "support", "hello", "contact", "sales", "enquiries",
+  "info", "admin", "support", "hello", "contact", "contacts", "contactus",
+  "contactshello", "sales", "enquiries", "enquiry",
   "reception", "office", "no-reply", "noreply", "webmaster", "marketing",
   "news", "documents", "membership", "careers", "hr", "jobs", "media",
   "press", "feedback", "compliance", "legal", "service", "help",
   "clientservice", "clientservices", "assetmanagement", "investments",
   "claims", "queries", "applications", "treasury", "operations",
   "accounts", "billing", "general", "team", "group", "corporate",
-  "investor", "shareholders", "communications", "procurement",
+  "investor", "shareholders", "communications", "communications2",
+  "procurement", "training", "editor", "pr", "subscribe", "mail",
+  "postmaster", "abuse", "newsletter", "do-not-reply", "donotreply",
 ];
 
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
