@@ -88,8 +88,7 @@ const EXCLUDED_DOMAINS = new Set([
 ]);
 
 const CONTACT_PATHS = [
-  "/contact", "/contact-us", "/about/leadership", "/about/our-team",
-  "/about", "/about-us", "/people", "/leadership", "/our-team",
+  "/contact", "/about", "/about-us", "/our-team",
 ];
 
 const GENERIC_PREFIXES = [
