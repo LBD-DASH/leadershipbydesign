@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Save, Loader2, Megaphone, Rocket, Target } from 'lucide-react';
+import { Settings, Save, Loader2, Megaphone, Rocket, Target, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CAMPAIGN_MODES = [
@@ -23,6 +23,7 @@ export default function AdminSettingsPanel() {
   const [savingCampaign, setSavingCampaign] = useState(false);
   const [runningProspecting, setRunningProspecting] = useState(false);
   const [runningApolloImport, setRunningApolloImport] = useState(false);
+  const [runningProspeoImport, setRunningProspeoImport] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -113,6 +114,26 @@ export default function AdminSettingsPanel() {
     setRunningApolloImport(false);
   };
 
+  const runProspeoImport = async () => {
+    setRunningProspeoImport(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('prospeo-pipeline', {
+        body: {},
+      });
+
+      if (error) {
+        toast.error(`Prospeo import failed: ${error.message}`);
+      } else if (data?.success) {
+        toast.success(`Prospeo import complete: ${data.inserted} new contacts added (${data.enriched} enriched from ${data.searched} searched)`);
+      } else {
+        toast.error(data?.error || 'Prospeo import returned an error');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to run Prospeo import: ${err.message}`);
+    }
+    setRunningProspeoImport(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-32">
@@ -154,6 +175,36 @@ export default function AdminSettingsPanel() {
           </Button>
           <p className="text-xs text-muted-foreground mt-2">
             Runs automatically at 7:00 AM SAST. Pipeline status reports post to Slack at 07:00, 13:00, and 18:00 SAST.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-primary" />
+            <CardTitle className="text-base">Prospeo Contact Search</CardTitle>
+          </div>
+          <CardDescription>
+            Searches Prospeo's 200M+ contact database for HR/L&D decision-makers at FSI &amp; Professional Services firms in South Africa (100-500 employees). Returns verified emails only.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={runProspeoImport} disabled={runningProspeoImport} className="w-full" variant="outline">
+            {runningProspeoImport ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Searching Prospeo…
+              </>
+            ) : (
+              <>
+                <Users className="w-4 h-4 mr-2" />
+                Run Prospeo Import Now
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Runs daily at 06:30 AM SAST alongside Apollo. Only verified emails are imported.
           </p>
         </CardContent>
       </Card>
