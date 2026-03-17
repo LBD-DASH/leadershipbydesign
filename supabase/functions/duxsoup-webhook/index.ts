@@ -78,6 +78,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const payload = await req.json();
+    console.log('📨 Raw Dux-Soup payload:', JSON.stringify(payload).substring(0, 1000));
     const events = Array.isArray(payload) ? payload : [payload];
     let processed = 0;
     let skipped = 0;
@@ -222,17 +223,86 @@ Deno.serve(async (req) => {
           }
 
           case 'message_received': {
-            if (contactEmail) {
+            // Dux-Soup message:received events often lack contact details.
+            // Try to look up the contact from our database using LinkedIn URL or userid.
+            let resolvedName = contactName;
+            let resolvedTitle = contact.title;
+            let resolvedCompany = contact.company;
+            let resolvedEmail = contactEmail;
+
+            if (!resolvedName || resolvedName === '') {
+              const linkedinUrl = contact.linkedin_url || (dsData.url as string) || (dsData.profile as string) || '';
+              const dsUserId = (raw.userid || '') as string;
+
+              // Try lookup by LinkedIn URL in call_list_prospects
+              if (linkedinUrl) {
+                const { data: callMatch } = await supabase
+                  .from('call_list_prospects')
+                  .select('first_name, last_name, title, company, email')
+                  .ilike('linkedin_url', `%${linkedinUrl.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '')}%`)
+                  .limit(1);
+
+                if (callMatch?.length) {
+                  resolvedName = `${callMatch[0].first_name || ''} ${callMatch[0].last_name || ''}`.trim();
+                  resolvedTitle = callMatch[0].title || resolvedTitle;
+                  resolvedCompany = callMatch[0].company || resolvedCompany;
+                  resolvedEmail = callMatch[0].email || resolvedEmail;
+                }
+              }
+
+              // Fallback: try lookup by LinkedIn URL in warm_outreach_queue
+              if (!resolvedName && linkedinUrl) {
+                const { data: warmMatch } = await supabase
+                  .from('warm_outreach_queue')
+                  .select('contact_name, contact_title, company_name, contact_email')
+                  .ilike('contact_linkedin', `%${linkedinUrl.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '')}%`)
+                  .limit(1);
+
+                if (warmMatch?.length) {
+                  resolvedName = warmMatch[0].contact_name || resolvedName;
+                  resolvedTitle = warmMatch[0].contact_title || resolvedTitle;
+                  resolvedCompany = warmMatch[0].company_name || resolvedCompany;
+                  resolvedEmail = warmMatch[0].contact_email || resolvedEmail;
+                }
+              }
+
+              // Fallback: try lookup in manual_outreach_leads by LinkedIn URL
+              if (!resolvedName && linkedinUrl) {
+                const { data: manualMatch } = await supabase
+                  .from('manual_outreach_leads')
+                  .select('first_name, last_name, title, company')
+                  .ilike('linkedin_url', `%${linkedinUrl.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '')}%`)
+                  .limit(1);
+
+                if (manualMatch?.length) {
+                  resolvedName = `${manualMatch[0].first_name || ''} ${manualMatch[0].last_name || ''}`.trim();
+                  resolvedTitle = manualMatch[0].title || resolvedTitle;
+                  resolvedCompany = manualMatch[0].company || resolvedCompany;
+                }
+              }
+
+              // Last resort: extract name hint from LinkedIn URL slug
+              if (!resolvedName && linkedinUrl) {
+                const slug = linkedinUrl.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '');
+                if (slug && slug !== '') {
+                  resolvedName = slug.replace(/-/g, ' ').replace(/\d+/g, '').trim()
+                    .split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                }
+              }
+            }
+
+            if (resolvedEmail) {
               await supabase
                 .from('warm_outreach_queue')
                 .update({
                   status: 'replied',
                   updated_at: new Date().toISOString(),
                 })
-                .eq('contact_email', contactEmail);
+                .eq('contact_email', resolvedEmail);
             }
 
-            // Hot lead alert
+            // Hot lead alert with resolved contact info
+            const messageText = contact.message_text || (dsData.message as string) || (dsData.text as string) || '';
             try {
               await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
                 method: 'POST',
@@ -242,13 +312,13 @@ Deno.serve(async (req) => {
                   eventType: 'system_error',
                   data: {
                     function: '🔥 LinkedIn Reply Received',
-                    error: `*${contactName}* (${contact.title}) @ ${contact.company}\nMessage: "${contact.message_text.substring(0, 200)}"`,
+                    error: `*${resolvedName || 'Unknown Contact'}* (${resolvedTitle || 'unknown title'}) @ ${resolvedCompany || 'unknown company'}\nMessage: "${messageText.substring(0, 200)}"`,
                   },
                 }),
               });
             } catch { /* best effort */ }
 
-            results.push(`reply:${contactName}`);
+            results.push(`reply:${resolvedName || 'unknown'}`);
             processed++;
             break;
           }
