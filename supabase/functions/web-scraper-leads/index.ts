@@ -177,9 +177,11 @@ function passesHeadcountFilter(content: string): boolean {
     const match = content.match(p);
     if (match) {
       const count = parseInt(match[1].replace(/,/g, ""), 10);
-      if (count < 100 || count > 500) return false;
+      // Only disqualify if explicitly too small (<50) or too large (>5000)
+      if (count < 50 || count > 5000) return false;
     }
   }
+  // If no headcount found, let it through (most company pages don't mention it)
   return true;
 }
 
