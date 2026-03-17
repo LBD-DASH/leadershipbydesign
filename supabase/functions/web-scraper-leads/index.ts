@@ -412,7 +412,9 @@ Deno.serve(async (req) => {
         }
         domainsDiscovered += discoveredDomains.size;
 
+        let domainsScrapeCount = 0;
         for (const [domain, info] of discoveredDomains) {
+          if (domainsScrapeCount >= 3) break; // Max 3 domains per query to avoid timeout
           if (existingDomains.has(domain)) { firecrawlSkippedDup++; continue; }
 
           let bestEmails: string[] = [];
