@@ -58,18 +58,21 @@ const APOLLO_TITLES = [
 // FIRECRAWL SIGNAL QUERIES — fallback for additional leads
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
-  { query: '"HR Manager" OR "People Manager" "financial services" Johannesburg site:linkedin.com', tag: 'linkedin-hr-fsi' },
-  { query: '"learning and development" vacancy South Africa financial services 2025', tag: 'ld-vacancy-fsi' },
-  { query: '"HR Manager" wanted insurance OR accounting OR "wealth management" Johannesburg', tag: 'hr-insurance-accounting' },
-  { query: '"leadership development" "our people" "financial services" OR "insurance" South Africa', tag: 'leadership-dev-signal' },
-  { query: '"people and culture" manager vacancy Johannesburg 2025', tag: 'people-culture-jhb' },
-  { query: '"talent development" OR "learning and development" manager "professional services" South Africa', tag: 'talent-dev-proserv' },
-  { query: '"HR" vacancy "short term insurance" OR "life insurance" OR "asset management" South Africa', tag: 'hr-vacancy-insurance' },
-  { query: '"coaching" OR "leadership" "our values" "financial services" Johannesburg staff', tag: 'coaching-values-fsi' },
-  { query: 'site:pnet.co.za "HR Manager" OR "L&D Manager" financial services', tag: 'pnet-hr-fsi' },
-  { query: 'site:careerjunction.co.za "HR" OR "people" manager insurance OR accounting', tag: 'careerjunction-hr' },
+  // Direct company website discovery — NO social/job board sites
+  { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
+  { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
+  { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
+  { query: '"learning and development" manager "professional services" OR accounting South Africa', tag: 'ld-proserv' },
+  { query: '"leadership development" programme "financial services" OR insurance South Africa company', tag: 'leadership-programme-fsi' },
+  { query: '"our team" OR "our people" "HR Director" insurance OR banking South Africa', tag: 'team-page-hr-fsi' },
+  { query: '"talent development" OR "people and culture" director "financial services" Gauteng', tag: 'talent-fsi-gauteng' },
+  { query: '"HR" OR "human resources" director "short term insurance" OR "life insurance" South Africa', tag: 'hr-insurance-direct' },
+  { query: '"Head of Learning" OR "L&D Director" banking OR "investment management" South Africa', tag: 'ld-banking' },
+  { query: '"people strategy" OR "organisational development" "financial services" OR legal South Africa', tag: 'od-fsi-legal' },
+  { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
+  { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
 ];
-const QUERIES_PER_RUN = 4;
+const QUERIES_PER_RUN = 3;
 
 const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
@@ -85,19 +88,21 @@ const EXCLUDED_DOMAINS = new Set([
 ]);
 
 const CONTACT_PATHS = [
-  "/contact", "/contact-us", "/about/leadership", "/about/our-team",
-  "/about", "/about-us", "/people", "/leadership", "/our-team",
+  "/contact", "/about", "/about-us", "/our-team",
 ];
 
 const GENERIC_PREFIXES = [
-  "info", "admin", "support", "hello", "contact", "sales", "enquiries",
+  "info", "admin", "support", "hello", "contact", "contacts", "contactus",
+  "contactshello", "sales", "enquiries", "enquiry",
   "reception", "office", "no-reply", "noreply", "webmaster", "marketing",
   "news", "documents", "membership", "careers", "hr", "jobs", "media",
   "press", "feedback", "compliance", "legal", "service", "help",
   "clientservice", "clientservices", "assetmanagement", "investments",
   "claims", "queries", "applications", "treasury", "operations",
   "accounts", "billing", "general", "team", "group", "corporate",
-  "investor", "shareholders", "communications", "procurement",
+  "investor", "shareholders", "communications", "communications2",
+  "procurement", "training", "editor", "pr", "subscribe", "mail",
+  "postmaster", "abuse", "newsletter", "do-not-reply", "donotreply",
 ];
 
 const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
@@ -132,8 +137,8 @@ function isQualityEmail(email: string, companyDomain: string): boolean {
   if (GENERIC_PREFIXES.some((g) => prefix === g || prefix.startsWith(g + "."))) return false;
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
-  if (prefix.length < 3) return false;
-  if (!prefix.includes(".") && !prefix.includes("_")) return false;
+  if (prefix.length < 2) return false;
+  // Accept personal emails: first.last, first_last, or short names (3+ chars)
   return true;
 }
 
@@ -174,9 +179,11 @@ function passesHeadcountFilter(content: string): boolean {
     const match = content.match(p);
     if (match) {
       const count = parseInt(match[1].replace(/,/g, ""), 10);
-      if (count < 100 || count > 500) return false;
+      // Only disqualify if explicitly too small (<50) or too large (>5000)
+      if (count < 50 || count > 5000) return false;
     }
   }
+  // If no headcount found, let it through (most company pages don't mention it)
   return true;
 }
 
@@ -184,10 +191,24 @@ function extractCompanyName(content: string, domain: string): string {
   const titleMatch = content.match(/(?:^|\n)#\s+(.+?)(?:\n|$)/);
   if (titleMatch) {
     const name = titleMatch[1].trim();
-    if (name.length > 2 && name.length < 60) return name;
+    // Skip error pages, generic titles, and navigation-like text
+    const skipPatterns = /error|404|not found|page not|access denied|forbidden|untitled|contact us|please use|cookie|privacy|sign in|log in|menu|navigation/i;
+    if (name.length > 2 && name.length < 40 && !skipPatterns.test(name)) return name;
   }
-  const parts = domain.replace(/\.co\.za$|\.com$|\.co$/, "").split(".");
+  const parts = domain.replace(/\.co\.za$|\.com$|\.co$|\.org$|\.net$/, "").split(".");
   return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+}
+
+// Only accept domains that are likely South African companies
+const SA_DOMAIN_INDICATORS = [".co.za", ".org.za", ".net.za", ".ac.za"];
+function isSouthAfricanDomain(domain: string): boolean {
+  // Accept .co.za domains and also .com/.org if they appear in SA-focused searches
+  // But reject obvious non-SA platforms
+  const nonSAplatforms = ["theorg.com", "intch.org", "glassdoor.com", "crunchbase.com", "zoominfo.com", "apollo.io", "skillsforafrica.org"];
+  for (const p of nonSAplatforms) {
+    if (domain === p || domain.endsWith("." + p)) return false;
+  }
+  return true;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -379,7 +400,7 @@ Deno.serve(async (req) => {
           const searchRes = await fetch("https://api.firecrawl.dev/v1/search", {
             method: "POST",
             headers: { Authorization: `Bearer ${firecrawlKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ query: sq.query, limit: 10 }),
+            body: JSON.stringify({ query: sq.query, limit: 5 }),
           });
 
           if (searchRes.ok) {
@@ -399,20 +420,23 @@ Deno.serve(async (req) => {
         for (const result of searchResults) {
           const url = result.url || result.link || "";
           const domain = extractDomainFromUrl(url);
-          if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain)) continue;
+          if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain) || !isSouthAfricanDomain(domain)) continue;
           discoveredDomains.set(domain, {
             url, title: result.title || "", snippet: result.description || result.markdown || "",
           });
         }
         domainsDiscovered += discoveredDomains.size;
 
+        let domainsScrapeCount = 0;
         for (const [domain, info] of discoveredDomains) {
+          if (domainsScrapeCount >= 3) break; // Max 3 domains per query to avoid timeout
           if (existingDomains.has(domain)) { firecrawlSkippedDup++; continue; }
 
           let bestEmails: string[] = [];
           let pageContent = info.snippet;
 
           if (!passesHeadcountFilter(info.snippet)) continue;
+          domainsScrapeCount++;
 
           for (const path of CONTACT_PATHS) {
             if (bestEmails.length >= 2) break;
