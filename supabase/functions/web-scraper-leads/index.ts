@@ -135,8 +135,8 @@ function isQualityEmail(email: string, companyDomain: string): boolean {
   if (GENERIC_PREFIXES.some((g) => prefix === g || prefix.startsWith(g + "."))) return false;
   const rootDomain = companyDomain.replace("www.", "");
   if (!emailDomain.includes(rootDomain) && !rootDomain.includes(emailDomain.split(".")[0])) return false;
-  if (prefix.length < 3) return false;
-  if (!prefix.includes(".") && !prefix.includes("_")) return false;
+  if (prefix.length < 2) return false;
+  // Accept personal emails: first.last, first_last, or short names (3+ chars)
   return true;
 }
 
