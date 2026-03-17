@@ -13,6 +13,8 @@ const QUALIFIED_INDUSTRIES = [
   "legal", "professional services", "wealth management",
   "asset management", "investment", "advisory", "consulting",
   "audit", "tax", "actuarial", "fund management", "stockbroking",
+  "fintech", "private equity", "investment banking", "venture capital",
+  "securities", "brokerage", "reinsurance", "pension", "retirement fund",
 ];
 
 const DISQUALIFIED_KEYWORDS = [
@@ -45,6 +47,8 @@ function classifyIndustry(
 const APOLLO_INDUSTRIES = [
   "Financial Services", "Insurance", "Banking", "Accounting",
   "Legal Services", "Management Consulting", "Investment Management",
+  "Wealth Management", "Asset Management", "Fintech",
+  "Private Equity", "Investment Banking", "Venture Capital & Private Equity",
 ];
 
 const APOLLO_TITLES = [
@@ -52,13 +56,17 @@ const APOLLO_TITLES = [
   "Chief People Officer", "L&D Manager", "Talent Lead",
   "Head of People", "Learning and Development Manager",
   "Head of Talent", "People & Culture Manager",
+  "Talent Director", "Head of Organisational Development",
+  "Head of OD", "Head of Learning", "Director of People",
+  "VP People", "VP Human Resources", "Head of People & Culture",
+  "Group Head of HR", "Head of Leadership Development",
 ];
 
 // ═══════════════════════════════════════════════════════════════
 // FIRECRAWL SIGNAL QUERIES — fallback for additional leads
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
-  // Direct company website discovery — NO social/job board sites
+  // Core FSI queries (direct company websites)
   { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
   { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
   { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
@@ -71,6 +79,13 @@ const SEARCH_QUERIES = [
   { query: '"people strategy" OR "organisational development" "financial services" OR legal South Africa', tag: 'od-fsi-legal' },
   { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
   { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
+  // Expanded: fintech, private equity, investment banking
+  { query: '"Head of People" OR "People Director" fintech OR "private equity" South Africa', tag: 'people-fintech-pe' },
+  { query: '"Chief People Officer" OR "Talent Director" "asset management" OR "investment" South Africa', tag: 'cpo-asset-mgmt' },
+  { query: '"Head of OD" OR "organisational development" "financial services" OR banking South Africa', tag: 'od-head-fsi' },
+  { query: '"Head of Learning" OR "Leadership Development" manager "wealth management" OR "private equity" South Africa', tag: 'learning-head-wealth' },
+  { query: '"People & Culture" OR "People and Culture" director fintech OR insurtech South Africa', tag: 'people-culture-fintech' },
+  { query: '"HR Director" OR "Head of HR" "investment banking" OR "securities" Johannesburg Cape Town', tag: 'hr-investbank' },
 ];
 const QUERIES_PER_RUN = 3;
 
@@ -271,7 +286,7 @@ Deno.serve(async (req) => {
             per_page: 15,
             person_titles: APOLLO_TITLES,
             person_locations: ["Gauteng, South Africa", "South Africa"],
-            organization_num_employees_ranges: ["101-500"],
+            organization_num_employees_ranges: ["51-100", "101-500", "501-1000"],
             q_keywords: targetIndustry,
           }),
         });
