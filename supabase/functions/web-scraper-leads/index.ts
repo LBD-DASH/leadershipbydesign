@@ -72,7 +72,7 @@ const SEARCH_QUERIES = [
   { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
   { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
 ];
-const QUERIES_PER_RUN = 5;
+const QUERIES_PER_RUN = 3;
 
 const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
