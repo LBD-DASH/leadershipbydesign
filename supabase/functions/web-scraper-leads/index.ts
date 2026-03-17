@@ -421,6 +421,7 @@ Deno.serve(async (req) => {
           let pageContent = info.snippet;
 
           if (!passesHeadcountFilter(info.snippet)) continue;
+          domainsScrapeCount++;
 
           for (const path of CONTACT_PATHS) {
             if (bestEmails.length >= 2) break;
