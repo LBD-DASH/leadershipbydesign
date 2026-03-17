@@ -207,6 +207,7 @@ export default function AdminSettingsPanel() {
             Runs daily at 06:30 AM SAST alongside Apollo. Only verified emails are imported.
           </p>
         </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
