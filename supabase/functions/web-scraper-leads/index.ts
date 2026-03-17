@@ -58,18 +58,21 @@ const APOLLO_TITLES = [
 // FIRECRAWL SIGNAL QUERIES — fallback for additional leads
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
-  { query: '"HR Manager" OR "People Manager" "financial services" Johannesburg site:linkedin.com', tag: 'linkedin-hr-fsi' },
-  { query: '"learning and development" vacancy South Africa financial services 2025', tag: 'ld-vacancy-fsi' },
-  { query: '"HR Manager" wanted insurance OR accounting OR "wealth management" Johannesburg', tag: 'hr-insurance-accounting' },
-  { query: '"leadership development" "our people" "financial services" OR "insurance" South Africa', tag: 'leadership-dev-signal' },
-  { query: '"people and culture" manager vacancy Johannesburg 2025', tag: 'people-culture-jhb' },
-  { query: '"talent development" OR "learning and development" manager "professional services" South Africa', tag: 'talent-dev-proserv' },
-  { query: '"HR" vacancy "short term insurance" OR "life insurance" OR "asset management" South Africa', tag: 'hr-vacancy-insurance' },
-  { query: '"coaching" OR "leadership" "our values" "financial services" Johannesburg staff', tag: 'coaching-values-fsi' },
-  { query: 'site:pnet.co.za "HR Manager" OR "L&D Manager" financial services', tag: 'pnet-hr-fsi' },
-  { query: 'site:careerjunction.co.za "HR" OR "people" manager insurance OR accounting', tag: 'careerjunction-hr' },
+  // Direct company website discovery — NO social/job board sites
+  { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
+  { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
+  { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
+  { query: '"learning and development" manager "professional services" OR accounting South Africa', tag: 'ld-proserv' },
+  { query: '"leadership development" programme "financial services" OR insurance South Africa company', tag: 'leadership-programme-fsi' },
+  { query: '"our team" OR "our people" "HR Director" insurance OR banking South Africa', tag: 'team-page-hr-fsi' },
+  { query: '"talent development" OR "people and culture" director "financial services" Gauteng', tag: 'talent-fsi-gauteng' },
+  { query: '"HR" OR "human resources" director "short term insurance" OR "life insurance" South Africa', tag: 'hr-insurance-direct' },
+  { query: '"Head of Learning" OR "L&D Director" banking OR "investment management" South Africa', tag: 'ld-banking' },
+  { query: '"people strategy" OR "organisational development" "financial services" OR legal South Africa', tag: 'od-fsi-legal' },
+  { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
+  { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
 ];
-const QUERIES_PER_RUN = 4;
+const QUERIES_PER_RUN = 5;
 
 const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
