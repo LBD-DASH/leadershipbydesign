@@ -191,12 +191,24 @@ function extractCompanyName(content: string, domain: string): string {
   const titleMatch = content.match(/(?:^|\n)#\s+(.+?)(?:\n|$)/);
   if (titleMatch) {
     const name = titleMatch[1].trim();
-    // Skip error pages and generic titles
-    const skipPatterns = /error|404|not found|page not|access denied|forbidden|untitled/i;
-    if (name.length > 2 && name.length < 60 && !skipPatterns.test(name)) return name;
+    // Skip error pages, generic titles, and navigation-like text
+    const skipPatterns = /error|404|not found|page not|access denied|forbidden|untitled|contact us|please use|cookie|privacy|sign in|log in|menu|navigation/i;
+    if (name.length > 2 && name.length < 40 && !skipPatterns.test(name)) return name;
   }
-  const parts = domain.replace(/\.co\.za$|\.com$|\.co$/, "").split(".");
+  const parts = domain.replace(/\.co\.za$|\.com$|\.co$|\.org$|\.net$/, "").split(".");
   return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
+}
+
+// Only accept domains that are likely South African companies
+const SA_DOMAIN_INDICATORS = [".co.za", ".org.za", ".net.za", ".ac.za"];
+function isSouthAfricanDomain(domain: string): boolean {
+  // Accept .co.za domains and also .com/.org if they appear in SA-focused searches
+  // But reject obvious non-SA platforms
+  const nonSAplatforms = ["theorg.com", "intch.org", "glassdoor.com", "crunchbase.com", "zoominfo.com", "apollo.io", "skillsforafrica.org"];
+  for (const p of nonSAplatforms) {
+    if (domain === p || domain.endsWith("." + p)) return false;
+  }
+  return true;
 }
 
 // ═══════════════════════════════════════════════════════════════
