@@ -125,6 +125,20 @@ async function bulkEnrichProspeo(apiKey: string, personIds: { identifier: string
     }),
   });
 
+  // Log rate limit info
+  const minuteLeft = res.headers.get("x-minute-request-left");
+  const dailyLeft = res.headers.get("x-daily-request-left");
+  if (minuteLeft || dailyLeft) {
+    console.log(`  Rate limits — minute: ${minuteLeft}, daily: ${dailyLeft}`);
+  }
+
+  if (res.status === 429) {
+    const resetSeconds = res.headers.get("x-minute-reset-seconds");
+    console.error(`Rate limited on enrich. Resets in ${resetSeconds}s`);
+    await res.text(); // consume body
+    return [];
+  }
+
   if (!res.ok) {
     const errText = await res.text();
     console.error(`Prospeo bulk enrich error [${res.status}]:`, errText);
