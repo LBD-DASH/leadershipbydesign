@@ -420,7 +420,7 @@ Deno.serve(async (req) => {
         for (const result of searchResults) {
           const url = result.url || result.link || "";
           const domain = extractDomainFromUrl(url);
-          if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain)) continue;
+          if (!domain || existingDomains.has(domain) || discoveredDomains.has(domain) || !isSouthAfricanDomain(domain)) continue;
           discoveredDomains.set(domain, {
             url, title: result.title || "", snippet: result.description || result.markdown || "",
           });
