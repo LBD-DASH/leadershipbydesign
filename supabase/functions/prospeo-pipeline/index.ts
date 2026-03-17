@@ -248,7 +248,7 @@ Deno.serve(async (req) => {
       }
 
       // Pause between search configs to respect rate limits
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 2000));
     }
 
     // Notify Slack
