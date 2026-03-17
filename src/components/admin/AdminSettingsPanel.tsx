@@ -182,6 +182,35 @@ export default function AdminSettingsPanel() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-primary" />
+            <CardTitle className="text-base">Prospeo Contact Search</CardTitle>
+          </div>
+          <CardDescription>
+            Searches Prospeo's 200M+ contact database for HR/L&D decision-makers at FSI &amp; Professional Services firms in South Africa (100-500 employees). Returns verified emails only.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={runProspeoImport} disabled={runningProspeoImport} className="w-full" variant="outline">
+            {runningProspeoImport ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Searching Prospeo…
+              </>
+            ) : (
+              <>
+                <Users className="w-4 h-4 mr-2" />
+                Run Prospeo Import Now
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Runs daily at 06:30 AM SAST alongside Apollo. Only verified emails are imported.
+          </p>
+        </CardContent>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-primary" />
             <CardTitle className="text-base">Apollo Decision-Maker Import</CardTitle>
           </div>
