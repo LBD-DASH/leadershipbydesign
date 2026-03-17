@@ -189,7 +189,9 @@ function extractCompanyName(content: string, domain: string): string {
   const titleMatch = content.match(/(?:^|\n)#\s+(.+?)(?:\n|$)/);
   if (titleMatch) {
     const name = titleMatch[1].trim();
-    if (name.length > 2 && name.length < 60) return name;
+    // Skip error pages and generic titles
+    const skipPatterns = /error|404|not found|page not|access denied|forbidden|untitled/i;
+    if (name.length > 2 && name.length < 60 && !skipPatterns.test(name)) return name;
   }
   const parts = domain.replace(/\.co\.za$|\.com$|\.co$/, "").split(".");
   return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
