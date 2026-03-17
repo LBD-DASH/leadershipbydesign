@@ -114,6 +114,26 @@ export default function AdminSettingsPanel() {
     setRunningApolloImport(false);
   };
 
+  const runProspeoImport = async () => {
+    setRunningProspeoImport(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('prospeo-pipeline', {
+        body: {},
+      });
+
+      if (error) {
+        toast.error(`Prospeo import failed: ${error.message}`);
+      } else if (data?.success) {
+        toast.success(`Prospeo import complete: ${data.inserted} new contacts added (${data.enriched} enriched from ${data.searched} searched)`);
+      } else {
+        toast.error(data?.error || 'Prospeo import returned an error');
+      }
+    } catch (err: any) {
+      toast.error(`Failed to run Prospeo import: ${err.message}`);
+    }
+    setRunningProspeoImport(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-32">
