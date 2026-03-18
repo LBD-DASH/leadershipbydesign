@@ -43,27 +43,30 @@ Takes 3 minutes. You'll get an instant profile.
     step: 3,
     minDays: 9,
     statusField: "step3_sent_at",
-    getSubject: (_company) => `One question about your management layer`,
-    getBody: (firstName, _company, bookingLink) =>
-      `${firstName} — quick question.
+    getSubject: (_company) => `The cost nobody calculates`,
+    getBody: (firstName, _company, _bookingLink) =>
+      `Hi ${firstName},
 
-If your managers had one coaching conversation per week with each direct report, what would change in 90 days?
+The average mid-size SA firm loses R1.5 to R3 million a year to turnover driven by poor management. Most of it traces back to managers who were promoted for technical skill and left to figure out people leadership on their own.
 
-That's exactly what we install. Happy to show you how: ${bookingLink}
+We built a free diagnostic that benchmarks your management layer's coaching capability in 2 minutes:
+https://leadershipbydesign.co/leader-as-coach-diagnostic
 
-— Kevin`,
+You'll get an instant scorecard showing exactly where the gaps are.
+
+— Kevin, Leadership by Design`,
   },
   {
     step: 4,
     minDays: 16,
     statusField: "step4_sent_at",
-    getSubject: (company) => `Last note from me — ${company}`,
-    getBody: (firstName, _company, bookingLink) =>
-      `${firstName},
+    getSubject: (_company) => `Last note — free diagnostic inside`,
+    getBody: (firstName, _company, _bookingLink) =>
+      `${firstName} — the diagnostic takes two minutes and it's free.
 
-I won't keep sending notes. If developing your management layer's coaching capability ever comes onto the agenda, I'm here: https://www.leadershipbydesign.co/leader-as-coach
+https://leadershipbydesign.co/leader-as-coach-diagnostic
 
-4,000+ leaders developed. 30+ organisations. Happy to talk when the time is right.
+If you want to talk after, let me know.
 
 — Kevin, Leadership by Design`,
   },

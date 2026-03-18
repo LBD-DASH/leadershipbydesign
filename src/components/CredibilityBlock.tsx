@@ -26,7 +26,7 @@ export default function CredibilityBlock() {
           {/* Text — 3 columns */}
           <div className="md:col-span-3 text-center md:text-left">
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4 leading-tight">
-              11 Years. 750 Workshops.<br />
+              11 Years. 25+ Programmes Implemented.<br />
               4,000+ Leaders Developed.
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base mb-6 max-w-xl">
