@@ -5,7 +5,7 @@ import SEO from "@/components/SEO";
 import { CourseSchema, ServiceSchema, HowToSchema } from "@/components/StructuredData";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target, GraduationCap, Shield, Headphones } from "lucide-react";
+import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target, GraduationCap, Shield, Headphones, Handshake, Lightbulb, Megaphone } from "lucide-react";
 import InterestModal from "@/components/shared/InterestModal";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
@@ -101,6 +101,36 @@ const programmes = [
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80",
     link: "/workshops/leadership",
     tags: ["Accountability", "Ownership", "Growth"],
+  },
+  {
+    id: "team-effectiveness-workshop",
+    icon: Handshake,
+    title: "Team Effectiveness Workshop",
+    tagline: "Build a high-performing team that collaborates, communicates, and delivers together",
+    meta: "1 day • In-person",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+    link: "/contact",
+    tags: ["Collaboration", "Team Dynamics", "Trust"],
+  },
+  {
+    id: "communication-skills-workshop",
+    icon: Megaphone,
+    title: "Communication & Assertiveness Workshop",
+    tagline: "Develop confident, assertive interpersonal skills for effective workplace communication",
+    meta: "1 day • In-person",
+    image: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=800&q=80",
+    link: "/contact",
+    tags: ["Assertiveness", "Communication", "Interpersonal Skills"],
+  },
+  {
+    id: "problem-solving-workshop",
+    icon: Lightbulb,
+    title: "Problem-Solving & Critical Thinking Workshop",
+    tagline: "Equip teams with practical frameworks to solve problems, make decisions, and think critically under pressure",
+    meta: "1 day • In-person",
+    image: "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&q=80",
+    link: "/contact",
+    tags: ["Problem-Solving", "Critical Thinking", "Decision-Making"],
   },
   {
     id: "executive-coaching",
