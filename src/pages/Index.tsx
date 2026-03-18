@@ -115,6 +115,29 @@ const Index = () => {
           </div>
         </section>
 
+        {/* WHITE PAPER DOWNLOAD BANNER */}
+        <section className="py-6 sm:py-8 px-4 sm:px-6" style={{ backgroundColor: "#C0392B" }}>
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <p className="text-white font-serif font-bold text-lg sm:text-xl">
+                FREE White Paper: The Coaching Gap
+              </p>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontFamily: "'Source Sans 3', sans-serif", fontSize: 14 }}>
+                Why manager development fails — and what high-performance organisations do differently.
+              </p>
+            </div>
+            <a
+              href="/downloads/LBD_WhitePaper_TheCoachingGap_2026.pdf"
+              download="LBD_WhitePaper_TheCoachingGap_2026.pdf"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-md font-semibold text-base transition-opacity hover:opacity-90 flex-shrink-0"
+              style={{ backgroundColor: "#FFFFFF", color: "#C0392B", fontFamily: "'Source Sans 3', sans-serif" }}
+            >
+              <ArrowRight className="w-4 h-4 rotate-90" />
+              Download Now
+            </a>
+          </div>
+        </section>
+
         {/* SECTION 3 — THE PROBLEM */}
         <section style={{ backgroundColor: "#F8F6F1" }} className="py-20 sm:py-28 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
