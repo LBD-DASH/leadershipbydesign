@@ -5,7 +5,7 @@ import SEO from "@/components/SEO";
 import { CourseSchema, ServiceSchema, HowToSchema } from "@/components/StructuredData";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target, GraduationCap, Shield, Headphones } from "lucide-react";
+import { ArrowRight, Bot, MessageCircle, Compass, Users, Brain, MessageSquare, Target, GraduationCap, Shield, Headphones, Handshake, Lightbulb, Megaphone } from "lucide-react";
 import InterestModal from "@/components/shared/InterestModal";
 import leaderAsCoachImage from "@/assets/leader-as-coach.jpg";
 import { Button } from "@/components/ui/button";
