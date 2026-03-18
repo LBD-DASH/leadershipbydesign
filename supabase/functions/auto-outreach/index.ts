@@ -281,26 +281,30 @@ Write the email now. Only the subject and body. Nothing else.`;
           .eq("id", prospect.id);
 
         // Step 5: Add to pipeline + log outreach record
-        await supabase.from("pipeline_deals").insert({
-          lead_source_table: "warm_outreach_queue",
-          lead_source_id: prospect.id,
-          lead_name: prospect.contact_name || "",
-          lead_email: prospect.contact_email,
-          lead_company: prospect.company_name,
-          lead_phone: prospect.contact_phone,
-          stage: "contacted",
-        }).then(() => {}).catch(() => {});
+        try {
+          await supabase.from("pipeline_deals").insert({
+            lead_source_table: "warm_outreach_queue",
+            lead_source_id: prospect.id,
+            lead_name: prospect.contact_name || "",
+            lead_email: prospect.contact_email,
+            lead_company: prospect.company_name,
+            lead_phone: prospect.contact_phone,
+            stage: "contacted",
+          });
+        } catch { /* best effort */ }
 
         // Log to prospect_outreach for admin visibility
-        await supabase.from("prospect_outreach").insert({
-          prospect_id: prospect.id,
-          email_subject: emailContent.subject,
-          email_body: emailContent.body,
-          status: "sent",
-          sent_at: new Date().toISOString(),
-          sequence_step: 1,
-          template_used: "kevin-cold-v2",
-        }).catch(() => {});
+        try {
+          await supabase.from("prospect_outreach").insert({
+            prospect_id: prospect.id,
+            email_subject: emailContent.subject,
+            email_body: emailContent.body,
+            status: "sent",
+            sent_at: new Date().toISOString(),
+            sequence_step: 1,
+            template_used: "kevin-cold-v2",
+          });
+        } catch { /* best effort */ }
 
         emailedCount++;
         console.log(`✅ Emailed: ${prospect.contact_name || prospect.contact_email} at ${prospect.company_name}`);
