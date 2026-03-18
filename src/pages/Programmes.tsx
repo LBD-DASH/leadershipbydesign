@@ -132,7 +132,6 @@ const programmes = [
     link: "/contact",
     tags: ["Problem-Solving", "Critical Thinking", "Decision-Making"],
   },
-  },
   {
     id: "executive-coaching",
     icon: Target,
