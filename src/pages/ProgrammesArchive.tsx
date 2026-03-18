@@ -188,7 +188,7 @@ export default function ProgrammesArchive() {
               </div>
               <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-[hsl(var(--gold))]" />
-                <span>750+ Programmes Delivered</span>
+                <span>30+ Programmes Delivered</span>
               </div>
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-[hsl(var(--gold))]" />

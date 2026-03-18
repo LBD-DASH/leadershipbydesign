@@ -36,7 +36,7 @@ export default function CredibilityBlock() {
             <ul className="space-y-3 mb-8 text-sm sm:text-base text-foreground">
               <li className="flex items-start gap-2">
                 <span className="text-primary mt-0.5">✦</span>
-                750+ workshops delivered across corporate, NGO, and academic environments
+                30+ workshops delivered across corporate, NGO, and academic environments
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary mt-0.5">✦</span>
