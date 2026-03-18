@@ -2,7 +2,7 @@ import SEO from "@/components/SEO";
 
 const stats = [
   { value: "4,000+", label: "Leaders Developed" },
-  { value: "750+", label: "Programmes Implemented" },
+  { value: "30+", label: "Programmes Implemented" },
   { value: "30+", label: "Client Organisations" },
   { value: "11", label: "Years Operating" },
 ];

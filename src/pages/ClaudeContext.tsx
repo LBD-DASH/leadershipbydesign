@@ -227,7 +227,7 @@ Leader as Coach: 90-day, 3 months, FSI focus
 Contagious Identity: 6-session executive coaching programme
 
 STATS (never change these)
-4,000+ leaders | 30+ organisations | 750+ programmes | 11 years`;
+4,000+ leaders | 30+ organisations | 30+ programmes | 11 years`;
 
       setText(output);
     }

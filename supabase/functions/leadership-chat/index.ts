@@ -29,7 +29,7 @@ ABOUT LEADER AS COACH:
 ABOUT LBD:
 - 11 years operating
 - 4,000+ leaders developed
-- 750+ programmes implemented
+- 30+ programmes implemented
 - 30+ organisations
 - Founded by Kevin Britz, Leadership Architect and executive coach
 - Based in South Africa, primarily serves FSI and professional services

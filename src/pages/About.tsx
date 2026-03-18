@@ -74,7 +74,7 @@ export default function About() {
     <>
       <SEO
         title="About Leadership by Design | 11 Years of Executive Coaching in South Africa"
-        description="Leadership by Design has developed 4,000+ leaders across 30+ organisations in South Africa through executive coaching, 750+ workshops, and leadership development programmes."
+        description="Leadership by Design has developed 4,000+ leaders across 30+ organisations in South Africa through executive coaching, 30+ workshops, and leadership development programmes."
         canonicalUrl="/about"
         ogImage="https://leadershipbydesign.co/og-about.jpg"
         keywords="about leadership by design, Kevin Britz, leadership philosophy, executive coaching, South Africa coaching"
@@ -121,7 +121,7 @@ export default function About() {
                   We believe that exceptional leadership is not innate — it is designed, embodied, and made contagious.
                 </p>
                 <p>
-                  Over 11 years, 750+ workshops, and 4,000+ leaders developed across 30+ organisations, we've proven that leadership identity shapes behaviour, and behaviour shapes results. Leaders don't just influence through strategy and systems — they influence through how they show up, what they tolerate, and the energy they create around them.
+                  Over 11 years, 30+ workshops, and 4,000+ leaders developed across 30+ organisations, we've proven that leadership identity shapes behaviour, and behaviour shapes results. Leaders don't just influence through strategy and systems — they influence through how they show up, what they tolerate, and the energy they create around them.
                 </p>
                 <p>
                   Our approach integrates the principles of Contagious Identity with the SHIFT Methodology™ — two of our six proprietary methodologies — helping leaders consciously design the identity they lead from and understand how that identity spreads through teams, culture, and performance.
