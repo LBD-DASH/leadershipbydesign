@@ -144,11 +144,6 @@ function ProgrammeCard({ programme, index }: { programme: typeof programmes[0]; 
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
-            <div className="absolute top-3 right-3">
-              <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
-                {programme.price}
-              </span>
-            </div>
           </div>
           <div className="p-5 flex flex-col flex-1">
             <div className="flex items-center gap-2 mb-2">
