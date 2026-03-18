@@ -515,7 +515,7 @@ export default function LeaderAsCoachSales() {
               <span className="hidden sm:inline">·</span>
               <span>11 years</span>
               <span className="hidden sm:inline">·</span>
-              <span>750+ programmes delivered</span>
+              <span>30+ programmes delivered</span>
             </div>
           </div>
         </section>
