@@ -220,7 +220,7 @@ export default function LeaderAsCoachSales() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
               {[
                 { value: "4,000+", label: "Leaders Developed" },
-                { value: "750+", label: "Programmes Delivered" },
+                { value: "30+", label: "Programmes Delivered" },
                 { value: "30+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
