@@ -121,7 +121,7 @@ export default function About() {
                   We believe that exceptional leadership is not innate — it is designed, embodied, and made contagious.
                 </p>
                 <p>
-                  Over 11 years, 750+ workshops, and 4,000+ leaders developed across 30+ organisations, we've proven that leadership identity shapes behaviour, and behaviour shapes results. Leaders don't just influence through strategy and systems — they influence through how they show up, what they tolerate, and the energy they create around them.
+                  Over 11 years, 30+ workshops, and 4,000+ leaders developed across 30+ organisations, we've proven that leadership identity shapes behaviour, and behaviour shapes results. Leaders don't just influence through strategy and systems — they influence through how they show up, what they tolerate, and the energy they create around them.
                 </p>
                 <p>
                   Our approach integrates the principles of Contagious Identity with the SHIFT Methodology™ — two of our six proprietary methodologies — helping leaders consciously design the identity they lead from and understand how that identity spreads through teams, culture, and performance.
