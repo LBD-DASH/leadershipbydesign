@@ -202,6 +202,14 @@ export default function LeaderAsCoachSales() {
                   Take the Free Assessment
                 </button>
               </Link>
+              <a
+                href="/downloads/LBD_WhitePaper_TheCoachingGap_2026.pdf"
+                download="LBD_WhitePaper_TheCoachingGap_2026.pdf"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-md font-semibold text-sm sm:text-base border-2 transition-opacity hover:opacity-80 w-full sm:w-auto text-center"
+                style={{ borderColor: "#C0392B", color: "#FFFFFF", backgroundColor: "#C0392B", fontFamily: "'Source Sans 3', sans-serif" }}
+              >
+                Download White Paper
+              </a>
             </div>
           </div>
         </section>
