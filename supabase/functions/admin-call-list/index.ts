@@ -92,10 +92,11 @@ Deno.serve(async (req) => {
       }
 
       if (action === "update_status") {
-        const { id, status, call_outcome } = body;
+        const { id, status, call_outcome, call_feedback } = body;
         const updates: any = { status };
         if (status === "called") updates.called_at = new Date().toISOString();
         if (call_outcome) updates.call_outcome = call_outcome;
+        if (call_feedback) updates.call_feedback = call_feedback;
 
         const { error } = await supabase
           .from("call_list_prospects")
