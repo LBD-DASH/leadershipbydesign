@@ -808,6 +808,7 @@ export default function ColdCallPrompter() {
                   <div className="space-y-3 pt-2">
                     <DatePicker value={form.followUpDate} onChange={(d) => update("followUpDate", d)} label="Follow-up date" />
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
