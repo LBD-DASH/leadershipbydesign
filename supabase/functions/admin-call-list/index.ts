@@ -23,6 +23,8 @@ Deno.serve(async (req) => {
       const url = new URL(req.url);
       const showAll = url.searchParams.get("all") === "true";
 
+      const statusFilter = url.searchParams.get("status"); // "called" to get history
+
       let query = supabase
         .from("call_list_prospects")
         .select("*")
@@ -30,8 +32,9 @@ Deno.serve(async (req) => {
         .neq("phone", "")
         .order("created_at", { ascending: false });
 
-      // By default only show uncalled prospects (pending/skipped)
-      if (!showAll) {
+      if (statusFilter === "called") {
+        query = query.eq("status", "called");
+      } else if (!showAll) {
         query = query.in("status", ["pending", "skipped"]);
       }
 
