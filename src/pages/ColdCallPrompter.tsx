@@ -998,7 +998,7 @@ export default function ColdCallPrompter() {
                       )}
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => { fetchProspects(); fetchCalledProspects(); }} className="gap-1.5 text-xs">
+                  <Button variant="ghost" size="sm" onClick={fetchProspects} className="gap-1.5 text-xs">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
                   </Button>
