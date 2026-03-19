@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     if (action === 'list') {
       const { data, error } = await supabase
         .from('newsletter_sends')
-        .select('id, subject, body_html, recipient_count, status, approval_status, auto_generated, research_topic, tag_filter, sent_at, created_at')
+        .select('id, subject, body_html, recipient_count, status, approval_status, auto_generated, research_topic, tag_filter, sent_at, created_at, rewrite_rounds, pain_point_topic, service_referenced')
         .order('created_at', { ascending: false })
         .limit(50);
 
