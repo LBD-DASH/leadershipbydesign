@@ -162,6 +162,43 @@ function buildNewsletterGeneratedBlocks(data: Record<string, any>) {
   ];
 }
 
+function buildNewsletterApprovalRequestBlocks(data: Record<string, any>) {
+  const round = data.rewriteRound || 0;
+  const headerText = round > 0 ? `📬 [REWRITE — Round ${round + 1}] Newsletter for Approval` : '📬 Newsletter Ready for Approval';
+
+  const blocks: any[] = [
+    { type: 'header', text: { type: 'plain_text', text: headerText, emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*Subject:* "${data.subject || '—'}"` } },
+    { type: 'section', fields: [
+      { type: 'mrkdwn', text: `*Pain Point:*\n${data.painPoint || '—'}` },
+      { type: 'mrkdwn', text: `*Service Bridge:*\n${data.serviceReferenced || '—'}` },
+    ]},
+    { type: 'divider' },
+    { type: 'section', text: { type: 'mrkdwn', text: `*HOOK:*\n${(data.hook || '').slice(0, 500)}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*THE PROBLEM:*\n${(data.problemFramed || '').slice(0, 500)}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*THE SHIFT:*\n${(data.theShift || '').slice(0, 500)}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*SOLUTION BRIDGE:*\n${(data.solutionBridge || '').slice(0, 500)}` } },
+    { type: 'section', text: { type: 'mrkdwn', text: `*CLOSING:*\n${data.closingLine || '—'}` } },
+    { type: 'divider' },
+    { type: 'section', text: { type: 'mrkdwn', text: `Reply *"approved"* or *"send"* to approve.\nReply with any other text to reject with feedback.\nNo reply within 4 hours = auto-rewrite.\n\n_Newsletter ID: ${data.newsletterId || '—'}_` } },
+  ];
+
+  if (data.monthlyTheme) {
+    blocks.splice(2, 0, { type: 'context', elements: [{ type: 'mrkdwn', text: `🎯 Monthly Theme: ${data.monthlyTheme}` }] });
+  }
+
+  blocks.push({ type: 'context', elements: [{ type: 'mrkdwn', text: `${sast()} SAST` }] });
+  return blocks;
+}
+
+function buildNewsletterManualNeededBlocks(data: Record<string, any>) {
+  return [
+    { type: 'header', text: { type: 'plain_text', text: '⚠️ Newsletter Needs Manual Input', emoji: true } },
+    { type: 'section', text: { type: 'mrkdwn', text: `After *${data.rounds}* rewrite rounds, the newsletter still hasn't been approved.\n\n*Last subject:* "${data.subject || '—'}"\n\nThe automated rewrite loop has been paused. Please compose or edit manually.` } },
+    { type: 'context', elements: [{ type: 'mrkdwn', text: `Newsletter ID: ${data.newsletterId || '—'} • ${sast()} SAST` }] },
+  ];
+}
+
 function buildNewsletterApprovedBlocks(data: Record<string, any>) {
   return [
     { type: 'header', text: { type: 'plain_text', text: '✅ Newsletter Approved & Sent', emoji: true } },
