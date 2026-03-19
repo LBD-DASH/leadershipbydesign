@@ -2177,6 +2177,60 @@ export type Database = {
           },
         ]
       }
+      outreach_channels: {
+        Row: {
+          apollo_id: string
+          channel: string
+          channel_cost: number | null
+          channel_status: string | null
+          channel_step: string | null
+          company: string | null
+          contact_email: string | null
+          contact_name: string | null
+          created_at: string | null
+          estimated_deal_value: number | null
+          id: number
+          notes: string | null
+          overall_status: string | null
+          touch_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          apollo_id: string
+          channel: string
+          channel_cost?: number | null
+          channel_status?: string | null
+          channel_step?: string | null
+          company?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          estimated_deal_value?: number | null
+          id?: never
+          notes?: string | null
+          overall_status?: string | null
+          touch_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          apollo_id?: string
+          channel?: string
+          channel_cost?: number | null
+          channel_status?: string | null
+          channel_step?: string | null
+          company?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string | null
+          estimated_deal_value?: number | null
+          id?: never
+          notes?: string | null
+          overall_status?: string | null
+          touch_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       outreach_queue: {
         Row: {
           apollo_id: string | null
@@ -3091,6 +3145,18 @@ export type Database = {
           tier?: string | null
           title?: string | null
           vertical?: string | null
+        }
+        Relationships: []
+      }
+      channel_roi_dashboard: {
+        Row: {
+          avg_cost_per_touch: number | null
+          bookings: number | null
+          channel: string | null
+          replies: number | null
+          total_pipeline_value: number | null
+          total_touches: number | null
+          unique_contacts: number | null
         }
         Relationships: []
       }
