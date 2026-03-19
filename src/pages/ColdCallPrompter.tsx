@@ -493,6 +493,14 @@ export default function ColdCallPrompter() {
               >
                 <ClipboardCheck className="h-3 w-3" />
                 Needs Analysis
+              <Button
+                variant={viewMode === 'called' ? 'default' : 'ghost'}
+                size="sm"
+                className="rounded-none text-xs gap-1 h-7"
+                onClick={() => { setViewMode('called'); fetchCalledProspects(); }}
+              >
+                <CheckCircle className="h-3 w-3" />
+                Called ({calledProspects.length})
               </Button>
             </div>
             {screen !== "REP_NAME" && (
