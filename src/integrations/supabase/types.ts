@@ -2057,11 +2057,15 @@ export type Database = {
           body_html: string
           created_at: string
           id: string
+          pain_point_topic: string | null
           recipient_count: number | null
           research_sources: Json | null
           research_topic: string | null
+          rewrite_feedback: string | null
+          rewrite_rounds: number | null
           sent_at: string | null
           sent_by: string | null
+          service_referenced: string | null
           slack_click_alert_sent: boolean | null
           slack_open_alert_sent: boolean | null
           status: string
@@ -2075,11 +2079,15 @@ export type Database = {
           body_html: string
           created_at?: string
           id?: string
+          pain_point_topic?: string | null
           recipient_count?: number | null
           research_sources?: Json | null
           research_topic?: string | null
+          rewrite_feedback?: string | null
+          rewrite_rounds?: number | null
           sent_at?: string | null
           sent_by?: string | null
+          service_referenced?: string | null
           slack_click_alert_sent?: boolean | null
           slack_open_alert_sent?: boolean | null
           status?: string
@@ -2093,11 +2101,15 @@ export type Database = {
           body_html?: string
           created_at?: string
           id?: string
+          pain_point_topic?: string | null
           recipient_count?: number | null
           research_sources?: Json | null
           research_topic?: string | null
+          rewrite_feedback?: string | null
+          rewrite_rounds?: number | null
           sent_at?: string | null
           sent_by?: string | null
+          service_referenced?: string | null
           slack_click_alert_sent?: boolean | null
           slack_open_alert_sent?: boolean | null
           status?: string
