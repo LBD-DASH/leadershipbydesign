@@ -129,6 +129,10 @@ interface Prospect {
   company: string;
   phone?: string;
   title?: string;
+  status?: string;
+  call_outcome?: string;
+  call_feedback?: string;
+  called_at?: string;
 }
 
 export default function ColdCallPrompter() {
@@ -141,8 +145,11 @@ export default function ColdCallPrompter() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPdf, setShowPdf] = useState(false);
   const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [calledProspects, setCalledProspects] = useState<Prospect[]>([]);
   const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
   const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs'>('script');
+  const [listTab, setListTab] = useState<'to_call' | 'called'>('to_call');
+  const [callFeedback, setCallFeedback] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -166,6 +173,10 @@ export default function ColdCallPrompter() {
         company: p.company || '',
         phone: p.phone || '',
         title: p.title || '',
+        status: p.status || 'pending',
+        call_outcome: p.call_outcome || '',
+        call_feedback: p.call_feedback || '',
+        called_at: p.called_at || '',
       }));
       setProspects(mapped);
       if (mapped.length > 0 && currentProspectIndex === -1) {
@@ -182,9 +193,49 @@ export default function ColdCallPrompter() {
     }
   }, [currentProspectIndex]);
 
+  const fetchCalledProspects = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke('admin-call-list', {
+      method: 'GET',
+      headers: { 'x-custom-status': 'called' },
+    });
+    // The GET endpoint doesn't support custom headers for filtering, so use query params
+    // We need to fetch with ?status=called
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-call-list?status=called`;
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+      });
+      const result = await res.json();
+      if (result?.prospects) {
+        const mapped: Prospect[] = result.prospects.map((p: any) => ({
+          id: p.id,
+          name: p.first_name || '',
+          surname: p.last_name || '',
+          email: p.email || '',
+          company: p.company || '',
+          phone: p.phone || '',
+          title: p.title || '',
+          status: p.status || 'called',
+          call_outcome: p.call_outcome || '',
+          call_feedback: p.call_feedback || '',
+          called_at: p.called_at || '',
+        }));
+        setCalledProspects(mapped);
+      }
+    } catch {
+      // silently fail
+    }
+  }, []);
+
   useEffect(() => {
-    if (isAuthenticated) fetchProspects();
-  }, [isAuthenticated, fetchProspects]);
+    if (isAuthenticated) {
+      fetchProspects();
+      fetchCalledProspects();
+    }
+  }, [isAuthenticated, fetchProspects, fetchCalledProspects]);
 
   // Real-time: auto-refresh when new prospects are added
   useEffect(() => {
@@ -328,9 +379,13 @@ export default function ColdCallPrompter() {
             id: prospect.id,
             status: 'called',
             call_outcome: form.pitchOutcome || form.initialResponse || 'completed',
+            call_feedback: callFeedback || form.notes || null,
           },
+          headers: { 'x-admin-token': MASTER_TOKEN },
         });
       }
+      setCallFeedback('');
+      fetchCalledProspects();
       setScreen("SUCCESS");
     }
   };
@@ -678,6 +733,7 @@ export default function ColdCallPrompter() {
                     )}
 
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback about this call..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -708,6 +764,7 @@ export default function ColdCallPrompter() {
                     </Select>
                     <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -733,6 +790,7 @@ export default function ColdCallPrompter() {
                       </SelectContent>
                     </Select>
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -750,6 +808,7 @@ export default function ColdCallPrompter() {
                   <div className="space-y-3 pt-2">
                     <DatePicker value={form.followUpDate} onChange={(d) => update("followUpDate", d)} label="Follow-up date" />
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -774,6 +833,7 @@ export default function ColdCallPrompter() {
                     <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
                     <Input placeholder="Email (if known)" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     <Textarea placeholder="Quick summary" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -814,6 +874,7 @@ export default function ColdCallPrompter() {
                       <Input placeholder="Email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     )}
                     <Textarea placeholder="Notes" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
@@ -842,69 +903,133 @@ export default function ColdCallPrompter() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium">Call List</span>
-                    {prospects.length > 0 && (
-                      <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
-                    )}
+                    <div className="flex items-center border border-border rounded-md overflow-hidden">
+                      <button
+                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'to_call' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
+                        onClick={() => setListTab('to_call')}
+                      >
+                        To Call ({prospects.length})
+                      </button>
+                      <button
+                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'called' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
+                        onClick={() => { setListTab('called'); fetchCalledProspects(); }}
+                      >
+                        Called ({calledProspects.length})
+                      </button>
+                    </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={fetchProspects} className="gap-1.5 text-xs">
+                  <Button variant="ghost" size="sm" onClick={() => { fetchProspects(); fetchCalledProspects(); }} className="gap-1.5 text-xs">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
                   </Button>
                 </div>
 
-                {prospects.length === 0 ? (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p className="text-sm">No prospects loaded yet</p>
-                    <p className="text-xs mt-1">Your admin will upload the call list</p>
-                  </div>
-                ) : (
-                  <div className="max-h-72 overflow-y-auto border border-border rounded-md">
-                    <table className="w-full text-xs">
-                      <thead className="bg-muted/50 sticky top-0 z-10">
-                        <tr>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
-                          <th className="py-1.5 px-2"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {prospects.map((p, idx) => (
-                          <tr
-                            key={idx}
-                            className={cn(
-                              "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
-                              idx === currentProspectIndex && "bg-primary/5 font-medium"
-                            )}
-                            onClick={() => selectProspect(idx)}
-                          >
-                            <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
-                            <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
-                            <td className="py-1.5 px-2 text-foreground">{p.company}</td>
-                            <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
-                            <td className="py-1.5 px-2">
-                              {p.phone ? (
-                                <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
-                                  {p.phone}
-                                </a>
-                              ) : (
-                                <span className="text-muted-foreground">—</span>
-                              )}
-                            </td>
-                            <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
-                            <td className="py-1.5 px-2">
-                              {idx === currentProspectIndex && (
-                                <span className="text-primary text-[10px] font-bold">ACTIVE</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                {listTab === 'to_call' && (
+                  <>
+                    {prospects.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <p className="text-sm">No prospects loaded yet</p>
+                        <p className="text-xs mt-1">Your admin will upload the call list</p>
+                      </div>
+                    ) : (
+                      <div className="max-h-72 overflow-y-auto border border-border rounded-md">
+                        <table className="w-full text-xs">
+                          <thead className="bg-muted/50 sticky top-0 z-10">
+                            <tr>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
+                              <th className="py-1.5 px-2"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {prospects.map((p, idx) => (
+                              <tr
+                                key={idx}
+                                className={cn(
+                                  "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                                  idx === currentProspectIndex && "bg-primary/5 font-medium"
+                                )}
+                                onClick={() => selectProspect(idx)}
+                              >
+                                <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
+                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
+                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                                <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
+                                <td className="py-1.5 px-2">
+                                  {p.phone ? (
+                                    <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
+                                      {p.phone}
+                                    </a>
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
+                                <td className="py-1.5 px-2">
+                                  {idx === currentProspectIndex && (
+                                    <span className="text-primary text-[10px] font-bold">ACTIVE</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {listTab === 'called' && (
+                  <>
+                    {calledProspects.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <p className="text-sm">No calls logged yet</p>
+                        <p className="text-xs mt-1">Completed calls will appear here</p>
+                      </div>
+                    ) : (
+                      <div className="max-h-96 overflow-y-auto border border-border rounded-md">
+                        <table className="w-full text-xs">
+                          <thead className="bg-muted/50 sticky top-0 z-10">
+                            <tr>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Outcome</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Feedback</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Called At</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {calledProspects.map((p) => (
+                              <tr key={p.id} className="border-t border-border">
+                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
+                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                                <td className="py-1.5 px-2">
+                                  <span className={cn(
+                                    "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium",
+                                    p.call_outcome === 'book_meeting' && 'bg-green-100 text-green-700',
+                                    p.call_outcome === 'need_info' && 'bg-amber-100 text-amber-700',
+                                    p.call_outcome === 'not_interested' && 'bg-red-100 text-red-700',
+                                    !['book_meeting', 'need_info', 'not_interested'].includes(p.call_outcome || '') && 'bg-muted text-muted-foreground'
+                                  )}>
+                                    {p.call_outcome || '—'}
+                                  </span>
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground max-w-[200px] truncate" title={p.call_feedback || ''}>
+                                  {p.call_feedback || '—'}
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground whitespace-nowrap">
+                                  {p.called_at ? format(new Date(p.called_at), 'dd MMM HH:mm') : '—'}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
