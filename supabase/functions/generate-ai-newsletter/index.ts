@@ -317,10 +317,15 @@ Deno.serve(async (req) => {
       .limit(1)
       .single()).data?.id;
 
-    // Step 5: Post to Slack #newsletter-engine for approval
-    console.log('Step 5: Posting to Slack #newsletter-engine for approval...');
+    // Step 5: Post to Slack AND send approval email
+    console.log('Step 5: Posting to Slack #newsletter-engine and sending approval email...');
 
-    await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+    const approveUrl = `${supabaseUrl}/functions/v1/approve-newsletter?token=${effectiveNewsletterId}&action=approve`;
+    const rejectUrl = `${supabaseUrl}/functions/v1/approve-newsletter?token=${effectiveNewsletterId}&action=reject`;
+
+    // Send Slack notification (non-blocking)
+    fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseServiceKey}` },
       body: JSON.stringify({
@@ -340,7 +345,91 @@ Deno.serve(async (req) => {
           monthlyTheme: monthlyTheme || null,
         },
       }),
-    });
+    }).catch(e => console.error('Slack notify error:', e));
+
+    // Send approval email to Kevin
+    if (RESEND_API_KEY) {
+      const approvalEmailHtml = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Georgia,serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:20px 0;">
+<tr><td align="center">
+<table width="640" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;">
+
+<tr><td style="background:#1a1a2e;padding:24px 40px;text-align:center;">
+  <h1 style="margin:0;color:#c8a97e;font-size:20px;">NEWSLETTER APPROVAL ${rewriteLabel || '— New Draft'}</h1>
+</td></tr>
+
+<tr><td style="padding:32px 40px;">
+  <p style="font-size:13px;color:#999;margin:0 0 4px;">SUBJECT LINE</p>
+  <p style="font-size:18px;color:#1a1a2e;font-weight:bold;margin:0 0 24px;">${newsletter.subject_line}</p>
+
+  <p style="font-size:13px;color:#999;margin:0 0 4px;">PAIN POINT</p>
+  <p style="font-size:14px;color:#333;margin:0 0 16px;">${newsletter.pain_point}</p>
+
+  <p style="font-size:13px;color:#999;margin:0 0 4px;">SERVICE BRIDGE</p>
+  <p style="font-size:14px;color:#333;margin:0 0 24px;">${newsletter.service_referenced}</p>
+
+  <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+
+  <p style="font-size:13px;color:#c8a97e;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Hook</p>
+  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;border-left:3px solid #c8a97e;padding-left:16px;font-style:italic;">${newsletter.hook}</div>
+
+  <p style="font-size:13px;color:#c8a97e;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">The Problem Framed</p>
+  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;">${newsletter.problem_framed}</div>
+
+  <p style="font-size:13px;color:#c8a97e;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">The Shift</p>
+  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;padding:16px;background:#f8f6f3;border-radius:6px;">${newsletter.the_shift}</div>
+
+  <p style="font-size:13px;color:#c8a97e;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Solution Bridge</p>
+  <div style="font-size:15px;color:#333;line-height:1.7;margin-bottom:24px;">${newsletter.solution_bridge}</div>
+
+  <p style="font-size:13px;color:#c8a97e;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Closing Line</p>
+  <p style="font-size:16px;color:#1a1a2e;font-weight:bold;margin-bottom:32px;">${newsletter.closing_line}</p>
+
+  <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+
+  <table width="100%" cellpadding="0" cellspacing="0"><tr>
+    <td width="50%" style="padding-right:8px;">
+      <a href="${approveUrl}" style="display:block;padding:16px;background:#2d6a4f;color:#fff;text-decoration:none;border-radius:8px;font-size:16px;font-weight:bold;text-align:center;">✅ Approve & Send</a>
+    </td>
+    <td width="50%" style="padding-left:8px;">
+      <a href="${rejectUrl}" style="display:block;padding:16px;background:#c1121f;color:#fff;text-decoration:none;border-radius:8px;font-size:16px;font-weight:bold;text-align:center;">❌ Reject</a>
+    </td>
+  </tr></table>
+
+  <p style="margin:16px 0 0;font-size:12px;color:#999;text-align:center;">Click approve to send to all subscribers immediately, or reject to trigger a rewrite.</p>
+</td></tr>
+
+<tr><td style="padding:16px 40px;background:#f8f8f8;text-align:center;border-top:1px solid #eee;">
+  <p style="margin:0;font-size:11px;color:#999;">Leadership by Design Newsletter Engine</p>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`;
+
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${RESEND_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Leadership by Design <hello@leadershipbydesign.co>',
+            to: ['kevin@kevinbritz.com'],
+            subject: `[APPROVE] ${rewriteLabel || 'New Draft'}: ${newsletter.subject_line}`,
+            html: approvalEmailHtml,
+            reply_to: 'hello@leadershipbydesign.co',
+          }),
+        });
+        console.log('Approval email sent to kevin@kevinbritz.com');
+      } catch (emailErr) {
+        console.error('Failed to send approval email:', emailErr);
+      }
+    }
 
     // Step 6: Schedule timeout check — after 4 hours, if not approved, auto-rewrite
     // We'll use a simple approach: store the pending state and let a scheduled function handle timeouts
