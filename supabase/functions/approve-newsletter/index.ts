@@ -17,12 +17,29 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Find newsletter by approval token
-    const { data: newsletter, error: findError } = await supabase
+    // Find newsletter by approval token OR by ID
+    let newsletter;
+    let findError;
+
+    // Try approval_token first, then fall back to ID lookup
+    const { data: byToken, error: tokenErr } = await supabase
       .from('newsletter_sends')
       .select('*')
       .eq('approval_token', token)
-      .single();
+      .maybeSingle();
+
+    if (byToken) {
+      newsletter = byToken;
+      findError = tokenErr;
+    } else {
+      const { data: byId, error: idErr } = await supabase
+        .from('newsletter_sends')
+        .select('*')
+        .eq('id', token)
+        .single();
+      newsletter = byId;
+      findError = idErr;
+    }
 
     if (findError || !newsletter) {
       return new Response(htmlPage('Not Found', 'Newsletter not found or token expired.'), {
