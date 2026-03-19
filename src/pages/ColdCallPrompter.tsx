@@ -897,69 +897,133 @@ export default function ColdCallPrompter() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium">Call List</span>
-                    {prospects.length > 0 && (
-                      <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
-                    )}
+                    <div className="flex items-center border border-border rounded-md overflow-hidden">
+                      <button
+                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'to_call' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
+                        onClick={() => setListTab('to_call')}
+                      >
+                        To Call ({prospects.length})
+                      </button>
+                      <button
+                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'called' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
+                        onClick={() => { setListTab('called'); fetchCalledProspects(); }}
+                      >
+                        Called ({calledProspects.length})
+                      </button>
+                    </div>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={fetchProspects} className="gap-1.5 text-xs">
+                  <Button variant="ghost" size="sm" onClick={() => { fetchProspects(); fetchCalledProspects(); }} className="gap-1.5 text-xs">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
                   </Button>
                 </div>
 
-                {prospects.length === 0 ? (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p className="text-sm">No prospects loaded yet</p>
-                    <p className="text-xs mt-1">Your admin will upload the call list</p>
-                  </div>
-                ) : (
-                  <div className="max-h-72 overflow-y-auto border border-border rounded-md">
-                    <table className="w-full text-xs">
-                      <thead className="bg-muted/50 sticky top-0 z-10">
-                        <tr>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
-                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
-                          <th className="py-1.5 px-2"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {prospects.map((p, idx) => (
-                          <tr
-                            key={idx}
-                            className={cn(
-                              "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
-                              idx === currentProspectIndex && "bg-primary/5 font-medium"
-                            )}
-                            onClick={() => selectProspect(idx)}
-                          >
-                            <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
-                            <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
-                            <td className="py-1.5 px-2 text-foreground">{p.company}</td>
-                            <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
-                            <td className="py-1.5 px-2">
-                              {p.phone ? (
-                                <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
-                                  {p.phone}
-                                </a>
-                              ) : (
-                                <span className="text-muted-foreground">—</span>
-                              )}
-                            </td>
-                            <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
-                            <td className="py-1.5 px-2">
-                              {idx === currentProspectIndex && (
-                                <span className="text-primary text-[10px] font-bold">ACTIVE</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                {listTab === 'to_call' && (
+                  <>
+                    {prospects.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <p className="text-sm">No prospects loaded yet</p>
+                        <p className="text-xs mt-1">Your admin will upload the call list</p>
+                      </div>
+                    ) : (
+                      <div className="max-h-72 overflow-y-auto border border-border rounded-md">
+                        <table className="w-full text-xs">
+                          <thead className="bg-muted/50 sticky top-0 z-10">
+                            <tr>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
+                              <th className="py-1.5 px-2"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {prospects.map((p, idx) => (
+                              <tr
+                                key={idx}
+                                className={cn(
+                                  "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                                  idx === currentProspectIndex && "bg-primary/5 font-medium"
+                                )}
+                                onClick={() => selectProspect(idx)}
+                              >
+                                <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
+                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
+                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                                <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
+                                <td className="py-1.5 px-2">
+                                  {p.phone ? (
+                                    <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
+                                      {p.phone}
+                                    </a>
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
+                                <td className="py-1.5 px-2">
+                                  {idx === currentProspectIndex && (
+                                    <span className="text-primary text-[10px] font-bold">ACTIVE</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {listTab === 'called' && (
+                  <>
+                    {calledProspects.length === 0 ? (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <p className="text-sm">No calls logged yet</p>
+                        <p className="text-xs mt-1">Completed calls will appear here</p>
+                      </div>
+                    ) : (
+                      <div className="max-h-96 overflow-y-auto border border-border rounded-md">
+                        <table className="w-full text-xs">
+                          <thead className="bg-muted/50 sticky top-0 z-10">
+                            <tr>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Outcome</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Feedback</th>
+                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Called At</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {calledProspects.map((p) => (
+                              <tr key={p.id} className="border-t border-border">
+                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
+                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                                <td className="py-1.5 px-2">
+                                  <span className={cn(
+                                    "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium",
+                                    p.call_outcome === 'book_meeting' && 'bg-green-100 text-green-700',
+                                    p.call_outcome === 'need_info' && 'bg-amber-100 text-amber-700',
+                                    p.call_outcome === 'not_interested' && 'bg-red-100 text-red-700',
+                                    !['book_meeting', 'need_info', 'not_interested'].includes(p.call_outcome || '') && 'bg-muted text-muted-foreground'
+                                  )}>
+                                    {p.call_outcome || '—'}
+                                  </span>
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground max-w-[200px] truncate" title={p.call_feedback || ''}>
+                                  {p.call_feedback || '—'}
+                                </td>
+                                <td className="py-1.5 px-2 text-muted-foreground whitespace-nowrap">
+                                  {p.called_at ? format(new Date(p.called_at), 'dd MMM HH:mm') : '—'}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
