@@ -129,6 +129,10 @@ interface Prospect {
   company: string;
   phone?: string;
   title?: string;
+  status?: string;
+  call_outcome?: string;
+  call_feedback?: string;
+  called_at?: string;
 }
 
 export default function ColdCallPrompter() {
