@@ -410,7 +410,6 @@ export default function ColdCallPrompter() {
     setScreen("CALL_START");
   };
 
-
       {/* Called History View */}
       {viewMode === 'called' && (
         <div className="flex-1 overflow-y-auto px-4 py-6">
