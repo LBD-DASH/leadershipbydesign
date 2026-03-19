@@ -1,0 +1,166 @@
+name: LBD Prospecting Engine
+
+on:
+  schedule:
+    # Phase 1: Daily 07:00 SAST (05:00 UTC) — Search + Score + Queue
+    - cron: '3 5 * * *'
+    # Phase 4: Every 4 hours — Monitor call results + next actions
+    - cron: '7 8,12,16,20 * * *'
+    # Phase 6: Daily 20:30 SAST (18:30 UTC) — Evening dashboard
+    - cron: '33 18 * * *'
+    # Weekly: Sunday 19:00 SAST (17:00 UTC) — Weekly report
+    - cron: '2 17 * * 0'
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: 'Phase to run (1, 4, 6, weekly)'
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '1'
+          - '4'
+          - '6'
+          - 'weekly'
+
+env:
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+  APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  phase1-prospect:
+    if: >
+      (github.event.schedule == '3 5 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == '1')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Phase 1 — Search + Queue
+        run: |
+          echo "Phase 1: Searching Apollo and inserting into outreach_queue"
+          # Call the existing Supabase edge functions which handle Apollo search
+          curl -s -X POST "$SUPABASE_URL/functions/v1/web-scraper-leads" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          # Trigger pipeline self-check
+          curl -s -X POST "$SUPABASE_URL/functions/v1/pipeline-self-check" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          # Trigger auto-outreach for pending prospects
+          curl -s -X POST "$SUPABASE_URL/functions/v1/auto-outreach" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          echo "Phase 1 complete"
+
+  phase4-monitor:
+    if: >
+      (github.event.schedule == '7 8,12,16,20 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == '4')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Phase 4 — Monitor + Next Actions
+        run: |
+          echo "Phase 4: Monitoring call results and executing next actions"
+
+          # Check outreach_queue for updated statuses
+          RESULTS=$(curl -s "$SUPABASE_URL/rest/v1/outreach_queue?status=in.(interested,objection,no_answer,callback_scheduled)&next_action=is.null&select=id,name,company,status" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+
+          echo "New results to process: $RESULTS"
+
+          # For no_answer: set retry in 72h
+          curl -s "$SUPABASE_URL/rest/v1/outreach_queue?status=eq.no_answer&next_action=is.null" \
+            -X PATCH \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"next_action\":\"retry_call\",\"next_action_date\":\"$(date -u -d '+72 hours' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+72H +%Y-%m-%dT%H:%M:%SZ)\",\"status\":\"pending_call\",\"scheduled_call_date\":\"$(date -u -d '+72 hours' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+72H +%Y-%m-%dT%H:%M:%SZ)\"}" || true
+
+          # For interested: set draft_proposal
+          curl -s "$SUPABASE_URL/rest/v1/outreach_queue?status=eq.interested&next_action=is.null" \
+            -X PATCH \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"next_action\":\"draft_proposal\",\"next_action_date\":\"$(date -u -d '+24 hours' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+24H +%Y-%m-%dT%H:%M:%SZ)\"}" || true
+
+          # Trigger gmail-reply-classifier
+          curl -s -X POST "$SUPABASE_URL/functions/v1/gmail-reply-classifier" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          echo "Phase 4 complete"
+
+  phase6-report:
+    if: >
+      (github.event.schedule == '33 18 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == '6')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Phase 6 — Evening Dashboard
+        run: |
+          echo "Phase 6: Generating evening dashboard"
+
+          # Get pipeline stats
+          STATS=$(curl -s "$SUPABASE_URL/rest/v1/outreach_queue?select=status,tier,vertical,estimated_value" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+
+          TOTAL=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+          INTERESTED=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len([x for x in d if x['status']=='interested']))" 2>/dev/null || echo "0")
+          PENDING=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len([x for x in d if x['status']=='pending_call']))" 2>/dev/null || echo "0")
+          VALUE=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(sum(x.get('estimated_value',0) or 0 for x in d))" 2>/dev/null || echo "0")
+
+          # Post to Slack via Supabase slack-notify
+          curl -s -X POST "$SUPABASE_URL/functions/v1/slack-notify" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel\":\"mission-control\",\"eventType\":\"system_error\",\"data\":{\"function\":\"Pipeline Dashboard\",\"error\":\"Total: $TOTAL | Pending calls: $PENDING | Interested: $INTERESTED | Pipeline: R$VALUE\"}}" || true
+
+          # Trigger system heartbeat
+          curl -s -X POST "$SUPABASE_URL/functions/v1/system-heartbeat" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          echo "Phase 6 complete"
+
+  weekly-report:
+    if: >
+      (github.event.schedule == '2 17 * * 0') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == 'weekly')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Weekly Report
+        run: |
+          echo "Weekly report: Generating pipeline summary"
+
+          STATS=$(curl -s "$SUPABASE_URL/rest/v1/outreach_queue?select=status,tier,vertical,estimated_value" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY")
+
+          TOTAL=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+          VALUE=$(echo "$STATS" | python3 -c "import json,sys; d=json.load(sys.stdin); print(sum(x.get('estimated_value',0) or 0 for x in d))" 2>/dev/null || echo "0")
+
+          curl -s -X POST "$SUPABASE_URL/functions/v1/slack-notify" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel\":\"mission-control\",\"eventType\":\"system_error\",\"data\":{\"function\":\"Weekly Pipeline Report\",\"error\":\"WEEKLY SUMMARY — Total prospects: $TOTAL | Pipeline value: R$VALUE\"}}" || true
+
+          echo "Weekly report complete"
