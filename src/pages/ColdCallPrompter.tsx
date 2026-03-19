@@ -173,6 +173,10 @@ export default function ColdCallPrompter() {
         company: p.company || '',
         phone: p.phone || '',
         title: p.title || '',
+        status: p.status || 'pending',
+        call_outcome: p.call_outcome || '',
+        call_feedback: p.call_feedback || '',
+        called_at: p.called_at || '',
       }));
       setProspects(mapped);
       if (mapped.length > 0 && currentProspectIndex === -1) {
@@ -189,9 +193,49 @@ export default function ColdCallPrompter() {
     }
   }, [currentProspectIndex]);
 
+  const fetchCalledProspects = useCallback(async () => {
+    const { data, error } = await supabase.functions.invoke('admin-call-list', {
+      method: 'GET',
+      headers: { 'x-custom-status': 'called' },
+    });
+    // The GET endpoint doesn't support custom headers for filtering, so use query params
+    // We need to fetch with ?status=called
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-call-list?status=called`;
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+      });
+      const result = await res.json();
+      if (result?.prospects) {
+        const mapped: Prospect[] = result.prospects.map((p: any) => ({
+          id: p.id,
+          name: p.first_name || '',
+          surname: p.last_name || '',
+          email: p.email || '',
+          company: p.company || '',
+          phone: p.phone || '',
+          title: p.title || '',
+          status: p.status || 'called',
+          call_outcome: p.call_outcome || '',
+          call_feedback: p.call_feedback || '',
+          called_at: p.called_at || '',
+        }));
+        setCalledProspects(mapped);
+      }
+    } catch {
+      // silently fail
+    }
+  }, []);
+
   useEffect(() => {
-    if (isAuthenticated) fetchProspects();
-  }, [isAuthenticated, fetchProspects]);
+    if (isAuthenticated) {
+      fetchProspects();
+      fetchCalledProspects();
+    }
+  }, [isAuthenticated, fetchProspects, fetchCalledProspects]);
 
   // Real-time: auto-refresh when new prospects are added
   useEffect(() => {
