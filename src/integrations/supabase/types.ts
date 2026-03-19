@@ -1026,6 +1026,81 @@ export type Database = {
         }
         Relationships: []
       }
+      email_outreach_log: {
+        Row: {
+          apollo_id: string | null
+          body: string | null
+          company: string | null
+          created_at: string | null
+          email: string
+          email_type: string | null
+          gmail_message_id: string | null
+          id: string
+          name: string | null
+          outreach_queue_id: string | null
+          reply_body: string | null
+          reply_received: boolean | null
+          reply_received_at: string | null
+          reply_sentiment: string | null
+          sent_at: string | null
+          subject: string | null
+          vertical: string | null
+        }
+        Insert: {
+          apollo_id?: string | null
+          body?: string | null
+          company?: string | null
+          created_at?: string | null
+          email: string
+          email_type?: string | null
+          gmail_message_id?: string | null
+          id?: string
+          name?: string | null
+          outreach_queue_id?: string | null
+          reply_body?: string | null
+          reply_received?: boolean | null
+          reply_received_at?: string | null
+          reply_sentiment?: string | null
+          sent_at?: string | null
+          subject?: string | null
+          vertical?: string | null
+        }
+        Update: {
+          apollo_id?: string | null
+          body?: string | null
+          company?: string | null
+          created_at?: string | null
+          email?: string
+          email_type?: string | null
+          gmail_message_id?: string | null
+          id?: string
+          name?: string | null
+          outreach_queue_id?: string | null
+          reply_body?: string | null
+          reply_received?: boolean | null
+          reply_received_at?: string | null
+          reply_sentiment?: string | null
+          sent_at?: string | null
+          subject?: string | null
+          vertical?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_outreach_log_outreach_queue_id_fkey"
+            columns: ["outreach_queue_id"]
+            isOneToOne: false
+            referencedRelation: "call_queue_agent_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_outreach_log_outreach_queue_id_fkey"
+            columns: ["outreach_queue_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_subscribers: {
         Row: {
           company: string | null
@@ -2102,6 +2177,99 @@ export type Database = {
           },
         ]
       }
+      outreach_queue: {
+        Row: {
+          apollo_id: string | null
+          call_date: string | null
+          call_notes: string | null
+          call_result: string | null
+          called_by: string | null
+          company: string | null
+          created_at: string | null
+          email: string | null
+          email_body: string | null
+          email_sent_at: string | null
+          email_subject: string | null
+          estimated_value: number | null
+          firecrawl_score: number | null
+          firecrawl_signals: Json | null
+          id: string
+          linkedin_url: string | null
+          name: string
+          next_action: string | null
+          next_action_date: string | null
+          phone: string | null
+          product: string | null
+          scheduled_call_date: string | null
+          source: string | null
+          status: string
+          tier: string
+          title: string | null
+          updated_at: string | null
+          vertical: string
+        }
+        Insert: {
+          apollo_id?: string | null
+          call_date?: string | null
+          call_notes?: string | null
+          call_result?: string | null
+          called_by?: string | null
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_body?: string | null
+          email_sent_at?: string | null
+          email_subject?: string | null
+          estimated_value?: number | null
+          firecrawl_score?: number | null
+          firecrawl_signals?: Json | null
+          id?: string
+          linkedin_url?: string | null
+          name: string
+          next_action?: string | null
+          next_action_date?: string | null
+          phone?: string | null
+          product?: string | null
+          scheduled_call_date?: string | null
+          source?: string | null
+          status?: string
+          tier?: string
+          title?: string | null
+          updated_at?: string | null
+          vertical?: string
+        }
+        Update: {
+          apollo_id?: string | null
+          call_date?: string | null
+          call_notes?: string | null
+          call_result?: string | null
+          called_by?: string | null
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_body?: string | null
+          email_sent_at?: string | null
+          email_subject?: string | null
+          estimated_value?: number | null
+          firecrawl_score?: number | null
+          firecrawl_signals?: Json | null
+          id?: string
+          linkedin_url?: string | null
+          name?: string
+          next_action?: string | null
+          next_action_date?: string | null
+          phone?: string | null
+          product?: string | null
+          scheduled_call_date?: string | null
+          source?: string | null
+          status?: string
+          tier?: string
+          title?: string | null
+          updated_at?: string | null
+          vertical?: string
+        }
+        Relationships: []
+      }
       outstanding_items: {
         Row: {
           created_at: string
@@ -2863,7 +3031,79 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      call_queue_agent_view: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          email: string | null
+          email_sent_at: string | null
+          estimated_value: number | null
+          firecrawl_score: number | null
+          firecrawl_signals: Json | null
+          id: string | null
+          name: string | null
+          next_action: string | null
+          next_action_date: string | null
+          phone: string | null
+          product: string | null
+          scheduled_call_date: string | null
+          status: string | null
+          tier: string | null
+          title: string | null
+          vertical: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_sent_at?: string | null
+          estimated_value?: number | null
+          firecrawl_score?: number | null
+          firecrawl_signals?: Json | null
+          id?: string | null
+          name?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          phone?: string | null
+          product?: string | null
+          scheduled_call_date?: string | null
+          status?: string | null
+          tier?: string | null
+          title?: string | null
+          vertical?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          email_sent_at?: string | null
+          estimated_value?: number | null
+          firecrawl_score?: number | null
+          firecrawl_signals?: Json | null
+          id?: string | null
+          name?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          phone?: string | null
+          product?: string | null
+          scheduled_call_date?: string | null
+          status?: string | null
+          tier?: string | null
+          title?: string | null
+          vertical?: string | null
+        }
+        Relationships: []
+      }
+      pipeline_dashboard: {
+        Row: {
+          count: number | null
+          status: string | null
+          tier: string | null
+          total_value: number | null
+          vertical: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
