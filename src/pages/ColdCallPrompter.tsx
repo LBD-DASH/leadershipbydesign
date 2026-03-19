@@ -147,7 +147,7 @@ export default function ColdCallPrompter() {
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [calledProspects, setCalledProspects] = useState<Prospect[]>([]);
   const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
-  const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs'>('script');
+  const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs' | 'called'>('script');
   const [listTab, setListTab] = useState<'to_call' | 'called'>('to_call');
   const [callFeedback, setCallFeedback] = useState('');
 
