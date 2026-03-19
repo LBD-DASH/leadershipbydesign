@@ -145,8 +145,11 @@ export default function ColdCallPrompter() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPdf, setShowPdf] = useState(false);
   const [prospects, setProspects] = useState<Prospect[]>([]);
+  const [calledProspects, setCalledProspects] = useState<Prospect[]>([]);
   const [currentProspectIndex, setCurrentProspectIndex] = useState<number>(-1);
   const [viewMode, setViewMode] = useState<'script' | 'queue' | 'needs'>('script');
+  const [listTab, setListTab] = useState<'to_call' | 'called'>('to_call');
+  const [callFeedback, setCallFeedback] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated) return;
