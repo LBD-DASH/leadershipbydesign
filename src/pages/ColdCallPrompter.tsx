@@ -542,6 +542,85 @@ export default function ColdCallPrompter() {
         </div>
       )}
 
+      {/* Called History View */}
+      {viewMode === 'called' && (
+        <div className="flex-1 overflow-y-auto px-4 py-6">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground">Call History</h2>
+                <p className="text-sm text-muted-foreground">{calledProspects.length} prospects contacted</p>
+              </div>
+              <Button variant="outline" size="sm" onClick={fetchCalledProspects} className="gap-1.5">
+                <RefreshCw className="w-3.5 h-3.5" />
+                Refresh
+              </Button>
+            </div>
+
+            {calledProspects.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  <CheckCircle className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                  <p className="text-sm">No calls logged yet</p>
+                  <p className="text-xs mt-1">Completed calls will appear here</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {calledProspects.map((p) => (
+                  <Card key={p.id} className="shadow-sm">
+                    <CardContent className="p-5 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-semibold text-base text-foreground">{p.name} {p.surname}</h3>
+                          <p className="text-sm text-muted-foreground">{p.company}{p.title ? ` · ${p.title}` : ''}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={cn(
+                            "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold",
+                            p.call_outcome === 'book_meeting' && 'bg-green-100 text-green-700',
+                            p.call_outcome === 'need_info' && 'bg-amber-100 text-amber-700',
+                            p.call_outcome === 'not_interested' && 'bg-red-100 text-red-700',
+                            p.call_outcome === 'yes' && 'bg-blue-100 text-blue-700',
+                            p.call_outcome === 'no' && 'bg-muted text-muted-foreground',
+                            p.call_outcome === 'voicemail' && 'bg-purple-100 text-purple-700',
+                            !['book_meeting', 'need_info', 'not_interested', 'yes', 'no', 'voicemail'].includes(p.call_outcome || '') && 'bg-muted text-muted-foreground'
+                          )}>
+                            {p.call_outcome?.replace(/_/g, ' ') || 'completed'}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {p.called_at ? format(new Date(p.called_at), 'dd MMM yyyy · HH:mm') : '—'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4 text-sm">
+                        {p.phone && (
+                          <a href={`tel:${p.phone}`} className="flex items-center gap-1.5 text-primary hover:underline">
+                            <Phone className="w-3.5 h-3.5" />
+                            {p.phone}
+                          </a>
+                        )}
+                        {p.email && (
+                          <span className="text-muted-foreground">{p.email}</span>
+                        )}
+                      </div>
+
+                      {p.call_feedback && (
+                        <div className="bg-muted/40 border border-border rounded-lg px-4 py-3">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Feedback / Notes</p>
+                          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{p.call_feedback}</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Script View */}
       {viewMode === 'script' && (
       <div className="flex-1 flex">
