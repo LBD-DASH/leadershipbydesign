@@ -990,19 +990,12 @@ export default function ColdCallPrompter() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-primary" />
-                    <div className="flex items-center border border-border rounded-md overflow-hidden">
-                      <button
-                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'to_call' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
-                        onClick={() => setListTab('to_call')}
-                      >
-                        To Call ({prospects.length})
-                      </button>
-                      <button
-                        className={cn("px-3 py-1 text-xs font-medium transition-colors", listTab === 'called' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted')}
-                        onClick={() => { setListTab('called'); fetchCalledProspects(); }}
-                      >
-                        Called ({calledProspects.length})
-                      </button>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium">Call List</span>
+                      {prospects.length > 0 && (
+                        <span className="text-xs text-muted-foreground">({prospects.length} prospects)</span>
+                      )}
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => { fetchProspects(); fetchCalledProspects(); }} className="gap-1.5 text-xs">
