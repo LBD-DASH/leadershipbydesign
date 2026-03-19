@@ -379,9 +379,13 @@ export default function ColdCallPrompter() {
             id: prospect.id,
             status: 'called',
             call_outcome: form.pitchOutcome || form.initialResponse || 'completed',
+            call_feedback: callFeedback || form.notes || null,
           },
+          headers: { 'x-admin-token': MASTER_TOKEN },
         });
       }
+      setCallFeedback('');
+      fetchCalledProspects();
       setScreen("SUCCESS");
     }
   };
