@@ -1,0 +1,1 @@
+ALTER TABLE public.call_list_prospects ADD COLUMN IF NOT EXISTS call_feedback text;

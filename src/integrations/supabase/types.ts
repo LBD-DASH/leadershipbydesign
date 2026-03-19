@@ -466,6 +466,7 @@ export type Database = {
       call_list_prospects: {
         Row: {
           batch_id: string | null
+          call_feedback: string | null
           call_outcome: string | null
           called_at: string | null
           company: string | null
@@ -482,6 +483,7 @@ export type Database = {
         }
         Insert: {
           batch_id?: string | null
+          call_feedback?: string | null
           call_outcome?: string | null
           called_at?: string | null
           company?: string | null
@@ -498,6 +500,7 @@ export type Database = {
         }
         Update: {
           batch_id?: string | null
+          call_feedback?: string | null
           call_outcome?: string | null
           called_at?: string | null
           company?: string | null
