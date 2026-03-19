@@ -833,6 +833,7 @@ export default function ColdCallPrompter() {
                     <Input placeholder="Phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
                     <Input placeholder="Email (if known)" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
                     <Textarea placeholder="Quick summary" value={form.notes} onChange={(e) => update("notes", e.target.value)} />
+                    <Textarea placeholder="Any additional feedback..." value={callFeedback} onChange={(e) => setCallFeedback(e.target.value)} rows={2} className="bg-muted/30" />
                     <Button size="lg" className="w-full" onClick={saveCall} disabled={saving}>
                       {saving ? "Saving…" : "SAVE CALL"}
                     </Button>
