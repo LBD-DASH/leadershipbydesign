@@ -468,6 +468,20 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildHotLeadAlertBlocks,
     text: (d) => `🔥 HOT LEAD — ${d.name} at ${d.company} (${d.source})`,
   },
+  newsletter_approval_request: {
+    channels: ['newsletter-engine'],
+    username: 'LBD Newsletter',
+    icon: ':newspaper:',
+    buildBlocks: buildNewsletterApprovalRequestBlocks,
+    text: (d) => `Newsletter for approval: "${d.subject || ''}"`,
+  },
+  newsletter_manual_needed: {
+    channels: ['newsletter-engine'],
+    username: 'LBD Newsletter',
+    icon: ':warning:',
+    buildBlocks: buildNewsletterManualNeededBlocks,
+    text: (d) => `Newsletter needs manual input after ${d.rounds} rounds`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────
