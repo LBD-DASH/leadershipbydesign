@@ -1004,114 +1004,58 @@ export default function ColdCallPrompter() {
                   </Button>
                 </div>
 
-                {listTab === 'to_call' && (
-                  <>
-                    {prospects.length === 0 ? (
-                      <div className="text-center py-6 text-muted-foreground">
-                        <p className="text-sm">No prospects loaded yet</p>
-                        <p className="text-xs mt-1">Your admin will upload the call list</p>
-                      </div>
-                    ) : (
-                      <div className="max-h-72 overflow-y-auto border border-border rounded-md">
-                        <table className="w-full text-xs">
-                          <thead className="bg-muted/50 sticky top-0 z-10">
-                            <tr>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
-                              <th className="py-1.5 px-2"></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {prospects.map((p, idx) => (
-                              <tr
-                                key={idx}
-                                className={cn(
-                                  "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
-                                  idx === currentProspectIndex && "bg-primary/5 font-medium"
-                                )}
-                                onClick={() => selectProspect(idx)}
-                              >
-                                <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
-                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
-                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
-                                <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
-                                <td className="py-1.5 px-2">
-                                  {p.phone ? (
-                                    <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
-                                      {p.phone}
-                                    </a>
-                                  ) : (
-                                    <span className="text-muted-foreground">—</span>
-                                  )}
-                                </td>
-                                <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
-                                <td className="py-1.5 px-2">
-                                  {idx === currentProspectIndex && (
-                                    <span className="text-primary text-[10px] font-bold">ACTIVE</span>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {listTab === 'called' && (
-                  <>
-                    {calledProspects.length === 0 ? (
-                      <div className="text-center py-6 text-muted-foreground">
-                        <p className="text-sm">No calls logged yet</p>
-                        <p className="text-xs mt-1">Completed calls will appear here</p>
-                      </div>
-                    ) : (
-                      <div className="max-h-[600px] overflow-y-auto border border-border rounded-md">
-                        <div className="divide-y divide-border">
-                          {calledProspects.map((p) => (
-                            <div key={p.id} className="p-3 space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium text-sm text-foreground">{p.name} {p.surname}</span>
-                                  <span className="text-xs text-muted-foreground">— {p.company}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className={cn(
-                                    "inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium",
-                                    p.call_outcome === 'book_meeting' && 'bg-green-100 text-green-700',
-                                    p.call_outcome === 'need_info' && 'bg-amber-100 text-amber-700',
-                                    p.call_outcome === 'not_interested' && 'bg-red-100 text-red-700',
-                                    !['book_meeting', 'need_info', 'not_interested'].includes(p.call_outcome || '') && 'bg-muted text-muted-foreground'
-                                  )}>
-                                    {p.call_outcome?.replace(/_/g, ' ') || '—'}
-                                  </span>
-                                  <span className="text-[11px] text-muted-foreground">
-                                    {p.called_at ? format(new Date(p.called_at), 'dd MMM HH:mm') : '—'}
-                                  </span>
-                                </div>
-                              </div>
-                              {p.title && (
-                                <p className="text-xs text-muted-foreground">{p.title}</p>
+                {prospects.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p className="text-sm">No prospects loaded yet</p>
+                    <p className="text-xs mt-1">Your admin will upload the call list</p>
+                  </div>
+                ) : (
+                  <div className="max-h-72 overflow-y-auto border border-border rounded-md">
+                    <table className="w-full text-xs">
+                      <thead className="bg-muted/50 sticky top-0 z-10">
+                        <tr>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">#</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Title</th>
+                          <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Phone</th>
+                          <th className="py-1.5 px-2"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {prospects.map((p, idx) => (
+                          <tr
+                            key={idx}
+                            className={cn(
+                              "border-t border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                              idx === currentProspectIndex && "bg-primary/5 font-medium"
+                            )}
+                            onClick={() => selectProspect(idx)}
+                          >
+                            <td className="py-1.5 px-2 text-muted-foreground">{idx + 1}</td>
+                            <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
+                            <td className="py-1.5 px-2 text-foreground">{p.company}</td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.title || '—'}</td>
+                            <td className="py-1.5 px-2">
+                              {p.phone ? (
+                                <a href={`tel:${p.phone}`} className="text-primary hover:underline font-medium whitespace-nowrap">
+                                  {p.phone}
+                                </a>
+                              ) : (
+                                <span className="text-muted-foreground">—</span>
                               )}
-                              {p.call_feedback && (
-                                <div className="bg-muted/40 rounded-md px-3 py-2">
-                                  <p className="text-[11px] font-medium text-muted-foreground mb-0.5">Feedback</p>
-                                  <p className="text-sm text-foreground whitespace-pre-wrap">{p.call_feedback}</p>
-                                </div>
+                            </td>
+                            <td className="py-1.5 px-2 text-muted-foreground">{p.email || '—'}</td>
+                            <td className="py-1.5 px-2">
+                              {idx === currentProspectIndex && (
+                                <span className="text-primary text-[10px] font-bold">ACTIVE</span>
                               )}
-                              {p.phone && (
-                                <a href={`tel:${p.phone}`} className="text-xs text-primary hover:underline">{p.phone}</a>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </CardContent>
             </Card>
