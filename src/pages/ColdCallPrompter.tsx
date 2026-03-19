@@ -990,43 +990,45 @@ export default function ColdCallPrompter() {
                         <p className="text-xs mt-1">Completed calls will appear here</p>
                       </div>
                     ) : (
-                      <div className="max-h-96 overflow-y-auto border border-border rounded-md">
-                        <table className="w-full text-xs">
-                          <thead className="bg-muted/50 sticky top-0 z-10">
-                            <tr>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Name</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Company</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Outcome</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Feedback</th>
-                              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Called At</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {calledProspects.map((p) => (
-                              <tr key={p.id} className="border-t border-border">
-                                <td className="py-1.5 px-2 text-foreground whitespace-nowrap">{p.name} {p.surname}</td>
-                                <td className="py-1.5 px-2 text-foreground">{p.company}</td>
-                                <td className="py-1.5 px-2">
+                      <div className="max-h-[600px] overflow-y-auto border border-border rounded-md">
+                        <div className="divide-y divide-border">
+                          {calledProspects.map((p) => (
+                            <div key={p.id} className="p-3 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-sm text-foreground">{p.name} {p.surname}</span>
+                                  <span className="text-xs text-muted-foreground">— {p.company}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
                                   <span className={cn(
-                                    "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium",
+                                    "inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium",
                                     p.call_outcome === 'book_meeting' && 'bg-green-100 text-green-700',
                                     p.call_outcome === 'need_info' && 'bg-amber-100 text-amber-700',
                                     p.call_outcome === 'not_interested' && 'bg-red-100 text-red-700',
                                     !['book_meeting', 'need_info', 'not_interested'].includes(p.call_outcome || '') && 'bg-muted text-muted-foreground'
                                   )}>
-                                    {p.call_outcome || '—'}
+                                    {p.call_outcome?.replace(/_/g, ' ') || '—'}
                                   </span>
-                                </td>
-                                <td className="py-1.5 px-2 text-muted-foreground max-w-[200px] truncate" title={p.call_feedback || ''}>
-                                  {p.call_feedback || '—'}
-                                </td>
-                                <td className="py-1.5 px-2 text-muted-foreground whitespace-nowrap">
-                                  {p.called_at ? format(new Date(p.called_at), 'dd MMM HH:mm') : '—'}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                                  <span className="text-[11px] text-muted-foreground">
+                                    {p.called_at ? format(new Date(p.called_at), 'dd MMM HH:mm') : '—'}
+                                  </span>
+                                </div>
+                              </div>
+                              {p.title && (
+                                <p className="text-xs text-muted-foreground">{p.title}</p>
+                              )}
+                              {p.call_feedback && (
+                                <div className="bg-muted/40 rounded-md px-3 py-2">
+                                  <p className="text-[11px] font-medium text-muted-foreground mb-0.5">Feedback</p>
+                                  <p className="text-sm text-foreground whitespace-pre-wrap">{p.call_feedback}</p>
+                                </div>
+                              )}
+                              {p.phone && (
+                                <a href={`tel:${p.phone}`} className="text-xs text-primary hover:underline">{p.phone}</a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </>
