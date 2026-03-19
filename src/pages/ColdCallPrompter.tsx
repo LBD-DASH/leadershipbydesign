@@ -493,6 +493,7 @@ export default function ColdCallPrompter() {
               >
                 <ClipboardCheck className="h-3 w-3" />
                 Needs Analysis
+              </Button>
               <Button
                 variant={viewMode === 'called' ? 'default' : 'ghost'}
                 size="sm"
