@@ -2,10 +2,23 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const GATEWAY_URL = 'https://connector-gateway.lovable.dev/slack/api';
 const MAX_REWRITES = 3;
+const DEFAULT_OWNER_EMAIL = 'kevin@kevinbritz.com';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+};
+
+type NewsletterPayload = {
+  id: string;
+  subject: string;
+  body_html: string;
+  recipient_count?: number | null;
+  status?: string | null;
+  sent_at?: string | null;
+  pain_point_topic?: string | null;
+  service_referenced?: string | null;
+  rewrite_rounds?: number | null;
 };
 
 Deno.serve(async (req) => {
@@ -19,10 +32,11 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const body = await req.json().catch(() => ({}));
-    const { action, newsletter_id, feedback } = body as {
-      action: 'approve' | 'reject' | 'check_timeouts';
+    const { action, newsletter_id, feedback, target_email } = body as {
+      action: 'approve' | 'reject' | 'check_timeouts' | 'resend_owner_copy';
       newsletter_id?: string;
       feedback?: string;
+      target_email?: string;
     };
 
     // --- CHECK TIMEOUTS: called by cron/scheduled function ---
@@ -83,6 +97,33 @@ Deno.serve(async (req) => {
       }
 
       return json({ success: true, processed: timedOut.length });
+    }
+
+    // --- RESEND OWNER COPY ---
+    if (action === 'resend_owner_copy' && newsletter_id) {
+      const { data: nl } = await supabase
+        .from('newsletter_sends')
+        .select('id, subject, body_html, recipient_count, status, sent_at')
+        .eq('id', newsletter_id)
+        .single();
+
+      if (!nl) return json({ error: 'Newsletter not found' }, 404);
+
+      const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+      if (!RESEND_API_KEY) throw new Error('RESEND_API_KEY not configured');
+
+      const { ownerEmail } = await sendOwnerCopy({
+        supabaseUrl,
+        resendApiKey: RESEND_API_KEY,
+        newsletter: nl,
+        targetEmail: target_email,
+      });
+
+      return json({
+        success: true,
+        message: `Owner copy sent to ${ownerEmail}`,
+        newsletter_id,
+      });
     }
 
     // --- APPROVE ---
@@ -177,6 +218,20 @@ Deno.serve(async (req) => {
         sent_at: new Date().toISOString(),
       }).eq('id', newsletter_id);
 
+      // Send monitoring copy to owner inbox
+      try {
+        const { ownerEmail } = await sendOwnerCopy({
+          supabaseUrl,
+          resendApiKey: RESEND_API_KEY,
+          newsletter: nl,
+          deliveredCount: totalSent,
+          totalSubscribers: allSubscribers.length,
+        });
+        console.log(`Owner monitoring copy sent to ${ownerEmail}`);
+      } catch (ownerErr) {
+        console.error('Owner monitoring copy failed:', ownerErr);
+      }
+
       // Log to Slack
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: 'POST',
@@ -251,12 +306,57 @@ Deno.serve(async (req) => {
       return json({ success: true, message: `Rewrite triggered (round ${currentRound})` });
     }
 
-    return json({ error: 'Invalid action. Use: approve, reject, check_timeouts' }, 400);
+    return json({ error: 'Invalid action. Use: approve, reject, check_timeouts, resend_owner_copy' }, 400);
   } catch (error) {
     console.error('newsletter-approval-handler error:', error);
     return json({ error: error instanceof Error ? error.message : 'Unknown error' }, 500);
   }
 });
+
+async function sendOwnerCopy({
+  supabaseUrl,
+  resendApiKey,
+  newsletter,
+  deliveredCount,
+  totalSubscribers,
+  targetEmail,
+}: {
+  supabaseUrl: string;
+  resendApiKey: string;
+  newsletter: NewsletterPayload;
+  deliveredCount?: number;
+  totalSubscribers?: number;
+  targetEmail?: string;
+}) {
+  const ownerEmail = targetEmail || Deno.env.get('OWNER_EMAIL') || DEFAULT_OWNER_EMAIL;
+
+  const deliverySummary =
+    typeof deliveredCount === 'number' && typeof totalSubscribers === 'number'
+      ? `${deliveredCount}/${totalSubscribers} delivered`
+      : `${newsletter.recipient_count ?? 0} delivered`;
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Leadership by Design <hello@leadershipbydesign.co>',
+      to: [ownerEmail],
+      subject: `[SENT COPY] ${newsletter.subject} — ${deliverySummary}`,
+      html: `<p><strong>Delivery Report:</strong> ${deliverySummary}</p><hr/>${newsletter.body_html}`,
+      reply_to: 'kevin@kevinbritz.com',
+    }),
+  });
+
+  const responseText = await response.text();
+  if (!response.ok) {
+    throw new Error(`Owner copy send failed [${response.status}]: ${responseText}`);
+  }
+
+  return { ownerEmail };
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
