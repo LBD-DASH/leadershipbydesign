@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 4096,
         system: NEWSLETTER_SYSTEM_PROMPT,
         messages: [{ role: 'user', content: userPrompt }],
@@ -174,7 +174,9 @@ Deno.serve(async (req) => {
     });
 
     if (!claudeResponse.ok) {
-      throw new Error(`Claude API error: ${claudeResponse.status}`);
+      const errBody = await claudeResponse.text();
+      console.error('Claude API error body:', errBody);
+      throw new Error(`Claude API error: ${claudeResponse.status} - ${errBody.slice(0, 500)}`);
     }
 
     const claudeData = await claudeResponse.json();
