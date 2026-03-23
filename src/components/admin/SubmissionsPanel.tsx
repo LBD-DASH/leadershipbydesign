@@ -173,6 +173,7 @@ export default function SubmissionsPanel() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex-wrap">
           <TabsTrigger value="overview">UTM Analytics</TabsTrigger>
+          <TabsTrigger value="lac">Leader as Coach</TabsTrigger>
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
