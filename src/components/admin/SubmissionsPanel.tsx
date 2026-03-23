@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
+import LACLeadsPanel from './LACLeadsPanel';
 
 export default function SubmissionsPanel() {
   const queryClient = useQueryClient();
