@@ -71,8 +71,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
-    if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY not configured');
     const FIRECRAWL_API_KEY = Deno.env.get('FIRECRAWL_API_KEY');
     if (!FIRECRAWL_API_KEY) throw new Error('FIRECRAWL_API_KEY not configured');
 
@@ -156,33 +156,33 @@ Deno.serve(async (req) => {
       userPrompt += `\n\nBefore generating, check:\n- Does the subject line create tension or curiosity?\n- Does the hook make an FSI executive feel immediately understood?\n- Is the problem framed at identity or behaviour level, not just symptoms?\n- Is the SHIFT reframe genuinely non-obvious?\n- Does the solution bridge feel earned, not forced?\n- Is the voice direct, warm, and free of jargon?`;
     }
 
-    console.log(`Step 2: Generating newsletter with Claude (round ${rewriteRound})...`);
+    console.log(`Step 2: Generating newsletter with Lovable AI (round ${rewriteRound})...`);
 
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 4096,
-        system: NEWSLETTER_SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt }],
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: NEWSLETTER_SYSTEM_PROMPT },
+          { role: 'user', content: userPrompt },
+        ],
       }),
     });
 
-    if (!claudeResponse.ok) {
-      const errBody = await claudeResponse.text();
-      console.error('Claude API error body:', errBody);
-      throw new Error(`Claude API error: ${claudeResponse.status} - ${errBody.slice(0, 500)}`);
+    if (!aiResponse.ok) {
+      const errBody = await aiResponse.text();
+      console.error('Lovable AI error body:', errBody);
+      throw new Error(`Lovable AI error: ${aiResponse.status} - ${errBody.slice(0, 500)}`);
     }
 
-    const claudeData = await claudeResponse.json();
-    const rawContent = claudeData.content[0]?.text || '';
+    const aiData = await aiResponse.json();
+    const rawContent = aiData.choices?.[0]?.message?.content || '';
     const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Failed to parse newsletter JSON from Claude');
+    if (!jsonMatch) throw new Error('Failed to parse newsletter JSON from AI response');
 
     const newsletter = JSON.parse(jsonMatch[0]);
     console.log(`Step 3: Newsletter generated. Topic: "${newsletter.topic}"`);
