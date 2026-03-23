@@ -230,6 +230,10 @@ export default function MarketingDashboard() {
                 <SubmissionsPanel />
               </TabsContent>
 
+              <TabsContent value="intelligence" className="mt-6">
+                <IntelligenceTab />
+              </TabsContent>
+
               <TabsContent value="cadence" className="mt-6">
                 <WarmLeadCadence />
               </TabsContent>
