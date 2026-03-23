@@ -174,7 +174,9 @@ Deno.serve(async (req) => {
     });
 
     if (!claudeResponse.ok) {
-      throw new Error(`Claude API error: ${claudeResponse.status}`);
+      const errBody = await claudeResponse.text();
+      console.error('Claude API error body:', errBody);
+      throw new Error(`Claude API error: ${claudeResponse.status} - ${errBody.slice(0, 500)}`);
     }
 
     const claudeData = await claudeResponse.json();
