@@ -1,28 +1,21 @@
 
 
-# Fix: Restore AI Analysis in Lead Notification Emails
+# Fix: Newsletter Generation Failing Due to Invalid Claude Model
 
 ## Problem
-The `analyze-lead` edge function calls the Anthropic API with model `claude-sonnet-4-20250514`, which is returning errors. The function catches the error and returns `"AI analysis unavailable"`, so every lead notification email arrives without the Buyer Profile, Pain Points, Recommended Approach, and Opening Line sections that you used to see.
+The `generate-ai-newsletter` function has been silently failing since March 19. The cron jobs fire twice a week (Monday + Thursday at 06:00 UTC) and the HTTP calls succeed, but the function errors internally because it uses the invalid model `claude-sonnet-4-20250514` on line 169.
 
-## Root Cause
-Model ID `claude-sonnet-4-20250514` is either deprecated or was never valid. The Anthropic API returns an error, the catch block fires, and the fallback text propagates through to the email.
+This is the exact same issue that broke the lead analysis — same bad model ID.
 
-## Fix (1 file change)
+## Fix (1 file, 1 line)
 
-**File: `supabase/functions/analyze-lead/index.ts`**
+**File: `supabase/functions/generate-ai-newsletter/index.ts`**
 
-1. Switch the model from `claude-sonnet-4-20250514` to `claude-3-5-sonnet-20241022` (stable, confirmed working)
-2. Add better error logging so future failures surface the actual Anthropic error message
-3. Increase `max_tokens` from 500 to 800 — the 4-section analysis (Buyer Profile, Pain Points, Recommended Approach, Opening Line) was sometimes getting truncated at 500
+Line 169: Change `claude-sonnet-4-20250514` → `claude-3-5-sonnet-20241022`
 
-No other files change. The notification email templates already render the AI analysis correctly when it's present — they just need the analysis to actually arrive.
+That's it. No other changes needed. The cron schedule, approval flow, Slack notifications, and rewrite loop are all working — they just never get triggered because the generation step crashes before producing a draft.
 
-## Technical Detail
-- Model change: line 79, `claude-sonnet-4-20250514` → `claude-3-5-sonnet-20241022`
-- Token increase: line 80, `500` → `800`
-- Deploy the updated function
+## After Deploy
 
-## Expected Result
-Next lead notification email will include the full AI analysis with Buyer Profile, Pain Points, Recommended Approach, and Opening Line — exactly like it used to.
+The next scheduled run is Thursday March 26 at 06:00 UTC. To avoid waiting, I'll also trigger a manual generation immediately so you get a draft in #newsletter-engine today.
 
