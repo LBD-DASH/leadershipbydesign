@@ -171,10 +171,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-12 w-full max-w-6xl">
+              <TabsList className="grid grid-cols-13 w-full max-w-6xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
+                </TabsTrigger>
+                <TabsTrigger value="intelligence" className="flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
+                  <span className="hidden sm:inline">Intelligence</span>
                 </TabsTrigger>
                 <TabsTrigger value="cadence" className="flex items-center gap-2">
                   <Flame className="w-4 h-4" />
