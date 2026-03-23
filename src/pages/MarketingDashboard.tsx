@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone, ClipboardCheck, Activity } from 'lucide-react';
+import { PenTool, Calendar, BarChart3, Loader2, Target, Users, Zap, Mail, TrendingUp, ClipboardList, FileText, BookOpen, Youtube, Image, Megaphone, Newspaper, Flame, Phone, ClipboardCheck, Activity, Brain } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ import CallLogsPanel from '@/components/admin/CallLogsPanel';
 import SalesPipeline from '@/components/marketing/SalesPipeline';
 import GA4Analytics from '@/components/marketing/GA4Analytics';
 import SourceAttribution from '@/components/marketing/SourceAttribution';
+import IntelligenceTab from '@/components/admin/IntelligenceTab';
 
 export default function MarketingDashboard() {
   const { isAuthenticated, loading, authenticate, logout } = useAdminAuth();
@@ -170,10 +171,14 @@ export default function MarketingDashboard() {
             transition={{ delay: 0.1 }}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <TabsList className="grid grid-cols-12 w-full max-w-6xl">
+              <TabsList className="grid grid-cols-13 w-full max-w-6xl">
                 <TabsTrigger value="submissions" className="flex items-center gap-2">
                   <ClipboardList className="w-4 h-4" />
                   <span className="hidden sm:inline">Leads</span>
+                </TabsTrigger>
+                <TabsTrigger value="intelligence" className="flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
+                  <span className="hidden sm:inline">Intelligence</span>
                 </TabsTrigger>
                 <TabsTrigger value="cadence" className="flex items-center gap-2">
                   <Flame className="w-4 h-4" />
@@ -223,6 +228,10 @@ export default function MarketingDashboard() {
 
               <TabsContent value="submissions" className="mt-6">
                 <SubmissionsPanel />
+              </TabsContent>
+
+              <TabsContent value="intelligence" className="mt-6">
+                <IntelligenceTab />
               </TabsContent>
 
               <TabsContent value="cadence" className="mt-6">

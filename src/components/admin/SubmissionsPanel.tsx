@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Target, TrendingUp, BarChart3, FileText, ArrowRight, BookOpen, Clock } from 'lucide-react';
 import UTMBreakdownChart from './UTMBreakdownChart';
 import SubmissionsTable from './SubmissionsTable';
+import LACLeadsPanel from './LACLeadsPanel';
 
 export default function SubmissionsPanel() {
   const queryClient = useQueryClient();
@@ -172,6 +173,7 @@ export default function SubmissionsPanel() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex-wrap">
           <TabsTrigger value="overview">UTM Analytics</TabsTrigger>
+          <TabsTrigger value="lac">Leader as Coach</TabsTrigger>
           <TabsTrigger value="leadership">Leadership</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="shift">SHIFT</TabsTrigger>
@@ -195,6 +197,10 @@ export default function SubmissionsPanel() {
               isLoading={loadingShift}
             />
           </div>
+        </TabsContent>
+
+        <TabsContent value="lac" className="mt-6">
+          <LACLeadsPanel />
         </TabsContent>
 
         <TabsContent value="leadership" className="mt-6">

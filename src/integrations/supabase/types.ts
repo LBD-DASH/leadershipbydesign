@@ -1294,13 +1294,20 @@ export type Database = {
       }
       leader_as_coach_assessments: {
         Row: {
+          admin_notes: string | null
           ai_analysis: string | null
+          apollo_data: Json | null
+          apollo_enriched_at: string | null
+          apollo_enrichment_status: string | null
           buyer_persona: string | null
+          buyer_type: string | null
+          buying_intent_score: number | null
           company: string | null
           company_size: string | null
           created_at: string
           email: string | null
           id: string
+          ideal_next_step: string | null
           job_title: string | null
           lead_score: number | null
           lead_temperature: string | null
@@ -1323,24 +1330,41 @@ export type Database = {
           q7: number
           q8: number
           q9: number
+          ruflo_intelligence: Json | null
+          ruflo_path: string | null
+          ruflo_processed_at: string | null
           scoring_breakdown: Json | null
+          status: string | null
           total_score: number
           urgency: string | null
+          urgency_level: string | null
           utm_campaign: string | null
           utm_content: string | null
           utm_medium: string | null
           utm_source: string | null
           utm_term: string | null
           version: string
+          vip_email_body: string | null
+          vip_email_outcome: string | null
+          vip_email_sent: boolean | null
+          vip_email_sent_at: string | null
+          vip_email_subject: string | null
         }
         Insert: {
+          admin_notes?: string | null
           ai_analysis?: string | null
+          apollo_data?: Json | null
+          apollo_enriched_at?: string | null
+          apollo_enrichment_status?: string | null
           buyer_persona?: string | null
+          buyer_type?: string | null
+          buying_intent_score?: number | null
           company?: string | null
           company_size?: string | null
           created_at?: string
           email?: string | null
           id?: string
+          ideal_next_step?: string | null
           job_title?: string | null
           lead_score?: number | null
           lead_temperature?: string | null
@@ -1363,24 +1387,41 @@ export type Database = {
           q7: number
           q8: number
           q9: number
+          ruflo_intelligence?: Json | null
+          ruflo_path?: string | null
+          ruflo_processed_at?: string | null
           scoring_breakdown?: Json | null
+          status?: string | null
           total_score: number
           urgency?: string | null
+          urgency_level?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
           utm_source?: string | null
           utm_term?: string | null
           version: string
+          vip_email_body?: string | null
+          vip_email_outcome?: string | null
+          vip_email_sent?: boolean | null
+          vip_email_sent_at?: string | null
+          vip_email_subject?: string | null
         }
         Update: {
+          admin_notes?: string | null
           ai_analysis?: string | null
+          apollo_data?: Json | null
+          apollo_enriched_at?: string | null
+          apollo_enrichment_status?: string | null
           buyer_persona?: string | null
+          buyer_type?: string | null
+          buying_intent_score?: number | null
           company?: string | null
           company_size?: string | null
           created_at?: string
           email?: string | null
           id?: string
+          ideal_next_step?: string | null
           job_title?: string | null
           lead_score?: number | null
           lead_temperature?: string | null
@@ -1403,15 +1444,25 @@ export type Database = {
           q7?: number
           q8?: number
           q9?: number
+          ruflo_intelligence?: Json | null
+          ruflo_path?: string | null
+          ruflo_processed_at?: string | null
           scoring_breakdown?: Json | null
+          status?: string | null
           total_score?: number
           urgency?: string | null
+          urgency_level?: string | null
           utm_campaign?: string | null
           utm_content?: string | null
           utm_medium?: string | null
           utm_source?: string | null
           utm_term?: string | null
           version?: string
+          vip_email_body?: string | null
+          vip_email_outcome?: string | null
+          vip_email_sent?: boolean | null
+          vip_email_sent_at?: string | null
+          vip_email_subject?: string | null
         }
         Relationships: []
       }
