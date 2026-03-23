@@ -199,6 +199,10 @@ export default function SubmissionsPanel() {
           </div>
         </TabsContent>
 
+        <TabsContent value="lac" className="mt-6">
+          <LACLeadsPanel />
+        </TabsContent>
+
         <TabsContent value="leadership" className="mt-6">
           <div className="flex items-center gap-3 mb-4">
             <Button
