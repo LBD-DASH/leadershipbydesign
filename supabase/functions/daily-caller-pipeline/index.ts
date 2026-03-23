@@ -123,17 +123,18 @@ Deno.serve(async (req) => {
         linkedin_url: p.linkedin_url || "",
       };
 
-      // If no email from search, enrich to reveal it
-      if (!person.email) {
-        console.log(`  🔍 Enriching ${person.first_name} ${person.last_name}...`);
+      // Enrich if missing email OR missing phone
+      if (!person.email || !person.phone) {
+        console.log(`  🔍 Enriching ${person.first_name} ${person.last_name} (email: ${!!person.email}, phone: ${!!person.phone})...`);
         const enriched = await enrichPerson(apolloApiKey, p);
-        if (enriched.email) {
+        if (enriched.email && !person.email) {
           person.email = enriched.email;
           enrichedCount++;
-          console.log(`  📧 Revealed: ${enriched.email}`);
+          console.log(`  📧 Revealed email: ${enriched.email}`);
         }
         if (enriched.phone && !person.phone) {
           person.phone = enriched.phone;
+          console.log(`  📞 Revealed phone: ${enriched.phone}`);
         }
         await new Promise(r => setTimeout(r, 400));
       }
