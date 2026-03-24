@@ -77,8 +77,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       .from("leader_as_coach_assessments")
       .update(updateData)
       .eq("id", body.assessment_id)
-      .select("id, email, name, buying_intent_score, ruflo_path")
-      .single();
+      .select("id, email, name, buying_intent_score, ruflo_path");
 
     if (error) {
       console.error("Supabase update error:", error);
@@ -88,8 +87,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
       );
     }
 
+    if (!data || data.length === 0) {
+      return new Response(
+        JSON.stringify({ success: false, error: "No matching assessment found", assessment_id: body.assessment_id }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ success: true, updated: data }),
+      JSON.stringify({ success: true, updated: data[0] }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
