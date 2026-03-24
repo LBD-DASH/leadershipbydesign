@@ -115,7 +115,7 @@ For each company, provide:
 
 IMPORTANT:
 - Only include companies you're confident are REAL South African companies
-- Focus on companies in the 50-800 employee range
+- Focus on companies in the 50-500 employee range
 - Include a mix of well-known regional players and growing mid-market companies
 - Website URLs must be real and accurate
 - Prioritize companies likely to have HR/People leadership functions
