@@ -66,14 +66,12 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Size description for AI - strict 50-800 employee focus
+    // Size description for AI - strict 50-500 employee focus
     const sizeDescription = companySize === '50-200' 
       ? 'SME companies with 50-200 employees'
       : companySize === '200-500'
       ? 'mid-market companies with 200-500 employees'
-      : companySize === '50-800'
-      ? 'mid-market companies with 50-800 employees (NOT enterprise, NOT listed companies)'
-      : 'mid-market companies with 50-500 employees';
+      : 'mid-market companies with 50-500 employees (NOT enterprise, NOT listed companies)';
 
     // Industry-specific focus for South Africa
     const industryContext: Record<string, string> = {
