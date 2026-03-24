@@ -96,7 +96,7 @@ TASK: Generate a list of 8-10 REAL ${industry} companies (${industryContext[indu
 STRICT REQUIREMENTS:
 - Company Size: ${sizeDescription} - this is CRITICAL
 - EXCLUDE: Listed companies on JSE, multinational headquarters, companies with "Holdings", "Group", "Limited" in their name
-- EXCLUDE: Any company that clearly has 800+ employees (no Discovery, Sasol, Vodacom, MTN, etc.)
+- EXCLUDE: Any company that clearly has 500+ employees (no Discovery, Sasol, Vodacom, MTN, etc.)
 - FOCUS: Owner-managed businesses, family businesses, regional players, growth-stage companies
 - These should be REAL companies that actually exist in South Africa
 ${exclusionInstruction}
