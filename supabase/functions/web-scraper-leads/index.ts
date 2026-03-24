@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
             per_page: 15,
             person_titles: APOLLO_TITLES,
             person_locations: ["Gauteng, South Africa", "South Africa"],
-            organization_num_employees_ranges: ["51-100", "101-500", "501-1000"],
+            organization_num_employees_ranges: ["51-100", "101-200", "201-500"],
             q_keywords: targetIndustry,
           }),
         });
