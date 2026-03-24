@@ -139,3 +139,6 @@ verify_jwt = false
 [functions.gmail-reply-classifier]
 verify_jwt = false
 
+[functions.ruflo-update-lead]
+verify_jwt = false
+
