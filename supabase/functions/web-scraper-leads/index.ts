@@ -6,15 +6,41 @@ const corsHeaders = {
 };
 
 // ═══════════════════════════════════════════════════════════════
-// QUALIFIED INDUSTRIES — only these enter the pipeline
+// QUALIFIED INDUSTRIES — these enter the pipeline (multi-vertical)
+// Rotates daily across verticals. Target: companies ≤500 employees.
 // ═══════════════════════════════════════════════════════════════
 const QUALIFIED_INDUSTRIES = [
+  // Financial Services & Insurance (FSI)
   "financial services", "insurance", "banking", "accounting",
-  "legal", "professional services", "wealth management",
-  "asset management", "investment", "advisory", "consulting",
-  "audit", "tax", "actuarial", "fund management", "stockbroking",
-  "fintech", "private equity", "investment banking", "venture capital",
-  "securities", "brokerage", "reinsurance", "pension", "retirement fund",
+  "legal", "wealth management", "asset management", "investment",
+  "advisory", "audit", "tax", "actuarial", "fund management",
+  "stockbroking", "fintech", "private equity", "investment banking",
+  "venture capital", "securities", "brokerage", "reinsurance",
+  "pension", "retirement fund",
+  // Professional Services
+  "professional services", "consulting", "management consulting",
+  "engineering", "architecture", "quantity surveying",
+  // Technology
+  "technology", "software", "saas", "it services", "cybersecurity",
+  "data analytics", "cloud computing", "digital agency",
+  // Healthcare & Pharma
+  "healthcare", "pharmaceutical", "medical", "biotech",
+  "health services", "wellness", "hospital", "clinic",
+  // Manufacturing & Industrial
+  "manufacturing", "industrial", "mining", "energy",
+  "renewable energy", "construction", "building materials",
+  // Retail & FMCG
+  "retail", "fmcg", "consumer goods", "ecommerce", "wholesale",
+  // Telecommunications
+  "telecommunications", "telecom", "ict",
+  // Agriculture & Agribusiness
+  "agriculture", "agribusiness", "agritech", "farming",
+  // Property & Real Estate
+  "property", "real estate", "property management",
+  // Education & Training
+  "education", "edtech", "training provider",
+  // Hospitality & Tourism
+  "hospitality", "tourism", "hotel", "travel",
 ];
 
 const DISQUALIFIED_KEYWORDS = [
@@ -42,16 +68,28 @@ function classifyIndustry(
 }
 
 // ═══════════════════════════════════════════════════════════════
-// APOLLO SEARCH CONFIG — primary source for named contacts
+// CLAUDE CONNECTOR INDUSTRIES — daily rotation for prospect discovery
+// One industry per day, ≤500 employees target
 // ═══════════════════════════════════════════════════════════════
-const APOLLO_INDUSTRIES = [
+const CLAUDE_INDUSTRIES = [
+  // Week 1: FSI
   "Financial Services", "Insurance", "Banking", "Accounting",
-  "Legal Services", "Management Consulting", "Investment Management",
-  "Wealth Management", "Asset Management", "Fintech",
-  "Private Equity", "Investment Banking", "Venture Capital & Private Equity",
+  "Investment Management", "Wealth Management", "Fintech",
+  // Week 2: Professional Services & Tech
+  "Management Consulting", "Legal Services", "Engineering",
+  "Information Technology", "Software Development", "Cybersecurity",
+  "Architecture & Planning",
+  // Week 3: Healthcare & Manufacturing
+  "Healthcare", "Pharmaceuticals", "Medical Devices",
+  "Manufacturing", "Mining & Metals", "Renewable Energy",
+  "Construction",
+  // Week 4: Retail, Telecom, Agri, Property, Education, Hospitality
+  "Retail", "Consumer Goods", "Telecommunications",
+  "Agriculture", "Real Estate", "Education",
+  "Hospitality", "Tourism",
 ];
 
-const APOLLO_TITLES = [
+const TARGET_TITLES = [
   "Head of HR", "HR Director", "HR Manager", "People Director",
   "Chief People Officer", "L&D Manager", "Talent Lead",
   "Head of People", "Learning and Development Manager",
@@ -66,26 +104,36 @@ const APOLLO_TITLES = [
 // FIRECRAWL SIGNAL QUERIES — fallback for additional leads
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
-  // Core FSI queries (direct company websites)
+  // FSI vertical
   { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
   { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
   { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
   { query: '"learning and development" manager "professional services" OR accounting South Africa', tag: 'ld-proserv' },
-  { query: '"leadership development" programme "financial services" OR insurance South Africa company', tag: 'leadership-programme-fsi' },
-  { query: '"our team" OR "our people" "HR Director" insurance OR banking South Africa', tag: 'team-page-hr-fsi' },
-  { query: '"talent development" OR "people and culture" director "financial services" Gauteng', tag: 'talent-fsi-gauteng' },
-  { query: '"HR" OR "human resources" director "short term insurance" OR "life insurance" South Africa', tag: 'hr-insurance-direct' },
   { query: '"Head of Learning" OR "L&D Director" banking OR "investment management" South Africa', tag: 'ld-banking' },
-  { query: '"people strategy" OR "organisational development" "financial services" OR legal South Africa', tag: 'od-fsi-legal' },
-  { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
-  { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
-  // Expanded: fintech, private equity, investment banking
   { query: '"Head of People" OR "People Director" fintech OR "private equity" South Africa', tag: 'people-fintech-pe' },
-  { query: '"Chief People Officer" OR "Talent Director" "asset management" OR "investment" South Africa', tag: 'cpo-asset-mgmt' },
-  { query: '"Head of OD" OR "organisational development" "financial services" OR banking South Africa', tag: 'od-head-fsi' },
-  { query: '"Head of Learning" OR "Leadership Development" manager "wealth management" OR "private equity" South Africa', tag: 'learning-head-wealth' },
-  { query: '"People & Culture" OR "People and Culture" director fintech OR insurtech South Africa', tag: 'people-culture-fintech' },
-  { query: '"HR Director" OR "Head of HR" "investment banking" OR "securities" Johannesburg Cape Town', tag: 'hr-investbank' },
+  // Technology vertical
+  { query: '"HR Director" OR "Head of HR" "software" OR "technology" South Africa -site:linkedin.com', tag: 'hr-director-tech' },
+  { query: '"Head of People" OR "Chief People Officer" "saas" OR "it services" OR "cybersecurity" South Africa', tag: 'cpo-tech' },
+  { query: '"People & Culture" OR "Talent Director" "digital agency" OR "software development" Johannesburg Cape Town', tag: 'people-culture-tech' },
+  // Healthcare & Pharma vertical
+  { query: '"HR Director" OR "Head of HR" "healthcare" OR "pharmaceutical" South Africa -site:linkedin.com', tag: 'hr-director-health' },
+  { query: '"Head of People" OR "Chief People Officer" "medical" OR "biotech" OR "hospital" South Africa', tag: 'cpo-healthcare' },
+  { query: '"learning and development" manager "healthcare" OR "pharmaceutical" Gauteng', tag: 'ld-healthcare' },
+  // Manufacturing & Industrial vertical
+  { query: '"HR Director" OR "Head of HR" "manufacturing" OR "mining" South Africa -site:linkedin.com', tag: 'hr-director-manufacturing' },
+  { query: '"Head of People" OR "People Director" "construction" OR "engineering" OR "energy" South Africa', tag: 'people-industrial' },
+  { query: '"talent development" OR "organisational development" "manufacturing" OR "industrial" Gauteng', tag: 'od-manufacturing' },
+  // Retail & FMCG vertical
+  { query: '"HR Director" OR "Head of HR" "retail" OR "fmcg" OR "consumer goods" South Africa', tag: 'hr-director-retail' },
+  { query: '"Head of People" OR "Chief People Officer" "ecommerce" OR "wholesale" South Africa', tag: 'cpo-retail' },
+  // Telecom, Agri, Property, Education, Hospitality
+  { query: '"HR Director" OR "Head of HR" "telecommunications" OR "ict" South Africa', tag: 'hr-director-telecom' },
+  { query: '"Head of People" OR "People Director" "agriculture" OR "agribusiness" South Africa', tag: 'people-agri' },
+  { query: '"HR Director" OR "Head of HR" "real estate" OR "property" OR "hospitality" South Africa', tag: 'hr-property-hospitality' },
+  { query: '"Head of People" OR "Chief People Officer" "education" OR "edtech" South Africa', tag: 'cpo-education' },
+  // Cross-industry leadership signals
+  { query: '"coaching culture" OR "leadership pipeline" OR "leadership development" programme South Africa company', tag: 'coaching-culture-cross' },
+  { query: '"people strategy" OR "organisational development" director South Africa company', tag: 'od-cross-industry' },
 ];
 const QUERIES_PER_RUN = 3;
 
@@ -238,10 +286,16 @@ Deno.serve(async (req) => {
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
   const firecrawlKey = Deno.env.get("FIRECRAWL_API_KEY");
-  const apolloApiKey = Deno.env.get("APOLLO_API_KEY");
+  const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
 
   try {
     console.log("🚀 web-scraper-leads invoked at", new Date().toISOString());
+
+    // Rotate industry daily
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    const industryIdx = dayOfYear % CLAUDE_INDUSTRIES.length;
+    const targetIndustry = CLAUDE_INDUSTRIES[industryIdx];
+    console.log(`🏭 Today's industry: ${targetIndustry} (day ${dayOfYear}, index ${industryIdx})`);
 
     // Load existing emails and domains for dedup
     const { data: existingRows } = await supabase
@@ -258,8 +312,8 @@ Deno.serve(async (req) => {
       }).filter(Boolean)
     );
 
-    let apolloAdded = 0;
-    let apolloSkipped = 0;
+    let claudeAdded = 0;
+    let claudeSkipped = 0;
     let firecrawlAdded = 0;
     let firecrawlSkippedDup = 0;
     let firecrawlSkippedQuality = 0;
@@ -267,86 +321,107 @@ Deno.serve(async (req) => {
     const industriesFound: string[] = [];
 
     // ═══════════════════════════════════════════════════════════
-    // PHASE 1: APOLLO — primary source for named decision-makers
+    // PHASE 1: CLAUDE CONNECTOR — AI-powered prospect discovery
+    // Finds 10 SA companies in today's industry (≤500 employees)
     // ═══════════════════════════════════════════════════════════
-    if (apolloApiKey) {
-      // Rotate industry daily
-      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-      const industryIdx = dayOfYear % APOLLO_INDUSTRIES.length;
-      const targetIndustry = APOLLO_INDUSTRIES[industryIdx];
-
-      console.log(`\n🔷 PHASE 1: Apollo search — ${targetIndustry}`);
+    if (anthropicKey) {
+      console.log(`\n🔷 PHASE 1: Claude Connector — ${targetIndustry}`);
 
       try {
-        const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
+        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "X-Api-Key": apolloApiKey },
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": anthropicKey,
+            "anthropic-version": "2023-06-01",
+          },
           body: JSON.stringify({
-            page: 1,
-            per_page: 15,
-            person_titles: APOLLO_TITLES,
-            person_locations: ["Gauteng, South Africa", "South Africa"],
-            organization_num_employees_ranges: ["51-100", "101-200", "201-500"],
-            q_keywords: targetIndustry,
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 4096,
+            system: `You are a prospecting research assistant for Leadership by Design (LBD), a South African leadership development company. Your job is to find 10 South African ${targetIndustry} companies with NO MORE THAN 500 employees that show pain signals indicating they need leadership coaching.\n\nTarget titles: ${TARGET_TITLES.join(", ")}\n\nFor each company, identify:\n- Company name, website, estimated employee count (must be ≤500), industry vertical\n- Decision maker: HR Director, CHRO, L&D Head, COO, or similar\n- Pain signals: manager turnover, rapid growth, hiring patterns, restructuring, new CEO\n- OS-readiness score (1-10): How ready they are for LBD's Operating System approach\n- Priority tier: HOT (score 7+), WARM (4-6), COLD (1-3)\n- Engagement hook: The specific pain signal to reference in outreach\n- Email pattern guess: firstname@company.co.za or similar\n\nIMPORTANT: Only include companies with ≤500 employees. Focus on SMEs and mid-market companies.\n\nReturn ONLY valid JSON array. No markdown, no explanation.`,
+            messages: [
+              {
+                role: "user",
+                content: `Find 10 South African ${targetIndustry} companies (≤500 employees) showing leadership development pain signals. Focus on companies in Johannesburg, Cape Town, and Durban. Look for recent news about: management changes, rapid growth, new offices, compliance issues, or digital transformation initiatives. Return as JSON array with fields: company_name, website, employee_count, industry_vertical, decision_maker_name, decision_maker_title, decision_maker_email_guess, pain_signals (array), growth_signals (array), os_readiness_score (1-10), priority_tier (HOT/WARM/COLD), engagement_hook, recommended_programme (Leader as Coach / SHIFT / Contagious Identity / AI Edge).`,
+              },
+            ],
           }),
         });
 
-        if (!apolloRes.ok) {
-          const errText = await apolloRes.text();
-          console.error(`Apollo API error [${apolloRes.status}]: ${errText}`);
+        if (!claudeRes.ok) {
+          const errText = await claudeRes.text();
+          console.error(`Claude API error [${claudeRes.status}]: ${errText}`);
         } else {
-          const apolloData = await apolloRes.json();
-          const people = apolloData.people || [];
-          console.log(`  📊 Apollo returned ${people.length} contacts`);
+          const claudeData = await claudeRes.json();
+          let content = "";
+          if (claudeData.content && Array.isArray(claudeData.content)) {
+            content = claudeData.content.map((c: any) => c.text || "").join("");
+          }
 
-          for (const p of people) {
-            const email = (p.email || "").toLowerCase().trim();
+          // Parse JSON from response
+          let prospects: any[] = [];
+          try {
+            const cleaned = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+            prospects = JSON.parse(cleaned);
+          } catch {
+            const match = content.match(/\[\s*\{[\s\S]*\}\s*\]/);
+            if (match) prospects = JSON.parse(match[0]);
+          }
+          if (!Array.isArray(prospects)) prospects = [prospects];
+
+          console.log(`  📊 Claude returned ${prospects.length} prospects`);
+
+          for (const p of prospects) {
+            const email = (p.decision_maker_email_guess || "").toLowerCase().trim();
             if (!email || !email.includes("@")) {
-              apolloSkipped++;
+              claudeSkipped++;
               continue;
             }
 
             // Skip generic emails
             const prefix = email.split("@")[0];
             if (GENERIC_PREFIXES.some(g => prefix === g)) {
-              apolloSkipped++;
+              claudeSkipped++;
               continue;
             }
 
-            // Skip kevin@ and own domain
+            // Skip own domain
             if (email.includes("kevin@") || email.includes("leadershipbydesign")) {
-              apolloSkipped++;
+              claudeSkipped++;
+              continue;
+            }
+
+            // Enforce ≤500 employee cap
+            if (p.employee_count && p.employee_count > 500) {
+              claudeSkipped++;
               continue;
             }
 
             // Dedup
             if (existingEmails.has(email)) {
-              apolloSkipped++;
+              claudeSkipped++;
               continue;
             }
 
-            const companyName = p.organization?.name || "";
-            const companyWebsite = p.organization?.website_url || "";
-            const contactName = `${p.first_name || ""} ${p.last_name || ""}`.trim();
-            const contactTitle = p.title || "";
-            const phone = p.phone_numbers?.[0]?.sanitized_number || "";
-            const linkedinUrl = p.linkedin_url || "";
+            const companyName = p.company_name || "";
+            const companyWebsite = p.website || "";
+            const contactName = p.decision_maker_name || "";
+            const contactTitle = p.decision_maker_title || "";
+            const industry = (p.industry_vertical || targetIndustry).toLowerCase();
 
             // Industry classification
             const classification = classifyIndustry(
-              companyName, companyWebsite, contactTitle, targetIndustry, ""
+              companyName, companyWebsite, contactTitle, targetIndustry, (p.pain_signals || []).join(" ")
             );
 
             if (!classification.qualified) {
-              // Insert as disqualified for tracking
               await supabase.from("warm_outreach_queue").insert({
                 company_name: companyName,
                 company_website: companyWebsite || null,
                 contact_name: contactName,
                 contact_email: email,
                 contact_title: contactTitle,
-                contact_phone: phone,
-                source_keyword: `apollo:${targetIndustry}`,
+                source_keyword: `claude:${targetIndustry}`,
                 status: "disqualified",
                 industry: classification.industry,
                 disqualified: true,
@@ -362,20 +437,20 @@ Deno.serve(async (req) => {
               contact_name: contactName,
               contact_email: email,
               contact_title: contactTitle,
-              contact_phone: phone,
-              source_keyword: `apollo:${targetIndustry}`,
+              source_keyword: `claude:${targetIndustry}`,
               status: "pending",
               industry: classification.industry,
-              score: 70, // Apollo contacts score higher — named decision-makers
+              score: p.os_readiness_score ? p.os_readiness_score * 10 : 70,
+              scrape_summary: `Pain: ${(p.pain_signals || []).join(", ")} | Hook: ${p.engagement_hook || ""} | Programme: ${p.recommended_programme || ""}`,
             });
 
             if (!error) {
-              apolloAdded++;
+              claudeAdded++;
               existingEmails.add(email);
               if (companyWebsite) {
                 try { existingDomains.add(getRootDomain(new URL(companyWebsite).hostname)); } catch {}
               }
-              console.log(`  ✅ Apollo: ${contactName} (${contactTitle}) @ ${companyName} — ${email}`);
+              console.log(`  ✅ Claude: ${contactName} (${contactTitle}) @ ${companyName} — ${email}`);
               if (!industriesFound.includes(classification.industry)) industriesFound.push(classification.industry);
             } else {
               console.error(`  ❌ Insert error: ${error.message}`);
@@ -383,16 +458,16 @@ Deno.serve(async (req) => {
           }
         }
       } catch (e) {
-        console.error("Apollo search error:", e);
+        console.error("Claude Connector error:", e);
       }
 
-      console.log(`  📊 Apollo result: ${apolloAdded} added, ${apolloSkipped} skipped`);
+      console.log(`  📊 Claude result: ${claudeAdded} added, ${claudeSkipped} skipped`);
     } else {
-      console.log("⚠️ APOLLO_API_KEY not set — skipping Phase 1");
+      console.log("⚠️ ANTHROPIC_API_KEY not set — skipping Phase 1");
     }
 
     // ═══════════════════════════════════════════════════════════
-    // PHASE 2: FIRECRAWL — fallback for additional leads
+    // PHASE 2: FIRECRAWL — signal search for additional leads
     // ═══════════════════════════════════════════════════════════
     if (firecrawlKey) {
       const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
@@ -544,8 +619,8 @@ Deno.serve(async (req) => {
     // ═══════════════════════════════════════════════════════════
     // SUMMARY & SLACK
     // ═══════════════════════════════════════════════════════════
-    const totalAdded = apolloAdded + firecrawlAdded;
-    const summary = `Lead Prospecting Complete\n🔷 Apollo: ${apolloAdded} added (${apolloSkipped} skipped)\n🔶 Firecrawl: ${firecrawlAdded} added\n❌ Disqualified: ${disqualifiedCount}\n🏭 Industries: ${industriesFound.join(", ") || "none"}`;
+    const totalAdded = claudeAdded + firecrawlAdded;
+    const summary = `Lead Prospecting Complete\n🔷 Claude Connector: ${claudeAdded} added (${claudeSkipped} skipped)\n🔶 Firecrawl: ${firecrawlAdded} added\n❌ Disqualified: ${disqualifiedCount}\n🏭 Industry: ${targetIndustry}\n🏭 Industries found: ${industriesFound.join(", ") || "none"}`;
     console.log(`\n✅ ${summary}`);
 
     try {
@@ -555,9 +630,9 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           eventType: "daily_pipeline_complete",
           data: {
-            industry: `Apollo + Signal Search (${industriesFound.join(", ") || "none"})`,
+            industry: `${targetIndustry} (${industriesFound.join(", ") || "none"})`,
             added: totalAdded,
-            apollo_added: apolloAdded,
+            claude_added: claudeAdded,
             firecrawl_added: firecrawlAdded,
             disqualified: disqualifiedCount,
           },
@@ -568,8 +643,9 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        apollo_added: apolloAdded,
-        apollo_skipped: apolloSkipped,
+        target_industry: targetIndustry,
+        claude_added: claudeAdded,
+        claude_skipped: claudeSkipped,
         firecrawl_added: firecrawlAdded,
         disqualified: disqualifiedCount,
         total_added: totalAdded,

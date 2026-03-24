@@ -26,7 +26,6 @@ on:
 env:
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
   SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-  APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
@@ -45,8 +44,8 @@ jobs:
 
       - name: Run Phase 1 — Search + Queue
         run: |
-          echo "Phase 1: Searching Apollo and inserting into outreach_queue"
-          # Call the existing Supabase edge functions which handle Apollo search
+          echo "Phase 1: Claude Connector prospect discovery + Firecrawl signal search"
+          # Call web-scraper-leads (Claude Connector + Firecrawl — no Apollo)
           curl -s -X POST "$SUPABASE_URL/functions/v1/web-scraper-leads" \
             -H "Authorization: Bearer $SUPABASE_KEY" \
             -H "Content-Type: application/json" \
