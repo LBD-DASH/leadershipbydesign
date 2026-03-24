@@ -11,10 +11,10 @@ const corsHeaders = {
 // ═══════════════════════════════════════════════════════════════
 const QUALIFIED_INDUSTRIES = [
   // Financial Services & Insurance (FSI)
-  "financial services", "insurance", "banking", "accounting",
+  "financial services", "insurance", "accounting",
   "legal", "wealth management", "asset management", "investment",
   "advisory", "audit", "tax", "actuarial", "fund management",
-  "stockbroking", "fintech", "private equity", "investment banking",
+  "stockbroking", "fintech", "private equity",
   "venture capital", "securities", "brokerage", "reinsurance",
   "pension", "retirement fund",
   // Professional Services
@@ -73,8 +73,8 @@ function classifyIndustry(
 // ═══════════════════════════════════════════════════════════════
 const CLAUDE_INDUSTRIES = [
   // Week 1: FSI
-  "Financial Services", "Insurance", "Banking", "Accounting",
-  "Investment Management", "Wealth Management", "Fintech",
+  "Financial Services", "Insurance", "Accounting",
+  "Wealth Management", "Fintech",
   // Week 2: Professional Services & Tech
   "Management Consulting", "Legal Services", "Engineering",
   "Information Technology", "Software Development", "Cybersecurity",
@@ -106,10 +106,10 @@ const TARGET_TITLES = [
 const SEARCH_QUERIES = [
   // FSI vertical
   { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
-  { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
+  { query: '"Head of People" OR "Chief People Officer" insurance OR "financial services" South Africa', tag: 'cpo-insurance-fsi' },
   { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
   { query: '"learning and development" manager "professional services" OR accounting South Africa', tag: 'ld-proserv' },
-  { query: '"Head of Learning" OR "L&D Director" banking OR "investment management" South Africa', tag: 'ld-banking' },
+  { query: '"Head of Learning" OR "L&D Director" "financial services" OR "wealth management" South Africa', tag: 'ld-fsi' },
   { query: '"Head of People" OR "People Director" fintech OR "private equity" South Africa', tag: 'people-fintech-pe' },
   // Technology vertical
   { query: '"HR Director" OR "Head of HR" "software" OR "technology" South Africa -site:linkedin.com', tag: 'hr-director-tech' },

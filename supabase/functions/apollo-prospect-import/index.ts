@@ -21,7 +21,7 @@ const TARGET_TITLES = [
 
 // Daily rotation across all target verticals
 const CLAUDE_INDUSTRIES = [
-  "Financial Services", "Insurance", "Banking", "Accounting",
+  "Financial Services", "Insurance", "Accounting",
   "Legal", "Professional Services", "Management Consulting",
   "Information Technology", "Software Development", "Cybersecurity",
   "Healthcare", "Pharmaceuticals", "Manufacturing",
