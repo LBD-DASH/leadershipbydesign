@@ -195,7 +195,7 @@ function passesHeadcountFilter(content: string): boolean {
     if (match) {
       const count = parseInt(match[1].replace(/,/g, ""), 10);
       // Only disqualify if explicitly too small (<50) or too large (>5000)
-      if (count < 50 || count > 5000) return false;
+      if (count < 50 || count > 500) return false;
     }
   }
   // If no headcount found, let it through (most company pages don't mention it)
@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
             per_page: 15,
             person_titles: APOLLO_TITLES,
             person_locations: ["Gauteng, South Africa", "South Africa"],
-            organization_num_employees_ranges: ["51-100", "101-500", "501-1000"],
+            organization_num_employees_ranges: ["51-100", "101-200", "201-500"],
             q_keywords: targetIndustry,
           }),
         });
