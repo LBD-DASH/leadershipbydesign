@@ -4,6 +4,8 @@ on:
   schedule:
     # Phase 1: Daily 07:00 SAST (05:00 UTC) — Search + Score + Queue
     - cron: '3 5 * * *'
+    # Nurture: Every 30 min 06:00-18:00 SAST (04:00-16:00 UTC) — Process diagnostic follow-ups
+    - cron: '*/30 4-16 * * *'
     # Phase 4: Every 4 hours — Monitor call results + next actions
     - cron: '7 8,12,16,20 * * *'
     # Phase 6: Daily 20:30 SAST (18:30 UTC) — Evening dashboard
@@ -13,12 +15,13 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: 'Phase to run (1, 4, 6, weekly)'
+        description: 'Phase to run (1, 4, 6, weekly, nurture)'
         required: true
         default: '1'
         type: choice
         options:
           - '1'
+          - 'nurture'
           - '4'
           - '6'
           - 'weekly'
@@ -65,6 +68,50 @@ jobs:
             -d '{}' || true
 
           echo "Phase 1 complete"
+
+  nurture-sequences:
+    if: >
+      (github.event.schedule == '*/30 4-16 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == 'nurture')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Nurture — Process diagnostic follow-up emails
+        run: |
+          echo "Nurture: Processing diagnostic email sequences"
+
+          # Process diagnostic nurture sequences (5-step emails for all diagnostic types)
+          NURTURE_RESULT=$(curl -s -w "\n%{http_code}" -X POST "$SUPABASE_URL/functions/v1/process-diagnostic-nurture" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+          NURTURE_STATUS=$(echo "$NURTURE_RESULT" | tail -1)
+          NURTURE_BODY=$(echo "$NURTURE_RESULT" | head -n -1)
+          echo "process-diagnostic-nurture: HTTP $NURTURE_STATUS"
+          echo "$NURTURE_BODY"
+
+          # Process LAC-specific follow-up sequences
+          LAC_RESULT=$(curl -s -w "\n%{http_code}" -X POST "$SUPABASE_URL/functions/v1/lac-follow-up" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+          LAC_STATUS=$(echo "$LAC_RESULT" | tail -1)
+          LAC_BODY=$(echo "$LAC_RESULT" | head -n -1)
+          echo "lac-follow-up: HTTP $LAC_STATUS"
+          echo "$LAC_BODY"
+
+          # Process warm lead reminders
+          curl -s -X POST "$SUPABASE_URL/functions/v1/process-warm-lead-reminders" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          # Process general follow-up sequences (prospect outreach)
+          curl -s -X POST "$SUPABASE_URL/functions/v1/process-follow-up-sequences" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          echo "Nurture phase complete"
 
   phase4-monitor:
     if: >
