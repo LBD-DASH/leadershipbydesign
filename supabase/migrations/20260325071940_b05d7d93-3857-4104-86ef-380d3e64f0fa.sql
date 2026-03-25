@@ -1,0 +1,1 @@
+UPDATE public.admin_settings SET setting_value = 'https://calendar.app.google/SZU7wfeeuX2SdXo68', updated_at = now() WHERE setting_key = 'booking_link';
