@@ -1,0 +1,374 @@
+{
+  "name": "Contact Form → Lead Scoring + Nurture Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "contact-form-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node_1_webhook_trigger",
+      "name": "1. Contact Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "contact-form-lead-scoring",
+      "notes": "Receives contact form submissions from the LBD website. Expects JSON body with: name, email, phone, company, company_size, role, service_interest, message, utm_source, utm_medium, utm_campaign."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate and enrich contact form data\nconst input = $input.first().json;\nconst body = input.body || input;\n\n// Extract and validate fields\nconst name = (body.name || '').trim();\nconst email = (body.email || '').trim().toLowerCase();\nconst phone = (body.phone || '').trim();\nconst company = (body.company || body.organisation || '').trim();\nconst companySize = (body.company_size || body.companySize || '').trim();\nconst role = (body.role || body.title || '').trim();\nconst serviceInterest = (body.service_interest || body.serviceInterest || '').trim();\nconst message = (body.message || '').trim();\n\n// UTM tracking\nconst utmSource = body.utm_source || body.utmSource || '';\nconst utmMedium = body.utm_medium || body.utmMedium || '';\nconst utmCampaign = body.utm_campaign || body.utmCampaign || '';\nconst utmContent = body.utm_content || body.utmContent || '';\nconst utmTerm = body.utm_term || body.utmTerm || '';\n\n// Validation\nif (!email || !email.includes('@')) {\n  throw new Error('Valid email is required');\n}\nif (!name) {\n  throw new Error('Name is required');\n}\n\n// Determine initial signals\nconst isDecisionMaker = /director|head|chief|vp|coo|chro|ceo|owner|founder|partner/i.test(role);\nconst isTargetIndustry = /insurance|financial|fintech|asset|fund|advisory|technology|software|saas|healthcare|pharmaceutical|manufacturing|mining|construction|retail|fmcg|telecom|agriculture|property|real estate|education|hospitality|consulting|engineering|legal|wealth management|accounting/i.test(company + ' ' + message);\nconst mentionsUrgency = /urgent|asap|immediately|soon|this quarter|next month|deadline/i.test(message);\nconst mentionsPain = /struggling|challenge|problem|issue|turnover|retention|engagement|burnout|toxic|dysfunction/i.test(message);\nconst isLargeCompany = /500|1000|enterprise|large|corporate/i.test(companySize);\nconst isMidMarket = /100|200|300|medium|mid/i.test(companySize);\n\nreturn [{\n  json: {\n    name,\n    email,\n    phone,\n    company,\n    company_size: companySize,\n    role,\n    service_interest: serviceInterest,\n    message,\n    utm_source: utmSource,\n    utm_medium: utmMedium,\n    utm_campaign: utmCampaign,\n    utm_content: utmContent,\n    utm_term: utmTerm,\n    signals: {\n      is_decision_maker: isDecisionMaker,\n      is_target_industry: isTargetIndustry,\n      mentions_urgency: mentionsUrgency,\n      mentions_pain: mentionsPain,\n      is_large_company: isLargeCompany,\n      is_mid_market: isMidMarket\n    },\n    received_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node_2_validate_enrich",
+      "name": "2. Validate & Enrich",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300],
+      "notes": "Validates form data, normalises fields, detects initial signals (decision-maker role, target industry, urgency keywords, pain keywords)."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLLAMA_HOST || 'http://localhost:11434' }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.3:70b\",\n  \"prompt\": \"You are a lead scoring engine for Leadership by Design (LBD), a South African leadership development company.\\n\\nScore this contact form submission. LBD's ideal customer profile (ICP):\\n- HR Directors, CHROs, L&D Heads, COOs at companies with ≤500 employees across all industries (South Africa)\\n- Pain signals: manager turnover, low engagement, leadership gaps, scaling challenges\\n- Single commercial offer: Leader as Coach 90-Day Manager Coaching Accelerator\\n- VIP threshold: lead_score >= 15 (lowered from 20)\\n\\nSubmission:\\n- Name: {{ $json.name }}\\n- Email: {{ $json.email }}\\n- Company: {{ $json.company }}\\n- Company Size: {{ $json.company_size }}\\n- Role: {{ $json.role }}\\n- Service Interest: {{ $json.service_interest }}\\n- Message: {{ $json.message }}\\n- UTM Source: {{ $json.utm_source }}\\n- Signals detected: Decision-maker={{ $json.signals.is_decision_maker }}, TargetIndustry={{ $json.signals.is_target_industry }}, Urgency={{ $json.signals.mentions_urgency }}, Pain={{ $json.signals.mentions_pain }}, Large-co={{ $json.signals.is_large_company }}, Mid-market={{ $json.signals.is_mid_market }}\\n\\nScoring rubric:\\n- Decision-maker title: +5 points\\n- Target industry (any qualified industry): +4 points\\n- ≤500 employees (SME/mid-market): +3 points\\n- Mentions pain signals: +3 points\\n- Mentions urgency: +3 points\\n- Specific programme interest: +2 points\\n- UTM from paid campaign: +2 points\\n- Company ≤500 employees: +2 points\\n- Has phone number: +1 point\\n- Generic inquiry: +0 points\\n\\nReturn ONLY this JSON (no markdown, no explanation):\\n{\\n  \\\"lead_score\\\": <number 0-30>,\\n  \\\"lead_temperature\\\": \\\"HOT/WARM/COLD\\\",\\n  \\\"buyer_persona\\\": \\\"<one of: HR Director / L&D Head / COO / Line Manager / Individual / Unknown>\\\",\\n  \\\"urgency\\\": \\\"high/medium/low\\\",\\n  \\\"scoring_breakdown\\\": {\\n    \\\"role_score\\\": <0-5>,\\n    \\\"industry_score\\\": <0-4>,\\n    \\\"size_score\\\": <0-3>,\\n    \\\"pain_score\\\": <0-3>,\\n    \\\"urgency_score\\\": <0-3>,\\n    \\\"interest_score\\\": <0-2>,\\n    \\\"campaign_score\\\": <0-2>,\\n    \\\"engagement_score\\\": <0-2>\\n  },\\n  \\\"next_action\\\": \\\"<one of: immediate_call / send_diagnostic / nurture_sequence / content_drip>\\\",\\n  \\\"ai_analysis\\\": \\\"<2-3 sentence analysis of this lead's potential>\\\"\\n}\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.2\n  }\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node_3_ollama_lead_scoring",
+      "name": "3. Ollama Lead Scoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [750, 300],
+      "notes": "Local Llama 3.3 70B scores the contact using LBD's ICP rubric. VIP threshold: 15+ (lowered from 20 per n8n-lower-vip-threshold spec). Cost: R0."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Ollama scoring response and merge with form data\nconst formData = $node['2. Validate & Enrich'].first().json;\nconst ollamaResponse = $input.first().json;\n\nlet scoring = {};\ntry {\n  const responseText = ollamaResponse.response || ollamaResponse.message?.content || JSON.stringify(ollamaResponse);\n  const cleaned = responseText.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  scoring = JSON.parse(cleaned);\n} catch (e) {\n  const match = (ollamaResponse.response || '').match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    scoring = JSON.parse(match[0]);\n  } else {\n    scoring = {\n      lead_score: 5,\n      lead_temperature: 'WARM',\n      buyer_persona: 'Unknown',\n      urgency: 'medium',\n      scoring_breakdown: {},\n      next_action: 'nurture_sequence',\n      ai_analysis: 'Could not parse scoring response. Defaulting to WARM.'\n    };\n  }\n}\n\n// Apply VIP threshold (15+, lowered from 20)\nconst leadScore = scoring.lead_score || 0;\nlet temperature = scoring.lead_temperature || 'COLD';\nif (leadScore >= 15) temperature = 'HOT';\nelse if (leadScore >= 8) temperature = 'WARM';\nelse temperature = 'COLD';\n\nreturn [{\n  json: {\n    ...formData,\n    lead_score: leadScore,\n    lead_temperature: temperature,\n    buyer_persona: scoring.buyer_persona || 'Unknown',\n    urgency: scoring.urgency || 'medium',\n    scoring_breakdown: scoring.scoring_breakdown || {},\n    next_action: scoring.next_action || 'nurture_sequence',\n    ai_analysis: scoring.ai_analysis || '',\n    is_vip: leadScore >= 15\n  }\n}];"
+      },
+      "id": "node_4_merge_scoring",
+      "name": "4. Merge Scoring Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 300],
+      "notes": "Parses Ollama scoring response, merges with form data, applies VIP threshold (15+, lowered from 20). Routes HOT/WARM/COLD."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/contact_form_submissions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $json.name }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"phone\": \"{{ $json.phone || '' }}\",\n  \"company\": \"{{ $json.company || '' }}\",\n  \"company_size\": \"{{ $json.company_size || '' }}\",\n  \"role\": \"{{ $json.role || '' }}\",\n  \"service_interest\": \"{{ $json.service_interest || '' }}\",\n  \"message\": \"{{ ($json.message || '').replace(/\"/g, '\\\\\"') }}\",\n  \"lead_score\": {{ $json.lead_score || 0 }},\n  \"lead_temperature\": \"{{ $json.lead_temperature || 'COLD' }}\",\n  \"buyer_persona\": \"{{ $json.buyer_persona || 'Unknown' }}\",\n  \"urgency\": \"{{ $json.urgency || 'medium' }}\",\n  \"scoring_breakdown\": {{ JSON.stringify($json.scoring_breakdown || {}) }},\n  \"next_action\": \"{{ $json.next_action || 'nurture_sequence' }}\",\n  \"ai_analysis\": \"{{ ($json.ai_analysis || '').replace(/\"/g, '\\\\\"') }}\",\n  \"utm_source\": \"{{ $json.utm_source || '' }}\",\n  \"utm_medium\": \"{{ $json.utm_medium || '' }}\",\n  \"utm_campaign\": \"{{ $json.utm_campaign || '' }}\",\n  \"utm_content\": \"{{ $json.utm_content || '' }}\"\n}"
+      },
+      "id": "node_5_supabase_insert",
+      "name": "5. Supabase Insert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1250, 300],
+      "notes": "Inserts scored contact form submission into contact_form_submissions table with lead_score, temperature, buyer_persona, and AI analysis."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "vip-check",
+              "leftValue": "={{ $json.is_vip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "node_6_vip_router",
+      "name": "6. VIP Router (Score >= 15)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1500, 300],
+      "notes": "Routes VIP leads (score >= 15) to immediate Slack alert + email generation. Non-VIP leads go to nurture sequence. Threshold lowered from 20 per n8n-lower-vip-threshold spec."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_LEADS }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"blocks\": [\n    {\n      \"type\": \"header\",\n      \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"🚨 VIP LEAD — Contact Form (Score: {{ $json.lead_score }})\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Name:*\\n{{ $json.name }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Email:*\\n{{ $json.email }}\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Company:*\\n{{ $json.company || 'Not provided' }} ({{ $json.company_size || '?' }})\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Role:*\\n{{ $json.role || 'Not provided' }}\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Temperature:*\\n{{ $json.lead_temperature }} 🔥\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Buyer Persona:*\\n{{ $json.buyer_persona }}\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Message:*\\n>>> {{ $json.message || 'No message' }}\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*AI Analysis:*\\n{{ $json.ai_analysis }}\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Next Action:*\\n{{ $json.next_action }}\"\n      }\n    },\n    {\n      \"type\": \"divider\"\n    },\n    {\n      \"type\": \"actions\",\n      \"elements\": [\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"📞 Call Now\"\n          },\n          \"style\": \"primary\",\n          \"value\": \"call_{{ $json.email }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"📧 Send Diagnostic\"\n          },\n          \"value\": \"diagnostic_{{ $json.email }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"📋 Add to Outreach\"\n          },\n          \"value\": \"outreach_{{ $json.email }}\"\n        }\n      ]\n    }\n  ]\n}"
+      },
+      "id": "node_7_vip_slack_alert",
+      "name": "7. VIP Slack Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1750, 200],
+      "notes": "Fires immediately for VIP leads (score >= 15). Posts to #leads-and-signups with full details, AI analysis, and Call/Diagnostic/Outreach action buttons."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLLAMA_HOST || 'http://localhost:11434' }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.3:70b\",\n  \"prompt\": \"You are Kevin, founder of Leadership by Design. Write a personal reply to this contact form submission. Ultra-casual, lowercase, 3-4 sentences max. Reference their specific message/need. Offer the Leadership Diagnostic as a next step.\\n\\nSubmission details:\\n- Name: {{ $json.name }}\\n- Company: {{ $json.company || 'their company' }}\\n- Role: {{ $json.role || 'their role' }}\\n- Service Interest: {{ $json.service_interest || 'leadership development' }}\\n- Message: {{ $json.message || 'general inquiry' }}\\n- Buyer Persona: {{ $json.buyer_persona }}\\n\\nKevin's voice rules:\\n1. Always lowercase (except proper nouns)\\n2. Ultra-casual, like texting a colleague\\n3. Max 3-4 sentences\\n4. Reference their specific message\\n5. Offer the Leadership Diagnostic (2-min free tool)\\n6. Subject line: lowercase, personal, under 6 words\\n\\nKevin's signature:\\nkevin\\nleadership by design\\nbuilt by design. not by default.\\n\\nReturn ONLY this JSON (no markdown):\\n{\\n  \\\"subject\\\": \\\"<subject line>\\\",\\n  \\\"body\\\": \\\"<full email body including signature>\\\"\\n}\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.7\n  }\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node_8_vip_email_gen",
+      "name": "8. VIP Email Generation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 200],
+      "notes": "Generates a personal reply in Kevin's voice for VIP leads. References their specific message. Cost: R0 (Ollama local)."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/warm_outreach_queue",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_name\": \"{{ $node['4. Merge Scoring Data'].first().json.name }}\",\n  \"contact_email\": \"{{ $node['4. Merge Scoring Data'].first().json.email }}\",\n  \"contact_title\": \"{{ $node['4. Merge Scoring Data'].first().json.role || '' }}\",\n  \"contact_phone\": \"{{ $node['4. Merge Scoring Data'].first().json.phone || '' }}\",\n  \"company_name\": \"{{ $node['4. Merge Scoring Data'].first().json.company || '' }}\",\n  \"industry\": \"FSI\",\n  \"email_subject\": \"{{ $json.subject || '' }}\",\n  \"email_body\": \"{{ $json.body || '' }}\",\n  \"score\": {{ $node['4. Merge Scoring Data'].first().json.lead_score || 0 }},\n  \"source_keyword\": \"contact_form_vip\",\n  \"status\": \"draft\",\n  \"needs_day1\": true,\n  \"scrape_summary\": \"VIP Contact Form | Persona: {{ $node['4. Merge Scoring Data'].first().json.buyer_persona }} | Interest: {{ $node['4. Merge Scoring Data'].first().json.service_interest || 'general' }} | {{ $node['4. Merge Scoring Data'].first().json.ai_analysis || '' }}\"\n}"
+      },
+      "id": "node_9_vip_outreach_queue",
+      "name": "9. VIP → Outreach Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2250, 200],
+      "notes": "Adds VIP lead + generated email to warm_outreach_queue for approval before sending."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/diagnostic_nurture_sequences",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"lead_email\": \"{{ $json.email }}\",\n  \"lead_name\": \"{{ $json.name }}\",\n  \"diagnostic_type\": \"contact_form\",\n  \"primary_result\": \"{{ $json.buyer_persona || 'Unknown' }} - {{ $json.service_interest || 'general inquiry' }}\",\n  \"current_step\": 0,\n  \"status\": \"active\",\n  \"next_send_at\": \"{{ new Date(Date.now() + 24*60*60*1000).toISOString() }}\"\n}"
+      },
+      "id": "node_10_nurture_sequence",
+      "name": "10. Non-VIP → Nurture Sequence",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1750, 450],
+      "notes": "Enrolls non-VIP leads (score < 15) into diagnostic_nurture_sequences for automated email drip. First email sends in 24 hours."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_LEADS }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"📝 New Contact Form Submission (non-VIP)\\n*{{ $json.name }}* ({{ $json.email }})\\nCompany: {{ $json.company || 'N/A' }} | Role: {{ $json.role || 'N/A' }}\\nScore: {{ $json.lead_score }}/30 ({{ $json.lead_temperature }})\\nPersona: {{ $json.buyer_persona }} | Action: {{ $json.next_action }}\\nAdded to nurture sequence.\"\n}"
+      },
+      "id": "node_11_nurture_slack_notify",
+      "name": "11. Nurture Slack Notify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 450],
+      "notes": "Simple text notification for non-VIP leads. No action buttons — they're in the nurture sequence automatically."
+    }
+  ],
+  "connections": {
+    "1. Contact Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "2. Validate & Enrich",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Validate & Enrich": {
+      "main": [
+        [
+          {
+            "node": "3. Ollama Lead Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Ollama Lead Scoring": {
+      "main": [
+        [
+          {
+            "node": "4. Merge Scoring Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Merge Scoring Data": {
+      "main": [
+        [
+          {
+            "node": "5. Supabase Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Supabase Insert": {
+      "main": [
+        [
+          {
+            "node": "6. VIP Router (Score >= 15)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. VIP Router (Score >= 15)": {
+      "main": [
+        [
+          {
+            "node": "7. VIP Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "10. Non-VIP → Nurture Sequence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. VIP Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "8. VIP Email Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. VIP Email Generation": {
+      "main": [
+        [
+          {
+            "node": "9. VIP → Outreach Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10. Non-VIP → Nurture Sequence": {
+      "main": [
+        [
+          {
+            "node": "11. Nurture Slack Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "contact-form"
+    },
+    {
+      "name": "lead-scoring"
+    },
+    {
+      "name": "claude-connector"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-03-24T00:00:00.000Z",
+  "versionId": "1.0.0"
+}

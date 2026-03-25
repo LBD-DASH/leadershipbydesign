@@ -1,0 +1,382 @@
+{
+  "name": "Leadership Diagnostic → Claude Connector Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 4096,\n  \"system\": \"You are a prospecting research assistant for Leadership by Design (LBD), a South African leadership development company. Your job is to find 10 South African companies with NO MORE THAN 500 employees that show pain signals indicating they need leadership coaching.\\n\\nToday's target industry (rotates daily): {{ ['Financial Services','Insurance','Accounting','Wealth Management','Fintech','Management Consulting','Legal Services','Engineering','Information Technology','Software Development','Cybersecurity','Architecture & Planning','Healthcare','Pharmaceuticals','Medical Devices','Manufacturing','Mining & Metals','Renewable Energy','Construction','Retail','Consumer Goods','Telecommunications','Agriculture','Real Estate','Education','Hospitality','Tourism'][Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000) % 27] }}\\n\\nFor each company, identify:\\n- Company name, website, employee count (MUST be ≤500), industry vertical\\n- Decision maker: HR Director, CHRO, L&D Head, COO, or similar\\n- Pain signals: manager turnover, rapid growth, hiring patterns, restructuring, new CEO\\n- OS-readiness score (1-10): How ready they are for LBD's Operating System approach\\n- Priority tier: HOT (score 7+), WARM (4-6), COLD (1-3)\\n- Engagement hook: The specific pain signal to reference in outreach\\n- Email pattern guess: firstname@company.co.za or similar\\n\\nIMPORTANT: Only include companies with ≤500 employees. Focus on SMEs and mid-market.\\n\\nReturn ONLY valid JSON array. No markdown, no explanation.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Find 10 South African companies (≤500 employees) in today's target industry showing leadership development pain signals. Focus on companies in Johannesburg, Cape Town, and Durban. Look for recent news about: management changes, rapid growth, new offices, compliance issues, or digital transformation initiatives. Return as JSON array with fields: company_name, website, employee_count, industry_vertical, decision_maker_name, decision_maker_title, decision_maker_email_guess, pain_signals (array), growth_signals (array), os_readiness_score (1-10), priority_tier (HOT/WARM/COLD), engagement_hook, recommended_programme (Leader as Coach / SHIFT / Contagious Identity / AI Edge).\"\n    }\n  ]\n}"
+      },
+      "id": "node_1_claude_connector_finder",
+      "name": "1. Claude Connector Finder",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [250, 300],
+      "notes": "Calls Claude API to find 10 SA-based prospects (≤500 employees) with pain signals, decision-makers, and OS-readiness scoring. Industry rotates daily across all verticals. Cost: ~R0.50 per 10 prospects."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude API response and flatten prospects into rows\nconst response = $input.first().json;\nlet content = '';\n\n// Extract text from Claude response\nif (response.content && Array.isArray(response.content)) {\n  content = response.content.map(c => c.text || '').join('');\n} else if (typeof response === 'string') {\n  content = response;\n}\n\n// Parse JSON from response (handle markdown code blocks)\nlet prospects = [];\ntry {\n  // Remove markdown code fences if present\n  const cleaned = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  prospects = JSON.parse(cleaned);\n} catch (e) {\n  // Try to find JSON array in the text\n  const match = content.match(/\\[\\s*\\{[\\s\\S]*\\}\\s*\\]/);\n  if (match) {\n    prospects = JSON.parse(match[0]);\n  } else {\n    throw new Error('Could not parse prospects JSON from Claude response: ' + e.message);\n  }\n}\n\nif (!Array.isArray(prospects)) {\n  prospects = [prospects];\n}\n\n// Return each prospect as a separate item\nreturn prospects.map((prospect, index) => ({\n  json: {\n    index: index + 1,\n    company_name: prospect.company_name || '',\n    website: prospect.website || '',\n    employee_count: prospect.employee_count || 0,\n    industry_vertical: prospect.industry_vertical || '',\n    decision_maker_name: prospect.decision_maker_name || '',\n    decision_maker_title: prospect.decision_maker_title || '',\n    decision_maker_email_guess: prospect.decision_maker_email_guess || '',\n    pain_signals: prospect.pain_signals || [],\n    growth_signals: prospect.growth_signals || [],\n    os_readiness_score: prospect.os_readiness_score || 0,\n    priority_tier: prospect.priority_tier || 'COLD',\n    engagement_hook: prospect.engagement_hook || '',\n    recommended_programme: prospect.recommended_programme || 'Leader as Coach',\n    source: 'claude_connector',\n    found_at: new Date().toISOString()\n  }\n}));"
+      },
+      "id": "node_2_parse_prospects",
+      "name": "2. Parse Prospects to Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300],
+      "notes": "Flattens Claude JSON response into iterable rows. Extracts: company_name, decision_maker, email_pattern, pain_signal, engagement_hook."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hot-filter",
+              "leftValue": "={{ $json.priority_tier }}",
+              "rightValue": "HOT",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "node_3_filter_hot",
+      "name": "3. Filter HOT Prospects",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [750, 300],
+      "notes": "Keeps only priority_tier = HOT (OS-readiness score 7+). Routes WARM/COLD to separate nurture queues."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLLAMA_HOST || 'http://localhost:11434' }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.3:70b\",\n  \"prompt\": \"You are a B2B sales intelligence analyst for Leadership by Design (LBD), a South African leadership development company.\\n\\nAnalyse this prospect and return a JSON object with scoring:\\n\\nCompany: {{ $json.company_name }}\\nIndustry: {{ $json.industry_vertical }}\\nEmployee Count: {{ $json.employee_count }}\\nDecision Maker: {{ $json.decision_maker_name }} ({{ $json.decision_maker_title }})\\nPain Signals: {{ $json.pain_signals }}\\nGrowth Signals: {{ $json.growth_signals }}\\nOS-Readiness Score: {{ $json.os_readiness_score }}\\nEngagement Hook: {{ $json.engagement_hook }}\\nRecommended Programme: {{ $json.recommended_programme }}\\n\\nReturn ONLY this JSON (no markdown, no explanation):\\n{\\n  \\\"buying_likelihood\\\": <1-10>,\\n  \\\"engagement_fit\\\": <1-10>,\\n  \\\"budget_indicator\\\": \\\"high/medium/low\\\",\\n  \\\"decision_timeline\\\": \\\"immediate/quarter/half-year/unknown\\\",\\n  \\\"recommended_approach\\\": \\\"<one sentence: direct pitch / diagnostic offer / content nurture / event invite>\\\",\\n  \\\"key_objection\\\": \\\"<most likely objection>\\\",\\n  \\\"estimated_deal_value\\\": <number in ZAR>\\n}\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.3\n  }\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node_4_ollama_lead_scoring",
+      "name": "4. Ollama Lead Scoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 300],
+      "notes": "Local Llama 3.3 70B scores each prospect: buying_likelihood (1-10), engagement_fit (1-10), recommended_approach. Cost: R0 (runs locally)."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLLAMA_HOST || 'http://localhost:11434' }}/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.3:70b\",\n  \"prompt\": \"You are Kevin, founder of Leadership by Design. You write ultra-casual, lowercase emails. 3 sentences max. You use OS-language framing (operating system for leadership). You never sound corporate or salesy.\\n\\nContext about the prospect:\\n- Company: {{ $json.company_name }}\\n- Decision Maker: {{ $json.decision_maker_name }} ({{ $json.decision_maker_title }})\\n- Pain Signal: {{ $json.engagement_hook }}\\n- Recommended Programme: {{ $json.recommended_programme }}\\n- Industry: {{ $json.industry_vertical }}\\n\\nKevin's voice rules:\\n1. Always lowercase (except proper nouns)\\n2. Ultra-casual, like texting a friend\\n3. Max 3 sentences\\n4. Reference their specific pain signal\\n5. Use OS metaphor naturally (don't force it)\\n6. End with a soft CTA (diagnostic, not a meeting)\\n7. Subject line: lowercase, intriguing, under 6 words\\n\\nKevin's signature:\\nkevin\\nleadership by design\\nbuilt by design. not by default.\\n\\nReturn ONLY this JSON (no markdown):\\n{\\n  \\\"subject\\\": \\\"<subject line>\\\",\\n  \\\"body\\\": \\\"<full email body including signature>\\\",\\n  \\\"cta_type\\\": \\\"diagnostic/content/event/direct\\\"\\n}\",\n  \"stream\": false,\n  \"options\": {\n    \"temperature\": 0.7\n  }\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node_5_ollama_email_generation",
+      "name": "5. Ollama Email Generation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1250, 300],
+      "notes": "Local Llama 3.3 70B generates email in Kevin's ultra-casual voice. Rules: lowercase, 3 sentences max, OS-language framing. Cost: R0 (runs locally)."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-20250514\",\n  \"max_tokens\": 1024,\n  \"system\": \"You are an email proofreader. Your ONLY job is to fix grammar and typos. Do NOT change the voice, tone, style, or content. Keep everything lowercase as-is. Keep it ultra-casual. Keep the OS metaphors. Return ONLY the corrected JSON with subject and body fields. No markdown.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Fix only grammar/typos in this email JSON. Keep the casual voice exactly as-is:\\n\\n{{ JSON.stringify($json.email_data || { subject: $json.subject, body: $json.body }) }}\"\n    }\n  ]\n}"
+      },
+      "id": "node_6_claude_email_polish",
+      "name": "6. Claude Email Polish (Optional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1500, 300],
+      "notes": "Claude API fixes grammar/typos only, keeps Kevin's voice intact. Cost: R0.05 per email. Can be bypassed by connecting Node 5 directly to Node 7.",
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/warm_outreach_queue",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact_name\": \"{{ $json.decision_maker_name || $node['2. Parse Prospects to Rows'].json.decision_maker_name }}\",\n  \"contact_email\": \"{{ $json.decision_maker_email_guess || $node['2. Parse Prospects to Rows'].json.decision_maker_email_guess }}\",\n  \"contact_title\": \"{{ $json.decision_maker_title || $node['2. Parse Prospects to Rows'].json.decision_maker_title }}\",\n  \"company_name\": \"{{ $json.company_name || $node['2. Parse Prospects to Rows'].json.company_name }}\",\n  \"company_website\": \"{{ $json.website || $node['2. Parse Prospects to Rows'].json.website }}\",\n  \"industry\": \"{{ $json.industry_vertical || $node['2. Parse Prospects to Rows'].json.industry_vertical }}\",\n  \"email_subject\": \"{{ $json.subject || '' }}\",\n  \"email_body\": \"{{ $json.body || '' }}\",\n  \"score\": {{ $json.os_readiness_score || $node['2. Parse Prospects to Rows'].json.os_readiness_score || 0 }},\n  \"source_keyword\": \"claude_connector\",\n  \"status\": \"draft\",\n  \"needs_day1\": true,\n  \"scrape_summary\": \"Pain: {{ ($json.pain_signals || $node['2. Parse Prospects to Rows'].json.pain_signals || []).join(', ') }} | Hook: {{ $json.engagement_hook || $node['2. Parse Prospects to Rows'].json.engagement_hook || '' }} | Programme: {{ $json.recommended_programme || $node['2. Parse Prospects to Rows'].json.recommended_programme || '' }}\"\n}"
+      },
+      "id": "node_7_supabase_insert",
+      "name": "7. Supabase Insert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1750, 300],
+      "notes": "Inserts prospect + generated email into warm_outreach_queue table with status 'draft'. Waiting for approval before sending."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_LEADS }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"blocks\": [\n    {\n      \"type\": \"header\",\n      \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"🔥 HOT Prospect Found — Claude Connector\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Company:*\\n{{ $json.company_name || $node['2. Parse Prospects to Rows'].json.company_name }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Decision Maker:*\\n{{ $json.decision_maker_name || $node['2. Parse Prospects to Rows'].json.decision_maker_name }} ({{ $json.decision_maker_title || $node['2. Parse Prospects to Rows'].json.decision_maker_title }})\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*OS-Readiness:*\\n{{ $json.os_readiness_score || $node['2. Parse Prospects to Rows'].json.os_readiness_score }}/10\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Programme:*\\n{{ $json.recommended_programme || $node['2. Parse Prospects to Rows'].json.recommended_programme }}\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Pain Signal:*\\n{{ $json.engagement_hook || $node['2. Parse Prospects to Rows'].json.engagement_hook }}\"\n      }\n    },\n    {\n      \"type\": \"divider\"\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*Email Draft:*\\n```Subject: {{ $json.subject || '' }}\\n\\n{{ $json.body || '' }}```\"\n      }\n    },\n    {\n      \"type\": \"actions\",\n      \"elements\": [\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"✅ Send Email\"\n          },\n          \"style\": \"primary\",\n          \"value\": \"send_{{ $json.decision_maker_email_guess || $node['2. Parse Prospects to Rows'].json.decision_maker_email_guess }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"✏️ Edit First\"\n          },\n          \"value\": \"edit_{{ $json.id || '' }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": \"❌ Skip\"\n          },\n          \"style\": \"danger\",\n          \"value\": \"skip_{{ $json.id || '' }}\"\n        }\n      ]\n    }\n  ]\n}"
+      },
+      "id": "node_8_slack_alert",
+      "name": "8. Slack Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 300],
+      "notes": "Posts to #leads-and-signups with prospect details, full email draft, and Send/Edit/Skip action buttons."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+        "authentication": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"raw\": \"{{ Buffer.from(\n    'To: ' + ($json.decision_maker_email_guess || $node['2. Parse Prospects to Rows'].json.decision_maker_email_guess) + '\\r\\n' +\n    'Subject: ' + ($json.subject || '') + '\\r\\n' +\n    'Content-Type: text/plain; charset=utf-8\\r\\n' +\n    '\\r\\n' +\n    ($json.body || '')\n  ).toString('base64url') }}\"\n}",
+        "options": {}
+      },
+      "id": "node_9_gmail_send",
+      "name": "9. Gmail Send",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2250, 300],
+      "notes": "Sends email via Gmail API when approved. Tracks opens/clicks. Requires Gmail OAuth2 credential configured in n8n.",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/update_pipeline_metrics",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"p_prospects_found\": {{ $node['2. Parse Prospects to Rows'].json.length || 10 }},\n  \"p_hot_count\": {{ $node['3. Filter HOT Prospects'].json.length || 0 }},\n  \"p_emails_generated\": {{ $node['5. Ollama Email Generation'].json.length || 0 }},\n  \"p_emails_sent\": 0,\n  \"p_source\": \"claude_connector\",\n  \"p_cost_rands\": 1.00,\n  \"p_run_date\": \"{{ new Date().toISOString().split('T')[0] }}\"\n}"
+      },
+      "id": "node_10_dashboard_update",
+      "name": "10. Dashboard Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2500, 300],
+      "notes": "Logs metrics to pipeline_dashboard: prospects_found, hot_count, emails_sent, costs. If RPC doesn't exist, replace with direct table insert."
+    }
+  ],
+  "connections": {
+    "1. Claude Connector Finder": {
+      "main": [
+        [
+          {
+            "node": "2. Parse Prospects to Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Parse Prospects to Rows": {
+      "main": [
+        [
+          {
+            "node": "3. Filter HOT Prospects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Filter HOT Prospects": {
+      "main": [
+        [
+          {
+            "node": "4. Ollama Lead Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Ollama Lead Scoring": {
+      "main": [
+        [
+          {
+            "node": "5. Ollama Email Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Ollama Email Generation": {
+      "main": [
+        [
+          {
+            "node": "6. Claude Email Polish (Optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Claude Email Polish (Optional)": {
+      "main": [
+        [
+          {
+            "node": "7. Supabase Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. Supabase Insert": {
+      "main": [
+        [
+          {
+            "node": "8. Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "9. Gmail Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9. Gmail Send": {
+      "main": [
+        [
+          {
+            "node": "10. Dashboard Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "prospecting"
+    },
+    {
+      "name": "claude-connector"
+    },
+    {
+      "name": "claude-connector-only"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-24T00:00:00.000Z",
+  "versionId": "1.0.0"
+}

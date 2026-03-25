@@ -35,15 +35,13 @@ Deno.serve(async (req) => {
   try {
     console.log("📧 auto-outreach invoked at", new Date().toISOString());
 
-    // Get top 10 pending prospects that are NOT disqualified, with valid email, score >= 60
-    // Skip Apollo-sourced contacts — Apollo owns their outreach via sequences
+    // Get top 10 pending prospects that are NOT disqualified, with valid email
     const { data: prospects, error: fetchErr } = await supabase
       .from("warm_outreach_queue")
       .select("*")
       .eq("status", "pending")
       .not("contact_email", "is", null)
       .neq("contact_email", "")
-      .neq("source_keyword", "apollo:sequence")
       .or("disqualified.is.null,disqualified.eq.false")
       .order("score", { ascending: false })
       .order("created_at", { ascending: true })

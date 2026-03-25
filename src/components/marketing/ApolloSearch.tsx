@@ -41,7 +41,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
   const [titles, setTitles] = useState('Head of HR, Head of Learning and Development, Chief People Officer');
   const [locations, setLocations] = useState('South Africa');
   const [keywords, setKeywords] = useState('');
-  const [companySize, setCompanySize] = useState('51-200,201-500,501-1000');
+  const [companySize, setCompanySize] = useState('1-50,51-200,201-500');
   const [results, setResults] = useState<ApolloResult[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [searching, setSearching] = useState(false);
