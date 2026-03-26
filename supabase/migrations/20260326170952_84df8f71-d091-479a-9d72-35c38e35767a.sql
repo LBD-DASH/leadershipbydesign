@@ -1,0 +1,1 @@
+SELECT cron.unschedule('daily-digest-5pm');
