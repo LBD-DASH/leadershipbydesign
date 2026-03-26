@@ -134,7 +134,7 @@ Last updated: ${format(now, "yyyy-MM-dd HH:mm")} SAST
 COMMERCIAL OFFER
 Primary: Leader as Coach — 90-Day Manager Coaching Accelerator
 Campaign mode: ${campaign.replace(/_/g, " ")}
-Target: HR Directors, L&D Heads, 100-500 person FSI/Professional Services SA
+Target: HR Directors, L&D Heads, under 500 person companies across all industries SA (EXCLUDING banks, FSI, insurance, education, consulting)
 
 PIPELINE LIVE STATS
 Queue pending: ${queueRes.count ?? 0}
@@ -212,7 +212,7 @@ WEBSITE PAGES LIVE
 
 FRAMEWORKS
 SHIFT: Self-Management, Human Intelligence, Innovation, Focus, Thinking, Your AI Edge
-Leader as Coach: 90-day, 3 months, FSI focus
+Leader as Coach: 90-day, 3 months, all industries (excl. banks, FSI, insurance, education, consulting)
 Contagious Identity: 6-session executive coaching programme
 
 STATS (never change these)

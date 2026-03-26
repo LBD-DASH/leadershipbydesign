@@ -16,13 +16,14 @@ const APOLLO_TITLES = [
 const EXCLUDED_INDUSTRIES = [
   "financial services", "insurance", "banking", "education",
   "investment banking", "venture capital", "private equity",
-  "fund management", "capital markets",
+  "fund management", "capital markets", "consulting",
+  "management consulting",
 ];
 
 // Industry groups that rotate every 3 days
 const INDUSTRY_ROTATION = [
   // Group 0: Professional Services
-  ["Accounting", "Legal", "Management Consulting", "Staffing and Recruiting", "Human Resources"],
+  ["Accounting", "Legal", "Staffing and Recruiting", "Human Resources", "Professional Training and Coaching"],
   // Group 1: Technology & Telecoms
   ["Information Technology", "Computer Software", "Telecommunications", "Internet", "Computer Hardware"],
   // Group 2: Manufacturing & Engineering
