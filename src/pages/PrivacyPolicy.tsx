@@ -33,7 +33,8 @@ const PrivacyPolicy = () => {
               The responsible party for the processing of your personal information is:
             </p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Business Name:</strong> Leadership by Design</li>
+              <li><strong>Business Name:</strong> Leadership by Design (Pty) Ltd</li>
+              <li><strong>Country:</strong> South Africa</li>
               <li><strong>Website:</strong> leadershipbydesign.co.za</li>
               <li><strong>Contact:</strong> Available via our <a href="/contact" className="text-primary underline">Contact page</a></li>
             </ul>
