@@ -1193,5 +1193,6 @@ export default function ColdCallPrompter() {
       </div>
       )}
     </div>
+    </AdminLayout>
   );
 }
