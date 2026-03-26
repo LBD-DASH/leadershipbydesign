@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Target, DollarSign, List, Calendar, Brain, BarChart3, Settings, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import AdminLoginForm from '@/components/admin/AdminLoginForm';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import SequenceTemplatesPanel from '@/components/admin/SequenceTemplatesPanel';
 import AdminSettingsPanel from '@/components/admin/AdminSettingsPanel';
@@ -40,40 +41,44 @@ export default function AdminOperatingSystem() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: CC.bg }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: CC.teal }} />
-      </div>
+      <AdminLayout>
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </AdminLayout>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: CC.bg }}>
-        <div className="w-full max-w-md mx-4">
-          <h1 style={{ color: CC.gold }} className="text-2xl font-serif font-bold text-center mb-6">LBD Command Centre</h1>
-          <AdminLoginForm onAuthenticate={authenticate} />
+      <AdminLayout>
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <div className="w-full max-w-md mx-4">
+            <h1 style={{ color: CC.gold }} className="text-2xl font-serif font-bold text-center mb-6">LBD Command Centre</h1>
+            <AdminLoginForm onAuthenticate={authenticate} />
+          </div>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   return (
     <>
       <SEO title="Command Centre | LBD" description="Leadership by Design Operating System" />
-      <div className="min-h-screen" style={{ background: CC.bg }}>
-        {/* Header */}
-        <header style={{ borderBottom: `1px solid ${CC.border}` }} className="px-4 py-4">
+      <AdminLayout hideNav>
+        {/* Custom header for Command Centre */}
+        <header className="border-b border-border px-4 py-4" style={{ background: 'hsl(212 58% 10%)' }}>
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div>
               <h1 style={{ color: CC.gold }} className="text-xl md:text-2xl font-serif font-bold tracking-wide">LBD COMMAND CENTRE</h1>
-              <p style={{ color: CC.muted }} className="text-xs">Leadership by Design Operating System</p>
+              <p className="text-xs text-muted-foreground">Leadership by Design Operating System</p>
             </div>
             <div className="flex items-center gap-3">
-              <span style={{ color: CC.muted }} className="text-xs hidden sm:block">Last sync: {format(lastRefresh, 'HH:mm:ss')}</span>
-              <button onClick={refresh} className="p-2 rounded-lg hover:bg-[#1A3044] transition-colors" title="Refresh">
-                <RefreshCw className="w-4 h-4" style={{ color: CC.teal }} />
+              <span className="text-xs text-muted-foreground hidden sm:block">Last sync: {format(lastRefresh, 'HH:mm:ss')}</span>
+              <button onClick={refresh} className="p-2 rounded-lg hover:bg-[hsl(206_45%_22%)] transition-colors" title="Refresh">
+                <RefreshCw className="w-4 h-4 text-primary" />
               </button>
-              <button onClick={logout} className="text-xs px-3 py-1.5 rounded-lg" style={{ color: CC.muted, border: `1px solid ${CC.border}` }}>
+              <button onClick={logout} className="text-xs px-3 py-1.5 rounded-lg text-muted-foreground border border-border">
                 Sign Out
               </button>
             </div>
@@ -81,7 +86,7 @@ export default function AdminOperatingSystem() {
         </header>
 
         {/* Tab Navigation */}
-        <nav style={{ borderBottom: `1px solid ${CC.border}` }} className="px-4 overflow-x-auto">
+        <nav className="border-b border-border px-4 overflow-x-auto" style={{ background: 'hsl(212 58% 10%)' }}>
           <div className="max-w-7xl mx-auto flex gap-0">
             {TABS.map(tab => {
               const Icon = tab.icon;
@@ -119,7 +124,7 @@ export default function AdminOperatingSystem() {
           {activeTab === 'sequences' && <SequenceTemplatesPanel />}
           {activeTab === 'settings' && <AdminSettingsPanel />}
         </main>
-      </div>
+      </AdminLayout>
     </>
   );
 }
