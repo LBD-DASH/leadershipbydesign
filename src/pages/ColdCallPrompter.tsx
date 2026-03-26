@@ -462,7 +462,7 @@ export default function ColdCallPrompter() {
   return (
     <AdminLayout>
     <div className="min-h-[calc(100vh-3rem)] flex flex-col">
-      <div className="border-b bg-background sticky top-0 z-10">
+      <div className="border-b border-border sticky top-12 z-10 bg-card">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
