@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_deals: {
+        Row: {
+          company: string
+          contact_email: string | null
+          contact_name: string
+          contact_title: string | null
+          created_at: string
+          deal_value: string | null
+          id: string
+          last_activity_at: string | null
+          next_action: string | null
+          next_action_date: string | null
+          notes: string | null
+          source: string | null
+          status: string
+        }
+        Insert: {
+          company: string
+          contact_email?: string | null
+          contact_name: string
+          contact_title?: string | null
+          created_at?: string
+          deal_value?: string | null
+          id?: string
+          last_activity_at?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          notes?: string | null
+          source?: string | null
+          status?: string
+        }
+        Update: {
+          company?: string
+          contact_email?: string | null
+          contact_name?: string
+          contact_title?: string | null
+          created_at?: string
+          deal_value?: string | null
+          id?: string
+          last_activity_at?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          notes?: string | null
+          source?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       active_projects: {
         Row: {
           created_at: string
@@ -65,6 +113,39 @@ export type Database = {
           setting_key?: string
           setting_value?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      agent_activity_log: {
+        Row: {
+          agent_name: string
+          agent_type: string
+          created_at: string
+          details: Json | null
+          id: string
+          items_processed: number | null
+          message: string | null
+          status: string
+        }
+        Insert: {
+          agent_name: string
+          agent_type: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          items_processed?: number | null
+          message?: string | null
+          status: string
+        }
+        Update: {
+          agent_name?: string
+          agent_type?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          items_processed?: number | null
+          message?: string | null
+          status?: string
         }
         Relationships: []
       }
