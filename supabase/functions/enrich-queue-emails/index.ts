@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     const existingEmails = new Set((existingRows || []).map((r: any) => r.contact_email?.toLowerCase().trim()));
 
     // Step 3: Search Apollo with simple keywords (one industry at a time)
-    const industries = ["Financial Services", "Insurance", "Banking", "Legal Services", "Professional Services"];
+    const industries = ["Manufacturing", "Technology", "Healthcare", "Retail", "Construction", "Logistics", "Legal", "Accounting", "Hospitality"];
     let totalAdded = 0;
     let totalEnriched = 0;
     let totalSearched = 0;
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
           per_page: 15,
           person_titles: ["HR Director", "HR Manager", "Head of People", "Chief People Officer", "L&D Manager", "Talent Director"],
           person_locations: ["South Africa"],
-          organization_num_employees_ranges: ["51-200", "201-500", "501-1000"],
+          organization_num_employees_ranges: ["1-10", "11-20", "21-50", "51-100", "101-200", "201-500"],
           q_keywords: industry,
         }),
       });

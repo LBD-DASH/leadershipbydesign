@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
       'Manufacturing': 'manufacturing, industrial, production, FMCG, food processing, automotive parts, packaging companies',
       'Technology': 'software, IT services, fintech, digital agencies, SaaS, tech startups that have scaled',
       'Mining': 'mining services, mining contractors, equipment suppliers, exploration companies, mineral processing',
-      'Engineering': 'engineering consulting, civil engineering, mechanical engineering, electrical contractors, project management firms',
+      'Engineering': 'civil engineering, mechanical engineering, electrical contractors, project management firms, industrial engineering',
     };
 
     console.log('Discovering companies:', { industry, location, companySize });

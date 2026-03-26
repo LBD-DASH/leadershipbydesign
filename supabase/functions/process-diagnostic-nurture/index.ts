@@ -162,7 +162,7 @@ function getEmailForStep(step: number, name: string, diagnosticType: string, pri
       subject: `How one team turned their diagnostic results into 40% productivity gains`,
       html: wrapHtml(`
         <h2>Hi ${firstName},</h2>
-        <p>A financial services company took the same diagnostic you did. Their primary gap? Very similar to yours.</p>
+        <p>A company took the same diagnostic you did. Their primary gap? Very similar to yours.</p>
         <p>Within 90 days of starting a targeted programme:</p>
         <ul>
           <li>40% increase in team productivity</li>

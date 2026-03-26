@@ -6,22 +6,23 @@ const corsHeaders = {
 };
 
 // ═══════════════════════════════════════════════════════════════
-// QUALIFIED INDUSTRIES — only these enter the pipeline
+// EXCLUDED INDUSTRIES — never target these
 // ═══════════════════════════════════════════════════════════════
-const QUALIFIED_INDUSTRIES = [
-  "financial services", "insurance", "banking", "accounting",
-  "legal", "professional services", "wealth management",
-  "asset management", "investment", "advisory", "consulting",
-  "audit", "tax", "actuarial", "fund management", "stockbroking",
-  "fintech", "private equity", "investment banking", "venture capital",
-  "securities", "brokerage", "reinsurance", "pension", "retirement fund",
+const EXCLUDED_INDUSTRIES = [
+  "financial services", "insurance", "banking", "education",
+  "investment banking", "venture capital", "private equity",
+  "fund management", "capital markets", "consulting",
+  "management consulting", "securities", "brokerage",
+  "reinsurance", "wealth management", "asset management",
+  "fintech", "stockbroking", "pension", "retirement fund",
+  "actuarial", "investment",
 ];
 
 const DISQUALIFIED_KEYWORDS = [
-  "transport", "logistics", "ngo", "non-profit", "nonprofit",
-  "charity", "news", "media", "journalism", "association",
+  "ngo", "non-profit", "nonprofit",
+  "charity", "news", "journalism", "association",
   "trade union", "competitor", "coaching company",
-  "recruitment", "staffing", "temp agency",
+  "bank", "insurer", "university", "college", "school",
 ];
 
 function classifyIndustry(
@@ -35,20 +36,28 @@ function classifyIndustry(
   for (const kw of DISQUALIFIED_KEYWORDS) {
     if (text.includes(kw)) return { qualified: false, industry: kw, reason: `Disqualified: matches "${kw}"` };
   }
-  for (const ind of QUALIFIED_INDUSTRIES) {
-    if (text.includes(ind)) return { qualified: true, industry: ind, reason: "" };
+  for (const ex of EXCLUDED_INDUSTRIES) {
+    if (text.includes(ex)) return { qualified: false, industry: ex, reason: `Excluded industry: "${ex}"` };
   }
-  return { qualified: false, industry: "unknown", reason: "No matching target industry found" };
+  // All other industries are qualified — extract best industry label from source
+  const industry = sourceKeyword.replace(/^(apollo:|signal-search:)/, "") || "general";
+  return { qualified: true, industry, reason: "" };
 }
 
 // ═══════════════════════════════════════════════════════════════
 // APOLLO SEARCH CONFIG — primary source for named contacts
+// Rotates industry group every 3 days to cover all target sectors
+// EXCLUDED: banks, FSI, insurance, education, consulting
 // ═══════════════════════════════════════════════════════════════
-const APOLLO_INDUSTRIES = [
-  "Financial Services", "Insurance", "Banking", "Accounting",
-  "Legal Services", "Management Consulting", "Investment Management",
-  "Wealth Management", "Asset Management", "Fintech",
-  "Private Equity", "Investment Banking", "Venture Capital & Private Equity",
+const APOLLO_INDUSTRY_ROTATION = [
+  ["Accounting", "Legal", "Staffing and Recruiting", "Human Resources", "Professional Training and Coaching"],
+  ["Information Technology", "Computer Software", "Telecommunications", "Internet", "Computer Hardware"],
+  ["Manufacturing", "Industrial Automation", "Mechanical Engineering", "Electrical Engineering", "Plastics"],
+  ["Retail", "Consumer Goods", "Food & Beverages", "Wholesale", "Supermarkets"],
+  ["Hospital & Health Care", "Pharmaceuticals", "Medical Devices", "Health Wellness and Fitness"],
+  ["Construction", "Real Estate", "Architecture & Planning", "Civil Engineering", "Building Materials"],
+  ["Logistics and Supply Chain", "Transportation", "Mining & Metals", "Oil & Energy", "Utilities"],
+  ["Media Production", "Marketing and Advertising", "Hospitality", "Leisure Travel & Tourism", "Events Services"],
 ];
 
 const APOLLO_TITLES = [
@@ -64,28 +73,33 @@ const APOLLO_TITLES = [
 
 // ═══════════════════════════════════════════════════════════════
 // FIRECRAWL SIGNAL QUERIES — fallback for additional leads
+// Broad industry coverage, excluding banks/FSI/insurance/education/consulting
 // ═══════════════════════════════════════════════════════════════
 const SEARCH_QUERIES = [
-  // Core FSI queries (direct company websites)
-  { query: '"HR Director" OR "Head of HR" "financial services" South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-director-fsi' },
-  { query: '"Head of People" OR "Chief People Officer" insurance OR banking South Africa', tag: 'cpo-insurance-banking' },
-  { query: '"HR Manager" OR "People Director" "asset management" OR "wealth management" Johannesburg', tag: 'hr-wealth-jhb' },
-  { query: '"learning and development" manager "professional services" OR accounting South Africa', tag: 'ld-proserv' },
-  { query: '"leadership development" programme "financial services" OR insurance South Africa company', tag: 'leadership-programme-fsi' },
-  { query: '"our team" OR "our people" "HR Director" insurance OR banking South Africa', tag: 'team-page-hr-fsi' },
-  { query: '"talent development" OR "people and culture" director "financial services" Gauteng', tag: 'talent-fsi-gauteng' },
-  { query: '"HR" OR "human resources" director "short term insurance" OR "life insurance" South Africa', tag: 'hr-insurance-direct' },
-  { query: '"Head of Learning" OR "L&D Director" banking OR "investment management" South Africa', tag: 'ld-banking' },
-  { query: '"people strategy" OR "organisational development" "financial services" OR legal South Africa', tag: 'od-fsi-legal' },
-  { query: '"HR Business Partner" OR "Head of Talent" actuarial OR "fund management" Johannesburg', tag: 'hrbp-actuarial' },
-  { query: '"coaching culture" OR "leadership pipeline" insurance OR banking South Africa company', tag: 'coaching-culture-fsi' },
-  // Expanded: fintech, private equity, investment banking
-  { query: '"Head of People" OR "People Director" fintech OR "private equity" South Africa', tag: 'people-fintech-pe' },
-  { query: '"Chief People Officer" OR "Talent Director" "asset management" OR "investment" South Africa', tag: 'cpo-asset-mgmt' },
-  { query: '"Head of OD" OR "organisational development" "financial services" OR banking South Africa', tag: 'od-head-fsi' },
-  { query: '"Head of Learning" OR "Leadership Development" manager "wealth management" OR "private equity" South Africa', tag: 'learning-head-wealth' },
-  { query: '"People & Culture" OR "People and Culture" director fintech OR insurtech South Africa', tag: 'people-culture-fintech' },
-  { query: '"HR Director" OR "Head of HR" "investment banking" OR "securities" Johannesburg Cape Town', tag: 'hr-investbank' },
+  // Manufacturing & Engineering
+  { query: '"HR Director" OR "Head of HR" manufacturing South Africa -site:linkedin.com -site:pnet.co.za', tag: 'hr-manufacturing' },
+  { query: '"Head of People" OR "People Director" engineering OR construction South Africa', tag: 'people-engineering' },
+  // Technology & Telecoms
+  { query: '"HR Manager" OR "Head of People" "software" OR "IT services" OR "technology" Johannesburg', tag: 'hr-tech-jhb' },
+  { query: '"Chief People Officer" OR "Talent Director" technology OR telecoms South Africa', tag: 'cpo-tech' },
+  // Healthcare & Pharma
+  { query: '"HR Director" OR "Head of HR" healthcare OR pharmaceutical South Africa', tag: 'hr-healthcare' },
+  { query: '"learning and development" manager healthcare OR medical South Africa', tag: 'ld-healthcare' },
+  // Retail & FMCG
+  { query: '"HR Director" OR "Head of People" retail OR FMCG OR "consumer goods" South Africa', tag: 'hr-retail' },
+  { query: '"talent development" OR "people and culture" director retail OR wholesale Gauteng', tag: 'talent-retail-gauteng' },
+  // Logistics, Mining & Energy
+  { query: '"HR Manager" OR "Head of HR" logistics OR mining OR energy South Africa', tag: 'hr-logistics-mining' },
+  { query: '"Head of People" OR "People Director" transport OR supply chain South Africa', tag: 'people-logistics' },
+  // Legal & Accounting
+  { query: '"HR Director" OR "Head of People" "law firm" OR accounting South Africa', tag: 'hr-legal-accounting' },
+  { query: '"learning and development" manager legal OR accounting Johannesburg Cape Town', tag: 'ld-legal' },
+  // Hospitality & Media
+  { query: '"HR Director" OR "Head of HR" hospitality OR tourism OR hotel South Africa', tag: 'hr-hospitality' },
+  { query: '"Head of People" OR "People Director" media OR advertising OR events South Africa', tag: 'people-media' },
+  // Construction & Real Estate
+  { query: '"HR Manager" OR "Head of HR" construction OR "real estate" OR property South Africa', tag: 'hr-construction' },
+  { query: '"coaching culture" OR "leadership pipeline" manufacturing OR construction South Africa company', tag: 'coaching-culture-mfg' },
 ];
 const QUERIES_PER_RUN = 3;
 
@@ -270,12 +284,13 @@ Deno.serve(async (req) => {
     // PHASE 1: APOLLO — primary source for named decision-makers
     // ═══════════════════════════════════════════════════════════
     if (apolloApiKey) {
-      // Rotate industry daily
-      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-      const industryIdx = dayOfYear % APOLLO_INDUSTRIES.length;
-      const targetIndustry = APOLLO_INDUSTRIES[industryIdx];
+      // Rotate industry group every 3 days
+      const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+      const groupIdx = Math.floor(daysSinceEpoch / 3) % APOLLO_INDUSTRY_ROTATION.length;
+      const todaysIndustries = APOLLO_INDUSTRY_ROTATION[groupIdx];
+      const targetIndustry = todaysIndustries.join(" OR ");
 
-      console.log(`\n🔷 PHASE 1: Apollo search — ${targetIndustry}`);
+      console.log(`\n🔷 PHASE 1: Apollo search — Group ${groupIdx}: ${todaysIndustries.join(", ")}`);
 
       try {
         const apolloRes = await fetch("https://api.apollo.io/api/v1/mixed_people/api_search", {
@@ -286,7 +301,7 @@ Deno.serve(async (req) => {
             per_page: 15,
             person_titles: APOLLO_TITLES,
             person_locations: ["Gauteng, South Africa", "South Africa"],
-            organization_num_employees_ranges: ["51-100", "101-200", "201-500"],
+            organization_num_employees_ranges: ["1-10", "11-20", "21-50", "51-100", "101-200", "201-500"],
             q_keywords: targetIndustry,
           }),
         });

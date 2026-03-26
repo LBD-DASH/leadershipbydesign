@@ -31,7 +31,7 @@ const templates: FollowUpTemplate[] = [
 
 Just following up on my note about coaching capability in your management layer.
 
-One pattern I keep seeing in financial services firms: managers who were promoted for technical excellence default to command-and-control. It shows up as disengagement, escalations landing on HR's desk, and good people leaving.
+One pattern I keep seeing in growing companies: managers who were promoted for technical excellence default to command-and-control. It shows up as disengagement, escalations landing on HR's desk, and good people leaving.
 
 If you're curious where your management layer stands, there's a free 3-minute assessment here: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
 

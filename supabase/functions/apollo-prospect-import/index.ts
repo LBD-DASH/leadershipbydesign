@@ -12,9 +12,32 @@ const APOLLO_TITLES = [
   "People Director", "Talent Lead",
 ];
 
-const APOLLO_INDUSTRIES = [
-  "Financial Services", "Insurance", "Banking",
-  "Accounting", "Legal", "Professional Services",
+// Excluded industries — never target these
+const EXCLUDED_INDUSTRIES = [
+  "financial services", "insurance", "banking", "education",
+  "investment banking", "venture capital", "private equity",
+  "fund management", "capital markets", "consulting",
+  "management consulting",
+];
+
+// Industry groups that rotate every 3 days
+const INDUSTRY_ROTATION = [
+  // Group 0: Professional Services
+  ["Accounting", "Legal", "Staffing and Recruiting", "Human Resources", "Professional Training and Coaching"],
+  // Group 1: Technology & Telecoms
+  ["Information Technology", "Computer Software", "Telecommunications", "Internet", "Computer Hardware"],
+  // Group 2: Manufacturing & Engineering
+  ["Manufacturing", "Industrial Automation", "Mechanical Engineering", "Electrical Engineering", "Plastics"],
+  // Group 3: Retail & FMCG
+  ["Retail", "Consumer Goods", "Food & Beverages", "Wholesale", "Supermarkets"],
+  // Group 4: Healthcare & Pharma
+  ["Hospital & Health Care", "Pharmaceuticals", "Medical Devices", "Health Wellness and Fitness"],
+  // Group 5: Construction & Real Estate
+  ["Construction", "Real Estate", "Architecture & Planning", "Civil Engineering", "Building Materials"],
+  // Group 6: Logistics & Mining
+  ["Logistics and Supply Chain", "Transportation", "Mining & Metals", "Oil & Energy", "Utilities"],
+  // Group 7: Media & Hospitality
+  ["Media Production", "Marketing and Advertising", "Hospitality", "Leisure Travel & Tourism", "Events Services"],
 ];
 
 const GENERIC_PREFIXES = [
@@ -93,6 +116,12 @@ Deno.serve(async (req) => {
   try {
     console.log("🎯 apollo-prospect-import invoked at", new Date().toISOString());
 
+    // Determine which industry group to use — rotates every 3 days
+    const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    const groupIndex = Math.floor(daysSinceEpoch / 3) % INDUSTRY_ROTATION.length;
+    const todaysIndustries = INDUSTRY_ROTATION[groupIndex];
+    console.log(`📊 Industry rotation: Group ${groupIndex} — ${todaysIndustries.join(", ")}`);
+
     // Load existing emails for dedup
     const { data: existingRows } = await supabase
       .from("warm_outreach_queue")
@@ -124,8 +153,8 @@ Deno.serve(async (req) => {
           per_page: 25,
           person_titles: APOLLO_TITLES,
           person_locations: ["South Africa"],
-          organization_num_employees_ranges: ["101-500"],
-          q_keywords: APOLLO_INDUSTRIES.join(" OR "),
+          organization_num_employees_ranges: ["1-10", "11-20", "21-50", "51-100", "101-200", "201-500"],
+          q_keywords: todaysIndustries.join(" OR "),
         }),
       });
 
@@ -144,6 +173,15 @@ Deno.serve(async (req) => {
 
       for (const p of people) {
         if (added >= 50) break;
+
+        // Skip excluded industries (banks, FSIs, education)
+        const orgIndustry = (p.organization?.industry || "").toLowerCase();
+        const orgName = (p.organization?.name || "").toLowerCase();
+        if (EXCLUDED_INDUSTRIES.some(ex => orgIndustry.includes(ex) || orgName.includes(ex))) {
+          console.log(`  ⛔ Skipping ${p.first_name} ${p.last_name} — excluded industry: ${orgIndustry}`);
+          skippedQuality++;
+          continue;
+        }
 
         // First check if the search already returned an email
         let email = (p.email || "").toLowerCase().trim();
@@ -197,9 +235,9 @@ Deno.serve(async (req) => {
           contact_email: email,
           contact_title: contactTitle,
           contact_phone: phone,
-          source_keyword: "apollo:sequence",
+          source_keyword: "apollo:import",
           status: "pending",
-          industry: "financial services",
+          industry: orgIndustry || todaysIndustries[0].toLowerCase(),
           score: 70,
         });
 
@@ -226,7 +264,7 @@ Deno.serve(async (req) => {
           eventType: "system_error",
           data: {
             function: "🎯 Apollo Import Complete",
-            error: `Searched: ${totalPulled} | Enriched: ${enriched} | Added: ${added} | Dup: ${skippedDup} | No email: ${enrichFailed}`,
+            error: `Industry Group ${groupIndex}: ${todaysIndustries.slice(0, 3).join(", ")}\nSearched: ${totalPulled} | Enriched: ${enriched} | Added: ${added} | Dup: ${skippedDup} | Excluded: ${skippedQuality} | No email: ${enrichFailed}`,
           },
         }),
       });

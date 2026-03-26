@@ -7,42 +7,44 @@ const corsHeaders = {
 
 const PROSPEO_API = "https://api.prospeo.io";
 
-// ICP: South African FSI firms, 100-500 employees, HR/L&D decision-makers
+// ICP: South African companies under 500 employees, HR/L&D decision-makers
+// EXCLUDED: banks, FSI, insurance, education, consulting
 const SEARCH_CONFIGS = [
   {
-    label: "Financial Services HR Directors",
+    label: "Manufacturing & Tech HR Directors",
     filters: {
       person_department: { include: ["Human Resources"] },
       person_seniority: { include: ["Director", "Head", "Vice President", "C-Suite"] },
       company_industry: {
         include: [
-          "Financial Services",
-          "Insurance",
-          "Banking",
-          "Accounting",
-          "Investment Management",
+          "Manufacturing",
+          "Information Technology and Services",
+          "Computer Software",
+          "Telecommunications",
+          "Construction",
         ],
       },
-      company_headcount_range: ["101-200", "201-500"],
+      company_headcount_range: ["1-10", "11-50", "51-200", "201-500"],
       person_location_search: { include: ["South Africa"] },
       max_person_per_company: 3,
     },
   },
   {
-    label: "Professional Services L&D Managers",
+    label: "Healthcare & Services L&D Managers",
     filters: {
       person_job_title: {
         boolean_search: "(HR OR 'Human Resources' OR 'People' OR 'L&D' OR 'Learning' OR 'Talent' OR 'OD') AND (Director OR Head OR Manager OR Lead)",
       },
       company_industry: {
         include: [
+          "Hospital & Health Care",
+          "Retail",
           "Legal Services",
-          "Law Practice",
-          "Business Consulting and Services",
-          "Professional Training and Coaching",
+          "Accounting",
+          "Hospitality",
         ],
       },
-      company_headcount_range: ["101-200", "201-500"],
+      company_headcount_range: ["1-10", "11-50", "51-200", "201-500"],
       person_location_search: { include: ["South Africa"] },
       max_person_per_company: 2,
     },

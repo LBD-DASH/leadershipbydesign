@@ -10,7 +10,7 @@ const SITE_DOMAIN = 'https://www.leadershipbydesign.co';
 const NEWSLETTER_SYSTEM_PROMPT = `You are the newsletter writer for Leadership by Design (LBD), a South African leadership development practice founded by Kevin Britz.
 
 AUDIENCE
-HR Directors, L&D Heads, COOs, and Talent Executives at 100–500 person Financial Services and Insurance firms in South Africa.
+HR Directors, L&D Heads, COOs, and Talent Executives at companies under 500 people across industries in South Africa.
 
 EVERY newsletter must follow this exact five-section structure. Return your response as a JSON object with these fields:
 
@@ -57,7 +57,7 @@ SUBJECT LINE
 NEVER USE
 - Servant leadership or growth mindset clichés
 - Motivational poster language
-- Themes not directly relevant to FSI or professional services leaders
+- Themes not relevant to HR/L&D leaders at growing South African companies
 - Generic management advice
 
 pain_point field: one short sentence naming the core pain point sourced from research
@@ -105,12 +105,12 @@ Deno.serve(async (req) => {
 
     // Step 1: Firecrawl research
     let searchQuery = hasTheme
-      ? `leadership ${monthlyTheme.toLowerCase()} challenge concern FSI financial services insurance South Africa ${currentYear}`
-      : `biggest leadership challenge concern financial services insurance South Africa ${currentYear} CEO executive manager`;
+      ? `leadership ${monthlyTheme.toLowerCase()} challenge concern managers South Africa ${currentYear}`
+      : `biggest leadership challenge concern growing companies South Africa ${currentYear} CEO executive manager`;
 
     // On rewrite, vary the search to get different angles
     if (rewriteRound > 0 && previousPainPoint) {
-      searchQuery = `leadership challenge NOT "${previousPainPoint}" FSI financial services ${currentYear} executive`;
+      searchQuery = `leadership challenge NOT "${previousPainPoint}" managers growing companies ${currentYear} executive South Africa`;
     }
 
     console.log(`Step 1: Firecrawl search (round ${rewriteRound}): "${searchQuery}"`);
@@ -148,12 +148,12 @@ Deno.serve(async (req) => {
       if (previousFeedback) {
         userPrompt += `\nKevin's feedback on the previous draft: "${previousFeedback}"`;
       } else {
-        userPrompt += `\nThe previous draft was rejected without specific feedback. Assume the issue is one or more of: theme relevance to FSI audience, voice quality, or weak solution bridge.`;
+        userPrompt += `\nThe previous draft was rejected without specific feedback. Assume the issue is one or more of: theme relevance to audience, voice quality, or weak solution bridge.`;
       }
       if (previousPainPoint) {
         userPrompt += `\nPrevious pain point used: "${previousPainPoint}" — try a different angle or sharper take.`;
       }
-      userPrompt += `\n\nBefore generating, check:\n- Does the subject line create tension or curiosity?\n- Does the hook make an FSI executive feel immediately understood?\n- Is the problem framed at identity or behaviour level, not just symptoms?\n- Is the SHIFT reframe genuinely non-obvious?\n- Does the solution bridge feel earned, not forced?\n- Is the voice direct, warm, and free of jargon?`;
+      userPrompt += `\n\nBefore generating, check:\n- Does the subject line create tension or curiosity?\n- Does the hook make an HR/L&D leader at a growing company feel immediately understood?\n- Is the problem framed at identity or behaviour level, not just symptoms?\n- Is the SHIFT reframe genuinely non-obvious?\n- Does the solution bridge feel earned, not forced?\n- Is the voice direct, warm, and free of jargon?`;
     }
 
     console.log(`Step 2: Generating newsletter with Lovable AI (round ${rewriteRound})...`);
