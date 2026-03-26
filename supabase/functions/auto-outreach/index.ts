@@ -43,7 +43,6 @@ Deno.serve(async (req) => {
       .eq("status", "pending")
       .not("contact_email", "is", null)
       .neq("contact_email", "")
-      .neq("source_keyword", "apollo:sequence")
       .or("disqualified.is.null,disqualified.eq.false")
       .order("score", { ascending: false })
       .order("created_at", { ascending: true })
@@ -251,7 +250,8 @@ Write the email now. Only the subject and body. Nothing else.`;
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "Kevin Britz <kevin@leadershipbydesign.co>",
+            from: "Kevin Britz <hello@leadershipbydesign.co>",
+            reply_to: "kevin@kevinbritz.com",
             to: [prospect.contact_email],
             subject: emailContent.subject,
             html: `<div style="font-family: Georgia, serif; font-size: 15px; line-height: 1.6; color: #333; max-width: 600px;">
