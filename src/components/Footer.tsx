@@ -75,9 +75,14 @@ const Footer = () => {
         </div>
 
         <div className="border-t mt-6 sm:mt-8 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Leadership by Design. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              © {new Date().getFullYear()} Leadership by Design. All rights reserved.
+            </p>
+            <Link to="/privacy-policy" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Privacy Policy
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             <Link to="/marketing" className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium bg-muted text-muted-foreground px-4 py-2 rounded-md hover:bg-muted/80 transition-colors">
               Admin

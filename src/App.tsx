@@ -96,6 +96,7 @@ import CoachingReadinessGuide from "./pages/products/CoachingReadinessGuide";
 import CoachingGapReport from "./pages/products/CoachingGapReport";
 import Brand from "./pages/Brand";
 import ProgrammesArchive from "./pages/ProgrammesArchive";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -221,6 +222,7 @@ const App = () => (
             }
           />
           <Route path="/programmes-archive" element={<ProgrammesArchive />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
