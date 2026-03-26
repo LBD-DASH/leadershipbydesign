@@ -166,7 +166,7 @@ const App = () => (
           <Route path="/survival-pack/success" element={<SurvivalPackSuccess />} />
           <Route path="/new-manager-training" element={<NewManagerTraining />} />
           <Route path="/auth" element={<Navigate to="/marketing" replace />} />
-          <Route path="/admin" element={<Navigate to="/marketing" replace />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/os" element={<AdminOperatingSystem />} />
           <Route path="/claude-context" element={<ClaudeContext />} />
           <Route path="/admin/overviews" element={<AdminOverviews />} />

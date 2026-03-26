@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -267,48 +268,52 @@ export default function ColdCallPrompter() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <AdminLayout>
+        <div className="min-h-[80vh] flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </AdminLayout>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <div className="border-b bg-background">
-          <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-2">
-            <Phone className="h-5 w-5 text-primary" />
-            <h1 className="font-semibold text-sm md:text-base">Leader as Coach – Cold Call Prompter</h1>
+      <AdminLayout>
+        <div className="min-h-[80vh] flex flex-col">
+          <div className="border-b border-border">
+            <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-2">
+              <Phone className="h-5 w-5 text-primary" />
+              <h1 className="font-semibold text-sm md:text-base text-foreground">Leader as Coach – Cold Call Prompter</h1>
+            </div>
+          </div>
+          <div className="flex-1 flex items-center justify-center px-4">
+            <Card className="w-full max-w-md">
+              <CardHeader className="text-center">
+                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                  <Lock className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">Call Centre Login</CardTitle>
+                <CardDescription>Sign in to access the cold call prompter</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <FormLabel htmlFor="cc-email">Email</FormLabel>
+                    <Input id="cc-email" type="email" placeholder="you@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <FormLabel htmlFor="cc-password">Password</FormLabel>
+                    <Input id="cc-password" type="password" placeholder="Enter your password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loginLoading}>
+                    {loginLoading ? "Signing in…" : "Sign In"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center px-4">
-          <Card className="w-full max-w-md">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Lock className="w-6 h-6 text-primary" />
-              </div>
-              <CardTitle className="text-2xl">Call Centre Login</CardTitle>
-              <CardDescription>Sign in to access the cold call prompter</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <FormLabel htmlFor="cc-email">Email</FormLabel>
-                  <Input id="cc-email" type="email" placeholder="you@example.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
-                </div>
-                <div className="space-y-2">
-                  <FormLabel htmlFor="cc-password">Password</FormLabel>
-                  <Input id="cc-password" type="password" placeholder="Enter your password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
-                </div>
-                <Button type="submit" className="w-full" disabled={loginLoading}>
-                  {loginLoading ? "Signing in…" : "Sign In"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      </AdminLayout>
     );
   }
 
@@ -455,9 +460,9 @@ export default function ColdCallPrompter() {
   );
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="border-b bg-background sticky top-0 z-10">
+    <AdminLayout>
+    <div className="min-h-[calc(100vh-3rem)] flex flex-col">
+      <div className="border-b border-border sticky top-12 z-10 bg-card">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
@@ -1188,5 +1193,6 @@ export default function ColdCallPrompter() {
       </div>
       )}
     </div>
+    </AdminLayout>
   );
 }
