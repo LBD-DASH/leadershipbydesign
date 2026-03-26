@@ -108,6 +108,37 @@ All colors MUST be HSL.
   }
 }
 
+/* ═══ Admin Dark Theme ═══ */
+.admin-dark {
+  --background: 207 50% 12%;
+  --foreground: 43 50% 96%;
+  --card: 207 42% 15%;
+  --card-foreground: 43 50% 96%;
+  --popover: 207 42% 15%;
+  --popover-foreground: 43 50% 96%;
+  --primary: 188 53% 35%;
+  --primary-foreground: 43 50% 96%;
+  --secondary: 207 44% 18%;
+  --secondary-foreground: 43 50% 96%;
+  --muted: 207 44% 18%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 188 53% 35%;
+  --accent-foreground: 43 50% 96%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 43 50% 96%;
+  --border: 188 30% 22%;
+  --input: 207 44% 18%;
+  --ring: 188 53% 35%;
+
+  /* Admin-specific tokens */
+  --admin-nav: 212 58% 10%;
+  --admin-gold: 41 50% 59%;
+  --admin-success: 142 71% 45%;
+  --admin-warning: 38 92% 50%;
+  --admin-hover: 206 45% 22%;
+  --admin-border-subtle: 188 53% 35%;
+}
+
 /* Command Centre pulsing status dot */
 .cc-pulse-dot {
   width: 10px;
@@ -122,4 +153,31 @@ All colors MUST be HSL.
   0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
   70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
   100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Admin dark table styling */
+.admin-dark table thead tr {
+  background: hsl(207 44% 18%);
+}
+.admin-dark table tbody tr:nth-child(even) {
+  background: hsl(207 50% 12%);
+}
+.admin-dark table tbody tr:nth-child(odd) {
+  background: hsl(207 42% 15%);
+}
+.admin-dark table tbody tr:hover {
+  background: hsl(206 45% 22%) !important;
+}
+.admin-dark table th,
+.admin-dark table td {
+  border-color: hsl(188 53% 35% / 0.1);
+}
+
+/* Admin dark input overrides for calendar, select dropdowns */
+.admin-dark [data-radix-popper-content-wrapper] [role="listbox"],
+.admin-dark [data-radix-popper-content-wrapper] .rdp,
+.admin-dark [cmdk-root] {
+  background: hsl(207 42% 15%);
+  border-color: hsl(188 53% 35% / 0.2);
+  color: hsl(43 50% 96%);
 }
