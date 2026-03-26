@@ -65,13 +65,13 @@ export default function AdminOperatingSystem() {
   return (
     <>
       <SEO title="Command Centre | LBD" description="Leadership by Design Operating System" />
-      <AdminLayout hideNav>
-        {/* Custom header for Command Centre */}
-        <header className="border-b border-border px-4 py-4" style={{ background: 'hsl(212 58% 10%)' }}>
+      <AdminLayout>
+        {/* Sub-header for Command Centre */}
+        <div className="border-b border-border px-4 py-3" style={{ background: 'hsl(212 58% 10%)' }}>
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div>
-              <h1 style={{ color: CC.gold }} className="text-xl md:text-2xl font-serif font-bold tracking-wide">LBD COMMAND CENTRE</h1>
-              <p className="text-xs text-muted-foreground">Leadership by Design Operating System</p>
+              <h1 style={{ color: CC.gold }} className="text-lg md:text-xl font-serif font-bold tracking-wide">COMMAND CENTRE</h1>
+              <p className="text-xs text-muted-foreground">Operating System</p>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground hidden sm:block">Last sync: {format(lastRefresh, 'HH:mm:ss')}</span>
@@ -83,7 +83,7 @@ export default function AdminOperatingSystem() {
               </button>
             </div>
           </div>
-        </header>
+        </div>
 
         {/* Tab Navigation */}
         <nav className="border-b border-border px-4 overflow-x-auto" style={{ background: 'hsl(212 58% 10%)' }}>
