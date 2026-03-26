@@ -1,5 +1,8 @@
 # Leadership by Design — Claude Code Context
 
+## Quick Recognition
+When the user starts a message with **"LBD"**, they are referring to this system — the Leadership by Design AI agent army, Lovable app, Supabase edge functions, n8n workflows, Apollo integration, and outreach automation. Treat it as full context for this repo. The user is Kevin Britz, founder.
+
 ## What This Is
 LBD is a South African leadership development practice founded by Kevin Britz. The codebase powers the website, CRM, and a fully automated outreach + nurture engine ("agent army") built on Supabase Edge Functions, n8n workflows, and GitHub Actions.
 
