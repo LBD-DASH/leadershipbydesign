@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     if ((noEmailQueue || 0) > 5) issues.push(`${noEmailQueue} dead prospects clogging queue`);
 
     const healthStatus = issues.length === 0 ? "✅ All Systems Go" : `⚠️ ${issues.length} Issue${issues.length > 1 ? "s" : ""} Detected`;
-    
+
     lines.push("");
     lines.push(`*Status:* ${healthStatus}`);
     if (issues.length > 0) {
@@ -151,6 +151,32 @@ Deno.serve(async (req) => {
     }
 
     const sast = now.toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg", hour: "2-digit", minute: "2-digit" });
+
+    // Email Kevin immediately when issues are detected
+    const resendKey = Deno.env.get("RESEND_API_KEY");
+    if (issues.length > 0 && resendKey) {
+      try {
+        const issueList = issues.map(i => `<li style="margin-bottom:6px;">${i}</li>`).join("");
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "LBD System <hello@leadershipbydesign.co>",
+            to: ["kevin@kevinbritz.com"],
+            subject: `⚠️ LBD System Alert — ${issues.length} issue${issues.length > 1 ? "s" : ""} detected`,
+            html: `<div style="font-family:system-ui;font-size:14px;line-height:1.6;max-width:600px;">
+              <h2 style="color:#c0392b;">System Health Alert — ${sast} SAST</h2>
+              <ul>${issueList}</ul>
+              <hr style="border:none;border-top:1px solid #eee;margin:16px 0;">
+              <p style="font-size:12px;color:#888;">Pipeline: ${pendingOutreach || 0} pending | ${emailedToday || 0} emailed today | ${followedUpToday || 0} follow-ups</p>
+            </div>`,
+          }),
+        });
+        console.log("📧 Alert email sent to Kevin");
+      } catch (e) {
+        console.error("Alert email failed:", e);
+      }
+    }
 
     // Post to Slack
     await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
