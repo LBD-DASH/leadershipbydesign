@@ -60,8 +60,17 @@ export default function LeaderAsCoachDiagnostic() {
 
     try {
       // Fire GA4 event
-      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      const { trackDiagnosticComplete, trackGoogleAdsConversion } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'leader-as-coach' });
+
+      // Fire Google Ads conversion if paid lead
+      if (utmParams.utm_source === 'google' || utmParams.utm_medium === 'cpc') {
+        trackGoogleAdsConversion({
+          diagnostic_type: 'leader-as-coach',
+          value: 500,
+          company: data.company,
+        });
+      }
 
       // Calculate lead score
       const leadData = {
@@ -117,6 +126,8 @@ export default function LeaderAsCoachDiagnostic() {
         console.log('✅ LAC assessment saved successfully');
       }
 
+      const isPaidLead = utmParams.utm_source === 'google' || utmParams.utm_medium === 'cpc';
+
       // Send Slack HOT lead alert
       try {
         await supabase.functions.invoke('slack-notify', {
@@ -125,10 +136,12 @@ export default function LeaderAsCoachDiagnostic() {
             data: {
               name: data.name,
               company: data.company,
-              source: 'LAC Assessment',
+              source: isPaidLead ? '💰 GOOGLE ADS → LAC Assessment' : 'LAC Assessment',
               profile: result.profileName,
               score: `${result.totalScore}/75`,
-              action: 'Completed coaching readiness assessment',
+              action: isPaidLead
+                ? `PAID LEAD completed assessment (${utmParams.utm_campaign || 'unknown campaign'})`
+                : 'Completed coaching readiness assessment',
             },
           },
         });
@@ -138,7 +151,10 @@ export default function LeaderAsCoachDiagnostic() {
 
       // Auto-feed into warm_outreach_queue as high-priority lead
       try {
-        const queueScore = version === 'hr_leader' ? 85 : 70;
+        const queueScore = isPaidLead ? 95 : (version === 'hr_leader' ? 85 : 70);
+        const sourceTag = isPaidLead
+          ? `diagnostic:lac:${version}:google_ads`
+          : `diagnostic:lac:${version}`;
         await supabase
           .from('warm_outreach_queue' as any)
           .insert({
@@ -146,7 +162,7 @@ export default function LeaderAsCoachDiagnostic() {
             contact_name: data.name,
             contact_email: data.email,
             contact_title: data.jobTitle,
-            source_keyword: `diagnostic:lac:${version}`,
+            source_keyword: sourceTag,
             status: 'pending',
             score: queueScore,
             industry: 'assessment-lead',
@@ -157,7 +173,8 @@ export default function LeaderAsCoachDiagnostic() {
 
       // Create LAC follow-up nurture sequence
       try {
-        const firstSendAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+        const firstSendDelay = isPaidLead ? 2 * 60 * 1000 : 5 * 60 * 1000; // Paid leads: 2 min, organic: 5 min
+        const firstSendAt = new Date(Date.now() + firstSendDelay);
         await supabase
           .from('diagnostic_nurture_sequences' as any)
           .insert({

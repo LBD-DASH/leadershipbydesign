@@ -95,6 +95,19 @@ export function trackHighIntentPageView(meta: { page: string; view_count: number
   });
 }
 
+/** Fires when a paid lead completes a diagnostic — feeds back to Google Ads for conversion optimisation */
+export function trackGoogleAdsConversion(meta: { diagnostic_type: string; value?: number; company?: string }) {
+  push({
+    event: 'google_ads_conversion',
+    event_category: 'conversion',
+    conversion_action: 'diagnostic_complete',
+    diagnostic_type: meta.diagnostic_type,
+    conversion_value: meta.value ?? 500,
+    currency: 'ZAR',
+    company: meta.company,
+  });
+}
+
 /** Fires when user scrolls past 80% of a key page without converting */
 export function trackBookingIntent(meta: { page: string }) {
   push({

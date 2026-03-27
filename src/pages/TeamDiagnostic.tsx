@@ -67,8 +67,11 @@ export default function TeamDiagnostic() {
       console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
 
       // Fire GA4 conversion event
-      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      const { trackDiagnosticComplete, trackGoogleAdsConversion } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'team' });
+      if (utmParams.utm_source === 'google' || utmParams.utm_medium === 'cpc') {
+        trackGoogleAdsConversion({ diagnostic_type: 'team', value: 500 });
+      }
 
       // Save to database with user data, follow-up preference, UTM params, AND lead scoring
       const { data: insertedData } = await supabase

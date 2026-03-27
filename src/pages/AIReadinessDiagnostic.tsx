@@ -43,8 +43,11 @@ export default function AIReadinessDiagnostic() {
 
     try {
       // Fire GA4 conversion event
-      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      const { trackDiagnosticComplete, trackGoogleAdsConversion } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'ai-readiness' });
+      if (utmParams.utm_source === 'google' || utmParams.utm_medium === 'cpc') {
+        trackGoogleAdsConversion({ diagnostic_type: 'ai-readiness', value: 500 });
+      }
 
       // Save to database
       const { data, error } = await supabase
