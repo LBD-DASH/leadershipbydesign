@@ -68,8 +68,11 @@ export default function ShiftDiagnostic() {
       console.log(`📊 Lead scored: ${leadScore.score}/100 (${leadScore.temperature})`);
 
       // Fire GA4 conversion event
-      const { trackDiagnosticComplete } = await import('@/utils/gtmEvents');
+      const { trackDiagnosticComplete, trackGoogleAdsConversion } = await import('@/utils/gtmEvents');
       trackDiagnosticComplete({ diagnostic_type: 'shift' });
+      if (utmParams.utm_source === 'google' || utmParams.utm_medium === 'cpc') {
+        trackGoogleAdsConversion({ diagnostic_type: 'shift', value: 500 });
+      }
 
       const { error } = await supabase
         .from('shift_diagnostic_submissions')
