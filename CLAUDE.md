@@ -48,8 +48,10 @@ The system runs an automated prospecting + outreach pipeline:
 | Schedule | Phase | What runs |
 |----------|-------|-----------|
 | 07:00 SAST daily | Phase 1 | `web-scraper-leads`, `auto-outreach` |
+| 09:05 + 15:05 SAST | Outreach | `auto-outreach` (additional runs) |
 | Every 30 min (06:00-18:00) | Nurture | `process-diagnostic-nurture`, `lac-follow-up`, `process-follow-up-sequences` |
 | Every 4 hours | Phase 4 | Reply monitoring, `gmail-reply-classifier` |
+| 09:00 + 18:00 SAST | Health | `system-heartbeat` (emails Kevin on issues) |
 | 20:30 SAST daily | Phase 6 | Evening dashboard to Slack |
 | Sunday 19:00 SAST | Weekly | Summary report |
 
@@ -84,6 +86,25 @@ Both `apollo-prospect-import` and `web-scraper-leads` rotate through these group
 6. Logistics & Mining
 7. Media & Hospitality
 
+## Google Ads Integration
+- GTM conversion tracking v4 live
+- Flow: Google Ad click → LAC Diagnostic → Conversion fires back to Google → Agents prioritise lead (score 95) → 2-min fast nurture → PAID LEAD Slack alert → Call
+- Paid leads get highest priority in outreach queue
+
+## LinkedIn Automation (~/lbd-agents/)
+- Direct LinkedIn REST API posting (no Zapier)
+- Schedule: Sun–Thu, random time 06:30–08:30 SAST
+- Content pipeline: pre-written posts in `data/linkedin_posts_mar_apr_2026.md`
+- Tracking: `data/linkedin_posted.json`
+- Token expires ~60 days from creation (needs refresh mechanism)
+
+## Contract Scraper (~/contract-scraper/)
+- Firecrawl scrapes 30+ job boards + Google search queries
+- Ollama/Mistral classifies results locally
+- Posts leads to Slack, saves to `results.json`
+- Recency filter: only jobs posted within 7 days
+- URL validation: rejects dead links, listing pages, article URLs
+
 ## Commercial Offer
 - **Primary**: Leader as Coach — 90-Day Manager Coaching Accelerator
 - **Frameworks**: SHIFT, Leader as Coach, Contagious Identity
@@ -96,3 +117,8 @@ Both `apollo-prospect-import` and `web-scraper-leads` rotate through these group
 - Company size filters must stay under 500
 - When updating agent prompts or system context, also update `claude-context/index.ts` to keep the live operating system in sync
 - Keep Lovable (deploys from `main`) and GitHub aligned — use feature branches + PRs
+- Auto-outreach uses `claude-sonnet-4-6-20250610` — do not downgrade
+- System heartbeat emails kevin@kevinbritz.com on any detected issues
+- LinkedIn posts go out Sun–Thu only, never Friday/Saturday
+- When leads reply, agents alert and step back — Kevin handles all direct conversations personally
+- After fixing any Supabase edge function, push to GitHub and tell user to redeploy via Lovable
