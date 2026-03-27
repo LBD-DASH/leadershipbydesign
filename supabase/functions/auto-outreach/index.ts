@@ -32,6 +32,13 @@ Deno.serve(async (req) => {
     });
   }
 
+  // Companies to skip — test records, paused, or wrong ICP
+  const SKIP_COMPANIES = [
+    "test", "ldb test run", "ldb test", "salt essential information technology",
+    "brighton   hair and bueaty", "brighton hair and beauty",
+    "mbucks unlimited", "tears",
+  ];
+
   try {
     console.log("📧 auto-outreach invoked at", new Date().toISOString());
 
@@ -70,7 +77,29 @@ Deno.serve(async (req) => {
       });
     }
 
-    console.log(`Processing ${prospects.length} qualified prospects`);
+    // Filter out test/junk/paused companies and auto-disqualify them
+    const validProspects = [];
+    for (const p of prospects) {
+      const companyLower = (p.company_name || "").toLowerCase().trim();
+      if (SKIP_COMPANIES.some(s => companyLower === s || companyLower.includes(s))) {
+        console.log(`⏭️ Skipping (blocklisted): ${p.company_name}`);
+        await supabase
+          .from("warm_outreach_queue")
+          .update({ disqualified: true, disqualified_reason: "blocklisted_company", updated_at: new Date().toISOString() })
+          .eq("id", p.id);
+        continue;
+      }
+      validProspects.push(p);
+    }
+
+    if (!validProspects.length) {
+      console.log("All prospects filtered out by blocklist");
+      return new Response(JSON.stringify({ success: true, emailed: 0, reason: "all_blocklisted" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log(`Processing ${validProspects.length} qualified prospects`);
     let emailedCount = 0;
     const errors: string[] = [];
 
@@ -83,7 +112,7 @@ Deno.serve(async (req) => {
     const settingsMap = Object.fromEntries((settingsData || []).map((s: any) => [s.setting_key, s.setting_value]));
     const bookingLink = settingsMap.booking_link || "https://leadershipbydesign.lovable.app/contact";
 
-    for (const prospect of prospects) {
+    for (const prospect of validProspects) {
       try {
         // Step 1: Scrape company website
         let companyContext = "";
@@ -186,7 +215,7 @@ Write the email now. Only the subject and body. Nothing else.`;
               "anthropic-version": "2023-06-01",
             },
             body: JSON.stringify({
-              model: "claude-sonnet-4-20250514",
+              model: "claude-sonnet-4-6-20250610",
               max_tokens: 400,
               messages: [
                 { role: "user", content: `${systemPrompt}\n\n${userPrompt}` },
@@ -318,11 +347,13 @@ Write the email now. Only the subject and body. Nothing else.`;
       }
     }
 
-    console.log(`📧 Auto-outreach complete: ${emailedCount}/${prospects.length} emails sent`);
+    console.log(`📧 Auto-outreach complete: ${emailedCount}/${validProspects.length} emails sent`);
 
     // Slack notification
-    const statusEmoji = emailedCount === prospects.length ? "✅" : emailedCount > 0 ? "⚠️" : "❌";
-    const slackText = `*Emails sent:* ${emailedCount}/${prospects.length}${errors.length ? `\n*Errors:*\n${errors.map(e => `• ${e}`).join("\n")}` : ""}`;
+    const skipped = prospects.length - validProspects.length;
+    const statusEmoji = emailedCount === validProspects.length ? "✅" : emailedCount > 0 ? "⚠️" : "❌";
+    const skippedNote = skipped > 0 ? `\n*Skipped:* ${skipped} (blocklisted)` : "";
+    const slackText = `*Emails sent:* ${emailedCount}/${validProspects.length}${skippedNote}${errors.length ? `\n*Errors:*\n${errors.map(e => `• ${e}`).join("\n")}` : ""}`;
 
     try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
