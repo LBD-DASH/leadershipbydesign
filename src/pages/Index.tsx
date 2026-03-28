@@ -96,7 +96,7 @@ const Index = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0">
               {[
                 { value: "4,000+", label: "Leaders Developed" },
-                { value: "30+", label: "Programmes Delivered" },
+                { value: "25+", label: "Programmes Implemented" },
                 { value: "30+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
@@ -322,7 +322,7 @@ const Index = () => {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {["Executive Coach", "Leadership Architect", "11 Years Practice"].map((tag) => (
+                  {["Executive Coach", "Leadership Architect", "Prosci ADKAR Certified", "MIT Sloan Assessor", "Business School Faculty", "11 Years Practice"].map((tag) => (
                     <span key={tag} className="px-3 py-1.5 rounded text-xs text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
                       {tag}
                     </span>

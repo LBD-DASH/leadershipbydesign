@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const stats = [
   { value: "11", label: "Years" },
-  { value: "30+", label: "Workshops" },
+  { value: "25+", label: "Programmes Implemented" },
   { value: "4,000+", label: "Leaders Impacted" },
   { value: "30+", label: "Organisations" },
   { value: "6", label: "Proprietary Methodologies" },
