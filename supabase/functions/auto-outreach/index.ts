@@ -174,7 +174,7 @@ ${STEP1_SIGNATURE}`;
             email_sent_at: new Date().toISOString(),
             email_subject: emailContent.subject,
             email_body: emailContent.body,
-            scrape_summary: companyContext.substring(0, 500),
+            scrape_summary: "diagnostic-first-v1",
             updated_at: new Date().toISOString(),
           })
           .eq("id", prospect.id);
