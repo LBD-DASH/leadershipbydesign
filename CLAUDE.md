@@ -65,6 +65,12 @@ The system runs an automated prospecting + outreach pipeline:
 | `newsletter-curator` | Curates relevant industry content for newsletters |
 | `linkedin-scheduler` | Schedules and manages LinkedIn post publishing |
 
+#### EXECUTIVE
+| Function | Purpose |
+|----------|---------|
+| `coo-agent` | Daily operations brief — agent health, pipeline, deals, urgent actions for Kevin. Emails + Slack daily 08:00 SAST. Weekly trends on Sundays. All 26 agents report to COO. |
+| `cfo-agent` | Weekly financial report — cost tracking (API spend), revenue attribution, unit economics (CAC, ROI%), pipeline forecast, break-even analysis. Emails + Slack Sunday 21:00 SAST. |
+
 #### SUPPORT
 | Function | Purpose |
 |----------|---------|
@@ -80,10 +86,18 @@ The system runs an automated prospecting + outreach pipeline:
 | 09:05 + 15:05 SAST | Outreach | `auto-outreach` (additional runs) |
 | Every 30 min (06:00-18:00) | Nurture | `process-diagnostic-nurture`, `lac-follow-up`, `process-follow-up-sequences` |
 | Every 4 hours | Phase 4 | Reply monitoring, `gmail-reply-classifier` |
+| 08:00 SAST daily | Executive | `coo-agent` — daily operations brief to Slack + email Kevin |
 | 09:00 + 18:00 SAST | Health | `system-heartbeat` (emails Kevin on issues) |
 | 09:30 SAST daily | Agent Health | Agent Health Check (Python agent in ~/lbd-agents/) — validates all agents are running and responsive |
+| 10:00 + 16:00 SAST | Intelligence | `deliverability-monitor` — email health checks, red alerts |
+| 18:30 SAST daily | Intelligence | `performance-dashboard` — daily conversion funnel to Slack |
+| 19:00 SAST daily | Intelligence | `conversion-tracker` — end-to-end revenue attribution |
 | 20:30 SAST daily | Phase 6 | Evening dashboard to Slack |
+| Sunday 16:00 SAST | Agents | `newsletter-curator` |
+| Sunday 18:00 SAST | Agents | `apollo-list-builder` |
 | Sunday 19:00 SAST | Weekly | Summary report |
+| Sunday 20:00 SAST | Intelligence | `outreach-optimizer` — weekly learning cycle, auto-tune scores |
+| Sunday 21:00 SAST | Executive | `cfo-agent` — weekly financial report to Slack + email Kevin |
 
 ### n8n Workflows
 - Ollama scoring + Apollo enrichment pipeline
