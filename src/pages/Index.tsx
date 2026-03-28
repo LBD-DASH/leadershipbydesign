@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import SEO from "@/components/SEO";
 import OrganizationSchema from "@/components/OrganizationSchema";
 import Header from "@/components/Header";
@@ -11,6 +12,27 @@ import lacImage from "@/assets/leader-as-coach.jpg";
 import shiftImage from "@/assets/shift-hero-team.jpg";
 import ciImage from "@/assets/contagious-identity-coaching-hero.jpg";
 import problemImage from "@/assets/leadership-feedback.jpg";
+
+const ScrollIndicator = () => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY < 100);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+      <ChevronDown
+        className="w-6 h-6 animate-bounce"
+        style={{ color: "rgba(255,255,255,0.6)" }}
+      />
+    </div>
+  );
+};
 
 const Index = () => {
   return (
@@ -88,6 +110,7 @@ const Index = () => {
               </Link>
             </div>
           </div>
+          <ScrollIndicator />
         </section>
 
         {/* SECTION 2 — PROOF BAR */}
@@ -96,7 +119,7 @@ const Index = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0">
               {[
                 { value: "4,000+", label: "Leaders Developed" },
-                { value: "30+", label: "Programmes Delivered" },
+                { value: "25+", label: "Programmes Implemented" },
                 { value: "30+", label: "Organisations" },
                 { value: "11 Years", label: "In Practice" },
               ].map((stat, i) => (
@@ -322,7 +345,7 @@ const Index = () => {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {["Executive Coach", "Leadership Architect", "11 Years Practice"].map((tag) => (
+                  {["Executive Coach", "Leadership Architect", "Prosci ADKAR Certified", "MIT Sloan Assessor", "Business School Faculty", "11 Years Practice"].map((tag) => (
                     <span key={tag} className="px-3 py-1.5 rounded text-xs text-white" style={{ backgroundColor: "#0F1F2E", fontFamily: "'Source Sans 3', sans-serif", fontSize: 13 }}>
                       {tag}
                     </span>

@@ -1,15 +1,32 @@
+import { useState, useEffect } from "react";
 import { Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 
 const FloatingSocial = () => {
+  const [nearBottom, setNearBottom] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const distanceFromBottom =
+        document.documentElement.scrollHeight -
+        window.scrollY -
+        window.innerHeight;
+      setNearBottom(distanceFromBottom < 300);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (nearBottom) return null;
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 1, duration: 0.5 }}
-      className="fixed bottom-6 left-6 z-50 flex flex-col gap-3"
+      className="fixed bottom-20 sm:bottom-6 left-6 z-50 flex flex-col gap-3"
     >
-      {/* LinkedIn Button */}
       <a
         href="https://www.linkedin.com/in/kevinbritz-leadership/"
         target="_blank"

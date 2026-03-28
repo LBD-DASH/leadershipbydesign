@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Phone } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import ldbLogo from "@/assets/ldb-logo.png";
 
 const Footer = () => {
@@ -81,15 +81,6 @@ const Footer = () => {
             </p>
             <Link to="/privacy-policy" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
-            </Link>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link to="/marketing" className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium bg-muted text-muted-foreground px-4 py-2 rounded-md hover:bg-muted/80 transition-colors">
-              Admin
-            </Link>
-            <Link to="/cold-call-prompter" className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-              <Phone className="w-3.5 h-3.5" />
-              Call Centre Prompter
             </Link>
           </div>
         </div>
