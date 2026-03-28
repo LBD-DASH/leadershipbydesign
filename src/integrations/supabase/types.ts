@@ -966,6 +966,48 @@ export type Database = {
           },
         ]
       }
+      diagnostic_email_results: {
+        Row: {
+          company: string | null
+          email: string
+          id: string
+          name: string | null
+          profile_type: string
+          score: number
+          sent_at: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          company?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          profile_type: string
+          score: number
+          sent_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          company?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          profile_type?: string
+          score?: number
+          sent_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       diagnostic_nurture_sequences: {
         Row: {
           created_at: string
