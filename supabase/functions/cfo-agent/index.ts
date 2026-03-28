@@ -355,6 +355,515 @@ Deno.serve(async (req) => {
     }
 
     // ═══════════════════════════════════════════════════════════
+    // 5b. MULTI-WEEK TREND ANALYSIS (last 4 weeks)
+    // ═══════════════════════════════════════════════════════════
+
+    const fourWeeksAgo = weekStartNWeeksAgo(now, 4);
+    const { data: historicalSnapshots } = await supabase
+      .from("financial_snapshots")
+      .select("*")
+      .gte("week_start", fourWeeksAgo)
+      .order("week_start", { ascending: true });
+
+    const snapshots = historicalSnapshots || [];
+    const hasHistory = snapshots.length >= 2;
+
+    // Calculate trend data
+    let costTrend = "→";
+    let revenueTrend = "→";
+    let roiTrend = "→";
+    let cacTrend = "→";
+    let fourWeekAvgCostPerLead = 0;
+    let fourWeekAvgCostPerReply = 0;
+    let fourWeekAvgCAC = 0;
+
+    interface TrendData {
+      week: string;
+      cost: number;
+      revenue: number;
+      roi: number;
+      cac: number;
+      costPerLead: number;
+      costPerReply: number;
+    }
+
+    const trendRows: TrendData[] = [];
+
+    if (hasHistory) {
+      for (const snap of snapshots) {
+        trendRows.push({
+          week: snap.week_start,
+          cost: snap.total_cost_estimate || 0,
+          revenue: snap.total_revenue || 0,
+          roi: snap.roi_percent || 0,
+          cac: snap.cac || 0,
+          costPerLead: snap.cost_per_lead || 0,
+          costPerReply: snap.cost_per_reply || 0,
+        });
+      }
+
+      const latest = trendRows[trendRows.length - 1];
+      const earliest = trendRows[0];
+
+      costTrend = trendArrowInverse(latest.cost, earliest.cost);
+      revenueTrend = trendArrow(latest.revenue, earliest.revenue);
+      roiTrend = trendArrow(latest.roi, earliest.roi);
+      cacTrend = trendArrowInverse(latest.cac, earliest.cac);
+
+      fourWeekAvgCostPerLead = trendRows.reduce((s, r) => s + r.costPerLead, 0) / trendRows.length;
+      fourWeekAvgCostPerReply = trendRows.reduce((s, r) => s + r.costPerReply, 0) / trendRows.length;
+      fourWeekAvgCAC = trendRows.reduce((s, r) => s + r.cac, 0) / trendRows.length;
+    }
+
+    const trendSummarySlack = hasHistory
+      ? [
+          `*4-WEEK TREND ANALYSIS:*`,
+          `\`\`\``,
+          ...trendRows.map(
+            (r) =>
+              `${r.week}: Cost $${fmt(r.cost)} | Rev R${fmt(r.revenue, 0)} | ROI ${fmt(r.roi, 0)}% | CAC R${fmt(r.cac, 0)}`
+          ),
+          `\`\`\``,
+          `Spend: ${costTrend}  Revenue: ${revenueTrend}  ROI: ${roiTrend}  CAC: ${cacTrend}`,
+        ]
+      : [`*4-WEEK TREND ANALYSIS:*`, `Not enough historical data yet (need 2+ weeks).`];
+
+    // ═══════════════════════════════════════════════════════════
+    // 5c. CHANNEL ROI DEEP-DIVE
+    // ═══════════════════════════════════════════════════════════
+
+    // Get all leads sourced this month grouped by source
+    const { data: monthLeads } = await supabase
+      .from("warm_outreach_queue")
+      .select("id, contact_email, source_keyword")
+      .gte("created_at", monthStartISO);
+
+    interface ChannelStats {
+      leads: number;
+      emails: number;
+      replies: number;
+      dealsCreated: number;
+      dealsClosed: number;
+      revenue: number;
+      leadEmails: string[];
+    }
+
+    const channelStats: Record<string, ChannelStats> = {};
+
+    for (const lead of monthLeads || []) {
+      const ch = classifyChannel(lead.source_keyword || "other");
+      if (!channelStats[ch]) {
+        channelStats[ch] = { leads: 0, emails: 0, replies: 0, dealsCreated: 0, dealsClosed: 0, revenue: 0, leadEmails: [] };
+      }
+      channelStats[ch].leads += 1;
+      if (lead.contact_email) {
+        channelStats[ch].leadEmails.push(lead.contact_email);
+      }
+    }
+
+    // For each channel, count emails sent, replies, deals
+    for (const [ch, stats] of Object.entries(channelStats)) {
+      if (stats.leadEmails.length === 0) continue;
+
+      // Batch query: emails sent to these leads
+      const { count: emailsSent } = await supabase
+        .from("prospect_outreach")
+        .select("id", { count: "exact", head: true })
+        .in("contact_email", stats.leadEmails.slice(0, 500))
+        .gte("sent_at", monthStartISO);
+
+      stats.emails = emailsSent || 0;
+
+      // Replies (status in warm_outreach_queue)
+      const { count: replyCount } = await supabase
+        .from("warm_outreach_queue")
+        .select("id", { count: "exact", head: true })
+        .in("contact_email", stats.leadEmails.slice(0, 500))
+        .in("status", ["replied", "interested", "booked"]);
+
+      stats.replies = replyCount || 0;
+
+      // Deals created from these leads
+      const { data: chDeals } = await supabase
+        .from("pipeline_deals")
+        .select("id, deal_value, stage")
+        .in("lead_email", stats.leadEmails.slice(0, 500))
+        .gte("created_at", monthStartISO);
+
+      stats.dealsCreated = chDeals?.length || 0;
+      for (const deal of chDeals || []) {
+        if (deal.stage === "closed_won") {
+          stats.dealsClosed += 1;
+          stats.revenue += deal.deal_value || 0;
+        }
+      }
+    }
+
+    // Calculate per-channel metrics and rank by ROI
+    interface ChannelROI {
+      channel: string;
+      leads: number;
+      emails: number;
+      replies: number;
+      dealsCreated: number;
+      dealsClosed: number;
+      revenue: number;
+      costPerLead: number;
+      costPerReply: number;
+      revenuePerLead: number;
+      roi: number;
+    }
+
+    const channelROIList: ChannelROI[] = [];
+    // Allocate costs proportionally by lead count
+    const totalLeadsAllChannels = Object.values(channelStats).reduce((s, c) => s + c.leads, 0);
+
+    for (const [ch, stats] of Object.entries(channelStats)) {
+      const costShare = totalLeadsAllChannels > 0
+        ? (stats.leads / totalLeadsAllChannels) * totalCostMonthZAR
+        : 0;
+      const cplCh = stats.leads > 0 ? costShare / stats.leads : 0;
+      const cprCh = stats.replies > 0 ? costShare / stats.replies : 0;
+      const rplCh = stats.leads > 0 ? stats.revenue / stats.leads : 0;
+      const roiCh = costShare > 0 ? (stats.revenue / costShare) * 100 : 0;
+
+      channelROIList.push({
+        channel: ch,
+        leads: stats.leads,
+        emails: stats.emails,
+        replies: stats.replies,
+        dealsCreated: stats.dealsCreated,
+        dealsClosed: stats.dealsClosed,
+        revenue: stats.revenue,
+        costPerLead: cplCh,
+        costPerReply: cprCh,
+        revenuePerLead: rplCh,
+        roi: roiCh,
+      });
+    }
+
+    // Sort by ROI descending
+    channelROIList.sort((a, b) => b.roi - a.roi);
+
+    const bestROICh = channelROIList.length > 0 ? channelROIList[0] : null;
+    const worstROICh = channelROIList.length > 1 ? channelROIList[channelROIList.length - 1] : null;
+
+    const channelRecommendation =
+      bestROICh && worstROICh && bestROICh.channel !== worstROICh.channel
+        ? `Scale *${bestROICh.channel}* (ROI ${fmt(bestROICh.roi, 0)}%), reduce *${worstROICh.channel}* (ROI ${fmt(worstROICh.roi, 0)}%)`
+        : channelROIList.length > 0
+          ? `Top channel: *${channelROIList[0].channel}* with ROI ${fmt(channelROIList[0].roi, 0)}%`
+          : "No channel data available yet.";
+
+    const channelDeepDiveSlack = channelROIList.length > 0
+      ? [
+          `*CHANNEL ROI DEEP-DIVE (this month):*`,
+          `\`\`\``,
+          `${"Channel".padEnd(16)} ${"Leads".padStart(6)} ${"Emails".padStart(7)} ${"Replies".padStart(8)} ${"Deals".padStart(6)} ${"Revenue".padStart(10)} ${"ROI".padStart(7)}`,
+          ...channelROIList.map(
+            (c) =>
+              `${c.channel.padEnd(16)} ${String(c.leads).padStart(6)} ${String(c.emails).padStart(7)} ${String(c.replies).padStart(8)} ${String(c.dealsClosed).padStart(6)} ${"R" + fmt(c.revenue, 0).padStart(9)} ${(fmt(c.roi, 0) + "%").padStart(7)}`
+          ),
+          `\`\`\``,
+          channelRecommendation,
+        ]
+      : [`*CHANNEL ROI DEEP-DIVE:*`, `No channel data for this month.`];
+
+    // ═══════════════════════════════════════════════════════════
+    // 5d. BURN RATE & RUNWAY ANALYSIS
+    // ═══════════════════════════════════════════════════════════
+
+    const totalMonthlySpendUSD = totalCostMonth + SUPABASE_MONTHLY_FIXED; // include fixed
+    const totalMonthlySpendZAR = totalMonthlySpendUSD * USD_TO_ZAR;
+
+    // Average monthly revenue from last 3 months of closed deals
+    const threeMonthsAgo = new Date(now);
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    const { data: recentClosedDeals } = await supabase
+      .from("pipeline_deals")
+      .select("deal_value, closed_at")
+      .eq("stage", "closed_won")
+      .gte("closed_at", threeMonthsAgo.toISOString());
+
+    const recentRevenue = (recentClosedDeals || []).reduce((s, d) => s + (d.deal_value || 0), 0);
+    const monthsOfData = Math.max(1, Math.min(3, Math.ceil((now.getTime() - threeMonthsAgo.getTime()) / (30 * 24 * 60 * 60 * 1000))));
+    const avgMonthlyRevenue = recentRevenue / monthsOfData;
+
+    let burnRateAnalysis = "";
+    if (avgMonthlyRevenue > totalMonthlySpendZAR) {
+      const netMargin = ((avgMonthlyRevenue - totalMonthlySpendZAR) / avgMonthlyRevenue) * 100;
+      burnRateAnalysis = `System is profitable. Net margin: ${fmt(netMargin, 1)}%. Monthly revenue R${fmt(avgMonthlyRevenue, 0)} vs costs R${fmt(totalMonthlySpendZAR, 0)}.`;
+
+      // Calculate how many weeks profitable
+      const profitableSnapshots = snapshots.filter(
+        (s) => (s.total_revenue || 0) > (s.total_cost_estimate || 0) * USD_TO_ZAR * 4
+      );
+      if (profitableSnapshots.length > 0) {
+        burnRateAnalysis += ` System has been profitable for ~${profitableSnapshots.length} of last ${snapshots.length} weeks.`;
+      }
+    } else if (avgMonthlyRevenue > 0) {
+      const monthlyBurn = totalMonthlySpendZAR - avgMonthlyRevenue;
+      const avgDealVal = avgMonthlyRevenue / Math.max(1, (recentClosedDeals || []).length / monthsOfData);
+      const dealsToBreakeven = avgDealVal > 0 ? Math.ceil(monthlyBurn / avgDealVal) : 0;
+      burnRateAnalysis = `System is burning R${fmt(monthlyBurn, 0)}/month. At current deal rate, need ${dealsToBreakeven} more deal${dealsToBreakeven !== 1 ? "s" : ""} to break even.`;
+
+      // Project weeks to profitability based on revenue growth
+      if (hasHistory && trendRows.length >= 2) {
+        const revenueGrowthPerWeek =
+          (trendRows[trendRows.length - 1].revenue - trendRows[0].revenue) / trendRows.length;
+        if (revenueGrowthPerWeek > 0) {
+          const weeklyBurn = totalMonthlySpendZAR / 4;
+          const currentWeeklyRevenue = trendRows[trendRows.length - 1].revenue / 4;
+          const weeksToProfit = Math.ceil((weeklyBurn - currentWeeklyRevenue) / revenueGrowthPerWeek);
+          if (weeksToProfit > 0 && weeksToProfit < 52) {
+            burnRateAnalysis += ` At current trajectory, system reaches profitability in ~${weeksToProfit} weeks.`;
+          }
+        }
+      }
+    } else {
+      burnRateAnalysis = `No revenue data yet. Monthly costs: R${fmt(totalMonthlySpendZAR, 0)}. Focus on closing pipeline deals.`;
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 5e. UNIT ECONOMICS TRENDS (vs 4-week average)
+    // ═══════════════════════════════════════════════════════════
+
+    interface UnitEconAlert {
+      metric: string;
+      current: number;
+      avg: number;
+      pctChange: number;
+    }
+
+    const unitEconAlerts: UnitEconAlert[] = [];
+
+    if (hasHistory && fourWeekAvgCostPerLead > 0) {
+      const cplChange = pctChange(costPerLead, fourWeekAvgCostPerLead);
+      if (cplChange > 20) {
+        unitEconAlerts.push({ metric: "Cost per lead", current: costPerLead, avg: fourWeekAvgCostPerLead, pctChange: cplChange });
+      }
+    }
+    if (hasHistory && fourWeekAvgCostPerReply > 0) {
+      const cprChange = pctChange(costPerReply, fourWeekAvgCostPerReply);
+      if (cprChange > 20) {
+        unitEconAlerts.push({ metric: "Cost per reply", current: costPerReply, avg: fourWeekAvgCostPerReply, pctChange: cprChange });
+      }
+    }
+    if (hasHistory && fourWeekAvgCAC > 0) {
+      const cacChange = pctChange(cac, fourWeekAvgCAC);
+      if (cacChange > 20) {
+        unitEconAlerts.push({ metric: "CAC", current: cac, avg: fourWeekAvgCAC, pctChange: cacChange });
+      }
+    }
+
+    const unitEconTrendSlack = hasHistory
+      ? [
+          `*UNIT ECONOMICS vs 4-WEEK AVERAGE:*`,
+          `\`\`\``,
+          `Cost/Lead:  R${fmt(costPerLead)} vs avg R${fmt(fourWeekAvgCostPerLead)} ${costPerLead > fourWeekAvgCostPerLead * 1.05 ? "↑" : costPerLead < fourWeekAvgCostPerLead * 0.95 ? "↓" : "→"}`,
+          `Cost/Reply: R${fmt(costPerReply)} vs avg R${fmt(fourWeekAvgCostPerReply)} ${costPerReply > fourWeekAvgCostPerReply * 1.05 ? "↑" : costPerReply < fourWeekAvgCostPerReply * 0.95 ? "↓" : "→"}`,
+          `CAC:        R${fmt(cac)} vs avg R${fmt(fourWeekAvgCAC)} ${cac > fourWeekAvgCAC * 1.05 ? "↑" : cac < fourWeekAvgCAC * 0.95 ? "↓" : "→"}`,
+          `\`\`\``,
+          ...(unitEconAlerts.length > 0
+            ? [`:warning: *Alerts:* ${unitEconAlerts.map((a) => `${a.metric} worsened ${fmt(a.pctChange, 0)}% vs average`).join(", ")}`]
+            : [":white_check_mark: All unit economics within normal range."]),
+        ]
+      : [];
+
+    // ═══════════════════════════════════════════════════════════
+    // 5f. DATA-DRIVEN FINANCIAL RECOMMENDATIONS
+    // ═══════════════════════════════════════════════════════════
+
+    const smartRecommendations: string[] = [];
+
+    // Check channels for high cost, low ROI
+    for (const ch of channelROIList) {
+      if (ch.leads >= 5 && ch.dealsClosed === 0 && ch.costPerLead > 0) {
+        smartRecommendations.push(
+          `${ch.channel} has ${ch.leads} leads this month with 0 closed deals (cost R${fmt(ch.costPerLead * ch.leads, 0)}). Test reducing volume or improving targeting.`
+        );
+      }
+    }
+
+    // Check for great ROI channel
+    if (bestROICh && bestROICh.roi > 200 && channelROIList.length > 1) {
+      const ratio = bestROICh.roi / (channelROIList[1]?.roi || 1);
+      if (ratio > 2) {
+        smartRecommendations.push(
+          `${bestROICh.channel} converts at ${fmt(ratio, 1)}x the rate of other channels. Double down on this source.`
+        );
+      }
+    }
+
+    // CAC improving?
+    if (hasHistory && fourWeekAvgCAC > 0 && cac < fourWeekAvgCAC * 0.9) {
+      smartRecommendations.push(
+        `CAC dropped from R${fmt(fourWeekAvgCAC, 0)} to R${fmt(cac, 0)} — current strategy is working, maintain course.`
+      );
+    } else if (hasHistory && fourWeekAvgCAC > 0 && cac > fourWeekAvgCAC * 1.2) {
+      smartRecommendations.push(
+        `CAC increased from R${fmt(fourWeekAvgCAC, 0)} to R${fmt(cac, 0)} — investigate which channel is getting less efficient.`
+      );
+    }
+
+    // Check email effectiveness (open rates from outreach_insights if available)
+    const { data: recentInsights } = await supabase
+      .from("outreach_insights")
+      .select("open_rate, reply_rate")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (recentInsights?.open_rate && recentInsights.open_rate < 0.4) {
+      smartRecommendations.push(
+        `Email open rate is ${fmt(recentInsights.open_rate * 100, 0)}% — costs are being wasted on unread emails. Fix deliverability before scaling volume.`
+      );
+    }
+
+    // Forward-looking recommendation
+    if (weightedPipeline > totalCostMonthZAR * 3) {
+      smartRecommendations.push(
+        `Weighted pipeline (R${fmt(weightedPipeline, 0)}) is ${fmt(weightedPipeline / totalCostMonthZAR, 1)}x monthly costs. Focus on conversion — closing even 1 deal changes the economics significantly.`
+      );
+    } else if (totalEmailsMonth > 0 && (repliesMonth || 0) === 0) {
+      smartRecommendations.push(
+        `${totalEmailsMonth} emails sent this month with 0 replies. Revisit email copy, subject lines, and targeting before increasing volume.`
+      );
+    } else {
+      smartRecommendations.push(
+        `Continue building pipeline. Each week of consistent outreach compounds — the data will show which levers to pull.`
+      );
+    }
+
+    // Limit to 3 recommendations
+    const topRecommendations = smartRecommendations.slice(0, 3);
+
+    const smartRecsSlack = [
+      `*DATA-DRIVEN RECOMMENDATIONS:*`,
+      ...topRecommendations.map((r, i) => `${i + 1}. ${r}`),
+    ];
+
+    // ═══════════════════════════════════════════════════════════
+    // 5g. MONTHLY P&L (first Sunday of month only)
+    // ═══════════════════════════════════════════════════════════
+
+    let monthlyPLSlack: string[] = [];
+    let monthlyPLHtml = "";
+
+    if (isFirstSundayOfMonth(now)) {
+      // Use previous month's data since it's the first Sunday
+      const prevStart = prevMonthStart(now);
+      const prevEnd = prevMonthEnd(now);
+      const prevStartISO = new Date(prevStart).toISOString();
+      const prevEndISO = new Date(prevEnd + "T23:59:59.999Z").toISOString();
+
+      // Previous month revenue
+      const { data: prevMonthDeals } = await supabase
+        .from("pipeline_deals")
+        .select("id, deal_value, lead_company, lead_email")
+        .eq("stage", "closed_won")
+        .gte("closed_at", prevStartISO)
+        .lte("closed_at", prevEndISO);
+
+      const prevRevenue = (prevMonthDeals || []).reduce((s, d) => s + (d.deal_value || 0), 0);
+      const prevDealCount = prevMonthDeals?.length || 0;
+
+      // Previous month costs (from snapshots)
+      const { data: prevSnapshots } = await supabase
+        .from("financial_snapshots")
+        .select("total_cost_estimate")
+        .gte("week_start", prevStart)
+        .lte("week_start", prevEnd);
+
+      const prevTotalCostUSD = (prevSnapshots || []).reduce(
+        (s, snap) => s + (snap.total_cost_estimate || 0),
+        0
+      );
+      const prevTotalCostZAR = (prevTotalCostUSD + SUPABASE_MONTHLY_FIXED) * USD_TO_ZAR;
+
+      const netPL = prevRevenue - prevTotalCostZAR;
+
+      // Top 3 deals by value
+      const topDeals = [...(prevMonthDeals || [])]
+        .sort((a, b) => (b.deal_value || 0) - (a.deal_value || 0))
+        .slice(0, 3);
+
+      // Previous previous month for comparison
+      const ppStart = prevMonthStart(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+      const ppEnd = prevMonthEnd(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+
+      const { data: ppDeals } = await supabase
+        .from("pipeline_deals")
+        .select("deal_value")
+        .eq("stage", "closed_won")
+        .gte("closed_at", new Date(ppStart).toISOString())
+        .lte("closed_at", new Date(ppEnd + "T23:59:59.999Z").toISOString());
+
+      const ppRevenue = (ppDeals || []).reduce((s, d) => s + (d.deal_value || 0), 0);
+
+      // Grade
+      let grade = "F";
+      const profitable = netPL > 0;
+      const growing = prevRevenue > ppRevenue;
+      const improving = netPL > (ppRevenue - prevTotalCostZAR); // better P&L than prev prev month (approximate)
+
+      if (profitable && growing) grade = "A";
+      else if (profitable && !growing) grade = "B";
+      else if (Math.abs(netPL) < prevTotalCostZAR * 0.1) grade = "C";
+      else if (!profitable && improving) grade = "D";
+      else grade = "F";
+
+      const prevMonthName = new Date(now.getFullYear(), now.getMonth() - 1, 1).toLocaleString(
+        "en-ZA",
+        { month: "long", year: "numeric" }
+      );
+
+      monthlyPLSlack = [
+        ``,
+        `*MONTHLY P&L — ${prevMonthName}:*`,
+        `\`\`\``,
+        `Revenue:      R${fmt(prevRevenue, 0)} (${prevDealCount} deal${prevDealCount !== 1 ? "s" : ""})`,
+        `Costs:        R${fmt(prevTotalCostZAR, 0)}`,
+        `Net ${netPL >= 0 ? "Profit" : "Loss"}:     ${netPL >= 0 ? "R" : "-R"}${fmt(Math.abs(netPL), 0)}`,
+        `\`\`\``,
+        ...(topDeals.length > 0
+          ? [
+              `Top deals:`,
+              ...topDeals.map(
+                (d, i) =>
+                  `  ${i + 1}. ${d.lead_company || d.lead_email || "Unknown"} — R${fmt(d.deal_value || 0, 0)}`
+              ),
+            ]
+          : []),
+        ppRevenue > 0
+          ? `vs prev month: ${prevRevenue >= ppRevenue ? "↑" : "↓"} ${prevRevenue >= ppRevenue ? "+" : ""}${fmt(((prevRevenue - ppRevenue) / ppRevenue) * 100, 0)}%`
+          : "",
+        `*Grade: ${grade}* ${grade === "A" ? "(profitable + growing)" : grade === "B" ? "(profitable + flat)" : grade === "C" ? "(break-even)" : grade === "D" ? "(losing money but improving)" : "(losing money + declining)"}`,
+      ].filter(Boolean);
+
+      const topDealRows = topDeals
+        .map(
+          (d, i) =>
+            `<tr><td style="padding:4px 12px;">${i + 1}. ${d.lead_company || d.lead_email || "Unknown"}</td><td style="padding:4px 12px;text-align:right;">R${fmt(d.deal_value || 0, 0)}</td></tr>`
+        )
+        .join("");
+
+      monthlyPLHtml = `
+  <h2 style="font-size:16px;color:#8e44ad;margin-top:24px;">Monthly P&L — ${prevMonthName}</h2>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;">
+    <tr style="background:#f8f9fa;"><td style="padding:6px 12px;">Revenue</td><td style="padding:6px 12px;text-align:right;">R${fmt(prevRevenue, 0)} (${prevDealCount} deals)</td></tr>
+    <tr><td style="padding:6px 12px;">Costs</td><td style="padding:6px 12px;text-align:right;">R${fmt(prevTotalCostZAR, 0)}</td></tr>
+    <tr style="font-weight:bold;border-top:2px solid #333;"><td style="padding:6px 12px;">Net ${netPL >= 0 ? "Profit" : "Loss"}</td><td style="padding:6px 12px;text-align:right;color:${netPL >= 0 ? "#27ae60" : "#e74c3c"};">${netPL >= 0 ? "R" : "-R"}${fmt(Math.abs(netPL), 0)}</td></tr>
+  </table>
+  ${topDeals.length > 0 ? `<h3 style="font-size:14px;color:#2c3e50;margin-top:12px;">Top Deals</h3>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;">${topDealRows}</table>` : ""}
+  ${ppRevenue > 0 ? `<p>vs previous month: ${prevRevenue >= ppRevenue ? "+" : ""}${fmt(((prevRevenue - ppRevenue) / ppRevenue) * 100, 0)}%</p>` : ""}
+  <p style="font-size:18px;font-weight:bold;color:${grade === "A" || grade === "B" ? "#27ae60" : grade === "C" ? "#f39c12" : "#e74c3c"};">
+    Grade: ${grade} ${grade === "A" ? "(profitable + growing)" : grade === "B" ? "(profitable + flat)" : grade === "C" ? "(break-even)" : grade === "D" ? "(losing money but improving)" : "(losing money + declining)"}
+  </p>`;
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // 6. POST TO SLACK
     // ═══════════════════════════════════════════════════════════
 
@@ -379,6 +888,13 @@ Deno.serve(async (req) => {
       `Closed this month: R${fmt(revenueMonth, 0)} (${dealsWonMonth} deal${dealsWonMonth !== 1 ? "s" : ""})`,
       bestChannel !== "none" ? `Best channel: ${bestChannel} — R${fmt(bestChannelRevenue, 0)}` : "",
       ``,
+      ...trendSummarySlack,
+      ``,
+      ...channelDeepDiveSlack,
+      ``,
+      `*BURN RATE & RUNWAY:*`,
+      burnRateAnalysis,
+      ``,
       `*UNIT ECONOMICS (ZAR, monthly):*`,
       `\`\`\``,
       `Cost per lead:    R${fmt(costPerLead)}`,
@@ -388,6 +904,7 @@ Deno.serve(async (req) => {
       `CAC:              R${fmt(cac)}`,
       `ROI:              ${fmt(roiPercent, 0)}%`,
       `\`\`\``,
+      ...(unitEconTrendSlack.length > 0 ? [...unitEconTrendSlack, ``] : []),
       ``,
       `*PIPELINE FORECAST:*`,
       pipelineLines || "  No active deals",
@@ -395,6 +912,10 @@ Deno.serve(async (req) => {
       dealsNeededForBreakeven > 0
         ? `Break-even: ${dealsNeededForBreakeven} more deal${dealsNeededForBreakeven !== 1 ? "s" : ""} needed at avg R${fmt(avgDealValue, 0)}`
         : "",
+      ``,
+      ...smartRecsSlack,
+      ``,
+      ...monthlyPLSlack,
       ``,
       `*RECOMMENDATION:*`,
       recommendation,
@@ -474,6 +995,29 @@ Deno.serve(async (req) => {
       : ""
   }
 
+  ${hasHistory ? `
+  <h2 style="font-size:16px;color:#2c3e50;margin-top:24px;">4-Week Trend Analysis</h2>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;">
+    <tr style="background:#f8f9fa;font-weight:bold;"><td style="padding:6px 12px;">Week</td><td style="padding:6px 12px;">Cost</td><td style="padding:6px 12px;">Revenue</td><td style="padding:6px 12px;">ROI</td><td style="padding:6px 12px;">CAC</td></tr>
+    ${trendRows.map((r, i) => `<tr${i % 2 === 0 ? '' : ' style="background:#f8f9fa;"'}><td style="padding:6px 12px;">${r.week}</td><td style="padding:6px 12px;">$${fmt(r.cost)}</td><td style="padding:6px 12px;">R${fmt(r.revenue, 0)}</td><td style="padding:6px 12px;">${fmt(r.roi, 0)}%</td><td style="padding:6px 12px;">R${fmt(r.cac, 0)}</td></tr>`).join("")}
+  </table>
+  <p><strong>Trends:</strong> Spend ${costTrend} &nbsp; Revenue ${revenueTrend} &nbsp; ROI ${roiTrend} &nbsp; CAC ${cacTrend}</p>
+  ` : `<p style="color:#888;margin-top:16px;"><em>Trend analysis available after 2+ weeks of data.</em></p>`}
+
+  ${channelROIList.length > 0 ? `
+  <h2 style="font-size:16px;color:#2c3e50;margin-top:24px;">Channel ROI Deep-Dive (This Month)</h2>
+  <table style="border-collapse:collapse;width:100%;font-size:12px;">
+    <tr style="background:#f8f9fa;font-weight:bold;"><td style="padding:6px 8px;">Channel</td><td style="padding:6px 8px;">Leads</td><td style="padding:6px 8px;">Emails</td><td style="padding:6px 8px;">Replies</td><td style="padding:6px 8px;">Deals Won</td><td style="padding:6px 8px;">Revenue</td><td style="padding:6px 8px;">ROI</td></tr>
+    ${channelROIList.map((c, i) => `<tr${i % 2 === 0 ? '' : ' style="background:#f8f9fa;"'}><td style="padding:6px 8px;">${c.channel}</td><td style="padding:6px 8px;">${c.leads}</td><td style="padding:6px 8px;">${c.emails}</td><td style="padding:6px 8px;">${c.replies}</td><td style="padding:6px 8px;">${c.dealsClosed}</td><td style="padding:6px 8px;">R${fmt(c.revenue, 0)}</td><td style="padding:6px 8px;">${fmt(c.roi, 0)}%</td></tr>`).join("")}
+  </table>
+  <p style="background:#eef6ff;padding:8px 12px;border-radius:4px;border-left:4px solid #3498db;font-size:13px;">${channelRecommendation.replace(/\*/g, "")}</p>
+  ` : ""}
+
+  <h2 style="font-size:16px;color:#e67e22;margin-top:24px;">Burn Rate & Runway</h2>
+  <p style="background:#fef9e7;padding:12px;border-radius:6px;border-left:4px solid #e67e22;font-size:13px;">
+    ${burnRateAnalysis}
+  </p>
+
   <h2 style="font-size:16px;color:#2c3e50;margin-top:24px;">Unit Economics (ZAR, Monthly)</h2>
   <table style="border-collapse:collapse;width:100%;font-size:13px;">
     <tr style="background:#f8f9fa;"><td style="padding:6px 12px;">Cost per lead</td><td style="padding:6px 12px;text-align:right;">R${fmt(costPerLead)}</td></tr>
@@ -483,6 +1027,15 @@ Deno.serve(async (req) => {
     <tr style="background:#f8f9fa;"><td style="padding:6px 12px;">CAC</td><td style="padding:6px 12px;text-align:right;">R${fmt(cac)}</td></tr>
     <tr style="font-weight:bold;border-top:2px solid #333;"><td style="padding:6px 12px;">ROI</td><td style="padding:6px 12px;text-align:right;">${fmt(roiPercent, 0)}%</td></tr>
   </table>
+  ${hasHistory ? `
+  <h3 style="font-size:14px;color:#2c3e50;margin-top:16px;">vs 4-Week Average</h3>
+  <table style="border-collapse:collapse;width:100%;font-size:13px;">
+    <tr style="background:#f8f9fa;"><td style="padding:6px 12px;">Cost per lead</td><td style="padding:6px 12px;text-align:right;">R${fmt(costPerLead)} vs R${fmt(fourWeekAvgCostPerLead)} ${costPerLead > fourWeekAvgCostPerLead * 1.05 ? "↑" : costPerLead < fourWeekAvgCostPerLead * 0.95 ? "↓" : "→"}</td></tr>
+    <tr><td style="padding:6px 12px;">Cost per reply</td><td style="padding:6px 12px;text-align:right;">R${fmt(costPerReply)} vs R${fmt(fourWeekAvgCostPerReply)} ${costPerReply > fourWeekAvgCostPerReply * 1.05 ? "↑" : costPerReply < fourWeekAvgCostPerReply * 0.95 ? "↓" : "→"}</td></tr>
+    <tr style="background:#f8f9fa;"><td style="padding:6px 12px;">CAC</td><td style="padding:6px 12px;text-align:right;">R${fmt(cac)} vs R${fmt(fourWeekAvgCAC)} ${cac > fourWeekAvgCAC * 1.05 ? "↑" : cac < fourWeekAvgCAC * 0.95 ? "↓" : "→"}</td></tr>
+  </table>
+  ${unitEconAlerts.length > 0 ? `<p style="color:#e74c3c;font-weight:bold;">Alerts: ${unitEconAlerts.map(a => `${a.metric} worsened ${fmt(a.pctChange, 0)}%`).join(", ")}</p>` : `<p style="color:#27ae60;">All unit economics within normal range.</p>`}
+  ` : ""}
 
   <h2 style="font-size:16px;color:#2c3e50;margin-top:24px;">Pipeline Forecast</h2>
   ${
@@ -499,6 +1052,13 @@ Deno.serve(async (req) => {
       ? `<p><strong>Break-even:</strong> ${dealsNeededForBreakeven} more deal${dealsNeededForBreakeven !== 1 ? "s" : ""} needed at avg R${fmt(avgDealValue, 0)}</p>`
       : ""
   }
+
+  <h2 style="font-size:16px;color:#2980b9;margin-top:24px;">Data-Driven Recommendations</h2>
+  <ol style="font-size:13px;line-height:1.8;">
+    ${topRecommendations.map(r => `<li style="margin-bottom:8px;">${r}</li>`).join("")}
+  </ol>
+
+  ${monthlyPLHtml}
 
   <h2 style="font-size:16px;color:#27ae60;margin-top:24px;">Recommendation</h2>
   <p style="background:#f0fdf4;padding:12px;border-radius:6px;border-left:4px solid #27ae60;">
@@ -597,7 +1157,35 @@ Deno.serve(async (req) => {
           cost_per_booking: costPerBooking,
           cac,
           roi_percent: roiPercent,
+          four_week_avg: hasHistory ? {
+            cost_per_lead: fourWeekAvgCostPerLead,
+            cost_per_reply: fourWeekAvgCostPerReply,
+            cac: fourWeekAvgCAC,
+          } : null,
+          alerts: unitEconAlerts,
         },
+        trends: {
+          cost: costTrend,
+          revenue: revenueTrend,
+          roi: roiTrend,
+          cac: cacTrend,
+          weeks_of_data: snapshots.length,
+        },
+        channel_roi: channelROIList.map(c => ({
+          channel: c.channel,
+          leads: c.leads,
+          emails: c.emails,
+          replies: c.replies,
+          deals_closed: c.dealsClosed,
+          revenue: c.revenue,
+          roi: c.roi,
+        })),
+        burn_rate: {
+          monthly_spend_zar: totalMonthlySpendZAR,
+          avg_monthly_revenue: avgMonthlyRevenue,
+          analysis: burnRateAnalysis,
+        },
+        recommendations: topRecommendations,
         pipeline: {
           weighted_value: weightedPipeline,
           stages: stageBreakdown,
@@ -619,6 +1207,10 @@ Deno.serve(async (req) => {
         roi_percent: roiPercent,
         weighted_pipeline: weightedPipeline,
         cac,
+        trends: { cost: costTrend, revenue: revenueTrend, roi: roiTrend, cac: cacTrend },
+        channel_roi_summary: channelROIList.map(c => ({ channel: c.channel, roi: c.roi, revenue: c.revenue })),
+        burn_rate: { monthly_spend_zar: totalMonthlySpendZAR, avg_monthly_revenue: avgMonthlyRevenue },
+        recommendations: topRecommendations,
       }),
       { headers }
     );

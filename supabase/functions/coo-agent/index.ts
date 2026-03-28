@@ -116,7 +116,10 @@ Deno.serve(async (req) => {
     const now = new Date();
     const dateStr = formatSAST(now);
     const timeStr = formatSASTTime(now);
-    const isSunday = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Johannesburg" })).getDay() === 0;
+    const sastDate = new Date(now.toLocaleString("en-US", { timeZone: "Africa/Johannesburg" }));
+    const isSunday = sastDate.getDay() === 0;
+    const isMonday = sastDate.getDay() === 1;
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     // Time boundaries
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
@@ -309,7 +312,294 @@ Deno.serve(async (req) => {
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 5. WEEKLY TRENDS (Sundays only)
+    // 5a. PATTERN RECOGNITION + LEARNING (daily)
+    // ═══════════════════════════════════════════════════════════
+
+    let patternsSection = "";
+    let patternsHtml = "";
+    const learnings: string[] = [];
+
+    try {
+      // Best day of week for replies (last 30 days)
+      const { data: replyData } = await supabase
+        .from("prospect_outreach")
+        .select("sent_at")
+        .not("replied_at", "is", null)
+        .gte("sent_at", thirtyDaysAgo);
+
+      const dayReplyCounts: Record<number, number> = {};
+      for (const r of replyData || []) {
+        const day = new Date(r.sent_at).getDay();
+        dayReplyCounts[day] = (dayReplyCounts[day] || 0) + 1;
+      }
+      const bestReplyDay = Object.entries(dayReplyCounts)
+        .sort(([, a], [, b]) => b - a)[0];
+      if (bestReplyDay) {
+        learnings.push(`Best reply day: ${DAYS_OF_WEEK[parseInt(bestReplyDay[0])]} (${bestReplyDay[1]} replies in 30d)`);
+      }
+
+      // Top converting industries (last 30 days)
+      const { data: repliedProspects } = await supabase
+        .from("prospect_outreach")
+        .select("recipient_email")
+        .not("replied_at", "is", null)
+        .gte("sent_at", thirtyDaysAgo);
+
+      const repliedEmails = new Set((repliedProspects || []).map(r => r.recipient_email).filter(Boolean));
+
+      if (repliedEmails.size > 0) {
+        const { data: repliedQueue } = await supabase
+          .from("warm_outreach_queue")
+          .select("industry, contact_title")
+          .in("contact_email", Array.from(repliedEmails).slice(0, 100));
+
+        // Industry performance
+        const industryCounts: Record<string, number> = {};
+        const titleCounts: Record<string, number> = {};
+        for (const q of repliedQueue || []) {
+          if (q.industry) industryCounts[q.industry] = (industryCounts[q.industry] || 0) + 1;
+          if (q.contact_title) titleCounts[q.contact_title] = (titleCounts[q.contact_title] || 0) + 1;
+        }
+
+        const topIndustries = Object.entries(industryCounts).sort(([, a], [, b]) => b - a).slice(0, 3);
+        const topTitles = Object.entries(titleCounts).sort(([, a], [, b]) => b - a).slice(0, 3);
+
+        if (topIndustries.length > 0) {
+          learnings.push(`Top industries (by replies): ${topIndustries.map(([k, v]) => `${k} (${v})`).join(", ")}`);
+        }
+        if (topTitles.length > 0) {
+          learnings.push(`Top titles (by replies): ${topTitles.map(([k, v]) => `${k} (${v})`).join(", ")}`);
+        }
+      }
+
+      // Zero-reply industries (sent 10+ but 0 replies)
+      const { data: allSent } = await supabase
+        .from("prospect_outreach")
+        .select("recipient_email, replied_at")
+        .gte("sent_at", thirtyDaysAgo);
+
+      if (allSent && allSent.length > 0) {
+        const sentEmails = (allSent || []).filter(s => !s.replied_at).map(s => s.recipient_email).filter(Boolean);
+        if (sentEmails.length > 0) {
+          const { data: sentQueue } = await supabase
+            .from("warm_outreach_queue")
+            .select("industry")
+            .in("contact_email", sentEmails.slice(0, 200));
+
+          const sentByIndustry: Record<string, number> = {};
+          for (const q of sentQueue || []) {
+            if (q.industry) sentByIndustry[q.industry] = (sentByIndustry[q.industry] || 0) + 1;
+          }
+
+          const deadIndustries = Object.entries(sentByIndustry)
+            .filter(([ind, count]) => count >= 10 && !(industryCounts?.[ind]))
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 3);
+
+          if (deadIndustries.length > 0) {
+            learnings.push(`Dead weight industries (10+ sent, 0 replies): ${deadIndustries.map(([k, v]) => `${k} (${v} sent)`).join(", ")}`);
+          }
+        }
+      }
+
+      // Template variant performance
+      const { data: variantData } = await supabase
+        .from("prospect_outreach")
+        .select("template_variant, replied_at")
+        .not("template_variant", "is", null)
+        .gte("sent_at", thirtyDaysAgo);
+
+      if (variantData && variantData.length > 0) {
+        const variantStats: Record<string, { sent: number; replied: number }> = {};
+        for (const v of variantData) {
+          if (!v.template_variant) continue;
+          if (!variantStats[v.template_variant]) variantStats[v.template_variant] = { sent: 0, replied: 0 };
+          variantStats[v.template_variant].sent++;
+          if (v.replied_at) variantStats[v.template_variant].replied++;
+        }
+        const variantRanked = Object.entries(variantStats)
+          .map(([name, stats]) => ({ name, ...stats, rate: stats.sent > 0 ? (stats.replied / stats.sent * 100) : 0 }))
+          .sort((a, b) => b.rate - a.rate);
+        if (variantRanked.length > 0) {
+          learnings.push(`Winning email template: "${variantRanked[0].name}" (${variantRanked[0].rate.toFixed(1)}% reply rate)`);
+        }
+      }
+
+      // Store patterns in outreach_insights
+      for (const learning of learnings) {
+        try {
+          await supabase.from("outreach_insights").upsert({
+            insight_type: "coo_pattern",
+            insight_key: learning.split(":")[0].trim(),
+            total_sent: 0,
+            total_replied: 0,
+            reply_rate: 0,
+            last_updated: now.toISOString(),
+          }, { onConflict: "insight_type,insight_key" });
+        } catch { /* best effort */ }
+      }
+
+      if (learnings.length > 0) {
+        patternsSection = `\n🧠 PATTERNS DETECTED:\n${learnings.map(l => `├─ ${l}`).join("\n")}`;
+        patternsHtml = `
+        <h3 style="color:#8e44ad;border-bottom:2px solid #8e44ad;padding-bottom:8px;margin-top:24px;">🧠 Patterns Detected</h3>
+        <ul style="padding-left:20px;">${learnings.map(l => `<li style="margin-bottom:6px;">${l}</li>`).join("")}</ul>`;
+      }
+    } catch (patternErr) {
+      console.error("Pattern recognition error:", patternErr);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 5b. ADAPTIVE RECOMMENDATIONS (daily)
+    // ═══════════════════════════════════════════════════════════
+
+    const recommendations: string[] = [];
+
+    // Based on learnings, generate specific advice
+    if ((emailsSent24h || 0) === 0 && (queuePending || 0) > 0) {
+      recommendations.push("Zero emails sent yesterday with pending prospects — check auto-outreach agent health immediately");
+    }
+    if ((replies24h || 0) > 0 && (bookings24h || 0) === 0) {
+      recommendations.push("Got replies but no bookings — follow up on warm leads within 2 hours of reply");
+    }
+    if (critical.length > 2) {
+      recommendations.push(`${critical.length} agents critical — system degraded. Prioritise fixing: ${critical.slice(0, 3).join(", ")}`);
+    }
+    if (coldDealList.length > 3) {
+      recommendations.push(`${coldDealList.length} deals going cold — block 30 min today to re-engage top 3 by value`);
+    }
+    for (const learning of learnings) {
+      if (learning.includes("Dead weight")) {
+        const match = learning.match(/Dead weight industries.*?: (.+)/);
+        if (match) recommendations.push(`Consider deprioritising: ${match[1]} — high volume, zero replies`);
+      }
+    }
+    if (recommendations.length === 0) {
+      recommendations.push("System operating normally — focus on closing existing warm leads");
+    }
+
+    let recsSection = `\n💡 RECOMMENDATIONS:\n${recommendations.map(r => `├─ ${r}`).join("\n")}`;
+    let recsHtml = `
+    <h3 style="color:#2980b9;border-bottom:2px solid #2980b9;padding-bottom:8px;margin-top:24px;">💡 Recommendations</h3>
+    <ul style="padding-left:20px;">${recommendations.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join("")}</ul>`;
+
+    // ═══════════════════════════════════════════════════════════
+    // 5c. MONDAY STRATEGY MEETING (Mondays only)
+    // ═══════════════════════════════════════════════════════════
+
+    let mondaySection = "";
+    let mondayHtml = "";
+
+    if (isMonday) {
+      // Comprehensive week-ahead strategy based on all data
+      const [
+        { count: thisWeekEmails },
+        { count: lastWeekEmails },
+        { count: thisWeekReplies },
+        { count: lastWeekReplies },
+        { count: thisWeekBookings },
+        { count: lastWeekBookings },
+        { data: thisWeekDeals },
+        { data: lastWeekDeals },
+        { count: thisWeekOpens },
+        { count: lastWeekOpens },
+        { count: totalPending },
+      ] = await Promise.all([
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).eq("status", "sent").gte("sent_at", sevenDaysAgo),
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).eq("status", "sent").gte("sent_at", fourteenDaysAgo).lt("sent_at", sevenDaysAgo),
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).not("replied_at", "is", null).gte("sent_at", sevenDaysAgo),
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).not("replied_at", "is", null).gte("sent_at", fourteenDaysAgo).lt("sent_at", sevenDaysAgo),
+        supabase.from("bookings").select("*", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+        supabase.from("bookings").select("*", { count: "exact", head: true }).gte("created_at", fourteenDaysAgo).lt("created_at", sevenDaysAgo),
+        supabase.from("pipeline_deals").select("deal_value").gte("created_at", sevenDaysAgo),
+        supabase.from("pipeline_deals").select("deal_value").gte("created_at", fourteenDaysAgo).lt("created_at", sevenDaysAgo),
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).not("opened_at", "is", null).gte("sent_at", sevenDaysAgo),
+        supabase.from("prospect_outreach").select("*", { count: "exact", head: true }).not("opened_at", "is", null).gte("sent_at", fourteenDaysAgo).lt("sent_at", sevenDaysAgo),
+        supabase.from("warm_outreach_queue").select("*", { count: "exact", head: true }).eq("status", "pending"),
+      ]);
+
+      const twe = thisWeekEmails || 0;
+      const lwe = lastWeekEmails || 0;
+      const twr = thisWeekReplies || 0;
+      const lwr = lastWeekReplies || 0;
+      const twb = thisWeekBookings || 0;
+      const lwb = lastWeekBookings || 0;
+      const two = thisWeekOpens || 0;
+      const lwo = lastWeekOpens || 0;
+      const twdValue = (thisWeekDeals || []).reduce((s: number, d: any) => s + (d.deal_value || 0), 0);
+      const lwdValue = (lastWeekDeals || []).reduce((s: number, d: any) => s + (d.deal_value || 0), 0);
+
+      // Strategic priorities for the week
+      const priorities: string[] = [];
+
+      // Volume analysis
+      if (twe < 50) priorities.push(`📧 EMAIL VOLUME LOW (${twe} last week). Target: 70+ emails/week. Check agent schedules and queue size (${totalPending || 0} pending).`);
+      else if (twe > lwe * 1.2) priorities.push(`📧 Email volume up ${trendPctChange(twe, lwe)}% — good momentum, maintain.`);
+
+      // Reply rate analysis
+      const replyRate = twe > 0 ? (twr / twe * 100) : 0;
+      const lastReplyRate = lwe > 0 ? (lwr / lwe * 100) : 0;
+      if (replyRate < 2) priorities.push(`📬 REPLY RATE CRITICAL (${replyRate.toFixed(1)}%). Industry benchmark is 3-5%. Review email copy and subject lines this week.`);
+      else if (replyRate > lastReplyRate) priorities.push(`📬 Reply rate improving (${replyRate.toFixed(1)}% vs ${lastReplyRate.toFixed(1)}%) — current approach working.`);
+
+      // Open rate analysis
+      const openRate = twe > 0 ? (two / twe * 100) : 0;
+      if (openRate < 15) priorities.push(`👁️ OPEN RATE LOW (${openRate.toFixed(0)}%). Emails may be landing in spam. Check deliverability monitor.`);
+
+      // Booking conversion
+      if (twr > 0 && twb === 0) priorities.push(`📞 ${twr} REPLIES BUT 0 BOOKINGS. Follow up within 2 hours. Every reply is a potential deal.`);
+      else if (twb > lwb) priorities.push(`📞 Bookings up ${trendPctChange(twb, lwb)}% — keep momentum.`);
+
+      // Pipeline
+      if (twdValue === 0 && twr > 0) priorities.push(`💰 No new deals despite ${twr} replies. Focus: convert warm leads to meetings this week.`);
+      if (coldDealList.length > 0) priorities.push(`🧊 ${coldDealList.length} cold deals — re-engage the top 3 by value today.`);
+
+      // Queue health
+      if ((totalPending || 0) < 20) priorities.push(`🎯 QUEUE LOW (${totalPending || 0} pending). Need more prospects. Check if apollo-prospect-import and web-scraper-leads ran.`);
+
+      if (priorities.length === 0) priorities.push("System healthy. Focus on closing warm leads and maintaining current cadence.");
+
+      mondaySection = `
+
+═══════════════════════════════════════
+📋 MONDAY STRATEGY MEETING — Week of ${dateStr}
+═══════════════════════════════════════
+
+LAST WEEK SCORECARD:
+├─ Emails: ${twe} ${trend(twe, lwe)} (was ${lwe})
+├─ Open rate: ${twe > 0 ? pct(two, twe) : 0}% ${trend(two, lwo)}
+├─ Reply rate: ${replyRate.toFixed(1)}% ${trend(twr, lwr)} (was ${lastReplyRate.toFixed(1)}%)
+├─ Bookings: ${twb} ${trend(twb, lwb)} (was ${lwb})
+├─ New pipeline: R${formatRand(twdValue)} ${trend(twdValue, lwdValue)} (was R${formatRand(lwdValue)})
+└─ Queue: ${totalPending || 0} pending prospects
+
+THIS WEEK'S PRIORITIES:
+${priorities.map((p, i) => `${i + 1}. ${p}`).join("\n")}
+
+${learnings.length > 0 ? `INTELLIGENCE UPDATE:\n${learnings.map(l => `• ${l}`).join("\n")}` : ""}`;
+
+      mondayHtml = `
+      <div style="background:#1a1a2e;color:white;padding:16px 24px;border-radius:8px;margin-top:24px;">
+        <h2 style="margin:0;font-size:18px;">📋 Monday Strategy Meeting — Week of ${dateStr}</h2>
+      </div>
+      <div style="padding:16px 24px;background:#f0f4ff;border:1px solid #c8d6e5;border-radius:0 0 8px 8px;">
+        <h3 style="color:#2c3e50;">Last Week Scorecard</h3>
+        <table style="border-collapse:collapse;width:100%;font-size:14px;">
+          <tr style="background:#fff;"><th style="padding:8px;text-align:left;">Metric</th><th style="padding:8px;">This Week</th><th style="padding:8px;">Last Week</th><th style="padding:8px;">Trend</th></tr>
+          <tr><td style="padding:8px;">Emails Sent</td><td style="padding:8px;text-align:center;font-weight:600;">${twe}</td><td style="padding:8px;text-align:center;">${lwe}</td><td style="padding:8px;text-align:center;">${trend(twe, lwe)}</td></tr>
+          <tr style="background:#fff;"><td style="padding:8px;">Open Rate</td><td style="padding:8px;text-align:center;font-weight:600;">${twe > 0 ? pct(two, twe) : 0}%</td><td style="padding:8px;text-align:center;">${lwe > 0 ? pct(lwo, lwe) : 0}%</td><td style="padding:8px;text-align:center;">${trend(two, lwo)}</td></tr>
+          <tr><td style="padding:8px;">Reply Rate</td><td style="padding:8px;text-align:center;font-weight:600;">${replyRate.toFixed(1)}%</td><td style="padding:8px;text-align:center;">${lastReplyRate.toFixed(1)}%</td><td style="padding:8px;text-align:center;">${trend(twr, lwr)}</td></tr>
+          <tr style="background:#fff;"><td style="padding:8px;">Bookings</td><td style="padding:8px;text-align:center;font-weight:600;">${twb}</td><td style="padding:8px;text-align:center;">${lwb}</td><td style="padding:8px;text-align:center;">${trend(twb, lwb)}</td></tr>
+          <tr><td style="padding:8px;">Pipeline Value</td><td style="padding:8px;text-align:center;font-weight:600;">R${formatRand(twdValue)}</td><td style="padding:8px;text-align:center;">R${formatRand(lwdValue)}</td><td style="padding:8px;text-align:center;">${trend(twdValue, lwdValue)}</td></tr>
+        </table>
+        <h3 style="color:#2c3e50;margin-top:20px;">This Week's Priorities</h3>
+        <ol style="padding-left:20px;">${priorities.map(p => `<li style="margin-bottom:10px;font-size:14px;">${p}</li>`).join("")}</ol>
+        ${learnings.length > 0 ? `<h3 style="color:#8e44ad;margin-top:20px;">Intelligence Update</h3><ul style="padding-left:20px;">${learnings.map(l => `<li style="margin-bottom:6px;">${l}</li>`).join("")}</ul>` : ""}
+      </div>`;
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 5d. WEEKLY TRENDS (Sundays only)
     // ═══════════════════════════════════════════════════════════
 
     let weeklySection = "";
@@ -411,7 +701,7 @@ PIPELINE:
 └─ Cold deals: ${coldDealList.length} need attention
 
 ⚡ KEVIN — ACTION REQUIRED:
-${(() => { let n = 0; return actions.map((a) => a.startsWith("   ") ? a : `${++n}. ${a}`).join("\n"); })()}${weeklySection ? "\n" + weeklySection : ""}`;
+${(() => { let n = 0; return actions.map((a) => a.startsWith("   ") ? a : `${++n}. ${a}`).join("\n"); })()}${patternsSection}${recsSection}${mondaySection ? "\n" + mondaySection : ""}${weeklySection ? "\n" + weeklySection : ""}`;
 
     try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
@@ -501,6 +791,9 @@ ${(() => { let n = 0; return actions.map((a) => a.startsWith("   ") ? a : `${++n
       ${actionHtml}
     </ul>
 
+    ${patternsHtml}
+    ${recsHtml}
+    ${mondayHtml}
     ${weeklyHtml}
   </div>
 
@@ -516,7 +809,7 @@ ${(() => { let n = 0; return actions.map((a) => a.startsWith("   ") ? a : `${++n
           body: JSON.stringify({
             from: "LBD System <hello@leadershipbydesign.co>",
             to: ["kevin@kevinbritz.com"],
-            subject: `LBD Daily Brief — ${dateStr}`,
+            subject: isMonday ? `📋 LBD Monday Strategy Brief — ${dateStr}` : `LBD Daily Brief — ${dateStr}`,
             html: emailHtml,
           }),
         });
