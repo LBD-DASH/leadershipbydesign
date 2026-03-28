@@ -40,8 +40,62 @@ function weekStart(d: Date): string {
   return monday.toISOString().split("T")[0];
 }
 
+function weekStartNWeeksAgo(d: Date, n: number): string {
+  const past = new Date(d);
+  past.setDate(past.getDate() - n * 7);
+  return weekStart(past);
+}
+
 function monthStart(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
+}
+
+function prevMonthStart(d: Date): string {
+  const prev = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+  return `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}-01`;
+}
+
+function prevMonthEnd(d: Date): string {
+  const end = new Date(d.getFullYear(), d.getMonth(), 0);
+  return end.toISOString().split("T")[0];
+}
+
+function trendArrow(current: number, previous: number): string {
+  if (previous === 0 && current === 0) return "→";
+  if (previous === 0) return "↑";
+  const pctChange = ((current - previous) / previous) * 100;
+  if (pctChange > 5) return "↑";
+  if (pctChange < -5) return "↓";
+  return "→";
+}
+
+function trendArrowInverse(current: number, previous: number): string {
+  // For metrics where lower is better (costs, CAC)
+  if (previous === 0 && current === 0) return "→";
+  if (previous === 0) return "↑";
+  const pctChange = ((current - previous) / previous) * 100;
+  if (pctChange > 5) return "↑";
+  if (pctChange < -5) return "↓";
+  return "→";
+}
+
+function pctChange(current: number, previous: number): number {
+  if (previous === 0) return current > 0 ? 100 : 0;
+  return ((current - previous) / previous) * 100;
+}
+
+function isFirstSundayOfMonth(d: Date): boolean {
+  return d.getDay() === 0 && d.getDate() <= 7;
+}
+
+function classifyChannel(src: string): string {
+  const s = src.toLowerCase();
+  if (s.includes("apollo")) return "apollo";
+  if (s.includes("firecrawl") || s.includes("signal") || s.includes("auto-pipeline") || s.includes("web-scraper") || s.includes("scraper")) return "web-scraper";
+  if (s.includes("diagnostic") || s.includes("lac")) return "diagnostic:lac";
+  if (s.includes("google") || s.includes("paid") || s.includes("gads")) return "google-ads";
+  if (s.includes("vibe")) return "vibe-prospect";
+  return s.split("-")[0] || "other";
 }
 
 Deno.serve(async (req) => {
