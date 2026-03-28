@@ -98,7 +98,7 @@ export default function CallLogsPanel() {
     if (!logsRes.error && logsRes.data?.logs) setLogs(logsRes.data.logs);
     if (!prospectsRes.error && prospectsRes.data?.prospects) setProspects(prospectsRes.data.prospects);
     setLoading(false);
-  }, [token]);
+  }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 

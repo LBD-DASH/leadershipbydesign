@@ -54,7 +54,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
   const [loadingSequences, setLoadingSequences] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [scrapingPhones, setScrapingPhones] = useState(false);
-  const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
+  // Auth handled via Supabase JWT automatically
 
   // Load sequences on mount
   useEffect(() => {
