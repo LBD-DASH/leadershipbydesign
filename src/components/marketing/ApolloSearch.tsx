@@ -66,7 +66,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
     try {
       const { data, error } = await supabase.functions.invoke('apollo-enroll-sequence', {
         body: { action: 'list_sequences' },
-        headers: { 'x-admin-token': token },
+        
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -94,7 +94,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
           page,
           per_page: 25,
         },
-        headers: { 'x-admin-token': token },
+        
       });
 
       if (error) throw error;
@@ -144,7 +144,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
       const batchId = `apollo-${Date.now()}`;
       const { data, error } = await supabase.functions.invoke('admin-call-list', {
         body: { action: 'bulk_upload', prospects, batch_id: batchId },
-        headers: { 'x-admin-token': token },
+        
       });
 
       if (error || !data?.success) throw new Error(data?.error || error?.message || 'Import failed');
@@ -184,7 +184,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
 
       const { data, error } = await supabase.functions.invoke('apollo-enroll-sequence', {
         body: { action: 'enroll', sequence_id: selectedSequence, contacts },
-        headers: { 'x-admin-token': token },
+        
       });
 
       if (error) throw error;
@@ -212,7 +212,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
     setSyncing(true);
     try {
       const { data, error } = await supabase.functions.invoke('apollo-sync-engagement', {
-        headers: { 'x-admin-token': token },
+        
       });
 
       if (error) throw error;
@@ -242,7 +242,7 @@ export default function ApolloSearch({ onImported }: ApolloSearchProps) {
 
       const { data, error } = await supabase.functions.invoke('scrape-company-phones', {
         body: { companies },
-        headers: { 'x-admin-token': token },
+        
       });
 
       if (error) throw error;

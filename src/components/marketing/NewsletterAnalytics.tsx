@@ -34,7 +34,7 @@ export default function NewsletterAnalytics() {
       const adminToken = sessionStorage.getItem('admin_token') || '';
       const { data: result } = await supabase.functions.invoke('admin-newsletters', {
         body: { action: 'sent_history' },
-        headers: { 'x-admin-token': adminToken },
+        
       });
 
       const newsletters = result?.data;
