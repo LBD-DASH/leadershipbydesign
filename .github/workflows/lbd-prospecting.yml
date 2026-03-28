@@ -10,12 +10,14 @@ on:
     - cron: '7 8,12,16,20 * * *'
     # Phase 6: Daily 20:30 SAST (18:30 UTC) — Evening dashboard
     - cron: '33 18 * * *'
+    # Health: 09:00 + 18:00 SAST (07:00 + 16:00 UTC) — System heartbeat
+    - cron: '0 7,16 * * *'
     # Weekly: Sunday 19:00 SAST (17:00 UTC) — Weekly report
     - cron: '2 17 * * 0'
   workflow_dispatch:
     inputs:
       phase:
-        description: 'Phase to run (1, 4, 6, weekly, nurture)'
+        description: 'Phase to run (1, 4, 6, health, weekly, nurture)'
         required: true
         default: '1'
         type: choice
@@ -24,6 +26,7 @@ on:
           - 'nurture'
           - '4'
           - '6'
+          - 'health'
           - 'weekly'
 
 env:
@@ -187,6 +190,23 @@ jobs:
             -d '{}' || true
 
           echo "Phase 6 complete"
+
+  health-check:
+    if: >
+      (github.event.schedule == '0 7,16 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == 'health')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run System Heartbeat
+        run: |
+          echo "Health check: Running system heartbeat"
+
+          curl -s -X POST "$SUPABASE_URL/functions/v1/system-heartbeat" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}' || true
+
+          echo "Health check complete"
 
   weekly-report:
     if: >
