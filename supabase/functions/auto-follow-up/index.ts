@@ -31,7 +31,7 @@ const templates: FollowUpTemplate[] = [
 
 Wanted to make sure this landed. We've had over 200 companies take this diagnostic and the pattern is always the same — the gap between where managers think they are and where they actually are is bigger than expected.
 
-Takes 3 minutes: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
+Takes 3 minutes: https://www.leadershipbydesign.co/leader-as-coach-diagnostic?utm_source=outreach&utm_medium=email&utm_campaign=diagnostic-cold&utm_content=step2
 
 No follow-up unless you want one.
 
@@ -47,7 +47,7 @@ Kevin`,
 
 Companies with undertrained managers lose 30-40% of new hires in the first year. Not because the hires were wrong — because the managers couldn't coach them through the transition.
 
-If that number doesn't bother you, ignore this. If it does, this takes 3 minutes and shows you exactly where your risk sits: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
+If that number doesn't bother you, ignore this. If it does, this takes 3 minutes and shows you exactly where your risk sits: https://www.leadershipbydesign.co/leader-as-coach-diagnostic?utm_source=outreach&utm_medium=email&utm_campaign=diagnostic-cold&utm_content=step3
 
 Kevin`,
   },
@@ -61,7 +61,7 @@ Kevin`,
 
 I'll keep this short — I've sent a few emails about a free leadership diagnostic we built. If the timing's wrong, no stress at all.
 
-If anything changes and you want to benchmark where your managers sit, the link stays live: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
+If anything changes and you want to benchmark where your managers sit, the link stays live: https://www.leadershipbydesign.co/leader-as-coach-diagnostic?utm_source=outreach&utm_medium=email&utm_campaign=diagnostic-cold&utm_content=step4
 
 All the best with the year ahead.
 

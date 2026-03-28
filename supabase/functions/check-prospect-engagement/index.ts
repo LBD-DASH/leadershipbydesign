@@ -35,14 +35,14 @@ Deno.serve(async (req) => {
       console.log(`Matched prospect by UTM: ${prospectId}`);
     }
     
-    // Fallback: match by email
+    // Fallback: match by email in prospect_companies
     if (!prospectId && email) {
       const { data: prospectByEmail } = await supabase
         .from('prospect_companies')
         .select('id')
         .eq('contact_email', email)
         .single();
-      
+
       if (prospectByEmail) {
         prospectId = prospectByEmail.id;
         matchType = 'email_match';
@@ -50,10 +50,73 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (!prospectId) {
+    // Also check warm_outreach_queue (Vibe/Apollo/scraper prospects)
+    let outreachMatch: any = null;
+    if (email) {
+      const { data: outreachProspect } = await supabase
+        .from('warm_outreach_queue')
+        .select('id, contact_name, company_name, source_keyword, score')
+        .eq('contact_email', email)
+        .limit(1)
+        .single();
+
+      if (outreachProspect) {
+        outreachMatch = outreachProspect;
+        // Update outreach queue record with diagnostic data
+        await supabase
+          .from('warm_outreach_queue')
+          .update({
+            status: 'engaged',
+            score: Math.min((outreachProspect.score || 0) + 30, 100),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', outreachProspect.id);
+        console.log(`Matched outreach prospect: ${outreachProspect.contact_name} at ${outreachProspect.company_name} — score boosted +30`);
+
+        if (!prospectId) {
+          matchType = 'outreach_queue_match';
+        }
+      }
+    }
+
+    // Slack notification for ALL diagnostic completions
+    try {
+      const matchLabel = prospectId
+        ? `MATCHED to prospect (${matchType})`
+        : outreachMatch
+        ? `MATCHED to outreach prospect from ${outreachMatch.source_keyword || 'unknown source'}`
+        : 'NEW lead — not in prospect database';
+
+      const personName = outreachMatch?.contact_name || email;
+      const companyName = outreachMatch?.company_name || 'unknown company';
+      const totalScore = diagnosticScores ? Object.values(diagnosticScores).reduce((a: number, b: number) => a + b, 0) : 0;
+
+      await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${supabaseServiceKey}` },
+        body: JSON.stringify({
+          channel: 'leads-and-signups',
+          eventType: 'system_error',
+          data: {
+            function: `🎯 Diagnostic Completed`,
+            error: `${personName} at ${companyName}\nType: ${diagnosticType}\nScore: ${totalScore}/75\n${matchLabel}`,
+          },
+        }),
+      });
+    } catch { /* best effort */ }
+
+    if (!prospectId && !outreachMatch) {
       console.log('No prospect match found');
       return new Response(
         JSON.stringify({ success: true, matched: false }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // If only matched in outreach queue (not prospect_companies), return early
+    if (!prospectId && outreachMatch) {
+      return new Response(
+        JSON.stringify({ success: true, matched: true, matchType: 'outreach_queue_match', companyName: outreachMatch.company_name }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

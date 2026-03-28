@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
 
   // Diagnostic-first outreach — Step 1 only. Steps 2-4 handled by auto-follow-up.
   // No AI generation needed — proven template with direct diagnostic CTA.
-  const DIAGNOSTIC_URL = "https://www.leadershipbydesign.co/leader-as-coach-diagnostic";
+  const DIAGNOSTIC_URL = "https://www.leadershipbydesign.co/leader-as-coach-diagnostic?utm_source=outreach&utm_medium=email&utm_campaign=diagnostic-cold&utm_content=step1";
   const STEP1_SUBJECT = "quick question about your managers";
   const STEP1_SIGNATURE = `Kevin Britz\nLeadership by Design\n11 years | 4,000+ leaders developed | 30+ organisations`;
 

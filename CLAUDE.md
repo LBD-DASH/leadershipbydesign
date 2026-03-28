@@ -154,6 +154,11 @@ Both `apollo-prospect-import` and `web-scraper-leads` rotate through these group
 - Step 4 (Day 16): "last one from me" — graceful close, link stays live
 - Programme selling happens ONLY after diagnostic completion via the 3 nurture sequences
 - Old sequences paused: "Leader as Coach — 1 MAR" (0 replies/183), "Leader as Coach — MAR v2" (0 replies/98)
+- All diagnostic links UTM-tagged: `utm_source=outreach&utm_medium=email&utm_campaign=diagnostic-cold&utm_content=stepN`
+- `send-diagnostic-results` edge function: emails branded results with profile-specific recommendations + soft CTA
+- `check-prospect-engagement` matches diagnostic completers back to `warm_outreach_queue` and `prospect_companies`, boosts score +30, Slack alerts to #leads-and-signups
+- `diagnostic_email_results` table tracks all emailed results with UTM attribution
+- Full funnel: outreach email → diagnostic click (tracked) → completion → results emailed → prospect matched → Slack alert → nurture sequence
 
 ## Commercial Offer
 - **Primary**: Leader as Coach — 90-Day Manager Coaching Accelerator
