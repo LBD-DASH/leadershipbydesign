@@ -32,27 +32,25 @@ Deno.serve(async (req) => {
     });
   }
 
-  // A/B template variants — optimizer tracks which converts best
-  const TEMPLATE_VARIANTS = [
-    {
-      id: "problem-pattern",
-      opener: 'Use "What I\'ve seen in [industry]..." or "The pattern I keep running into..."',
-      cta: 'Offer the diagnostic as a gift: "I built a 2-min diagnostic that shows exactly where your management layer sits. Want me to send it across?"',
-    },
-    {
-      id: "question-hook",
-      opener: 'Lead with a provocative question about their industry. "How do your managers handle [specific challenge]?" or "What happens when your best people start leaving?"',
-      cta: 'Offer a quick insight: "I put together a short diagnostic that pinpoints this in 2 minutes — happy to share if useful."',
-    },
-    {
-      id: "stat-lead",
-      opener: 'Lead with a surprising stat or observation: "67% of managers in [industry] have never had coaching training" or "Most [size] companies lose their best people to bad management, not bad pay."',
-      cta: 'Direct ask: "Worth a 10-minute call to see if this applies to your team?"',
-    },
-  ];
+  // Diagnostic-first outreach — Step 1 only. Steps 2-4 handled by auto-follow-up.
+  // No AI generation needed — proven template with direct diagnostic CTA.
+  const DIAGNOSTIC_URL = "https://www.leadershipbydesign.co/leader-as-coach-diagnostic";
+  const STEP1_SUBJECT = "quick question about your managers";
+  const STEP1_SIGNATURE = `Kevin Britz\nLeadership by Design\n11 years | 4,000+ leaders developed | 30+ organisations`;
 
-  // Rotate variant based on prospect index within batch
-  let variantIndex = 0;
+  function getStep1Body(firstName: string): string {
+    return `Hi ${firstName},
+
+Most companies we work with have the same gap — their managers were promoted for being great at their jobs, not because they knew how to lead. The cost is usually invisible until turnover spikes or performance flatlines.
+
+We built a 3-minute diagnostic that shows exactly where that gap sits in your business. No fluff, no sales pitch — just a score and a breakdown you can act on immediately.
+
+Here's the link: ${DIAGNOSTIC_URL}
+
+Worth 3 minutes if leadership development is anywhere on your radar this year.
+
+${STEP1_SIGNATURE}`;
+  }
 
   // Companies to skip — test records, paused, or wrong ICP
   const SKIP_COMPANIES = [
@@ -136,166 +134,12 @@ Deno.serve(async (req) => {
 
     for (const prospect of validProspects) {
       try {
-        // Step 1: Scrape company website
-        let companyContext = "";
-        if (prospect.company_website) {
-          try {
-            const scrapeRes = await fetch("https://api.firecrawl.dev/v1/scrape", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${firecrawlKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                url: prospect.company_website,
-                formats: ["markdown"],
-                onlyMainContent: true,
-                timeout: 30000,
-              }),
-            });
-
-            if (scrapeRes.ok) {
-              const scrapeData = await scrapeRes.json();
-              companyContext = (scrapeData.data?.markdown || scrapeData.markdown || "").substring(0, 3000);
-            }
-          } catch (e) {
-            console.error(`Scrape failed for ${prospect.company_website}:`, e);
-          }
-        }
-
-        // Step 2: Claude generates personalized email with A/B variant
+        // Diagnostic-first Step 1 — no AI generation needed, proven template
         const firstName = prospect.contact_name?.split(" ")[0] || "there";
-        const industry = prospect.industry || "professional services";
-        const companySize = prospect.company_size || "";
-
-        // Select variant for this prospect
-        const variant = TEMPLATE_VARIANTS[variantIndex % TEMPLATE_VARIANTS.length];
-        variantIndex++;
-
-        const systemPrompt = `You are Kevin Britz, founder of Leadership by Design, writing a cold email to a senior HR or L&D decision maker in South Africa.
-
-VOICE: Direct, warm, no corporate language. First person "I" throughout. You are a practitioner, not a vendor. Write like a peer, not a salesperson.
-
-SUBJECT LINE RULES:
-- Max 6 words
-- Never use the company name
-- Never use "leadership development", "training", "programme"
-- Create tension or curiosity around a management problem
-- Examples of the RIGHT direction:
-  "Your managers are flying blind"
-  "Coaching culture or command culture?"
-  "Most managers default to this"
-  "What happens after the training ends"
-  "The gap nobody talks about"
-
-BODY RULES:
-- Under 80 words total. Hard limit.
-- Never use: "impressive", "remarkable", "commitment to excellence", "particularly caught my attention", "I noticed your", "we", "our programme", "our approach"
-- No flattery. No preamble. Get to the point in sentence one.
-- Use "I" not "we"
-- One idea only. No lists. No headers.
-
-STRUCTURE:
-Sentence 1-2: ${variant.opener}
-Sentence 3-4: Connect that problem to what happens when managers coach instead of control. One concrete outcome only: retention, performance, or speed of execution.
-Sentence 5: ${variant.cta}
-
-SIGN-OFF:
-Kevin
-Leadership by Design
-
-CRITICAL: If the scraped signal contains words like "committed to", "passionate about", "excellence", "world-class", "journey" -- DISCARD IT. Use industry pattern instead.
-
-OUTPUT FORMAT (respond ONLY with this, nothing else):
-Subject: [subject line]
-
-Hi [first name],
-
-[email body]
-
-Kevin
-Leadership by Design`;
-
-        const userPrompt = `PROSPECT:
-- First name: ${firstName}
-- Full name: ${prospect.contact_name || "Unknown"}
-- Job title: ${prospect.contact_title || "HR Leader"}
-- Company: ${prospect.company_name}
-- Industry: ${industry}
-- Company size: ${companySize}
-- Scraped signal: ${companyContext || "None available"}
-
-Write the email now. Only the subject and body. Nothing else.`;
-
-        // Generation with validation retry
-        let emailContent: { subject: string; body: string } | null = null;
-        const BANNED_SUBJECT = ["leadership development", "training", "programme"];
-        const BANNED_BODY = ["we ", "we'", "our programme", "our approach", "impressive", "remarkable", "commitment to excellence", "commitment"];
-
-        for (let attempt = 0; attempt < 2; attempt++) {
-          const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": anthropicKey,
-              "anthropic-version": "2023-06-01",
-            },
-            body: JSON.stringify({
-              model: "claude-sonnet-4-6-20250610",
-              max_tokens: 400,
-              messages: [
-                { role: "user", content: `${systemPrompt}\n\n${userPrompt}` },
-              ],
-            }),
-          });
-
-          if (!aiRes.ok) {
-            const errDetail = await aiRes.text();
-            console.error(`Claude API failed for ${prospect.company_name}: ${aiRes.status} — ${errDetail}`);
-            errors.push(`Claude ${aiRes.status} for ${prospect.company_name}`);
-            break;
-          }
-
-          const aiData = await aiRes.json();
-          const aiText = (aiData.content?.[0]?.text || "").trim();
-
-          // Parse "Subject: ...\n\n...body..." format
-          const subjectMatch = aiText.match(/^Subject:\s*(.+)/i);
-          if (!subjectMatch) {
-            console.error("No subject line found in AI response:", aiText.slice(0, 200));
-            if (attempt === 0) continue;
-            errors.push(`Parse fail for ${prospect.company_name}`);
-            break;
-          }
-
-          const subject = subjectMatch[1].trim();
-          const body = aiText.slice(aiText.indexOf("\n", aiText.indexOf(subject)) + 1).trim();
-          const wordCount = body.split(/\s+/).length;
-
-          // Validation checks
-          const companyLower = (prospect.company_name || "").toLowerCase();
-          const subjectLower = subject.toLowerCase();
-          const bodyLower = body.toLowerCase();
-
-          const subjectBad = BANNED_SUBJECT.some(b => subjectLower.includes(b)) ||
-            (companyLower.length > 2 && subjectLower.includes(companyLower));
-          const bodyBad = BANNED_BODY.some(b => bodyLower.includes(b));
-          const tooLong = wordCount > 120;
-
-          if ((subjectBad || bodyBad || tooLong) && attempt === 0) {
-            console.log(`  ♻️ Regenerating for ${prospect.company_name} (subject_bad=${subjectBad}, body_bad=${bodyBad}, words=${wordCount})`);
-            await new Promise(r => setTimeout(r, 1000));
-            continue;
-          }
-
-          emailContent = { subject, body };
-          break;
-        }
-
-        if (!emailContent) {
-          errors.push(`Generation failed for ${prospect.company_name}`);
-          continue;
-        }
+        const emailContent = {
+          subject: STEP1_SUBJECT,
+          body: getStep1Body(firstName),
+        };
 
         // Step 3: Send via Resend
         const sendRes = await fetch("https://api.resend.com/emails", {
@@ -357,8 +201,8 @@ Write the email now. Only the subject and body. Nothing else.`;
             status: "sent",
             sent_at: new Date().toISOString(),
             sequence_step: 1,
-            template_used: "kevin-cold-v2",
-            template_variant: variant.id,
+            template_used: "diagnostic-first-v1",
+            template_variant: "step1-diagnostic",
             recipient_email: prospect.contact_email,
           });
         } catch { /* best effort */ }
@@ -405,7 +249,7 @@ Write the email now. Only the subject and body. Nothing else.`;
       await supabase.from("agent_activity_log").insert({
         agent_name: "auto-outreach",
         status: emailedCount > 0 ? "success" : "warning",
-        message: `Sent ${emailedCount}/${validProspects.length} emails. Variants used: ${TEMPLATE_VARIANTS.map(v => v.id).join(", ")}${errors.length ? `. Errors: ${errors.length}` : ""}`,
+        message: `Sent ${emailedCount}/${validProspects.length} diagnostic-first emails (Step 1)${errors.length ? `. Errors: ${errors.length}` : ""}`,
       });
     } catch { /* best effort */ }
 

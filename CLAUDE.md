@@ -146,6 +146,15 @@ Both `apollo-prospect-import` and `web-scraper-leads` rotate through these group
 - Recency filter: only jobs posted within 7 days
 - URL validation: rejects dead links, listing pages, article URLs
 
+## Outreach Strategy (as of March 28 2026)
+**Diagnostic-first cold outreach** — shifted from programme-pitch to diagnostic-first approach.
+- Step 1 (Day 1): "quick question about your managers" — drives to LAC diagnostic
+- Step 2 (Day 4): "re: quick question about your managers" — social proof (200+ companies)
+- Step 3 (Day 9): "one stat that might change your mind" — 30-40% new hire loss stat
+- Step 4 (Day 16): "last one from me" — graceful close, link stays live
+- Programme selling happens ONLY after diagnostic completion via the 3 nurture sequences
+- Old sequences paused: "Leader as Coach — 1 MAR" (0 replies/183), "Leader as Coach — MAR v2" (0 replies/98)
+
 ## Commercial Offer
 - **Primary**: Leader as Coach — 90-Day Manager Coaching Accelerator
 - **Frameworks**: SHIFT, Leader as Coach, Contagious Identity

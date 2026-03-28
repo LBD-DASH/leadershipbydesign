@@ -25,50 +25,47 @@ const templates: FollowUpTemplate[] = [
     step: 2,
     minDays: 4,
     statusField: "step2_sent_at",
-    getSubject: (company) => `Quick follow-up — ${company}`,
-    getBody: (firstName, company, bookingLink) =>
+    getSubject: (_company) => `re: quick question about your managers`,
+    getBody: (firstName, _company, _bookingLink) =>
       `Hi ${firstName},
 
-Just following up on my note about coaching capability in your management layer.
+Wanted to make sure this landed. We've had over 200 companies take this diagnostic and the pattern is always the same — the gap between where managers think they are and where they actually are is bigger than expected.
 
-One pattern I keep seeing in growing companies: managers who were promoted for technical excellence default to command-and-control. It shows up as disengagement, escalations landing on HR's desk, and good people leaving.
+Takes 3 minutes: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
 
-If you're curious where your management layer stands, there's a free 3-minute assessment here: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
+No follow-up unless you want one.
 
-Takes 3 minutes. You'll get an instant profile.
-
-— Kevin, Leadership by Design`,
+Kevin`,
   },
   {
     step: 3,
     minDays: 9,
     statusField: "step3_sent_at",
-    getSubject: (_company) => `The cost nobody calculates`,
+    getSubject: (_company) => `one stat that might change your mind`,
     getBody: (firstName, _company, _bookingLink) =>
       `Hi ${firstName},
 
-The average mid-size SA firm loses R1.5 to R3 million a year to turnover driven by poor management. Most of it traces back to managers who were promoted for technical skill and left to figure out people leadership on their own.
+Companies with undertrained managers lose 30-40% of new hires in the first year. Not because the hires were wrong — because the managers couldn't coach them through the transition.
 
-We built a free diagnostic that benchmarks your management layer's coaching capability in 2 minutes:
-https://leadershipbydesign.co/leader-as-coach-diagnostic
+If that number doesn't bother you, ignore this. If it does, this takes 3 minutes and shows you exactly where your risk sits: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
 
-You'll get an instant scorecard showing exactly where the gaps are.
-
-— Kevin, Leadership by Design`,
+Kevin`,
   },
   {
     step: 4,
     minDays: 16,
     statusField: "step4_sent_at",
-    getSubject: (_company) => `Last note — free diagnostic inside`,
+    getSubject: (_company) => `last one from me`,
     getBody: (firstName, _company, _bookingLink) =>
-      `${firstName} — the diagnostic takes two minutes and it's free.
+      `Hi ${firstName},
 
-https://leadershipbydesign.co/leader-as-coach-diagnostic
+I'll keep this short — I've sent a few emails about a free leadership diagnostic we built. If the timing's wrong, no stress at all.
 
-If you want to talk after, let me know.
+If anything changes and you want to benchmark where your managers sit, the link stays live: https://www.leadershipbydesign.co/leader-as-coach-diagnostic
 
-— Kevin, Leadership by Design`,
+All the best with the year ahead.
+
+Kevin`,
   },
 ];
 
