@@ -59,7 +59,6 @@ Deno.serve(async (req) => {
       const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
       const supabase = createClient(supabaseUrl, supabaseKey);
 
-      // Save to chat_leads table
       const { error: insertError } = await supabase.from("chat_leads").insert({
         first_name: leadData.first_name,
         last_name: leadData.last_name,
@@ -73,7 +72,6 @@ Deno.serve(async (req) => {
         console.error("Lead insert error:", insertError);
       }
 
-      // Also sync to email_subscribers
       await supabase.from("email_subscribers").upsert({
         email: leadData.email?.toLowerCase().trim(),
         name: `${leadData.first_name || ""} ${leadData.last_name || ""}`.trim(),
@@ -83,7 +81,6 @@ Deno.serve(async (req) => {
         status: "active",
       }, { onConflict: "email" });
 
-      // Send Slack notification
       try {
         const slackRes = await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
           method: "POST",
@@ -117,83 +114,50 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Chat completion
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not configured");
+    // Chat completion via Lovable AI gateway
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
     }
 
     if (!messages || !Array.isArray(messages)) {
       throw new Error("Messages array is required");
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    // Convert messages to OpenAI format (add system message)
+    const openAIMessages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages,
+    ];
+
+    const response = await fetch("https://ai.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "google/gemini-2.5-flash",
+        messages: openAIMessages,
         max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: messages,
         stream: true,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Anthropic API error:", response.status, errorText);
+      console.error("Lovable AI error:", response.status, errorText);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited" }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error(`Anthropic API error: ${response.status}`);
+      throw new Error(`Lovable AI error: ${response.status}`);
     }
 
-    // Transform Anthropic SSE to OpenAI-compatible SSE format for the client
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
-    const reader = response.body!.getReader();
-
-    const stream = new ReadableStream({
-      async start(controller) {
-        let buffer = "";
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) {
-            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-            controller.close();
-            break;
-          }
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n");
-          buffer = lines.pop() || "";
-
-          for (const line of lines) {
-            if (!line.startsWith("data: ")) continue;
-            const jsonStr = line.slice(6).trim();
-            if (!jsonStr) continue;
-            try {
-              const event = JSON.parse(jsonStr);
-              if (event.type === "content_block_delta" && event.delta?.text) {
-                // Emit in OpenAI-compatible format
-                const chunk = {
-                  choices: [{ delta: { content: event.delta.text } }],
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
-              }
-            } catch { /* skip */ }
-          }
-        }
-      },
-    });
-
-    return new Response(stream, {
+    // Stream is already in OpenAI-compatible SSE format
+    return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
