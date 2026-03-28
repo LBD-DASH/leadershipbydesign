@@ -36,8 +36,8 @@ on:
     - cron: '30 16 * * *'
     # COO Agent: Daily 08:00 SAST (06:00 UTC) — Morning brief
     - cron: '0 6 * * *'
-    # CFO Agent: Sunday 19:00 SAST (17:00 UTC) — Weekly financial report
-    - cron: '5 17 * * 0'
+    # CFO Agent: Monday 08:05 SAST (06:05 UTC) — Weekly financial report
+    - cron: '5 6 * * 1'
   workflow_dispatch:
     inputs:
       phase:
@@ -389,7 +389,7 @@ jobs:
   executive:
     if: >
       (github.event.schedule == '0 6 * * *') ||
-      (github.event.schedule == '5 17 * * 0') ||
+      (github.event.schedule == '5 6 * * 1') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == 'executive')
     runs-on: ubuntu-latest
     steps:
@@ -399,6 +399,7 @@ jobs:
           DOW=$(date -u +%u)
 
           # COO Agent — Daily 06:00 UTC (08:00 SAST)
+          # Monday is the full strategy brief, other days are operational updates
           if [ "$HOUR" = "06" ] || [ "${{ github.event.inputs.phase }}" = "executive" ]; then
             echo "Running COO Daily Brief"
             curl -s -X POST "$SUPABASE_URL/functions/v1/coo-agent" \
@@ -407,8 +408,8 @@ jobs:
               -d '{}' || true
           fi
 
-          # CFO Agent — Sunday 17:05 UTC (19:05 SAST)
-          if [ "$DOW" = "7" ] || [ "${{ github.event.inputs.phase }}" = "executive" ]; then
+          # CFO Agent — Monday 06:05 UTC (08:05 SAST) — weekly financial report
+          if [ "$DOW" = "1" ] || [ "${{ github.event.inputs.phase }}" = "executive" ]; then
             echo "Running CFO Financial Report"
             curl -s -X POST "$SUPABASE_URL/functions/v1/cfo-agent" \
               -H "Authorization: Bearer $SUPABASE_KEY" \
