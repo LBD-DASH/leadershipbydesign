@@ -11,24 +11,39 @@ const corsHeaders = {
 };
 
 const KNOWN_AGENTS = [
+  // FIND PROSPECTS
+  "apollo-prospect-import",
+  "web-scraper-leads",
+  "apollo-list-builder",
+  "find-companies",
+  "stale-lead-reengager",
+  // SEND EMAILS
   "auto-outreach",
   "auto-follow-up",
   "process-diagnostic-nurture",
   "lac-follow-up",
-  "web-scraper-leads",
-  "apollo-prospect-import",
-  "apollo-list-builder",
-  "system-heartbeat",
-  "deliverability-monitor",
-  "performance-dashboard",
+  // LEARN & OPTIMIZE
   "conversion-tracker",
+  "deliverability-monitor",
   "outreach-optimizer",
+  "performance-dashboard",
   "win-loss-tracker",
-  "stale-lead-reengager",
+  // MONITOR & ALERT
+  "system-heartbeat",
+  "apollo-sync-engagement",
+  "gmail-reply-classifier",
+  "competitor-monitor",
+  // CONTENT
+  "generate-ai-newsletter",
   "blog-repurposer",
   "newsletter-curator",
-  "competitor-monitor",
-  "gmail-reply-classifier",
+  "linkedin-scheduler",
+  // SUPPORT
+  "leadership-chat",
+  "apollo-search",
+  "enrich-queue-emails",
+  // EXECUTIVE
+  "cfo-agent",
 ];
 
 function pct(num: number, den: number): string {
