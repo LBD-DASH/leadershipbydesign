@@ -183,7 +183,7 @@ export const prospectsApi = {
     try {
       const { data, error } = await supabase.functions.invoke('admin-prospects', {
         body: { action: 'list' },
-        headers: { 'x-admin-token': adminToken },
+        
       });
 
       if (error) {
@@ -212,7 +212,7 @@ export const prospectsApi = {
     try {
       const { data, error } = await supabase.functions.invoke('admin-prospects', {
         body: { action: 'get', prospectId },
-        headers: { 'x-admin-token': adminToken },
+        
       });
 
       if (error) {

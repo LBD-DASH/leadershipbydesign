@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -121,12 +121,9 @@ export default function CSVUploader({ onImportComplete }: { onImportComplete?: (
       status: 'active',
     }));
 
-    const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
-
     try {
       const { data, error } = await supabase.functions.invoke('admin-subscribers', {
         body: { action: 'bulk_upsert', rows },
-        headers: { 'x-admin-token': token },
       });
 
       if (error) throw error;

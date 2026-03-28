@@ -54,7 +54,6 @@ export default function NewsletterThemeManager() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-token': adminToken,
           },
           body: JSON.stringify({ action: 'list_themes' }),
         }
@@ -85,7 +84,6 @@ export default function NewsletterThemeManager() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-token': adminToken,
           },
           body: JSON.stringify({
             action: editing.id ? 'update_theme' : 'create_theme',
@@ -119,7 +117,6 @@ export default function NewsletterThemeManager() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-token': adminToken,
           },
           body: JSON.stringify({ action: 'delete_theme', id }),
         }

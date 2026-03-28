@@ -8,7 +8,7 @@ import { Loader2, Phone, Upload, Trash2, Users, FileText } from 'lucide-react';
 import ApolloSearch from '@/components/marketing/ApolloSearch';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 
 interface CallLog {
   id: string;
@@ -85,13 +85,11 @@ export default function CallLogsPanel() {
   const [uploading, setUploading] = useState(false);
   const [clearing, setClearing] = useState(false);
 
-  const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
+  // Auth is handled via Supabase JWT automatically
 
   const fetchData = useCallback(async () => {
     const [logsRes, prospectsRes] = await Promise.all([
-      supabase.functions.invoke('admin-call-logs', {
-        headers: { 'x-admin-token': token },
-      }),
+      supabase.functions.invoke('admin-call-logs'),
       supabase.functions.invoke('admin-call-list', {
         method: 'GET',
       }),
@@ -100,7 +98,7 @@ export default function CallLogsPanel() {
     if (!logsRes.error && logsRes.data?.logs) setLogs(logsRes.data.logs);
     if (!prospectsRes.error && prospectsRes.data?.prospects) setProspects(prospectsRes.data.prospects);
     setLoading(false);
-  }, [token]);
+  }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -158,7 +156,6 @@ export default function CallLogsPanel() {
       const batchId = `batch-${Date.now()}`;
       const { data, error } = await supabase.functions.invoke('admin-call-list', {
         body: { action: 'bulk_upload', prospects: parsed, batch_id: batchId },
-        headers: { 'x-admin-token': token },
       });
 
       if (error || !data?.success) {
@@ -178,7 +175,6 @@ export default function CallLogsPanel() {
     setClearing(true);
     const { data, error } = await supabase.functions.invoke('admin-call-list', {
       body: { action: 'clear_all' },
-      headers: { 'x-admin-token': token },
     });
     if (error || !data?.success) {
       toast({ title: 'Failed to clear', description: error?.message || 'Unknown error', variant: 'destructive' });

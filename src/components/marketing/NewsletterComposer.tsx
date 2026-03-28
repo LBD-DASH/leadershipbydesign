@@ -16,7 +16,7 @@ import {
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 
 interface Draft {
   id: string;
@@ -44,9 +44,7 @@ export default function NewsletterComposer() {
     toast({ title: 'Advert inserted', description: 'Scroll down to see it in the editor.' });
   };
 
-  const getAdminToken = () => {
-    return sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
-  };
+  // Auth handled via Supabase JWT automatically
 
   // Fetch active count, tags via edge function, and drafts
   useEffect(() => {
@@ -55,7 +53,7 @@ export default function NewsletterComposer() {
       try {
         const { data: countData } = await supabase.functions.invoke('admin-subscribers', {
           body: { action: 'count', tag: tagFilter || undefined },
-          headers: { 'x-admin-token': getAdminToken() },
+          
         });
         if (countData?.success) {
           setActiveCount(countData.count ?? 0);
@@ -69,7 +67,7 @@ export default function NewsletterComposer() {
       try {
         const { data: draftResult } = await supabase.functions.invoke('admin-subscribers', {
           body: { action: 'list_drafts' },
-          headers: { 'x-admin-token': getAdminToken() },
+          
         });
         if (draftResult?.success) setDrafts((draftResult.data as Draft[]) || []);
       } catch (err) {
@@ -88,7 +86,7 @@ export default function NewsletterComposer() {
     try {
       const { data: result } = await supabase.functions.invoke('admin-subscribers', {
         body: { action: 'save_newsletter', subject, body_html: body, tag_filter: tagFilter || null },
-        headers: { 'x-admin-token': getAdminToken() },
+        
       });
       if (!result?.success) {
         toast({ title: 'Save failed', description: result?.error || 'Unknown error', variant: 'destructive' });
@@ -109,7 +107,7 @@ export default function NewsletterComposer() {
         }).catch(() => {});
         const { data: draftResult } = await supabase.functions.invoke('admin-subscribers', {
           body: { action: 'list_drafts' },
-          headers: { 'x-admin-token': getAdminToken() },
+          
         });
         if (draftResult?.success) setDrafts((draftResult.data as Draft[]) || []);
       }
@@ -125,7 +123,7 @@ export default function NewsletterComposer() {
     try {
       const { data: result } = await supabase.functions.invoke('admin-subscribers', {
         body: { action: 'schedule_newsletter', subject, body_html: body, tag_filter: tagFilter || null },
-        headers: { 'x-admin-token': getAdminToken() },
+        
       });
       if (!result?.success) {
         toast({ title: 'Schedule failed', description: result?.error || 'Unknown error', variant: 'destructive' });
@@ -178,7 +176,7 @@ export default function NewsletterComposer() {
       try {
         const { data: countData } = await supabase.functions.invoke('admin-subscribers', {
           body: { action: 'count' },
-          headers: { 'x-admin-token': getAdminToken() },
+          
         });
         if (countData?.success) setActiveCount(countData.count ?? 0);
       } catch {}
