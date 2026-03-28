@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Phone } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import ldbLogo from "@/assets/ldb-logo.png";
 
 const Footer = () => {

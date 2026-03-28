@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import SEO from "@/components/SEO";
 import OrganizationSchema from "@/components/OrganizationSchema";
 import Header from "@/components/Header";
@@ -88,6 +89,7 @@ const Index = () => {
               </Link>
             </div>
           </div>
+          <ScrollIndicator />
         </section>
 
         {/* SECTION 2 — PROOF BAR */}
