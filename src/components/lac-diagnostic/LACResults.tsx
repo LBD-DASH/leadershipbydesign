@@ -1,18 +1,57 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, AlertTriangle, Phone, TrendingDown, Award } from "lucide-react";
+import { ArrowRight, AlertTriangle, Phone, TrendingDown, Award, Mail, CheckCircle, Loader2 } from "lucide-react";
 import { LACResult, LACVersion } from "@/data/lacQuestions";
 import BookingWidget from "@/components/shared/BookingWidget";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Props {
   result: LACResult;
   version: LACVersion;
   userName?: string;
+  userEmail?: string;
+  userCompany?: string;
+  utmParams?: Record<string, string | null>;
 }
 
-export default function LACResults({ result, version, userName }: Props) {
-  const { totalScore, profileName, profileDescription, lowestAreas } = result;
+export default function LACResults({ result, version, userName, userEmail, userCompany, utmParams }: Props) {
+  const { totalScore, profileName, profileDescription, lowestAreas, profile } = result;
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
+  const handleEmailResults = async () => {
+    if (!userEmail) {
+      toast.error("No email address available.");
+      return;
+    }
+    setEmailSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-diagnostic-results", {
+        body: {
+          email: userEmail,
+          name: userName,
+          company: userCompany,
+          profile_type: profile,
+          score: totalScore,
+          utm_source: utmParams?.utm_source,
+          utm_medium: utmParams?.utm_medium,
+          utm_campaign: utmParams?.utm_campaign,
+          utm_content: utmParams?.utm_content,
+        },
+      });
+      if (error) throw error;
+      setEmailSent(true);
+      toast.success("Your detailed results have been emailed!");
+    } catch (err) {
+      console.error("Failed to email results:", err);
+      toast.error("Failed to send results email. Please try again.");
+    } finally {
+      setEmailSending(false);
+    }
+  };
 
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
