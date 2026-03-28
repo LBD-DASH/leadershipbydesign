@@ -49,7 +49,7 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
 
     try {
       // Use admin-privileged fetch so prospects are not hidden by RLS.
-      const adminToken = sessionStorage.getItem('admin_token') || 'Bypass2024';
+      // Auth handled via Supabase JWT
       const response = await prospectsApi.getProspectsAdmin(adminToken);
 
       console.log('[ProspectList] Fetched prospects:', response);
@@ -103,7 +103,7 @@ export default function ProspectList({ autoOpenProspectId, onAutoOpenHandled }: 
       }
 
       // Fallback: fetch the prospect directly (covers cases where list query is empty/filtered)
-      const adminToken = sessionStorage.getItem('admin_token') || 'Bypass2024';
+      // Auth handled via Supabase JWT
       const res = await prospectsApi.getProspectByIdAdmin(adminToken, autoOpenProspectId);
 
       if (res.success && res.data) {

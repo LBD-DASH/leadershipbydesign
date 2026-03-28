@@ -64,7 +64,7 @@ export default function CallQueue({ agentName, adminToken }: CallQueueProps) {
     try {
       const { data, error } = await supabase.functions.invoke('apollo-call-queue', {
         body: { action: 'get_queue', agent_name: agentName, limit: 50 },
-        headers: { 'x-admin-token': adminToken },
+        
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -88,7 +88,7 @@ export default function CallQueue({ agentName, adminToken }: CallQueueProps) {
     try {
       const { data, error } = await supabase.functions.invoke('apollo-call-queue', {
         body: { action: 'complete_call', lead_id: leadId, outcome: callOutcome, notes: callNotes },
-        headers: { 'x-admin-token': adminToken },
+        
       });
       if (error) throw error;
       toast({ title: 'Call logged', description: `Outcome: ${callOutcome}` });
