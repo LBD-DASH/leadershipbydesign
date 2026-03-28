@@ -1,8 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-// COO Agent — Kevin's single daily operations brief
+// COO Agent — Kevin's single daily operations brief + learning layer
 // Runs daily: checks every agent, pipeline, deals, and surfaces actions needed.
-// Posts to Slack + emails Kevin. Weekly trends included on Sundays.
+// Posts to Slack + emails Kevin. Weekly trends included DAILY.
+// Learning layer: agent performance scoring, pattern recognition, adaptive recommendations.
+// Weekly learning summary on Sundays.
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -78,10 +80,27 @@ function formatSASTTime(date: Date): string {
 }
 
 function trend(current: number, previous: number): string {
-  if (current > previous) return "↑";
-  if (current < previous) return "↓";
-  return "→";
+  if (previous === 0 && current === 0) return "→";
+  if (previous === 0) return "↑";
+  const changePct = ((current - previous) / previous) * 100;
+  if (Math.abs(changePct) <= 5) return "→";
+  return changePct > 0 ? "↑" : "↓";
 }
+
+function trendPctChange(current: number, previous: number): number {
+  if (previous === 0 && current === 0) return 0;
+  if (previous === 0) return 100;
+  return Math.round(((current - previous) / previous) * 100);
+}
+
+function needsAttention(current: number, previous: number): boolean {
+  if (previous === 0) return false;
+  return ((previous - current) / previous) * 100 > 20;
+}
+
+type AgentScore = "productive" | "idle" | "failed";
+
+const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
