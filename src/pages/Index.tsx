@@ -13,6 +13,27 @@ import shiftImage from "@/assets/shift-hero-team.jpg";
 import ciImage from "@/assets/contagious-identity-coaching-hero.jpg";
 import problemImage from "@/assets/leadership-feedback.jpg";
 
+const ScrollIndicator = () => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY < 100);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+      <ChevronDown
+        className="w-6 h-6 animate-bounce"
+        style={{ color: "rgba(255,255,255,0.6)" }}
+      />
+    </div>
+  );
+};
+
 const Index = () => {
   return (
     <>
