@@ -191,11 +191,26 @@ export default function LeaderAsCoachDiagnostic() {
         console.error('Nurture sequence creation failed:', nurtureErr);
       }
 
+      // Check prospect engagement (match diagnostic completers back to outreach queue)
+      if (utmParams.utm_campaign?.startsWith('prospect_') || utmParams.utm_source === 'outreach') {
+        try {
+          await supabase.functions.invoke('check-prospect-engagement', {
+            body: {
+              email: data.email,
+              utmCampaign: utmParams.utm_campaign,
+              diagnosticType: 'lac',
+              diagnosticScores: { total: result.totalScore },
+            },
+          });
+        } catch (engErr) {
+          console.error('Prospect engagement check failed:', engErr);
+        }
+      }
+
       // Process lead (AI analysis + notifications) non-blocking
       processLead(leadData, `Leader as Coach Assessment: ${result.profileName} (${result.totalScore}/75). Version: ${version}. Lowest areas: ${result.lowestAreas.map(a => a.theme).join(', ')}.`)
         .then(({ aiAnalysis }) => {
           // AI analysis update skipped — anon user cannot read back inserted ID
-          // The analysis is captured in the processLead flow instead
         })
         .catch(err => console.error('LAC lead processing error:', err));
     } catch (error) {
@@ -333,7 +348,7 @@ export default function LeaderAsCoachDiagnostic() {
               transition={{ duration: 0.6 }}
               className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl"
             >
-              <LACResults result={result} version={version} userName={userData?.name} />
+              <LACResults result={result} version={version} userName={userData?.name} userEmail={userData?.email} userCompany={userData?.company} utmParams={utmParams} />
             </motion.section>
           )}
         </main>
