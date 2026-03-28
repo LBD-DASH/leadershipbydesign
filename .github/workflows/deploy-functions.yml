@@ -1,0 +1,80 @@
+name: Deploy Supabase Edge Functions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/**'
+  workflow_dispatch:
+
+env:
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy all edge functions
+        run: |
+          echo "🚀 Deploying Supabase edge functions..."
+
+          FUNCTIONS_DIR="supabase/functions"
+          DEPLOYED=0
+          FAILED=0
+          ERRORS=""
+
+          for dir in "$FUNCTIONS_DIR"/*/; do
+            func_name=$(basename "$dir")
+
+            # Skip directories that aren't functions (shared, _shared, etc.)
+            if [[ "$func_name" == _* ]] || [[ "$func_name" == "shared" ]]; then
+              continue
+            fi
+
+            # Must have an index.ts
+            if [[ ! -f "$dir/index.ts" ]]; then
+              continue
+            fi
+
+            echo "  📦 Deploying $func_name..."
+            if supabase functions deploy "$func_name" --project-ref "$SUPABASE_PROJECT_ID" 2>&1; then
+              DEPLOYED=$((DEPLOYED + 1))
+              echo "  ✅ $func_name deployed"
+            else
+              FAILED=$((FAILED + 1))
+              ERRORS="$ERRORS\n  ❌ $func_name failed"
+              echo "  ❌ $func_name failed"
+            fi
+          done
+
+          echo ""
+          echo "🏁 Deployment complete: $DEPLOYED deployed, $FAILED failed"
+
+          if [[ $FAILED -gt 0 ]]; then
+            echo -e "$ERRORS"
+            exit 1
+          fi
+
+      - name: Notify Slack on success
+        if: success()
+        run: |
+          curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/slack-notify" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"channel":"mission-control","eventType":"system_error","data":{"function":"🚀 Auto-Deploy","error":"Edge functions deployed successfully from GitHub"}}' || true
+
+      - name: Notify Slack on failure
+        if: failure()
+        run: |
+          curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/slack-notify" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"channel":"mission-control","eventType":"system_error","data":{"function":"❌ Auto-Deploy FAILED","error":"Edge function deployment failed — check GitHub Actions logs"}}' || true
