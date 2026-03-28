@@ -83,7 +83,7 @@ export default function ChatWidget() {
         },
       ]);
     } catch {
-      toast.error("Something went wrong saving your details. Please email kevin@kevinbritz.com");
+      toast.error("Something went wrong saving your details. Please email hello@leadershipbydesign.co");
     }
   };
 
@@ -173,7 +173,7 @@ export default function ChatWidget() {
         {
           role: "assistant",
           content:
-            "Sorry, I'm having a moment — drop us an email at kevin@kevinbritz.com and we'll come back to you.",
+            "Sorry, I'm having a moment — drop us an email at hello@leadershipbydesign.co and we'll come back to you.",
         },
       ]);
     } finally {
