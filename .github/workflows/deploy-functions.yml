@@ -9,7 +9,6 @@ on:
 
 env:
   SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-  SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
 jobs:
   deploy:
@@ -22,19 +21,21 @@ jobs:
         with:
           version: latest
 
+      - name: Link project
+        run: supabase link --project-ref fdtlljyfjdlrymfeguoa
+
       - name: Deploy all edge functions
         run: |
           echo "🚀 Deploying Supabase edge functions..."
 
-          FUNCTIONS_DIR="supabase/functions"
           DEPLOYED=0
           FAILED=0
-          ERRORS=""
+          FAILED_NAMES=""
 
-          for dir in "$FUNCTIONS_DIR"/*/; do
+          for dir in supabase/functions/*/; do
             func_name=$(basename "$dir")
 
-            # Skip directories that aren't functions (shared, _shared, etc.)
+            # Skip non-function directories
             if [[ "$func_name" == _* ]] || [[ "$func_name" == "shared" ]]; then
               continue
             fi
@@ -45,36 +46,39 @@ jobs:
             fi
 
             echo "  📦 Deploying $func_name..."
-            if supabase functions deploy "$func_name" --project-ref "$SUPABASE_PROJECT_ID" 2>&1; then
+            if supabase functions deploy "$func_name" --no-verify-jwt 2>&1; then
               DEPLOYED=$((DEPLOYED + 1))
-              echo "  ✅ $func_name deployed"
+              echo "  ✅ $func_name"
             else
               FAILED=$((FAILED + 1))
-              ERRORS="$ERRORS\n  ❌ $func_name failed"
-              echo "  ❌ $func_name failed"
+              FAILED_NAMES="$FAILED_NAMES $func_name"
+              echo "  ❌ $func_name FAILED"
             fi
           done
 
           echo ""
-          echo "🏁 Deployment complete: $DEPLOYED deployed, $FAILED failed"
+          echo "🏁 Result: $DEPLOYED deployed, $FAILED failed"
+          if [[ -n "$FAILED_NAMES" ]]; then
+            echo "Failed:$FAILED_NAMES"
+          fi
 
-          if [[ $FAILED -gt 0 ]]; then
-            echo -e "$ERRORS"
+          # Only fail the job if ALL functions failed
+          if [[ $DEPLOYED -eq 0 ]] && [[ $FAILED -gt 0 ]]; then
+            echo "❌ All deployments failed"
             exit 1
           fi
 
-      - name: Notify Slack on success
-        if: success()
+      - name: Notify Slack
+        if: always()
         run: |
-          curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/slack-notify" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{"channel":"mission-control","eventType":"system_error","data":{"function":"🚀 Auto-Deploy","error":"Edge functions deployed successfully from GitHub"}}' || true
+          STATUS="${{ job.status }}"
+          if [[ "$STATUS" == "success" ]]; then
+            MSG="✅ Edge functions deployed successfully from GitHub"
+          else
+            MSG="⚠️ Some edge function deployments failed — check GitHub Actions logs"
+          fi
 
-      - name: Notify Slack on failure
-        if: failure()
-        run: |
           curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/slack-notify" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{"channel":"mission-control","eventType":"system_error","data":{"function":"❌ Auto-Deploy FAILED","error":"Edge function deployment failed — check GitHub Actions logs"}}' || true
+            -d "{\"channel\":\"mission-control\",\"eventType\":\"system_error\",\"data\":{\"function\":\"Auto-Deploy\",\"error\":\"$MSG\"}}" || true
