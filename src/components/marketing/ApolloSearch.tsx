@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, Loader2, UserPlus, Globe, Building, CheckCircle2, Zap, Send, RefreshCw, Phone, PhoneCall } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 
 interface ApolloResult {
   id: string;

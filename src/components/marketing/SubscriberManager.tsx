@@ -10,7 +10,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { format } from 'date-fns';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 
 interface Subscriber {
   id: string;
@@ -24,10 +24,8 @@ interface Subscriber {
 }
 
 async function adminInvoke(action: string, extra: Record<string, unknown> = {}) {
-  const token = sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
   const { data, error } = await supabase.functions.invoke('admin-subscribers', {
     body: { action, ...extra },
-    headers: { 'x-admin-token': token },
   });
   if (error) throw error;
   if (!data.success) throw new Error(data.error || 'Unknown error');

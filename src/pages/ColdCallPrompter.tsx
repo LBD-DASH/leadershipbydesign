@@ -16,7 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CallQueue from "@/components/marketing/CallQueue";
 import NeedsAnalysisWizard from "@/components/admin/NeedsAnalysisWizard";
-import { MASTER_TOKEN } from "@/lib/adminAuth";
+// Auth handled via Supabase JWT automatically
 
 type Screen =
   | "REP_NAME"
@@ -386,7 +386,7 @@ export default function ColdCallPrompter() {
             call_outcome: form.pitchOutcome || form.initialResponse || 'completed',
             call_feedback: callFeedback || form.notes || null,
           },
-          headers: { 'x-admin-token': MASTER_TOKEN },
+          
         });
       }
       setCallFeedback('');

@@ -16,7 +16,7 @@ import {
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { ADMIN_AUTH_KEY, MASTER_TOKEN } from '@/lib/adminAuth';
+import { ADMIN_AUTH_KEY } from '@/lib/adminAuth';
 
 interface Draft {
   id: string;
@@ -44,9 +44,7 @@ export default function NewsletterComposer() {
     toast({ title: 'Advert inserted', description: 'Scroll down to see it in the editor.' });
   };
 
-  const getAdminToken = () => {
-    return sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true' ? MASTER_TOKEN : '';
-  };
+  // Auth handled via Supabase JWT automatically
 
   // Fetch active count, tags via edge function, and drafts
   useEffect(() => {
