@@ -1,18 +1,57 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, AlertTriangle, Phone, TrendingDown, Award } from "lucide-react";
+import { ArrowRight, AlertTriangle, Phone, TrendingDown, Award, Mail, CheckCircle, Loader2 } from "lucide-react";
 import { LACResult, LACVersion } from "@/data/lacQuestions";
 import BookingWidget from "@/components/shared/BookingWidget";
 import SocialShareButtons from "@/components/shared/SocialShareButtons";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Props {
   result: LACResult;
   version: LACVersion;
   userName?: string;
+  userEmail?: string;
+  userCompany?: string;
+  utmParams?: Record<string, string | null>;
 }
 
-export default function LACResults({ result, version, userName }: Props) {
-  const { totalScore, profileName, profileDescription, lowestAreas } = result;
+export default function LACResults({ result, version, userName, userEmail, userCompany, utmParams }: Props) {
+  const { totalScore, profileName, profileDescription, lowestAreas, profile } = result;
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
+  const handleEmailResults = async () => {
+    if (!userEmail) {
+      toast.error("No email address available.");
+      return;
+    }
+    setEmailSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-diagnostic-results", {
+        body: {
+          email: userEmail,
+          name: userName,
+          company: userCompany,
+          profile_type: profile,
+          score: totalScore,
+          utm_source: utmParams?.utm_source,
+          utm_medium: utmParams?.utm_medium,
+          utm_campaign: utmParams?.utm_campaign,
+          utm_content: utmParams?.utm_content,
+        },
+      });
+      if (error) throw error;
+      setEmailSent(true);
+      toast.success("Your detailed results have been emailed!");
+    } catch (err) {
+      console.error("Failed to email results:", err);
+      toast.error("Failed to send results email. Please try again.");
+    } finally {
+      setEmailSending(false);
+    }
+  };
 
   return (
     <div className="space-y-8 sm:space-y-12 pt-8 sm:pt-12">
@@ -112,7 +151,45 @@ export default function LACResults({ result, version, userName }: Props) {
         </p>
       </motion.div>
 
-      {/* Primary CTA - Book a Discovery Call */}
+      {/* Email Results CTA */}
+      {userEmail && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
+          className="text-center"
+        >
+          <Button
+            onClick={handleEmailResults}
+            disabled={emailSending || emailSent}
+            size="lg"
+            variant={emailSent ? "outline" : "default"}
+            className="gap-2"
+          >
+            {emailSent ? (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                Results Emailed
+              </>
+            ) : emailSending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Mail className="w-4 h-4" />
+                Email Me My Detailed Results
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Get your full breakdown with actionable recommendations sent to {userEmail}
+          </p>
+        </motion.div>
+      )}
+
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
