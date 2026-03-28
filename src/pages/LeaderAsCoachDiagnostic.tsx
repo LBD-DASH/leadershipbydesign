@@ -348,7 +348,7 @@ export default function LeaderAsCoachDiagnostic() {
               transition={{ duration: 0.6 }}
               className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl"
             >
-              <LACResults result={result} version={version} userName={userData?.name} userEmail={userData?.email} userCompany={userData?.company} utmParams={utmParams} />
+              <LACResults result={result} version={version} userName={userData?.name} userEmail={userData?.email} userCompany={userData?.company} utmParams={utmParams as any} />
             </motion.section>
           )}
         </main>
