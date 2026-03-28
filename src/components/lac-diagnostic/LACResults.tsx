@@ -151,7 +151,45 @@ export default function LACResults({ result, version, userName, userEmail, userC
         </p>
       </motion.div>
 
-      {/* Primary CTA - Book a Discovery Call */}
+      {/* Email Results CTA */}
+      {userEmail && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
+          className="text-center"
+        >
+          <Button
+            onClick={handleEmailResults}
+            disabled={emailSending || emailSent}
+            size="lg"
+            variant={emailSent ? "outline" : "default"}
+            className="gap-2"
+          >
+            {emailSent ? (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                Results Emailed
+              </>
+            ) : emailSending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Mail className="w-4 h-4" />
+                Email Me My Detailed Results
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Get your full breakdown with actionable recommendations sent to {userEmail}
+          </p>
+        </motion.div>
+      )}
+
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
