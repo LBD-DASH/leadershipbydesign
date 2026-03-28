@@ -26,6 +26,14 @@ on:
     - cron: '0 14 * * 0'
     # Competitor Monitor: Monday 06:00 SAST (04:00 UTC)
     - cron: '0 4 * * 1'
+    # Conversion Tracker: Daily 19:00 SAST (17:00 UTC)
+    - cron: '0 17 * * *'
+    # Deliverability Monitor: Daily 10:00 + 16:00 SAST (08:00 + 14:00 UTC)
+    - cron: '0 8,14 * * *'
+    # Outreach Optimizer: Sunday 20:00 SAST (18:00 UTC) — weekly learning cycle
+    - cron: '0 18 * * 0'
+    # Performance Dashboard: Daily 18:30 SAST (16:30 UTC)
+    - cron: '30 16 * * *'
   workflow_dispatch:
     inputs:
       phase:
@@ -41,6 +49,7 @@ on:
           - 'health'
           - 'weekly'
           - 'agents'
+          - 'intelligence'
 
 env:
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -317,3 +326,56 @@ jobs:
           fi
 
           echo "Specialist agents complete"
+
+  # Intelligence layer — conversion tracking, deliverability, optimization, dashboard
+  intelligence:
+    if: >
+      (github.event.schedule == '0 17 * * *') ||
+      (github.event.schedule == '0 8,14 * * *') ||
+      (github.event.schedule == '0 18 * * 0') ||
+      (github.event.schedule == '30 16 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.phase == 'intelligence')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Intelligence Layer
+        run: |
+          HOUR=$(date -u +%H)
+          DOW=$(date -u +%u)
+
+          # Conversion Tracker — Daily 17:00 UTC
+          if [ "$HOUR" = "17" ] || [ "${{ github.event.inputs.phase }}" = "intelligence" ]; then
+            echo "Running Conversion Tracker"
+            curl -s -X POST "$SUPABASE_URL/functions/v1/conversion-tracker" \
+              -H "Authorization: Bearer $SUPABASE_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{}' || true
+          fi
+
+          # Deliverability Monitor — 08:00 + 14:00 UTC
+          if [ "$HOUR" = "08" ] || [ "$HOUR" = "14" ] || [ "${{ github.event.inputs.phase }}" = "intelligence" ]; then
+            echo "Running Deliverability Monitor"
+            curl -s -X POST "$SUPABASE_URL/functions/v1/deliverability-monitor" \
+              -H "Authorization: Bearer $SUPABASE_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{}' || true
+          fi
+
+          # Outreach Optimizer — Sunday 18:00 UTC
+          if [ "$DOW" = "7" ] && [ "$HOUR" = "18" ] || [ "${{ github.event.inputs.phase }}" = "intelligence" ]; then
+            echo "Running Outreach Optimizer"
+            curl -s -X POST "$SUPABASE_URL/functions/v1/outreach-optimizer" \
+              -H "Authorization: Bearer $SUPABASE_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{}' || true
+          fi
+
+          # Performance Dashboard — Daily 16:30 UTC
+          if [ "$HOUR" = "16" ] || [ "${{ github.event.inputs.phase }}" = "intelligence" ]; then
+            echo "Running Performance Dashboard"
+            curl -s -X POST "$SUPABASE_URL/functions/v1/performance-dashboard" \
+              -H "Authorization: Bearer $SUPABASE_KEY" \
+              -H "Content-Type: application/json" \
+              -d '{}' || true
+          fi
+
+          echo "Intelligence layer complete"

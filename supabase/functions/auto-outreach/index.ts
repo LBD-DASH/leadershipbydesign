@@ -32,6 +32,28 @@ Deno.serve(async (req) => {
     });
   }
 
+  // A/B template variants — optimizer tracks which converts best
+  const TEMPLATE_VARIANTS = [
+    {
+      id: "problem-pattern",
+      opener: 'Use "What I\'ve seen in [industry]..." or "The pattern I keep running into..."',
+      cta: 'Offer the diagnostic as a gift: "I built a 2-min diagnostic that shows exactly where your management layer sits. Want me to send it across?"',
+    },
+    {
+      id: "question-hook",
+      opener: 'Lead with a provocative question about their industry. "How do your managers handle [specific challenge]?" or "What happens when your best people start leaving?"',
+      cta: 'Offer a quick insight: "I put together a short diagnostic that pinpoints this in 2 minutes — happy to share if useful."',
+    },
+    {
+      id: "stat-lead",
+      opener: 'Lead with a surprising stat or observation: "67% of managers in [industry] have never had coaching training" or "Most [size] companies lose their best people to bad management, not bad pay."',
+      cta: 'Direct ask: "Worth a 10-minute call to see if this applies to your team?"',
+    },
+  ];
+
+  // Rotate variant based on prospect index within batch
+  let variantIndex = 0;
+
   // Companies to skip — test records, paused, or wrong ICP
   const SKIP_COMPANIES = [
     "test", "ldb test run", "ldb test", "salt essential information technology",
@@ -141,10 +163,14 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Step 2: Claude generates personalized email
+        // Step 2: Claude generates personalized email with A/B variant
         const firstName = prospect.contact_name?.split(" ")[0] || "there";
         const industry = prospect.industry || "professional services";
         const companySize = prospect.company_size || "";
+
+        // Select variant for this prospect
+        const variant = TEMPLATE_VARIANTS[variantIndex % TEMPLATE_VARIANTS.length];
+        variantIndex++;
 
         const systemPrompt = `You are Kevin Britz, founder of Leadership by Design, writing a cold email to a senior HR or L&D decision maker in South Africa.
 
@@ -170,9 +196,9 @@ BODY RULES:
 - One idea only. No lists. No headers.
 
 STRUCTURE:
-Sentence 1-2: Name a specific management problem relevant to their industry or company size. Make it feel like an observation, not research. Use "What I've seen in [industry]..." or "The pattern I keep running into..."
+Sentence 1-2: ${variant.opener}
 Sentence 3-4: Connect that problem to what happens when managers coach instead of control. One concrete outcome only: retention, performance, or speed of execution.
-Sentence 5: CTA. Offer the diagnostic as a gift, not a meeting request. "I built a 2-min diagnostic that shows exactly where your management layer sits. Want me to send it across?"
+Sentence 5: ${variant.cta}
 
 SIGN-OFF:
 Kevin
@@ -322,7 +348,7 @@ Write the email now. Only the subject and body. Nothing else.`;
           });
         } catch { /* best effort */ }
 
-        // Log to prospect_outreach for admin visibility
+        // Log to prospect_outreach for admin visibility + A/B tracking
         try {
           await supabase.from("prospect_outreach").insert({
             prospect_id: prospect.id,
@@ -332,6 +358,8 @@ Write the email now. Only the subject and body. Nothing else.`;
             sent_at: new Date().toISOString(),
             sequence_step: 1,
             template_used: "kevin-cold-v2",
+            template_variant: variant.id,
+            recipient_email: prospect.contact_email,
           });
         } catch { /* best effort */ }
 
@@ -371,6 +399,15 @@ Write the email now. Only the subject and body. Nothing else.`;
     } catch (e) {
       console.error("Slack notify failed:", e);
     }
+
+    // Log to agent_activity_log
+    try {
+      await supabase.from("agent_activity_log").insert({
+        agent_name: "auto-outreach",
+        status: emailedCount > 0 ? "success" : "warning",
+        message: `Sent ${emailedCount}/${validProspects.length} emails. Variants used: ${TEMPLATE_VARIANTS.map(v => v.id).join(", ")}${errors.length ? `. Errors: ${errors.length}` : ""}`,
+      });
+    } catch { /* best effort */ }
 
     return new Response(
       JSON.stringify({ success: true, emailed: emailedCount, total: prospects.length, errors }),
