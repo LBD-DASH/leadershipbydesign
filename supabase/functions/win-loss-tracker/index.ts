@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: {
             function: "🏆 Win/Loss Tracker",
             error: `7-Day Summary | Won: ${summary.deals_won} | Lost: ${summary.deals_lost} | Active: ${summary.deals_active} | Bookings: ${summary.bookings} | Diagnostics: ${summary.diagnostics} | Emails: ${summary.emails_sent} | Win Rate: ${summary.win_rate}`,

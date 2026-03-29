@@ -488,6 +488,50 @@ const EVENT_CONFIG: Record<string, {
     buildBlocks: buildNewsletterManualNeededBlocks,
     text: (d) => `Newsletter needs manual input after ${d.rounds} rounds`,
   },
+  ceo_briefing: {
+    channels: ['mission-control'],
+    username: 'LBD COO',
+    icon: ':office:',
+    buildBlocks: (d) => [
+      { type: 'header', text: { type: 'plain_text', text: `🏢 ${d.function || 'COO Daily Brief'}`, emoji: true } },
+      { type: 'section', text: { type: 'mrkdwn', text: d.error || d.message || 'No details' } },
+      { type: 'context', elements: [{ type: 'mrkdwn', text: `COO Agent • ${sast()} SAST` }] },
+    ],
+    text: (d) => `${d.function || 'COO Brief'}: ${(d.error || d.message || '').slice(0, 100)}`,
+  },
+  cfo_report: {
+    channels: ['mission-control'],
+    username: 'LBD CFO',
+    icon: ':money_with_wings:',
+    buildBlocks: (d) => [
+      { type: 'header', text: { type: 'plain_text', text: `💰 ${d.function || 'CFO Financial Report'}`, emoji: true } },
+      { type: 'section', text: { type: 'mrkdwn', text: d.error || d.message || 'No details' } },
+      { type: 'context', elements: [{ type: 'mrkdwn', text: `CFO Agent • ${sast()} SAST` }] },
+    ],
+    text: (d) => `${d.function || 'CFO Report'}: ${(d.error || d.message || '').slice(0, 100)}`,
+  },
+  agent_report: {
+    channels: ['mission-control'],
+    username: 'LBD Agent',
+    icon: ':robot_face:',
+    buildBlocks: (d) => [
+      { type: 'header', text: { type: 'plain_text', text: `📊 ${d.function || 'Agent Report'}`, emoji: true } },
+      { type: 'section', text: { type: 'mrkdwn', text: d.error || d.message || 'No details' } },
+      { type: 'context', elements: [{ type: 'mrkdwn', text: `${d.function || 'Agent'} • ${sast()} SAST` }] },
+    ],
+    text: (d) => `${d.function || 'Agent'}: ${(d.error || d.message || '').slice(0, 100)}`,
+  },
+  deliverability_alert: {
+    channels: ['mission-control', 'system-health'],
+    username: 'LBD Deliverability',
+    icon: ':email:',
+    buildBlocks: (d) => [
+      { type: 'header', text: { type: 'plain_text', text: `📧 ${d.function || 'Deliverability Monitor'}`, emoji: true } },
+      { type: 'section', text: { type: 'mrkdwn', text: d.error || d.message || 'No details' } },
+      { type: 'context', elements: [{ type: 'mrkdwn', text: `Deliverability Monitor • ${sast()} SAST` }] },
+    ],
+    text: (d) => `Deliverability: ${(d.error || d.message || '').slice(0, 100)}`,
+  },
 };
 
 // ── Main handler ──────────────────────────────────────────

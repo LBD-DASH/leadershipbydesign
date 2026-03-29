@@ -210,7 +210,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "deliverability_alert",
           data: {
             function: "Deliverability Monitor",
             error: reportText,

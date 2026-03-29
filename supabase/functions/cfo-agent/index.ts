@@ -931,7 +931,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "cfo_report",
           data: {
             function: `CFO WEEKLY FINANCIAL REPORT — Week of ${dateLabel}`,
             error: slackMessage,
