@@ -76,6 +76,7 @@ async function postSlack(
     // Non-fatal — bot may already be in channel
   }
 
+  console.log(`[slack-notify] Posting to channel ${channel} (ID: ${channelId})`);
   const body: Record<string, any> = { channel: channelId, blocks, text };
   if (username) body.username = username;
   if (iconEmoji) body.icon_emoji = iconEmoji;
@@ -87,7 +88,8 @@ async function postSlack(
   });
 
   const result = await res.json();
-  if (!result.ok) console.error('Slack postMessage error:', result.error);
+  console.log(`[slack-notify] postMessage result ok=${result.ok}, error=${result.error || 'none'}, channel=${result.channel || '—'}`);
+  if (!result.ok) console.error('[slack-notify] Slack postMessage error:', result.error);
   return result;
 }
 
