@@ -28,10 +28,12 @@ async function resolveChannel(channelName: string, headers: Record<string, strin
       const params = new URLSearchParams({ types: 'public_channel', limit: '200' });
       if (cursor) params.set('cursor', cursor);
 
+      console.log(`[slack-notify] Resolving channel: ${clean}, calling conversations.list`);
       const res = await fetch(`${GATEWAY_URL}/conversations.list?${params}`, { headers });
       const data = await res.json();
+      console.log(`[slack-notify] conversations.list response ok=${data.ok}, channels=${(data.channels || []).length}, error=${data.error || 'none'}`);
       if (!data.ok) {
-        console.error('conversations.list error:', data.error);
+        console.error('[slack-notify] conversations.list error:', data.error);
         return null;
       }
       for (const ch of data.channels || []) {
