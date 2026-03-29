@@ -709,7 +709,7 @@ ${(() => { let n = 0; return actions.map((a) => a.startsWith("   ") ? a : `${++n
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "ceo_briefing",
           data: {
             function: "COO Daily Brief",
             error: slackMessage,

@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: { function: "📊 Conversion Tracker", error: message },
         }),
       });
@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: { function: "Conversion Tracker", error: `FAILED: ${msg}` },
         }),
       });

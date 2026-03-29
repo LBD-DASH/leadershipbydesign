@@ -233,7 +233,7 @@ ${STEP1_SIGNATURE}`;
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: {
             function: `auto-outreach ${statusEmoji}`,
             error: slackText,

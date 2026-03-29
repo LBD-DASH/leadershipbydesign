@@ -444,7 +444,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: {
             function: "📊 Outreach Optimizer",
             error: slackMessage,
@@ -463,7 +463,7 @@ Deno.serve(async (req) => {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
           body: JSON.stringify({
             channel: "mission-control",
-            eventType: "system_error",
+            eventType: "agent_report",
             data: {
               function: "🏆 Template A/B Winner",
               error: templateWinner,
@@ -521,7 +521,7 @@ Deno.serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: { function: "outreach-optimizer", error: errMsg },
         }),
       });

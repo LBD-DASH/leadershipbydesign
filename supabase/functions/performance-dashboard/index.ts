@@ -291,7 +291,7 @@ ${actionBlock}`;
         },
         body: JSON.stringify({
           channel: "mission-control",
-          eventType: "system_error",
+          eventType: "agent_report",
           data: {
             function: "Daily Dashboard",
             error: message,
@@ -389,7 +389,7 @@ ${actionBlock}`;
           Authorization: `Bearer ${supabaseKey}`,
         },
         body: JSON.stringify({
-          eventType: "system_error",
+          eventType: "agent_report",
           data: {
             function: "performance-dashboard",
             error: errMsg,
