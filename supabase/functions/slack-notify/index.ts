@@ -499,9 +499,11 @@ Deno.serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    console.log(`[slack-notify] LOVABLE_API_KEY present: ${!!LOVABLE_API_KEY}, length: ${LOVABLE_API_KEY?.length || 0}`);
     if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY is not configured');
 
     const SLACK_API_KEY = Deno.env.get('SLACK_API_KEY');
+    console.log(`[slack-notify] SLACK_API_KEY present: ${!!SLACK_API_KEY}, length: ${SLACK_API_KEY?.length || 0}`);
     if (!SLACK_API_KEY) throw new Error('SLACK_API_KEY is not configured');
 
     const slackHeaders = {
