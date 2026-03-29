@@ -101,7 +101,7 @@ const SEARCH_QUERIES = [
   { query: '"HR Manager" OR "Head of HR" construction OR "real estate" OR property South Africa', tag: 'hr-construction' },
   { query: '"coaching culture" OR "leadership pipeline" manufacturing OR construction South Africa company', tag: 'coaching-culture-mfg' },
 ];
-const QUERIES_PER_RUN = 3;
+const QUERIES_PER_RUN = 2;
 
 const EXCLUDED_DOMAINS = new Set([
   "linkedin.com", "facebook.com", "twitter.com", "instagram.com", "youtube.com",
@@ -256,6 +256,9 @@ Deno.serve(async (req) => {
 
   try {
     console.log("🚀 web-scraper-leads invoked at", new Date().toISOString());
+    const startTime = Date.now();
+    const MAX_RUNTIME_MS = 50000; // 50s hard limit — return before 60s edge function timeout
+    function isTimedOut(): boolean { return Date.now() - startTime > MAX_RUNTIME_MS; }
 
     // Load existing emails and domains for dedup
     const { data: existingRows } = await supabase
@@ -423,6 +426,7 @@ Deno.serve(async (req) => {
       let pagesScraped = 0;
 
       for (const sq of runQueries) {
+        if (isTimedOut()) { console.log("⏱️ Timeout — stopping Firecrawl phase early"); break; }
         console.log(`\n  🔎 Query [${sq.tag}]`);
 
         let searchResults: any[] = [];
@@ -459,7 +463,8 @@ Deno.serve(async (req) => {
 
         let domainsScrapeCount = 0;
         for (const [domain, info] of discoveredDomains) {
-          if (domainsScrapeCount >= 3) break; // Max 3 domains per query to avoid timeout
+          if (domainsScrapeCount >= 2) break; // Max 2 domains per query to stay within 60s timeout
+          if (isTimedOut()) { console.log("⏱️ Timeout — stopping domain scraping"); break; }
           if (existingDomains.has(domain)) { firecrawlSkippedDup++; continue; }
 
           let bestEmails: string[] = [];
@@ -478,7 +483,7 @@ Deno.serve(async (req) => {
                   url: `https://${domain}${path}`,
                   formats: ["markdown"],
                   onlyMainContent: false,
-                  timeout: 15000,
+                  timeout: 10000,
                 }),
               });
               pagesScraped++;
