@@ -46,7 +46,9 @@ async function resolveChannel(channelName: string, headers: Record<string, strin
     return null;
   }
 
-  return channelCache[clean] || null;
+  const resolved = channelCache[clean] || null;
+  console.log(`[slack-notify] Channel "${clean}" resolved to: ${resolved}`);
+  return resolved;
 }
 
 async function postSlack(
