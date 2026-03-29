@@ -13,20 +13,17 @@ Deno.serve(async (req) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
-  const firecrawlKey = Deno.env.get("FIRECRAWL_API_KEY");
-  const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
   const resendKey = Deno.env.get("RESEND_API_KEY");
 
-  if (!firecrawlKey || !anthropicKey || !resendKey) {
-    const missing = [!firecrawlKey && "FIRECRAWL", !anthropicKey && "ANTHROPIC", !resendKey && "RESEND"].filter(Boolean).join(", ");
+  if (!resendKey) {
     try {
       await fetch(`${supabaseUrl}/functions/v1/slack-notify`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
-        body: JSON.stringify({ eventType: "system_error", data: { function: "auto-outreach", error: `Missing API keys: ${missing}` } }),
+        body: JSON.stringify({ eventType: "system_error", data: { function: "auto-outreach", error: "Missing RESEND_API_KEY" } }),
       });
     } catch { /* best effort */ }
-    return new Response(JSON.stringify({ error: `Missing API keys: ${missing}` }), {
+    return new Response(JSON.stringify({ error: "Missing RESEND_API_KEY" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
