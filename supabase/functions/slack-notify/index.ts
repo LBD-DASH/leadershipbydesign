@@ -28,10 +28,12 @@ async function resolveChannel(channelName: string, headers: Record<string, strin
       const params = new URLSearchParams({ types: 'public_channel', limit: '200' });
       if (cursor) params.set('cursor', cursor);
 
+      console.log(`[slack-notify] Resolving channel: ${clean}, calling conversations.list`);
       const res = await fetch(`${GATEWAY_URL}/conversations.list?${params}`, { headers });
       const data = await res.json();
+      console.log(`[slack-notify] conversations.list response ok=${data.ok}, channels=${(data.channels || []).length}, error=${data.error || 'none'}`);
       if (!data.ok) {
-        console.error('conversations.list error:', data.error);
+        console.error('[slack-notify] conversations.list error:', data.error);
         return null;
       }
       for (const ch of data.channels || []) {
@@ -44,7 +46,9 @@ async function resolveChannel(channelName: string, headers: Record<string, strin
     return null;
   }
 
-  return channelCache[clean] || null;
+  const resolved = channelCache[clean] || null;
+  console.log(`[slack-notify] Channel "${clean}" resolved to: ${resolved}`);
+  return resolved;
 }
 
 async function postSlack(
@@ -72,6 +76,7 @@ async function postSlack(
     // Non-fatal — bot may already be in channel
   }
 
+  console.log(`[slack-notify] Posting to channel ${channel} (ID: ${channelId})`);
   const body: Record<string, any> = { channel: channelId, blocks, text };
   if (username) body.username = username;
   if (iconEmoji) body.icon_emoji = iconEmoji;
@@ -83,7 +88,8 @@ async function postSlack(
   });
 
   const result = await res.json();
-  if (!result.ok) console.error('Slack postMessage error:', result.error);
+  console.log(`[slack-notify] postMessage result ok=${result.ok}, error=${result.error || 'none'}, channel=${result.channel || '—'}`);
+  if (!result.ok) console.error('[slack-notify] Slack postMessage error:', result.error);
   return result;
 }
 
@@ -493,9 +499,11 @@ Deno.serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    console.log(`[slack-notify] LOVABLE_API_KEY present: ${!!LOVABLE_API_KEY}, length: ${LOVABLE_API_KEY?.length || 0}`);
     if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY is not configured');
 
     const SLACK_API_KEY = Deno.env.get('SLACK_API_KEY');
+    console.log(`[slack-notify] SLACK_API_KEY present: ${!!SLACK_API_KEY}, length: ${SLACK_API_KEY?.length || 0}`);
     if (!SLACK_API_KEY) throw new Error('SLACK_API_KEY is not configured');
 
     const slackHeaders = {
