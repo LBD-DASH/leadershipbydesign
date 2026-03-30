@@ -25,6 +25,7 @@ const TABS = [
   { id: 'content', label: 'Content', icon: Calendar, mobileLabel: '📅' },
   { id: 'intelligence', label: 'Intelligence', icon: Brain, mobileLabel: '🧠' },
   { id: 'pipeline', label: 'Pipeline', icon: BarChart3, mobileLabel: '📊' },
+  { id: 'budget', label: 'Budget', icon: Wallet, mobileLabel: '💳' },
   { id: 'sequences', label: 'Sequences', icon: List, mobileLabel: '📧' },
   { id: 'settings', label: 'Settings', icon: Settings, mobileLabel: '⚙️' },
 ] as const;
