@@ -14,6 +14,7 @@ import DealsTab from '@/components/admin/command-centre/DealsTab';
 import ActivityFeedTab from '@/components/admin/command-centre/ActivityFeedTab';
 import ContentTab from '@/components/admin/command-centre/ContentTab';
 import PipelineTab from '@/components/admin/command-centre/PipelineTab';
+import BudgetTab from '@/components/admin/command-centre/BudgetTab';
 import { CC } from '@/components/admin/command-centre/theme';
 import { format } from 'date-fns';
 
