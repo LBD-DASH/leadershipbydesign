@@ -123,6 +123,7 @@ export default function AdminOperatingSystem() {
             </div>
           )}
           {activeTab === 'pipeline' && <PipelineTab />}
+          {activeTab === 'budget' && <BudgetTab />}
           {activeTab === 'sequences' && <SequenceTemplatesPanel />}
           {activeTab === 'settings' && <AdminSettingsPanel />}
         </main>
