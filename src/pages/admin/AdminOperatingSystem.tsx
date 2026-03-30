@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Target, DollarSign, List, Calendar, Brain, BarChart3, Settings, Loader2 } from 'lucide-react';
+import { RefreshCw, Target, DollarSign, List, Calendar, Brain, BarChart3, Settings, Loader2, Wallet } from 'lucide-react';
 import SEO from '@/components/SEO';
 import AdminLoginForm from '@/components/admin/AdminLoginForm';
 import AdminLayout from '@/components/admin/AdminLayout';
