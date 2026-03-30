@@ -126,42 +126,55 @@ export default function BudgetTab() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const text = ev.target?.result as string;
-      const lines = text.split('\n').filter(l => l.trim());
+      const delimiter = text.includes(';') && !text.split('\n')[0].includes(',') ? ';' : ',';
+      const lines = parseCSVLines(text, delimiter).filter(l => l.length > 1);
       if (lines.length < 2) return toast.error('CSV needs a header row and data');
 
-      const header = lines[0].toLowerCase();
-      const hasDate = header.includes('date');
-      const hasAmount = header.includes('amount');
-      const hasDescription = header.includes('description') || header.includes('desc') || header.includes('reference');
-
-      if (!hasAmount) return toast.error('CSV must have an "amount" column');
-
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      const dateIdx = headers.findIndex(h => h.includes('date'));
+      const headers = lines[0].map(h => h.trim().toLowerCase());
+      const dateIdx = headers.findIndex(h => /date|posted|trans.*date|value.*date/.test(h));
       const amountIdx = headers.findIndex(h => h.includes('amount'));
-      const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('reference') || h.includes('narration'));
-      const categoryIdx = headers.findIndex(h => h.includes('category') || h.includes('type'));
+      const debitIdx = headers.findIndex(h => /debit|dr/.test(h));
+      const creditIdx = headers.findIndex(h => /credit|cr/.test(h));
+      const descIdx = headers.findIndex(h => /desc|reference|narration|particular|detail|memo/.test(h));
+      const categoryIdx = headers.findIndex(h => /category|type/.test(h));
+
+      const hasSplitColumns = debitIdx >= 0 || creditIdx >= 0;
+      if (amountIdx < 0 && !hasSplitColumns) return toast.error('CSV must have an "amount" column (or debit/credit columns)');
 
       const batchId = `csv-${Date.now()}`;
-      const rows = lines.slice(1).map(line => {
-        const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-        const rawAmount = parseFloat(cols[amountIdx]?.replace(/[^0-9.\-]/g, '') || '0');
-        if (isNaN(rawAmount) || rawAmount === 0) return null;
+      const rows = lines.slice(1).map(cols => {
+        let rawAmount = 0;
+        let isIncome = false;
 
-        const isIncome = rawAmount > 0;
+        if (hasSplitColumns) {
+          const debit = debitIdx >= 0 ? parseFloat(cols[debitIdx]?.replace(/[^0-9.\-]/g, '') || '0') : 0;
+          const credit = creditIdx >= 0 ? parseFloat(cols[creditIdx]?.replace(/[^0-9.\-]/g, '') || '0') : 0;
+          if (!isNaN(credit) && credit > 0) { rawAmount = credit; isIncome = true; }
+          else if (!isNaN(debit) && debit > 0) { rawAmount = debit; isIncome = false; }
+          else return null;
+        } else {
+          rawAmount = parseFloat(cols[amountIdx]?.replace(/[^0-9.\-]/g, '') || '0');
+          if (isNaN(rawAmount) || rawAmount === 0) return null;
+          isIncome = rawAmount > 0;
+          rawAmount = Math.abs(rawAmount);
+        }
+
+        const desc = descIdx >= 0 ? cols[descIdx]?.trim() || '' : '';
+
         return {
-          transaction_date: dateIdx >= 0 && cols[dateIdx] ? parseCSVDate(cols[dateIdx]) : format(new Date(), 'yyyy-MM-dd'),
+          transaction_date: dateIdx >= 0 && cols[dateIdx] ? parseCSVDate(cols[dateIdx].trim()) : format(new Date(), 'yyyy-MM-dd'),
           account_type: account,
           transaction_type: isIncome ? 'income' : 'expense',
-          category: categoryIdx >= 0 && cols[categoryIdx] ? cols[categoryIdx] : (isIncome ? 'Other Income' : 'Other Expense'),
-          description: descIdx >= 0 ? cols[descIdx] || '' : '',
-          amount: Math.abs(rawAmount),
+          category: categoryIdx >= 0 && cols[categoryIdx]?.trim() ? cols[categoryIdx].trim() : autoCategory(desc, isIncome),
+          description: desc,
+          amount: rawAmount,
           source: 'csv',
           batch_id: batchId,
         };
       }).filter(Boolean) as any[];
 
       if (rows.length === 0) return toast.error('No valid rows found');
+      toast.info(`Importing ${rows.length} transactions…`);
       bulkMutation.mutate(rows);
     };
     reader.readAsText(file);
@@ -350,9 +363,50 @@ export default function BudgetTab() {
   );
 }
 
+function parseCSVLines(text: string, delimiter: string): string[][] {
+  const result: string[][] = [];
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQuotes = !inQuotes; continue; }
+      if (ch === delimiter && !inQuotes) { cols.push(current.trim()); current = ''; continue; }
+      current += ch;
+    }
+    cols.push(current.trim());
+    result.push(cols);
+  }
+  return result;
+}
+
+function autoCategory(desc: string, isIncome: boolean): string {
+  const d = desc.toLowerCase();
+  if (isIncome) {
+    if (/salary|payroll|wage/.test(d)) return 'Salary Draw';
+    if (/interest|dividend/.test(d)) return 'Investments';
+    if (/rent/.test(d)) return 'Rental Income';
+    return 'Other Income';
+  }
+  if (/grocery|woolworths|checkers|pick.*pay|spar|food/.test(d)) return 'Groceries';
+  if (/uber|bolt|petrol|garage|fuel|engen|shell|caltex/.test(d)) return 'Transport';
+  if (/eskom|city.*power|water|municipal|electric/.test(d)) return 'Utilities';
+  if (/medical|discovery|medscheme|doctor|pharmacy/.test(d)) return 'Medical';
+  if (/insurance|sanlam|old.*mutual|outsurance|hollard/.test(d)) return 'Insurance';
+  if (/netflix|spotify|dstv|showmax|youtube|subscription/.test(d)) return 'Subscriptions';
+  if (/rent|bond|mortgage|home.*loan/.test(d)) return 'Rent/Bond';
+  if (/api|openai|anthropic|resend|vercel|supabase|firecrawl|heroku|aws|google.*cloud/.test(d)) return 'API Costs';
+  if (/hosting|domain|software|saas|adobe|microsoft|slack|notion/.test(d)) return 'Tools & Software';
+  if (/facebook|google.*ads|meta|adverti|marketing|campaign/.test(d)) return 'Marketing';
+  if (/sars|tax|vat/.test(d)) return 'Tax Provision';
+  return 'Other Expense';
+}
+
 function parseCSVDate(raw: string): string {
   try {
-    // Try common SA bank formats: dd/mm/yyyy, yyyy-mm-dd, dd-mm-yyyy
     if (raw.includes('/')) {
       const parts = raw.split('/');
       if (parts[0].length === 4) return `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
