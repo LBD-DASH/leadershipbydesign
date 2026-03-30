@@ -363,9 +363,50 @@ export default function BudgetTab() {
   );
 }
 
+function parseCSVLines(text: string, delimiter: string): string[][] {
+  const result: string[][] = [];
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQuotes = !inQuotes; continue; }
+      if (ch === delimiter && !inQuotes) { cols.push(current.trim()); current = ''; continue; }
+      current += ch;
+    }
+    cols.push(current.trim());
+    result.push(cols);
+  }
+  return result;
+}
+
+function autoCategory(desc: string, isIncome: boolean): string {
+  const d = desc.toLowerCase();
+  if (isIncome) {
+    if (/salary|payroll|wage/.test(d)) return 'Salary Draw';
+    if (/interest|dividend/.test(d)) return 'Investments';
+    if (/rent/.test(d)) return 'Rental Income';
+    return 'Other Income';
+  }
+  if (/grocery|woolworths|checkers|pick.*pay|spar|food/.test(d)) return 'Groceries';
+  if (/uber|bolt|petrol|garage|fuel|engen|shell|caltex/.test(d)) return 'Transport';
+  if (/eskom|city.*power|water|municipal|electric/.test(d)) return 'Utilities';
+  if (/medical|discovery|medscheme|doctor|pharmacy/.test(d)) return 'Medical';
+  if (/insurance|sanlam|old.*mutual|outsurance|hollard/.test(d)) return 'Insurance';
+  if (/netflix|spotify|dstv|showmax|youtube|subscription/.test(d)) return 'Subscriptions';
+  if (/rent|bond|mortgage|home.*loan/.test(d)) return 'Rent/Bond';
+  if (/api|openai|anthropic|resend|vercel|supabase|firecrawl|heroku|aws|google.*cloud/.test(d)) return 'API Costs';
+  if (/hosting|domain|software|saas|adobe|microsoft|slack|notion/.test(d)) return 'Tools & Software';
+  if (/facebook|google.*ads|meta|adverti|marketing|campaign/.test(d)) return 'Marketing';
+  if (/sars|tax|vat/.test(d)) return 'Tax Provision';
+  return 'Other Expense';
+}
+
 function parseCSVDate(raw: string): string {
   try {
-    // Try common SA bank formats: dd/mm/yyyy, yyyy-mm-dd, dd-mm-yyyy
     if (raw.includes('/')) {
       const parts = raw.split('/');
       if (parts[0].length === 4) return `${parts[0]}-${parts[1].padStart(2,'0')}-${parts[2].padStart(2,'0')}`;
