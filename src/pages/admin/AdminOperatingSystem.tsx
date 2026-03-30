@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Target, DollarSign, List, Calendar, Brain, BarChart3, Settings, Loader2 } from 'lucide-react';
+import { RefreshCw, Target, DollarSign, List, Calendar, Brain, BarChart3, Settings, Loader2, Wallet } from 'lucide-react';
 import SEO from '@/components/SEO';
 import AdminLoginForm from '@/components/admin/AdminLoginForm';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -14,6 +14,7 @@ import DealsTab from '@/components/admin/command-centre/DealsTab';
 import ActivityFeedTab from '@/components/admin/command-centre/ActivityFeedTab';
 import ContentTab from '@/components/admin/command-centre/ContentTab';
 import PipelineTab from '@/components/admin/command-centre/PipelineTab';
+import BudgetTab from '@/components/admin/command-centre/BudgetTab';
 import { CC } from '@/components/admin/command-centre/theme';
 import { format } from 'date-fns';
 
@@ -24,6 +25,7 @@ const TABS = [
   { id: 'content', label: 'Content', icon: Calendar, mobileLabel: '📅' },
   { id: 'intelligence', label: 'Intelligence', icon: Brain, mobileLabel: '🧠' },
   { id: 'pipeline', label: 'Pipeline', icon: BarChart3, mobileLabel: '📊' },
+  { id: 'budget', label: 'Budget', icon: Wallet, mobileLabel: '💳' },
   { id: 'sequences', label: 'Sequences', icon: List, mobileLabel: '📧' },
   { id: 'settings', label: 'Settings', icon: Settings, mobileLabel: '⚙️' },
 ] as const;
@@ -121,6 +123,7 @@ export default function AdminOperatingSystem() {
             </div>
           )}
           {activeTab === 'pipeline' && <PipelineTab />}
+          {activeTab === 'budget' && <BudgetTab />}
           {activeTab === 'sequences' && <SequenceTemplatesPanel />}
           {activeTab === 'settings' && <AdminSettingsPanel />}
         </main>

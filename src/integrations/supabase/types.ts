@@ -544,6 +544,54 @@ export type Database = {
         }
         Relationships: []
       }
+      budget_transactions: {
+        Row: {
+          account_type: string
+          amount: number
+          batch_id: string | null
+          category: string
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          notes: string | null
+          source: string | null
+          subcategory: string | null
+          transaction_date: string
+          transaction_type: string
+        }
+        Insert: {
+          account_type?: string
+          amount?: number
+          batch_id?: string | null
+          category: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          notes?: string | null
+          source?: string | null
+          subcategory?: string | null
+          transaction_date?: string
+          transaction_type?: string
+        }
+        Update: {
+          account_type?: string
+          amount?: number
+          batch_id?: string | null
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          notes?: string | null
+          source?: string | null
+          subcategory?: string | null
+          transaction_date?: string
+          transaction_type?: string
+        }
+        Relationships: []
+      }
       call_list_prospects: {
         Row: {
           batch_id: string | null
