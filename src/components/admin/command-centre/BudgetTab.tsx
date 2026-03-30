@@ -126,42 +126,55 @@ export default function BudgetTab() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const text = ev.target?.result as string;
-      const lines = text.split('\n').filter(l => l.trim());
+      const delimiter = text.includes(';') && !text.split('\n')[0].includes(',') ? ';' : ',';
+      const lines = parseCSVLines(text, delimiter).filter(l => l.length > 1);
       if (lines.length < 2) return toast.error('CSV needs a header row and data');
 
-      const header = lines[0].toLowerCase();
-      const hasDate = header.includes('date');
-      const hasAmount = header.includes('amount');
-      const hasDescription = header.includes('description') || header.includes('desc') || header.includes('reference');
-
-      if (!hasAmount) return toast.error('CSV must have an "amount" column');
-
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      const dateIdx = headers.findIndex(h => h.includes('date'));
+      const headers = lines[0].map(h => h.trim().toLowerCase());
+      const dateIdx = headers.findIndex(h => /date|posted|trans.*date|value.*date/.test(h));
       const amountIdx = headers.findIndex(h => h.includes('amount'));
-      const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('reference') || h.includes('narration'));
-      const categoryIdx = headers.findIndex(h => h.includes('category') || h.includes('type'));
+      const debitIdx = headers.findIndex(h => /debit|dr/.test(h));
+      const creditIdx = headers.findIndex(h => /credit|cr/.test(h));
+      const descIdx = headers.findIndex(h => /desc|reference|narration|particular|detail|memo/.test(h));
+      const categoryIdx = headers.findIndex(h => /category|type/.test(h));
+
+      const hasSplitColumns = debitIdx >= 0 || creditIdx >= 0;
+      if (amountIdx < 0 && !hasSplitColumns) return toast.error('CSV must have an "amount" column (or debit/credit columns)');
 
       const batchId = `csv-${Date.now()}`;
-      const rows = lines.slice(1).map(line => {
-        const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-        const rawAmount = parseFloat(cols[amountIdx]?.replace(/[^0-9.\-]/g, '') || '0');
-        if (isNaN(rawAmount) || rawAmount === 0) return null;
+      const rows = lines.slice(1).map(cols => {
+        let rawAmount = 0;
+        let isIncome = false;
 
-        const isIncome = rawAmount > 0;
+        if (hasSplitColumns) {
+          const debit = debitIdx >= 0 ? parseFloat(cols[debitIdx]?.replace(/[^0-9.\-]/g, '') || '0') : 0;
+          const credit = creditIdx >= 0 ? parseFloat(cols[creditIdx]?.replace(/[^0-9.\-]/g, '') || '0') : 0;
+          if (!isNaN(credit) && credit > 0) { rawAmount = credit; isIncome = true; }
+          else if (!isNaN(debit) && debit > 0) { rawAmount = debit; isIncome = false; }
+          else return null;
+        } else {
+          rawAmount = parseFloat(cols[amountIdx]?.replace(/[^0-9.\-]/g, '') || '0');
+          if (isNaN(rawAmount) || rawAmount === 0) return null;
+          isIncome = rawAmount > 0;
+          rawAmount = Math.abs(rawAmount);
+        }
+
+        const desc = descIdx >= 0 ? cols[descIdx]?.trim() || '' : '';
+
         return {
-          transaction_date: dateIdx >= 0 && cols[dateIdx] ? parseCSVDate(cols[dateIdx]) : format(new Date(), 'yyyy-MM-dd'),
+          transaction_date: dateIdx >= 0 && cols[dateIdx] ? parseCSVDate(cols[dateIdx].trim()) : format(new Date(), 'yyyy-MM-dd'),
           account_type: account,
           transaction_type: isIncome ? 'income' : 'expense',
-          category: categoryIdx >= 0 && cols[categoryIdx] ? cols[categoryIdx] : (isIncome ? 'Other Income' : 'Other Expense'),
-          description: descIdx >= 0 ? cols[descIdx] || '' : '',
-          amount: Math.abs(rawAmount),
+          category: categoryIdx >= 0 && cols[categoryIdx]?.trim() ? cols[categoryIdx].trim() : autoCategory(desc, isIncome),
+          description: desc,
+          amount: rawAmount,
           source: 'csv',
           batch_id: batchId,
         };
       }).filter(Boolean) as any[];
 
       if (rows.length === 0) return toast.error('No valid rows found');
+      toast.info(`Importing ${rows.length} transactions…`);
       bulkMutation.mutate(rows);
     };
     reader.readAsText(file);
